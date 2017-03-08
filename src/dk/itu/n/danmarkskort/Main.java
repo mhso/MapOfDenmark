@@ -2,8 +2,8 @@ package dk.itu.n.danmarkskort;
 
 public class Main {
 
-	public static String appName = "";
-	public static String appVersion = "";
+	public final static String APP_NAME = "FrankMaps";
+	public final static String APP_VERSION = "0.1";
 	
 	public static void main(String[] args) {
 		startup();
@@ -13,7 +13,7 @@ public class Main {
 	
 	
 	public static void log(String text) {
-		System.out.println("[" + appName + " " + appVersion + "] " + text);
+		System.out.println("[" + APP_NAME + " " + APP_VERSION + "] " + text);
 	}
 	
 	public static void startup() {
