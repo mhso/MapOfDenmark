@@ -2,6 +2,7 @@ package dk.itu.n.danmarkskort;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
 
 public class Main {
 
@@ -17,12 +18,14 @@ public class Main {
 	}
 
     public static void makeFrame() {
-        JFrame window = new JFrame("sick map");
-        window.add(new MainPanel());
+        JFrame window = new JFrame("Musk Maps");
+        window.add(new MainCanvas());
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        window.setLocationRelativeTo(null);
+        window.addWindowListener(new WindowAdapter() {
+		});
         window.pack();
-        window.setVisible(true);
+		window.setLocationRelativeTo(null);
+		window.setVisible(true);
     }
 	
 	public static void log(String text) {
