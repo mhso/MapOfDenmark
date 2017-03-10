@@ -31,18 +31,11 @@ public class OsmAddressParser {
 		switch(key){
 		case "housenumber":			buildAddress.setHousenumber(value);
 		case "housename":			buildAddress.setHousename(value);
-		case "flats":				buildAddress.setFlats(value);
-		case "conscriptionnumber":	buildAddress.setConscriptionnumber(value);
 		case "street":				buildAddress.setStreet(value);
-		case "place":				buildAddress.setPlace(value);
 		case "postcode":			buildAddress.setPostcode(value);
 		case "city":				buildAddress.setCity(value);
 		case "country":				buildAddress.setCountry(value);
-		case "full":				buildAddress.setFull(value);
-		case "door":				buildAddress.setDoor(value);
-		case "unit":				buildAddress.setUnit(value);
 		case "floor":				buildAddress.setFloor(value);
-		case "name":				buildAddress.setName(value);
 		}
 	}
 }
