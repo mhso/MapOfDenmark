@@ -1,7 +1,7 @@
 package dk.itu.n.danmarkskort.address;
 
 public class Address{
-	private int nodeId;
+	private long nodeId;
 	private long lat;
 	private long lon;
 	
@@ -24,15 +24,15 @@ public class Address{
 	 
 	}
 	
-	public Address(int nodeId, long lat, long lon){
+	public Address(Long nodeId, long lat, long lon){
 		this.nodeId = nodeId;
 		this.lat = lat;
 		this.lon = lon;
 	 
 	}
 	
-	public int getNodeId() { return nodeId; }
-	public void setNodeId(int nodeId) { this.nodeId = nodeId; }
+	public long getNodeId() { return nodeId; }
+	public void setNodeId(long nodeId2) { this.nodeId = nodeId2; }
 	public long getLat() { return lat; }
 	public void setLat(long lat) { this.lat = lat; }
 	public long getLon() { return lon; }

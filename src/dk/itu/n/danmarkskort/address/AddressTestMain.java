@@ -107,6 +107,10 @@ public class AddressTestMain extends JFrame {
 	
 	private void btnParseAddressaction(String inputText){
 		AddressManager addressManager = new AddressManager();
+		addressManager.addOsmAddress(4616395489, 55.6715887, 12.5832270, "addr:housenumber", "1");
+		addressManager.addOsmAddress(4616395489, 55.6715887, 12.5832270, "addr:postcode", "1411");
+		addressManager.addOsmAddress(4616395489, 55.6715887, 12.5832270, "addr:street", "Langebrogade");
+		
 		AddressParser addressParser = new AddressParser();
 		Address address = addressParser.parse(inputText);
 		HashMap<String, String> adresses = new HashMap<String, String>();

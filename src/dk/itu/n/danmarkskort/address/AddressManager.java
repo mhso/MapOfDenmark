@@ -4,14 +4,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class AddressManager {
-	private Map<Integer, Address> addresses;
+	private Map<Long, Address> addresses;
 	
 	
 	public AddressManager(){
-		addresses =  new HashMap<Integer, Address>();
+		addresses =  new HashMap<Long, Address>();
 	}
 	
-	public Map<Integer, Address> getAddresses(){
+	public Map<Long, Address> getAddresses(){
 		return addresses;
 	}
 	
@@ -23,7 +23,7 @@ public class AddressManager {
 		addresses.put(address.getNodeId(), address);
 	}
 	
-	public void addOsmAddress(int nodeId, long lat, long lon, String k, String v){
+	public void addOsmAddress(long nodeId, long lat, long lon, String k, String v){
 		Address adr;
 		if (addresses.containsKey(nodeId)) {
 			adr = addresses.get(nodeId);
