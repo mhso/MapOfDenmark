@@ -18,13 +18,15 @@ public class MainCanvas extends JPanel {
 
     @Override
     public void paintComponent(Graphics g){
+        super.paintComponent(g);
         Graphics g2d = (Graphics2D) g;
+        System.out.println("JEG HADER SWING");
         g2d.setColor(canvasBG);
         g2d.fillRect(0, 0, WIDTH, HEIGHT);
     }
 
     public void addGUI() {
-        GUIManager gui = new GUIManager();
+        GUIManager gui = new GUIManager(this);
         add(gui);
     }
 }

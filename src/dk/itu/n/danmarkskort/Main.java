@@ -6,7 +6,7 @@ import java.awt.event.WindowAdapter;
 
 public class Main {
 
-	public final static String APP_NAME = "FrankMaps";
+	public final static String APP_NAME = "This is not the map you're looking for";
 	public final static String APP_VERSION = "0.1";
 	
 	public static void main(String[] args) {
@@ -18,7 +18,7 @@ public class Main {
 	}
 
     public static void makeFrame() {
-        JFrame window = new JFrame("Musk Maps");
+        JFrame window = new JFrame("This is not the map you're looking for");
         window.add(new MainCanvas());
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.addWindowListener(new WindowAdapter() {
