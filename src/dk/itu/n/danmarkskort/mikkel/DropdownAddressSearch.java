@@ -1,4 +1,4 @@
-package dk.itu.n.danmarkskort.view;
+package dk.itu.n.danmarkskort.mikkel;
 
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
@@ -22,14 +22,28 @@ public class DropdownAddressSearch extends JPopupMenu {
 		EventQueue.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				new DropdownAddressSearch();
+				DropdownAddressSearch das = new DropdownAddressSearch();
+				das.createTestFrame();
 			}
 		});
 	}
 
 	private JTextField txtField;
 	
+	/**
+	 * Create the panel.
+	 */
+	public DropdownAddressSearch() {
+		setFocusable(false);
+	}
+	
 	private void createTestFrame() {
+		addElement("Result1");
+		
+		addElement("Result2");
+		
+		addElement("Long Result123");
+		
 		JFrame frame = new JFrame();
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		JPanel pane = (JPanel)frame.getContentPane();
@@ -52,22 +66,11 @@ public class DropdownAddressSearch extends JPopupMenu {
 		add(buttonResult);
 	}
 	
+	/**
+	 * Clear the Dropdown-Menu.
+	 */
 	public void clearElements() {
 		removeAll();
-	}
-	
-	/**
-	 * Create the panel.
-	 */
-	public DropdownAddressSearch() {
-		createTestFrame();
-		setFocusable(false);
-		
-		addElement("Result1");
-		
-		addElement("Result2");
-		
-		addElement("Long Result123");
 	}
 	
 	private void setSharedButtonAttributes(JButton dropdownButton) {

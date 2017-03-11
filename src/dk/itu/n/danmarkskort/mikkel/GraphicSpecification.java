@@ -1,4 +1,4 @@
-package dk.itu.n.danmarkskort.model;
+package dk.itu.n.danmarkskort.mikkel;
 
 import java.util.ArrayList;
 import java.util.List;
