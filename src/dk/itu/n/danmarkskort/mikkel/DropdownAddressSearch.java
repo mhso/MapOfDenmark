@@ -83,10 +83,17 @@ public class DropdownAddressSearch extends JPopupMenu {
 		dropdownButton.setBackground(new Color(0, 0, 0, 0));
 	}
 	
+	/**
+	 * Hide the Dropdown-Menu.
+	 */
 	public void hideDropdown() {
 		setVisible(false);
 	}
 
+	/**
+	 * Show the Dropdown-Menu at the specified Component.
+	 * @param source The component under which this menu should be shown.
+	 */
 	public void showDropdown(Component source) {
 		Point loc = source.getLocation();
 		show(source, loc.x, loc.y+source.getHeight());
