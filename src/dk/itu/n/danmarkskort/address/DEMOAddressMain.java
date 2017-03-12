@@ -13,7 +13,9 @@ import java.awt.Insets;
 import javax.swing.JButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+
 import java.util.Map;
+import java.util.Set;
 
 public class DEMOAddressMain extends JFrame {
 
@@ -106,7 +108,7 @@ public class DEMOAddressMain extends JFrame {
 	}
 	
 	private void btnParseAddressaction(String inputText){
-		DEMOAddressParser dEMOAddressParser = new DEMOAddressParser("resources/tiny.osm");
+		DEMOAddressParser dEMOAddressParser = new DEMOAddressParser("resources/map.osm");
 		AddressManager addressManager = AddressManager.getInstance();
 		/*
 		addressManager.addOsmAddress(4616395489l, 55.6715887, 12.5832270, "addr:housenumber", "1");
@@ -139,31 +141,29 @@ public class DEMOAddressMain extends JFrame {
 		Map<Long, Address> adresses = addressManager.getAddresses();
 		String result = "Read Input: "+inputText+"\n";
 		if(address != null)	result += "Parsed Results:\n"+address.toString()+"\n";
-		result += "Matched found:\n";
-		for(Address addr : adresses.values()){
-			result += addr.toString()+"\n";
-		}
+		result += "Adresses found: "+adresses.size()+"\n";
+		
+		//for(Address addr : adresses.values()){ result += addr.toString()+"\n"; }
+		
 		textArea.setText(result);
 		
 		testPrint(addressManager);
 	}
 	
 	private void testPrint(AddressManager addressManager){
-		System.out.println("-- Postcodes mapped: --");
-		for(String pc : addressManager.getPostcodes().keySet()){
-			System.out.println(pc);
-		}
-		System.out.println("-- Citys mapped: --");
-		for(Postcode s : addressManager.getPostcodes().values()){
-			System.out.println(s.getCity());
-		}
-		System.out.println("-- Streets mapped: --");
-		for(String s : addressManager.getStreets().keySet()){
-			System.out.println(s);
-		}
+		System.out.println("-- Addresses mapped: "+addressManager.getAddresses().size()+" --");
+		System.out.println("-- Postcodes mapped: "+addressManager.getPostcodes().size()+" --");
+		//for(String pc : addressManager.getPostcodes().keySet()){ System.out.println(pc); }
+		//System.out.println("-- Citys mapped: --");
+		//for(Postcode s : addressManager.getPostcodes().values()){ System.out.println(s.getCity()); }
+		System.out.println("-- Streets mapped: "+addressManager.getStreets().size()+" --");
+		/*
+		for(String s : addressManager.getStreets().keySet()){ System.out.println(s); }
+		*/
 		
-		System.out.println("-- Street search: --");
-		for(String s : addressManager.streetSearch("R")){
+		Set<String> findStreets = addressManager.streetSearch("An");
+		System.out.println("-- Street search: "+findStreets.size()+" --");
+		for(String s : findStreets){
 			Postcode postcode = addressManager.getPostcodeFromStreet(s);
 			System.out.println("Street: "+s);
 			System.out.println("....Postcode: "+postcode.getPostcode()+ " City: "+postcode.getCity());
