@@ -94,7 +94,7 @@ public class AddressManager {
 			if(addr.getPostcode() != null){
 				Postcode postcode = postcodes.get(addr.getPostcode());
 				
-				if(postcode == null) postcode = new Postcode(addr.getCity());
+				if(postcode == null) postcode = new Postcode(addr.getPostcode(), addr.getCity());
 				postcodes.put(addr.getPostcode(), postcode);
 				
 				// Adding street to mapping

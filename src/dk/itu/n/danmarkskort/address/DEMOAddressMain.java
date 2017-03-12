@@ -13,12 +13,9 @@ import java.awt.Insets;
 import javax.swing.JButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 
-public class AddressTestMain extends JFrame {
+public class DEMOAddressMain extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField txtInputAddress;
@@ -31,7 +28,7 @@ public class AddressTestMain extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					AddressTestMain frame = new AddressTestMain();
+					DEMOAddressMain frame = new DEMOAddressMain();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -43,7 +40,7 @@ public class AddressTestMain extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public AddressTestMain() {
+	public DEMOAddressMain() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1142, 550);
 		contentPane = new JPanel();
@@ -162,17 +159,10 @@ public class AddressTestMain extends JFrame {
 		}
 		
 		System.out.println("-- Street search: --");
-		for(String s : streetSearch("Le")){
-			System.out.println(s);
+		for(String s : addressManager.streetSearch("Le")){
+			Postcode postcode = addressManager.getPostcodeFromStreet(s);
+			System.out.println("Street: "+s);
+			System.out.println("....Postcode: "+postcode.getPostcode()+ " City: "+postcode.getCity());
 		}
-	}
-	
-	public Set<String> streetSearch(String find){
-		Map<String, Postcode> map = AddressManager.getInstance().getStreets();
-		Set<String> set = map.keySet()
-                .stream()
-                .filter(s -> s.startsWith(find))
-                .collect(Collectors.toSet());
-		return set;
 	}
 }
