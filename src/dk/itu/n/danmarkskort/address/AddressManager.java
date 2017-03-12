@@ -2,17 +2,38 @@ package dk.itu.n.danmarkskort.address;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class AddressManager {
 	private Map<Long, Address> addresses;
 	private Map<String, Postcode> postcodes;
 	private Map<String, Postcode> streets;
+	private static AddressManager instance;
+	private final static Lock lock = new ReentrantLock();
 	
-	public AddressManager(){
+	private AddressManager(){
 		addresses =  new HashMap<Long, Address>();
 		postcodes = new HashMap<String, Postcode>();
 		streets = new HashMap<String, Postcode>();
 	}
+	
+	public static AddressManager getInstance(){
+        if (instance == null) {
+            lock.lock();
+            try {
+                if (instance == null) {
+                	AddressManager tmpInstance = new AddressManager();
+                    instance = tmpInstance;
+                }
+            }
+            finally {
+                lock.unlock();
+            }
+        }
+        return instance;
+    }
+	
 	
 	public Map<Long, Address> getAddresses(){
 		return addresses;

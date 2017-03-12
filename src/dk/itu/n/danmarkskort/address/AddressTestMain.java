@@ -107,7 +107,7 @@ public class AddressTestMain extends JFrame {
 	}
 	
 	private void btnParseAddressaction(String inputText){
-		AddressManager addressManager = new AddressManager();
+		AddressManager addressManager = AddressManager.getInstance();
 		addressManager.addOsmAddress(4616395489l, 55.6715887, 12.5832270, "addr:housenumber", "1");
 		addressManager.addOsmAddress(4616395489l, 55.6715887, 12.5832270, "addr:postcode", "1411");
 		addressManager.addOsmAddress(4616395489l, 55.6715887, 12.5832270, "addr:street", "Langebrogade");
