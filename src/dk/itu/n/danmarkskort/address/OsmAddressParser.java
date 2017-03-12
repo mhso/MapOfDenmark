@@ -7,7 +7,7 @@ public class OsmAddressParser {
 		this.buildAddress = buildAddress;
 	}
 	
-	public Address parseKeyAddr(long nodeId, long lat, long lon, String k, String v){
+	public Address parseKeyAddr(Address buildAddress, long nodeId, double lat, double lon, String k, String v){
 		if(isAddress(k)){
 			String cleanKey = cleanKey(k);
 			buildAddress.setNodeId(nodeId);
@@ -20,7 +20,7 @@ public class OsmAddressParser {
 	}
 	
 	private boolean isAddress(String key){
-		return key.length() < cleanKey(key).length();
+		return key.length() > cleanKey(key).length();
 	}
 	
 	private String cleanKey(String key){
@@ -29,13 +29,20 @@ public class OsmAddressParser {
 	
 	private void setKeyFromValue(String key, String value){
 		switch(key){
-		case "housenumber":			buildAddress.setHousenumber(value);
-		case "housename":			buildAddress.setHousename(value);
 		case "street":				buildAddress.setStreet(value);
+		break;
+		case "housenumber":			buildAddress.setHousenumber(value);
+		break;
 		case "postcode":			buildAddress.setPostcode(value);
+		break;
 		case "city":				buildAddress.setCity(value);
+		break;
 		case "country":				buildAddress.setCountry(value);
+		break;
 		case "floor":				buildAddress.setFloor(value);
+		break;
+		case "housename":			buildAddress.setHousename(value);
+		break;
 		}
 	}
 }

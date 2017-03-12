@@ -2,8 +2,8 @@ package dk.itu.n.danmarkskort.address;
 
 public class Address{
 	private long nodeId;
-	private long lat;
-	private long lon;
+	private double lat;
+	private double lon;
 	
 	// Relevant parts off OpenStreetMaps addr: tags
 	private String street;
@@ -21,10 +21,9 @@ public class Address{
 		this.nodeId = -1;
 		this.lat = -1;
 		this.lon = -1;
-	 
 	}
 	
-	public Address(Long nodeId, long lat, long lon){
+	public Address(long nodeId, double lat, double lon){
 		this.nodeId = nodeId;
 		this.lat = lat;
 		this.lon = lon;
@@ -33,10 +32,10 @@ public class Address{
 	
 	public long getNodeId() { return nodeId; }
 	public void setNodeId(long nodeId2) { this.nodeId = nodeId2; }
-	public long getLat() { return lat; }
-	public void setLat(long lat) { this.lat = lat; }
-	public long getLon() { return lon; }
-	public void setLon(long lon) { this.lon = lon; }
+	public double getLat() { return lat; }
+	public void setLat(double lat) { this.lat = lat; }
+	public double getLon() { return lon; }
+	public void setLon(double lon) { this.lon = lon; }
 
 	public String getStreet() { return street; }
 	public void setStreet(String street) { this.street = street; }

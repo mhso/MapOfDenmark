@@ -14,6 +14,7 @@ import javax.swing.JButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import java.util.HashMap;
+import java.util.Map;
 
 public class AddressTestMain extends JFrame {
 
@@ -107,22 +108,19 @@ public class AddressTestMain extends JFrame {
 	
 	private void btnParseAddressaction(String inputText){
 		AddressManager addressManager = new AddressManager();
-		addressManager.addOsmAddress(4616395489, 55.6715887, 12.5832270, "addr:housenumber", "1");
-		addressManager.addOsmAddress(4616395489, 55.6715887, 12.5832270, "addr:postcode", "1411");
-		addressManager.addOsmAddress(4616395489, 55.6715887, 12.5832270, "addr:street", "Langebrogade");
+		addressManager.addOsmAddress(4616395489l, 55.6715887, 12.5832270, "addr:housenumber", "1");
+		addressManager.addOsmAddress(4616395489l, 55.6715887, 12.5832270, "addr:postcode", "1411");
+		addressManager.addOsmAddress(4616395489l, 55.6715887, 12.5832270, "addr:street", "Langebrogade");
 		
 		AddressParser addressParser = new AddressParser();
 		Address address = addressParser.parse(inputText);
-		HashMap<String, String> adresses = new HashMap<String, String>();
-		adresses.put("1", "Addresse 1");
-		adresses.put("2", "Addresse 2");
-		adresses.put("3", "Addresse 3");
-		String result = "Read Input: "+inputText+"\nParsed Results:\n";
-		if(address != null)	result += address.toString()+"\n";
-		for(String adr : adresses.values()){
-			result += adr+"\n";
+		Map<Long, Address> adresses = addressManager.getAddresses();
+		String result = "Read Input: "+inputText+"\n";
+		if(address != null)	result += "Parsed Results:\n"+address.toString()+"\n";
+		result += "Matched found:\n";
+		for(Address addr : adresses.values()){
+			result += addr.toString();
 		}
 		textArea.setText(result);
 	}
-
 }

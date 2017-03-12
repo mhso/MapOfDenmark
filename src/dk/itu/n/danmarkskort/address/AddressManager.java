@@ -5,10 +5,17 @@ import java.util.Map;
 
 public class AddressManager {
 	private Map<Long, Address> addresses;
-	
+	private Map<String, Postcode> countryToPostcodes;
+	private Map<String, Street> postcodeToStreet;
+	private Map<String, Housenumber> streetToHousenumber;
+	private Map<String, Address> housenumberToAddress;
 	
 	public AddressManager(){
 		addresses =  new HashMap<Long, Address>();
+		countryToPostcodes = new HashMap<String, Postcode>();
+		postcodeToStreet = new HashMap<String, Street>();
+		streetToHousenumber = new HashMap<String, Housenumber>();
+		housenumberToAddress = new HashMap<String, Address>();
 	}
 	
 	public Map<Long, Address> getAddresses(){
@@ -23,15 +30,19 @@ public class AddressManager {
 		addresses.put(address.getNodeId(), address);
 	}
 	
-	public void addOsmAddress(long nodeId, long lat, long lon, String k, String v){
-		Address adr;
+	public void addOsmAddress(long nodeId, double lat, double lon, String k, String v){
+		Address addr;
 		if (addresses.containsKey(nodeId)) {
-			adr = addresses.get(nodeId);
+			addr = addresses.get(nodeId);
 		} else {
-			adr = new Address(nodeId, lon, lon);
+			addr = new Address(nodeId, lon, lon);
 		}
-		OsmAddressParser oap = new OsmAddressParser(adr);
-		adr = oap.parseKeyAddr(nodeId, lat, lon, k, v);
-		addresses.put(adr.getNodeId(), adr);
+		OsmAddressParser oap = new OsmAddressParser(addr);
+		addr = oap.parseKeyAddr(addr, nodeId, lat, lon, k, v);
+		addresses.put(addr.getNodeId(), addr);
+		countryToPostcodes.put(addr.getCountry(), new Postcode(addr.getPostcode()));
+		postcodeToStreet.put(addr.getPostcode(), new Street(addr.getCity()));
+		streetToHousenumber.put(addr.getStreet(), new Housenumber(addr.getHousenumber()));
+		housenumberToAddress.put(addr.getHousenumber(), addr);
 	}
 }
