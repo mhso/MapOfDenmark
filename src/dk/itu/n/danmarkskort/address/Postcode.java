@@ -1,19 +1,11 @@
 package dk.itu.n.danmarkskort.address;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
-public class Postcode extends ArrayList<Street>{
-	private String postcode;
+public class Postcode extends HashMap<String, Street>{
+	private String city;
 	
-	public Postcode(String postcode) {
-		this.postcode = postcode;
-	}
-
-	public String getPostcode() {
-		return postcode;
-	}
-
-	public void setPostcode(String postcode) {
-		this.postcode = postcode;
+	public Postcode(String city){
+		this.city = city;
 	}
 }

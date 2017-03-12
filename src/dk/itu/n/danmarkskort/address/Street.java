@@ -1,19 +1,7 @@
 package dk.itu.n.danmarkskort.address;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
-public class Street extends ArrayList<Housenumber>{
-	private String street;
+public class Street extends HashMap<String, Housenumber>{
 
-	public Street(String street) {
-		this.street = street;
-	}
-
-	public String getStreet() {
-		return street;
-	}
-
-	public void setStreet(String street) {
-		this.street = street;
-	}
 }

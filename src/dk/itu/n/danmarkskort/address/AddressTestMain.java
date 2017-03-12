@@ -111,6 +111,7 @@ public class AddressTestMain extends JFrame {
 		addressManager.addOsmAddress(4616395489l, 55.6715887, 12.5832270, "addr:housenumber", "1");
 		addressManager.addOsmAddress(4616395489l, 55.6715887, 12.5832270, "addr:postcode", "1411");
 		addressManager.addOsmAddress(4616395489l, 55.6715887, 12.5832270, "addr:street", "Langebrogade");
+		Address osmAddr = addressManager.getAddressFromNodeId(4616395489l);
 		
 		AddressParser addressParser = new AddressParser();
 		Address address = addressParser.parse(inputText);
