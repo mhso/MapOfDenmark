@@ -15,6 +15,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class AddressTestMain extends JFrame {
 
@@ -112,11 +114,22 @@ public class AddressTestMain extends JFrame {
 		addressManager.addOsmAddress(4616395489l, 55.6715887, 12.5832270, "addr:postcode", "1411");
 		addressManager.addOsmAddress(4616395489l, 55.6715887, 12.5832270, "addr:street", "Langebrogade");
 		
+		addressManager.addOsmAddress(340527455, 55.6702390, 12.5810040, "addr:city", "København K");
+		addressManager.addOsmAddress(340527455, 55.6702390, 12.5810040, "addr:country", "DK");
+		addressManager.addOsmAddress(340527455, 55.6702390, 12.5810040, "addr:housenumber", "2");
+		addressManager.addOsmAddress(340527455, 55.6702390, 12.5810040, "addr:postcode", "1411");
+		addressManager.addOsmAddress(340527455, 55.6702390, 12.5810040, "addr:street", "Langebrogade");
+		
 		addressManager.addOsmAddress(340486650, 55.6708970, 12.5859510, "addr:country", "DK");
 		addressManager.addOsmAddress(340486650, 55.6708970, 12.5859510, "addr:housenumber", "15");
 		addressManager.addOsmAddress(340486650, 55.6708970, 12.5859510, "addr:postcode", "1411");
 		addressManager.addOsmAddress(340486650, 55.6708970, 12.5859510, "addr:city", "København K");
 		addressManager.addOsmAddress(340486650, 55.6708970, 12.5859510, "addr:street", "Applebys Plads");
+		
+		addressManager.addOsmAddress(296957928, 55.6651852, 12.5812276, "addr:city", "København S");
+		addressManager.addOsmAddress(296957928, 55.6651852, 12.5812276, "addr:housenumber", "2-4");
+		addressManager.addOsmAddress(296957928, 55.6651852, 12.5812276, "addr:postcode", "2300");
+		addressManager.addOsmAddress(296957928, 55.6651852, 12.5812276, "addr:street", "Leifsgade");
 		
 		Address osmAddr = addressManager.getAddressFromNodeId(4616395489l);
 		
@@ -147,5 +160,19 @@ public class AddressTestMain extends JFrame {
 		for(String s : addressManager.getStreets().keySet()){
 			System.out.println(s);
 		}
+		
+		System.out.println("-- Street search: --");
+		for(String s : streetSearch("Le")){
+			System.out.println(s);
+		}
+	}
+	
+	public Set<String> streetSearch(String find){
+		Map<String, Postcode> map = AddressManager.getInstance().getStreets();
+		Set<String> set = map.keySet()
+                .stream()
+                .filter(s -> s.startsWith(find))
+                .collect(Collectors.toSet());
+		return set;
 	}
 }

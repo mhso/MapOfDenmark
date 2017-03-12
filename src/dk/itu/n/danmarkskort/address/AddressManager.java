@@ -1,9 +1,11 @@
 package dk.itu.n.danmarkskort.address;
 
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.stream.Collectors;
 
 public class AddressManager {
 	private Map<Long, Address> addresses;
@@ -59,8 +61,12 @@ public class AddressManager {
 		return streets.get(street);
 	}
 	
-	public String streetSearch(String street){
-		return null;
+	public Set<String> streetSearch(String find){
+		Set<String> set = streets.keySet()
+                .stream()
+                .filter(s -> s.startsWith(find))
+                .collect(Collectors.toSet());
+		return set;
 	}
 	
 	public void add(Address address){
