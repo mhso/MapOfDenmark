@@ -7,12 +7,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class AddressValidator {
-	private Map<String,String> postalcodeToCity = new HashMap<String,String>();
-	private Map<String,String> cityToPostalcode = new HashMap<String,String>();
-	private List<String> streetnames = new ArrayList<String>();
-	
 	public AddressValidator(){
-		//postalcodeCityMapping();
 	}
 	
 	public String cleanAddress(String inputStr){
@@ -60,57 +55,29 @@ public class AddressValidator {
 				.replaceAll("st. ","")
 				.replaceAll("([0-9])+(\\. sal) ","");
 	}
-	
-	public String getCityFromPostalcode(String postalcode){
-		return postalcodeToCity.get(postalcode);
-	}
-	
-	public String getPostalcodeFromCity(String cityName){
-		return cityToPostalcode.get(cityName);
-	}
-	
-	public boolean comparePostalcodeToCity(String postalcode, String cityName){
-		if(getPostalcodeFromCity(cityName) != null && postalcode.compareTo(getPostalcodeFromCity(cityName)) == 0){
-			if(getCityFromPostalcode(postalcode) != null && cityName.compareTo(getCityFromPostalcode(postalcode)) == 0){
-				return true;
-			}
-		}
+
+	public boolean confirmStreetname(String streetMatch) {
+		// TODO Auto-generated method stub
 		return false;
 	}
-	
-	/*
-	private void postalcodeCityMapping(){
-		for(String str : readfile("resources/postalcode_city.txt")){
-			String[] strArr = str.split("_");
-			if(strArr.length == 2){
-				postalcodeToCity.put(strArr[0], strArr[1]);
-				cityToPostalcode.put(strArr[1], strArr[0]);
-				//System.out.println("Mapping: "+strArr[0]+"->"+strArr[1]);
-			}
-		}
-	}
-	*/
-	
-	public List<String> searchCityname(String cityname){
-			return postalcodeToCity.values().stream().filter(it -> it.contains(cityname)).collect(Collectors.toList());
-	}
-	
-	public List<String> getStreetnames(){
-		if(streetnames.size() == 0){
-			//streetnames = readfile("resources/streetnames.txt");
-		}
-		return streetnames;
-	}
-	
-	public boolean confirmStreetname(String streetname){
-		List<String> matches = getStreetnames().stream().filter(it -> it.contentEquals(streetname)).collect(Collectors.toList());
-	    if(matches != null && matches.size() == 1){
-	    	return true;
-	    }
+
+	public boolean comparePostalcodeToCity(String postcodeMatch, String cityMatch) {
+		// TODO Auto-generated method stub
 		return false;
 	}
-	
-	public List<String> searchStreetname(String streetname){
-		return getStreetnames().stream().filter(it -> it.contains(streetname)).collect(Collectors.toList());
+
+	public String getCityFromPostalcode(String postcodeMatch) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public String getPostalcodeFromCity(String cityMatch) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public List<String> searchCityname(String city) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

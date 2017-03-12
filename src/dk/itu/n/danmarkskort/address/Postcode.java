@@ -1,8 +1,8 @@
 package dk.itu.n.danmarkskort.address;
 
-import java.util.HashMap;
+import java.util.TreeMap;
 
-public class Postcode extends HashMap<String, Street>{
+public class Postcode extends TreeMap<String, Street>{
 	private String city;
 	
 	public Postcode(String city){

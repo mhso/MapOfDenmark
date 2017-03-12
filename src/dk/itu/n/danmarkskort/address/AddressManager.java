@@ -1,7 +1,7 @@
 package dk.itu.n.danmarkskort.address;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -13,9 +13,9 @@ public class AddressManager {
 	private final static Lock lock = new ReentrantLock();
 	
 	private AddressManager(){
-		addresses =  new HashMap<Long, Address>();
-		postcodes = new HashMap<String, Postcode>();
-		streets = new HashMap<String, Postcode>();
+		addresses =  new TreeMap<Long, Address>();
+		postcodes = new TreeMap<String, Postcode>();
+		streets = new TreeMap<String, Postcode>();
 	}
 	
 	public static AddressManager getInstance(){
@@ -59,7 +59,7 @@ public class AddressManager {
 		return streets.get(street);
 	}
 	
-	public Address search(String indputStr){
+	public String streetSearch(String street){
 		return null;
 	}
 	
