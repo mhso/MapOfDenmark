@@ -1,7 +1,6 @@
 package dk.itu.n.danmarkskort;
 
 import javax.swing.*;
-import java.awt.event.WindowAdapter;
 
 public class Main {
 
@@ -20,8 +19,6 @@ public class Main {
         JFrame window = new JFrame("Ceci n'est pas une carte");
         window.add(new MainCanvas());
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        window.addWindowListener(new WindowAdapter() {
-		});
         window.pack();
 		window.setLocationRelativeTo(null);
 		window.setVisible(true);

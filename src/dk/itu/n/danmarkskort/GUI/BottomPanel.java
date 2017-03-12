@@ -53,6 +53,8 @@ public class BottomPanel extends JPanel {
         // which displays the longitude-latitude where the mouse is, and a the name
         // of the nearest street
 
+        //right now it contains nothing
+
         JLabel dummy = new JLabel();
         gbcParent.gridx = 1;
         gbcParent.weightx = 1;
@@ -74,9 +76,10 @@ public class BottomPanel extends JPanel {
 
         JButton zoomIn = style.zoomInButton();
         zoomIn.setBackground(style.zoomButtonBG());
-        zoomIn.setToolTipText("Zoom out");
+        zoomIn.setToolTipText("Zoom in");
         zoomIn.setBorder(null);
         zoomIn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        zoomIn.setRolloverIcon(style.zoomInHoverIcon());
 
         gbc.gridx = 1;
         gbc.gridy = 1;
@@ -89,6 +92,7 @@ public class BottomPanel extends JPanel {
         zoomOut.setToolTipText("Zoom out");
         zoomOut.setBorder(null);
         zoomOut.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        zoomOut.setRolloverIcon(style.zoomOutHoverIcon());
 
         gbc.gridy = 2;
         gbc.insets = new Insets(5, 0, 0, 0);

@@ -7,15 +7,12 @@ import java.awt.*;
 
 public class Style {
 
-    private int topWidth, topHeight, margin, smallMargin, alphaInt;
-
-    private float alphaFloat;
-
-    private Color panelBorderColor, panelBG, inputFieldBG, panelTextColor, iconBorderColor, zoomButtonBG;
-
+    private int topWidth, topHeight, margin, smallMargin;
+    private float alphaFloat, alphaRollover;
+    private Color panelBG, inputFieldBG, panelTextColor, iconBorderColor, zoomButtonBG, dropDownBG;
     private JButton searchButton, menuButton,routeButton, zoomInButton, zoomOutButton;
-
     private ImageIcon scaleIndicator;
+    private AlphaImageIcon searchHoverIcon, menuHoverIcon, routeHoverIcon, zoomInHoverIcon, zoomOutHoverIcon;
 
     public Style() {
         // Default style sheet
@@ -23,22 +20,27 @@ public class Style {
         topHeight = 35;
         margin = 10;
         smallMargin = 10;
-        alphaInt = 255;
 
-        alphaFloat = 0.6f;
+        alphaFloat = 0.5f;
+        alphaRollover = 0.8f;
 
-        panelBorderColor = new Color(60, 70, 80, alphaInt);
-        panelBG = new Color(60, 70, 80, alphaInt);
-        inputFieldBG = new Color(80, 90, 100);
-        panelTextColor = new Color(180, 180, 180);
+        panelBG = new Color(30, 40, 50);
+        inputFieldBG = new Color(50, 60, 70);
+        panelTextColor = new Color(210, 210, 210);
         iconBorderColor = new Color(90, 100, 110);
-        zoomButtonBG = new Color(40, 50 ,60);
+        zoomButtonBG = new Color(30, 40 ,50);
 
-        searchButton = new JButton(new AlphaImageIcon(new ImageIcon("resources/searchw.png"), alphaFloat));
-        menuButton = new JButton(new AlphaImageIcon(new ImageIcon("resources/menuw.png"), alphaFloat));
-        routeButton = new JButton(new AlphaImageIcon(new ImageIcon("resources/routew.png"), alphaFloat));
-        zoomInButton = new JButton(new AlphaImageIcon(new ImageIcon("resources/zoominw.png"), alphaFloat));
-        zoomOutButton = new JButton(new AlphaImageIcon(new ImageIcon("resources/zoomoutw.png"), alphaFloat));
+        searchButton = new JButton(new AlphaImageIcon(new ImageIcon("resources/icons/searchw.png"), alphaFloat));
+        menuButton = new JButton(new AlphaImageIcon(new ImageIcon("resources/icons/menuw.png"), alphaFloat));
+        routeButton = new JButton(new AlphaImageIcon(new ImageIcon("resources/icons/routew.png"), alphaFloat));
+        zoomInButton = new JButton(new AlphaImageIcon(new ImageIcon("resources/icons/zoominw.png"), alphaFloat));
+        zoomOutButton = new JButton(new AlphaImageIcon(new ImageIcon("resources/icons/zoomoutw.png"), alphaFloat));
+
+        searchHoverIcon = new AlphaImageIcon(new ImageIcon("resources/icons/searchw.png"), alphaRollover);
+        menuHoverIcon = new AlphaImageIcon(new ImageIcon("resources/icons/menuw.png"), alphaRollover);
+        routeHoverIcon = new AlphaImageIcon(new ImageIcon("resources/icons/routew.png"), alphaRollover);
+        zoomInHoverIcon = new AlphaImageIcon(new ImageIcon("resources/icons/zoominw.png"), alphaRollover);
+        zoomOutHoverIcon = new AlphaImageIcon(new ImageIcon("resources/icons/zoomoutw.png"), alphaRollover);
 
         scaleIndicator = new ImageIcon("resources/scale.png");
     }
@@ -48,9 +50,8 @@ public class Style {
     public int topHeight() { return topHeight; }
     public int margin() { return margin; }
     public int smallMargin() { return smallMargin; }
-    public int alphaInt() { return alphaInt; }
     public float alphaFloat() { return alphaFloat; }
-    public Color panelBorderColor() { return panelBorderColor; }
+
     public Color panelBG() { return panelBG; }
     public Color inputFieldBG() { return inputFieldBG; }
     public Color panelTextColor() { return panelTextColor; }
@@ -62,5 +63,12 @@ public class Style {
     public JButton routeButton() { return routeButton; }
     public JButton zoomInButton() { return zoomInButton; }
     public JButton zoomOutButton() { return zoomOutButton; }
+
+    public AlphaImageIcon searchHoverIcon() { return searchHoverIcon; }
+    public AlphaImageIcon menuHoverIcon() { return menuHoverIcon; }
+    public AlphaImageIcon routeHoverIcon() { return routeHoverIcon; }
+    public AlphaImageIcon zoomInHoverIcon() { return zoomInHoverIcon; }
+    public AlphaImageIcon zoomOutHoverIcon() { return zoomOutHoverIcon; }
+
     public ImageIcon scaleIndicator() { return scaleIndicator; }
 }
