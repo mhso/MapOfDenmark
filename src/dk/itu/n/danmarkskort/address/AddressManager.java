@@ -1,18 +1,41 @@
 package dk.itu.n.danmarkskort.address;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.stream.Collectors;
 
 public class AddressManager {
 	private Map<Long, Address> addresses;
 	private Map<String, Postcode> postcodes;
 	private Map<String, Postcode> streets;
+	private static AddressManager instance;
+	private final static Lock lock = new ReentrantLock();
 	
-	public AddressManager(){
-		addresses =  new HashMap<Long, Address>();
-		postcodes = new HashMap<String, Postcode>();
-		streets = new HashMap<String, Postcode>();
+	private AddressManager(){
+		addresses =  new TreeMap<Long, Address>();
+		postcodes = new TreeMap<String, Postcode>();
+		streets = new TreeMap<String, Postcode>();
 	}
+	
+	public static AddressManager getInstance(){
+        if (instance == null) {
+            lock.lock();
+            try {
+                if (instance == null) {
+                	AddressManager tmpInstance = new AddressManager();
+                    instance = tmpInstance;
+                }
+            }
+            finally {
+                lock.unlock();
+            }
+        }
+        return instance;
+    }
+	
 	
 	public Map<Long, Address> getAddresses(){
 		return addresses;
@@ -38,8 +61,12 @@ public class AddressManager {
 		return streets.get(street);
 	}
 	
-	public Address search(String indputStr){
-		return null;
+	public Set<String> streetSearch(String find){
+		Set<String> set = streets.keySet()
+                .stream()
+                .filter(s -> s.startsWith(find))
+                .collect(Collectors.toSet());
+		return set;
 	}
 	
 	public void add(Address address){
@@ -55,7 +82,7 @@ public class AddressManager {
 		}
 		OsmAddressParser oap = new OsmAddressParser(addr);
 		addr = oap.parseKeyAddr(addr, nodeId, lat, lon, k, v);
-		addresses.put(addr.getNodeId(), addr);
+		if(addr != null) addresses.put(addr.getNodeId(), addr);
 		
 		// Adding to the address path
 		updateAddressPathMapping(addr);
@@ -67,7 +94,7 @@ public class AddressManager {
 			if(addr.getPostcode() != null){
 				Postcode postcode = postcodes.get(addr.getPostcode());
 				
-				if(postcode == null) postcode = new Postcode(addr.getCity());
+				if(postcode == null) postcode = new Postcode(addr.getPostcode(), addr.getCity());
 				postcodes.put(addr.getPostcode(), postcode);
 				
 				// Adding street to mapping

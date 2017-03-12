@@ -139,10 +139,6 @@ public class AddressParser {
 				if(addrVal.getPostalcodeFromCity(cityMatch) == null){
 					finalBuildAddress.setCity(cityMatch);
 				}
-				
-				if(finalBuildAddress.getPostcode() == null && addrVal.searchCityname(finalBuildAddress.getCity()).size() == 1){
-					finalBuildAddress.setPostcode(addrVal.getPostalcodeFromCity(cityMatch));
-				}
 			
 			buildAddress.setCity(cityMatch);
 
