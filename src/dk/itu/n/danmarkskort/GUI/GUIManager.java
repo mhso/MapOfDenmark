@@ -1,7 +1,5 @@
 package dk.itu.n.danmarkskort.GUI;
 
-import dk.itu.n.danmarkskort.Extras.AlphaImageIcon;
-
 import javax.swing.*;
 import java.awt.*;
 

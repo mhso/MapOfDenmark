@@ -11,7 +11,7 @@ import java.io.IOException;
 
 public class MainCanvas extends JPanel {
 
-    public static final int WIDTH = 800, HEIGHT = 600;
+    public static final int WIDTH = 1000, HEIGHT = 800;
     private final Color canvasBG = new Color(146, 171, 200);
     BufferedImage canvasImg;
 
