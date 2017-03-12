@@ -1,12 +1,11 @@
 package dk.itu.n.danmarkskort;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.WindowAdapter;
 
 public class Main {
 
-	public final static String APP_NAME = "This is not the map you're looking for";
+	public final static String APP_NAME = "Ceci n'est pas une carte";
 	public final static String APP_VERSION = "0.1";
 	
 	public static void main(String[] args) {
@@ -18,7 +17,7 @@ public class Main {
 	}
 
     public static void makeFrame() {
-        JFrame window = new JFrame("This is not the map you're looking for");
+        JFrame window = new JFrame("Ceci n'est pas une carte");
         window.add(new MainCanvas());
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.addWindowListener(new WindowAdapter() {
