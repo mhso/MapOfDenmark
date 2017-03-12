@@ -82,7 +82,7 @@ public class AddressManager {
 		}
 		OsmAddressParser oap = new OsmAddressParser(addr);
 		addr = oap.parseKeyAddr(addr, nodeId, lat, lon, k, v);
-		addresses.put(addr.getNodeId(), addr);
+		if(addr != null) addresses.put(addr.getNodeId(), addr);
 		
 		// Adding to the address path
 		updateAddressPathMapping(addr);

@@ -10,17 +10,12 @@ import org.xml.sax.*;
 import org.xml.sax.helpers.XMLReaderFactory;
 
 public class DEMOAddressParser {
-	public DEMOAddressParser(String filename) {
-		initialize();
-		load(filename);
-	}
-
-	public DEMOAddressParser() {
-		initialize();
-		//load("maps/bornholm.zip");
-	}
+	long id;
+	float lat;
+	float lon;
 	
-	private void initialize(){
+	public DEMOAddressParser(String filename) {
+		load(filename);
 	}
 	
 	public void loadModel(String filename) {
@@ -33,7 +28,7 @@ public class DEMOAddressParser {
 			loadOSM(new InputSource(filename));
 		} else if (filename.endsWith(".zip")) {
 			try {
-				ZipInputStream zip = new ZipInputStream(new BufferedInputStream(Resource.loadStream(filename)));
+				ZipInputStream zip = new ZipInputStream(new BufferedInputStream(DEMOResource.loadStream(filename)));
 				zip.getNextEntry();
 				loadOSM(new InputSource(zip));
 			} catch (FileNotFoundException e) {
@@ -42,7 +37,7 @@ public class DEMOAddressParser {
 				e.printStackTrace();
 			}
 		} else {
-			try (ObjectInputStream in = new ObjectInputStream(new BufferedInputStream(Resource.loadStream(filename)))) {
+			try (ObjectInputStream in = new ObjectInputStream(new BufferedInputStream(DEMOResource.loadStream(filename)))) {
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
@@ -86,14 +81,17 @@ public class DEMOAddressParser {
 
 		@Override
 		public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
+			AddressManager addressManager = AddressManager.getInstance();
 			switch(qName) {
 				case "node":
-					long id = Long.parseLong(atts.getValue("id"));
-					float lat = Float.parseFloat(atts.getValue("lat"));
-					float lon = Float.parseFloat(atts.getValue("lon"));
+					id = Long.parseLong(atts.getValue("id"));
+					lat = Float.parseFloat(atts.getValue("lat"));
+					lon = Float.parseFloat(atts.getValue("lon"));
+					addressManager.addOsmAddress(id, lat, lon, null, null);
+					break;
+				case "tag":
 					String k = atts.getValue("k");
 					String v = atts.getValue("v");
-					AddressManager addressManager = AddressManager.getInstance();
 					addressManager.addOsmAddress(id, lat, lon, k, v);
 					break;
 			}

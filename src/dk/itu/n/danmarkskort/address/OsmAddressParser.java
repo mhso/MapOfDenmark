@@ -20,7 +20,8 @@ public class OsmAddressParser {
 	}
 	
 	private boolean isAddress(String key){
-		return key.length() > cleanKey(key).length();
+		if(key != null) return key.length() > cleanKey(key).length();
+		return false;
 	}
 	
 	private String cleanKey(String key){

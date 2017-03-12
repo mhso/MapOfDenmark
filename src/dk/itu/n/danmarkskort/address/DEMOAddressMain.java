@@ -106,7 +106,9 @@ public class DEMOAddressMain extends JFrame {
 	}
 	
 	private void btnParseAddressaction(String inputText){
+		DEMOAddressParser dEMOAddressParser = new DEMOAddressParser("resources/tiny.osm");
 		AddressManager addressManager = AddressManager.getInstance();
+		/*
 		addressManager.addOsmAddress(4616395489l, 55.6715887, 12.5832270, "addr:housenumber", "1");
 		addressManager.addOsmAddress(4616395489l, 55.6715887, 12.5832270, "addr:postcode", "1411");
 		addressManager.addOsmAddress(4616395489l, 55.6715887, 12.5832270, "addr:street", "Langebrogade");
@@ -128,7 +130,9 @@ public class DEMOAddressMain extends JFrame {
 		addressManager.addOsmAddress(296957928, 55.6651852, 12.5812276, "addr:postcode", "2300");
 		addressManager.addOsmAddress(296957928, 55.6651852, 12.5812276, "addr:street", "Leifsgade");
 		
+		
 		Address osmAddr = addressManager.getAddressFromNodeId(4616395489l);
+		*/
 		
 		AddressParser addressParser = new AddressParser();
 		Address address = addressParser.parse(inputText);
@@ -159,7 +163,7 @@ public class DEMOAddressMain extends JFrame {
 		}
 		
 		System.out.println("-- Street search: --");
-		for(String s : addressManager.streetSearch("Le")){
+		for(String s : addressManager.streetSearch("R")){
 			Postcode postcode = addressManager.getPostcodeFromStreet(s);
 			System.out.println("Street: "+s);
 			System.out.println("....Postcode: "+postcode.getPostcode()+ " City: "+postcode.getCity());
