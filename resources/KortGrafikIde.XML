@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<theme version="0.1">
+	<element>
+		<tag k="highway" v="footway"/>
+		<layer color="FF3333" lineWidth="0.0002" lineType="standard"/>
+		<layer color="0000CC" lineWidth="0.0001" lineType="dotted"/>
+		<layer color="FFFFFF" lineWidth="0.001" lineType="standard"/>
+		<layer color="0000CC" lineWidth="0.0001" lineType="dotted"/>
+		<layer color="FF3333" lineWidth="0.0002" lineType="standard"/>
+	</element>
+</theme>
