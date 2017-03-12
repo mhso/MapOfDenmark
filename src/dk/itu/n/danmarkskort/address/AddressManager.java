@@ -30,7 +30,11 @@ public class AddressManager {
 		return postcodes.get(postcode);
 	}
 	
-	public Postcode getPostcodesFromStreet(String street){
+	public Map<String, Postcode> getStreets(){
+		return streets;
+	}
+	
+	public Postcode getPostcodeFromStreet(String street){
 		return streets.get(street);
 	}
 	
@@ -62,6 +66,7 @@ public class AddressManager {
 			// Adding postcode to mapping
 			if(addr.getPostcode() != null){
 				Postcode postcode = postcodes.get(addr.getPostcode());
+				
 				if(postcode == null) postcode = new Postcode(addr.getCity());
 				postcodes.put(addr.getPostcode(), postcode);
 				

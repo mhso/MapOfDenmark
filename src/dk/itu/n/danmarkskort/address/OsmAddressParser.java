@@ -24,7 +24,7 @@ public class OsmAddressParser {
 	}
 	
 	private String cleanKey(String key){
-		return key.replaceAll("addr:", "").trim();
+		return key.toLowerCase().replaceAll("addr:", "").trim();
 	}
 	
 	private void setKeyFromValue(String key, String value){
