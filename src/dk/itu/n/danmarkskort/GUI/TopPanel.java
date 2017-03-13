@@ -11,18 +11,18 @@ public class TopPanel extends JPanel {
 
     private Style style;
     private DropdownAddressSearch das;
+    private DropdownMenu dropMenu;
     private JTextField input;
-    private JPanel searchInputWrapper;
+    private JPanel searchInputWrapper, topParent;
+    private JButton menu;
 
     public TopPanel(Style style) {
 
         this.style = style;
-        das = new DropdownAddressSearch(this);
-
         setOpaque(false);
 
-        JPanel topParent = new JPanel(new BorderLayout());
-        topParent.setBorder(BorderFactory.createLineBorder(style.panelBG(), 8, true));
+        topParent = new JPanel(new BorderLayout());
+        topParent.setBorder(BorderFactory.createLineBorder(style.panelBG(), style.topPanelBorderWidth(), true));
         topParent.setOpaque(false);
 
         JPanel top = new JPanel(new GridBagLayout());
@@ -32,7 +32,7 @@ public class TopPanel extends JPanel {
         gbc.insets = new Insets(0, 3, 0, 3);
         gbc.weighty = 1;
 
-        JButton menu = style.menuButton();
+        menu = style.menuButton();
         menu.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, style.iconBorderColor()));
         menu.setBackground(style.panelBG());
         menu.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -82,6 +82,14 @@ public class TopPanel extends JPanel {
         topParent.add(top);
         add(topParent);
 
+
+        das = new DropdownAddressSearch(this);
+        dropMenu = new DropdownMenu(this, style);
+
+        menu.addActionListener(e -> {
+            dropMenu.showDropdown(menu);
+        });
+
         // adding drop down functionality
         ((AbstractDocument) input.getDocument()).setDocumentFilter(new TopPanel.SearchFilter());
         input.addActionListener(e -> das.showDropdown(input));
@@ -93,6 +101,8 @@ public class TopPanel extends JPanel {
     }
 
     public int getInputFieldWidth() { return searchInputWrapper.getPreferredSize().width; }
+    public int getMenuWidth() { return menu.getPreferredSize().width + style.topPanelBorderWidth() + 6; } // 6 is from insets
+    public Dimension getTopPanelDimension() { return topParent.getPreferredSize(); }
     public JTextField getInputField() { return input; }
 
     // used to listen to what
