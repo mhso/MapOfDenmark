@@ -1,5 +1,7 @@
 package dk.itu.n.danmarkskort.address;
 
+import java.util.Map;
+
 public class AddressOsmParser {
 	private Address buildAddress;
 	
@@ -17,6 +19,15 @@ public class AddressOsmParser {
 			return buildAddress;
 		}
 		return null;
+	}
+	
+	public Address parseKeyAddr(Address buildAddress, Map<String, String> keysValues){
+		for(String key : keysValues.keySet()){
+			if(isAddress(key)){
+				setKeyFromValue(cleanKey(key), keysValues.get(key));
+			}
+		}
+		return buildAddress;
 	}
 	
 	private boolean isAddress(String key){

@@ -31,13 +31,13 @@ public class AddressParser {
 			Matcher allMatch = doorSidePat;
 			String doorSideMatch = allMatch.group("side").trim();
 			
-			System.out.println("PAT_SIDE Match: ["+allMatch.group()+"] Start Index: "+allMatch.start()+" End Index: "+allMatch.end());
+			//System.out.println("PAT_SIDE Match: ["+allMatch.group()+"] Start Index: "+allMatch.start()+" End Index: "+allMatch.end());
 
 			finalBuildAddress.setDoorSide(doorSideMatch);
 			buildAddress.setDoorSide(doorSideMatch);
 			
 			inputAddress = addrVal.cleanAddressSide(inputAddress);
-			System.out.println("Clean side: "+inputAddress);
+			//System.out.println("Clean side: "+inputAddress);
 		}
 		
 		Matcher floorPat = PAT_FLOOR.matcher(inputAddress);
@@ -46,13 +46,13 @@ public class AddressParser {
 			Matcher allMatch = floorPat;
 			String floorMatch = allMatch.group("floor").trim();
 			
-			System.out.println("PAT_FLOOR Match: ["+allMatch.group()+"] Start Index: "+allMatch.start()+" End Index: "+allMatch.end());
+			//System.out.println("PAT_FLOOR Match: ["+allMatch.group()+"] Start Index: "+allMatch.start()+" End Index: "+allMatch.end());
 
 			finalBuildAddress.setFloor(floorMatch);
 			buildAddress.setFloor(floorMatch);
 			
 			inputAddress = addrVal.cleanAddressFloor(inputAddress);
-			System.out.println("Clean floor: "+inputAddress);
+			//System.out.println("Clean floor: "+inputAddress);
 		}
 		
 		Matcher streetHousePat = PAT_STREET_HOUSE.matcher(inputAddress);
@@ -62,14 +62,12 @@ public class AddressParser {
 			String streetMatch = allMatch.group("street").trim();
 			String housenumberMatch = allMatch.group("housenumber").trim();
 			
-			System.out.println("PAT_STREET_HOUSE Match: ["+allMatch.group()+"] Start Index: "+allMatch.start()+" End Index: "+allMatch.end());
+			//System.out.println("PAT_STREET_HOUSE Match: ["+allMatch.group()+"] Start Index: "+allMatch.start()+" End Index: "+allMatch.end());
 			
 			streetMatch = addrVal.insertDotAfterSingleChar(streetMatch);
 			
 			if(addrVal.confirmStreetname(streetMatch)){
 				finalBuildAddress.setStreet(streetMatch);
-			} else {
-				streetMatch = streetMatch+"?";
 			}
 			
 			buildAddress.setStreet(streetMatch);
@@ -83,19 +81,13 @@ public class AddressParser {
 			String postcodeMatch = allMatch.group("postcode").trim();
 			String cityMatch = allMatch.group("city").trim();
 			
-			System.out.println("PAT_POSTCODE_CITY Match: ["+allMatch.group()+"] Start Index: "+allMatch.start()+" End Index: "+allMatch.end());
+			//System.out.println("PAT_POSTCODE_CITY Match: ["+allMatch.group()+"] Start Index: "+allMatch.start()+" End Index: "+allMatch.end());
 			
 			if(addrVal.comparePostalcodeToCity(postcodeMatch, cityMatch)){
 				finalBuildAddress.setPostcode(postcodeMatch);
 				finalBuildAddress.setCity(cityMatch);
 			}else{
 
-				if(addrVal.getCityFromPostalcode(postcodeMatch) == null){
-					postcodeMatch = postcodeMatch+"?";
-				}
-				if(addrVal.getPostalcodeFromCity(cityMatch) == null){
-					cityMatch = cityMatch+"?";
-				}
 				if(addrVal.getCityFromPostalcode(postcodeMatch) != null && addrVal.getPostalcodeFromCity(cityMatch) != null){
 					finalBuildAddress.setPostcode(postcodeMatch);
 					finalBuildAddress.setCity(cityMatch);
@@ -113,15 +105,13 @@ public class AddressParser {
 			String postcodeMatch = allMatch.group("postcode").trim();
 			String cityMatch = null;
 			
-			System.out.println("PAT_POSTCODE Match: ["+allMatch.group()+"] Start Index: "+allMatch.start()+" End Index: "+allMatch.end());
+			//System.out.println("PAT_POSTCODE Match: ["+allMatch.group()+"] Start Index: "+allMatch.start()+" End Index: "+allMatch.end());
 
 				if(addrVal.getCityFromPostalcode(postcodeMatch) != null){
 					finalBuildAddress.setPostcode(postcodeMatch);
 					cityMatch = addrVal.getCityFromPostalcode(postcodeMatch);
 					finalBuildAddress.setCity(cityMatch);
 					
-				}else{
-					postcodeMatch = postcodeMatch+"?";
 				}
 			
 			buildAddress.setPostcode(postcodeMatch);
@@ -134,7 +124,7 @@ public class AddressParser {
 			Matcher allMatch = cityPat;
 			String cityMatch = allMatch.group("city").trim();
 			
-			System.out.println("PAT_CITY Match: ["+allMatch.group()+"] Start Index: "+allMatch.start()+" End Index: "+allMatch.end());
+			//System.out.println("PAT_CITY Match: ["+allMatch.group()+"] Start Index: "+allMatch.start()+" End Index: "+allMatch.end());
 			
 				if(addrVal.getPostalcodeFromCity(cityMatch) == null){
 					finalBuildAddress.setCity(cityMatch);
@@ -150,7 +140,7 @@ public class AddressParser {
 			Matcher allMatch = streetPat;
 			String streetMatch = allMatch.group("street").trim();
 			
-			System.out.println("PAT_STREET Match: ["+allMatch.group()+"] Start Index: "+allMatch.start()+" End Index: "+allMatch.end());
+			//System.out.println("PAT_STREET Match: ["+allMatch.group()+"] Start Index: "+allMatch.start()+" End Index: "+allMatch.end());
 
 			streetMatch = addrVal.insertDotAfterSingleChar(streetMatch);
 			
@@ -186,14 +176,13 @@ public class AddressParser {
 		return finalBuildAddress;
 	}
 	
-	public Address matchAdresses(Address addr){
-		
-		// Primary
+	public Address matchBuilder(Address addr){
 		if(addr.getPostcode() != null){
 			Postcode postcode = AddressController.getInstance().getPostcode(addr.getPostcode());
-			if(addr.getCity() != null){
+			if(addr.getCity() == null && postcode != null) addr.setCity(postcode.getCity());
+			if(addr.getCity() != null && postcode != null){
 				
-				if(addr.getStreet() != null && postcode != null){
+				if(addr.getStreet() != null){
 					Street street = postcode.get(addr.getStreet());
 					if(addr.getHousenumber() != null && street != null){
 						Housenumber housenumber = street.get(addr.getHousenumber());
@@ -204,11 +193,10 @@ public class AddressParser {
 				}
 			}
 		}
-		
-		return null;
+		return addr;
 	}
 	
 	public Address findMatch(String inputAddress){
-		return matchAdresses(parse(inputAddress));
+		return matchBuilder(parse(inputAddress));
 	}
 }

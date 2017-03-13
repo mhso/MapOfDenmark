@@ -72,9 +72,12 @@ public class AddressController implements OSMParserListener{
 	}
 	
 	private Set<String> streetSearch(String find){
+		AddressParser ap = new AddressParser();
+		Address addrBuild = ap.findMatch(find);
+		System.out.println(addrBuild.toString());
 		Set<String> set = streets.keySet()
                 .stream()
-                .filter(s -> s.startsWith(find))
+                .filter(s -> s.toLowerCase().startsWith(find.toLowerCase()))
                 .collect(Collectors.toSet());
 		return set;
 	}
@@ -109,6 +112,20 @@ public class AddressController implements OSMParserListener{
 		
 		// Adding to the address path
 		updateAddressPathMapping(addr);
+	}
+	
+	public Address createOsmAddress(Long nodeId, Double lat, Double lon){
+		if(nodeId != null && lat != null && lon != null){
+			Address addr;
+			if (addresses.containsKey(nodeId)) {
+				addr = addresses.get(nodeId);
+			} else {
+				addr = new Address(nodeId, lon, lon);
+			}
+			addresses.put(addr.getNodeId(), addr);
+			return addr;
+			}
+		return null;
 	}
 	
 	private void updateAddressPathMapping(Address addr){
@@ -157,11 +174,12 @@ public class AddressController implements OSMParserListener{
 				long nodeId = Long.parseLong(omsAddr.getAttributes().get("id"));
 				double lat = Double.parseDouble(omsAddr.getAttributes().get("lat"));
 				double lon = Double.parseDouble(omsAddr.getAttributes().get("lon"));
-				addOsmAddress(nodeId, lat, lon, null, null);
-				for(String k : omsAddr.attributes.keySet()){
-					String v = omsAddr.attributes.get(k);
-					addOsmAddress(nodeId, lat, lon, k, v);
-				}
+				Address addr = createOsmAddress(nodeId, lat, lon);
+				
+				AddressOsmParser aop = new AddressOsmParser(addr);
+				aop.parseKeyAddr(addr, omsAddr.attributes);				
+				// Adding to the address path
+				updateAddressPathMapping(addr);
 			}
 		}
 	}
@@ -169,7 +187,6 @@ public class AddressController implements OSMParserListener{
 	@Override
 	public void onParsingFinished() {
 		// TODO Auto-generated method stub
-		Main.log("Adresses found: "+addresses.size());
+		Main.log("AdresseController found: "+addresses.size()+" adresses");
 	}
-	
 }
