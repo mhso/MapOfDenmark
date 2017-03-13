@@ -7,7 +7,7 @@ import java.awt.*;
 
 public class Style {
 
-    private int topWidth, topHeight, margin, smallMargin;
+    private int topWidth, topHeight, margin, smallMargin, topPanelBorderWidth;
     private float alphaFloat, alphaRollover;
     private Color panelBG, inputFieldBG, panelTextColor, iconBorderColor, zoomButtonBG, dropDownBG;
     private JButton searchButton, menuButton,routeButton, zoomInButton, zoomOutButton;
@@ -20,6 +20,7 @@ public class Style {
         topHeight = 35;
         margin = 10;
         smallMargin = 10;
+        topPanelBorderWidth = 8;
 
         alphaFloat = 0.5f;
         alphaRollover = 0.8f;
@@ -50,6 +51,7 @@ public class Style {
     public int topHeight() { return topHeight; }
     public int margin() { return margin; }
     public int smallMargin() { return smallMargin; }
+    public int topPanelBorderWidth() { return topPanelBorderWidth; }
     public float alphaFloat() { return alphaFloat; }
 
     public Color panelBG() { return panelBG; }
