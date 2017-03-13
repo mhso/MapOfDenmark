@@ -81,7 +81,7 @@ public class DEMOAddressParser {
 
 		@Override
 		public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
-			AddressManager addressManager = AddressManager.getInstance();
+			AddressController addressManager = AddressController.getInstance();
 			switch(qName) {
 				case "node":
 					id = Long.parseLong(atts.getValue("id"));

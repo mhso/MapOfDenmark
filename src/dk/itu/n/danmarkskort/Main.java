@@ -2,7 +2,7 @@ package dk.itu.n.danmarkskort;
 
 import javax.swing.*;
 
-import dk.itu.n.danmarkskort.address.AddressManager;
+import dk.itu.n.danmarkskort.address.AddressController;
 import dk.itu.n.danmarkskort.backend.OSMParser;
 import dk.itu.n.danmarkskort.backend.ParserListenerTest;
 import dk.itu.n.danmarkskort.backend.TileController;
@@ -32,7 +32,7 @@ public class Main {
 		
 		// Add your listeners for the parser here, if you are going to use data. 
 		osmParser.addListener(new ParserListenerTest());
-		osmParser.addListener(AddressManager.getInstance());
+		osmParser.addListener(AddressController.getInstance());
 		
 		if(args.length == 1) osmParser.parseFile(args[0]);
 	}
