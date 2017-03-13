@@ -160,8 +160,6 @@ public class AddressParser {
 				if(addrVal.getPostalcodeFromCity(streetMatch) != null){
 					finalBuildAddress.setCity(streetMatch);
 					streetMatch = null;
-				} else {
-					streetMatch = streetMatch+"?";
 				}
 			}
 			
@@ -188,22 +186,29 @@ public class AddressParser {
 		return finalBuildAddress;
 	}
 	
-	public double compareAdresses(Address addr1, Address addr2){
-		int compareValue = 0;
+	public Address matchAdresses(Address addr){
 		
 		// Primary
-		if(addr1.getPostcode().equals(addr2.getPostcode())){ compareValue++; }
-		if(addr1.getCity().equals(addr2.getCity())){ compareValue++; }
-		if(addr1.getCountry().equals(addr2.getCountry())){ compareValue++; }
-		if(addr1.getStreet().equals(addr2.getStreet())){ compareValue++; }
+		if(addr.getPostcode() != null){
+			Postcode postcode = AddressManager.getInstance().getPostcode(addr.getPostcode());
+			if(addr.getCity() != null){
+				
+				if(addr.getStreet() != null && postcode != null){
+					Street street = postcode.get(addr.getStreet());
+					if(addr.getHousenumber() != null && street != null){
+						Housenumber housenumber = street.get(addr.getHousenumber());
+						if(housenumber != null){
+							return housenumber.get(addr.getHousenumber());
+						}
+					}
+				}
+			}
+		}
 		
-		// Secondary
-		if(addr1.getHousenumber().equals(addr2.getHousenumber())){ compareValue++; }
-		
-		// Third
-		if(addr1.getHousename().equals(addr2.getHousename())){ compareValue++; }
-		if(addr1.getFloor().equals(addr2.getFloor())){ compareValue++; }
-		
-		return 0;
+		return null;
+	}
+	
+	public Address findMatch(String inputAddress){
+		return matchAdresses(parse(inputAddress));
 	}
 }

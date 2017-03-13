@@ -1,7 +1,6 @@
 package dk.itu.n.danmarkskort.address;
 
-import java.util.ArrayList;
+import java.util.TreeMap;
 
-public class Housenumber extends ArrayList<Address>{
-
+public class Housenumber extends TreeMap<String, Address>{
 }
