@@ -109,7 +109,7 @@ public class DEMOAddressMain extends JFrame {
 	
 	private void btnParseAddressaction(String inputText){
 		DEMOAddressParser dEMOAddressParser = new DEMOAddressParser("resources/map.osm");
-		AddressManager addressManager = AddressManager.getInstance();
+		AddressController addressManager = AddressController.getInstance();
 		
 		AddressParser addressParser = new AddressParser();
 		Address address = addressParser.findMatch(inputText);
@@ -127,7 +127,7 @@ public class DEMOAddressMain extends JFrame {
 		testPrint(addressManager);
 	}
 	
-	private void testPrint(AddressManager addressManager){
+	private void testPrint(AddressController addressManager){
 		System.out.println("-- Addresses mapped: "+addressManager.getAddresses().size()+" --");
 		System.out.println("-- Postcodes mapped: "+addressManager.getPostcodes().size()+" --");
 		//for(String pc : addressManager.getPostcodes().keySet()){ System.out.println(pc); }

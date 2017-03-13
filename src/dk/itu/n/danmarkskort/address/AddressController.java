@@ -13,25 +13,25 @@ import dk.itu.n.danmarkskort.backend.OSMParserListener;
 import dk.itu.n.danmarkskort.models.ParsedAddress;
 import dk.itu.n.danmarkskort.models.ParsedObject;
 
-public class AddressManager implements OSMParserListener{
+public class AddressController implements OSMParserListener{
 	private Map<Long, Address> addresses;
 	private Map<String, Postcode> postcodes;
 	private Map<String, Postcode> streets;
-	private static AddressManager instance;
+	private static AddressController instance;
 	private final static Lock lock = new ReentrantLock();
 	
-	private AddressManager(){
+	private AddressController(){
 		addresses =  new TreeMap<Long, Address>();
 		postcodes = new TreeMap<String, Postcode>();
 		streets = new TreeMap<String, Postcode>();
 	}
 	
-	public static AddressManager getInstance(){
+	public static AddressController getInstance(){
         if (instance == null) {
             lock.lock();
             try {
                 if (instance == null) {
-                	AddressManager tmpInstance = new AddressManager();
+                	AddressController tmpInstance = new AddressController();
                     instance = tmpInstance;
                 }
             }
