@@ -7,5 +7,9 @@ public class Tile {
 	public Tile() {
 		
 	}
+
+	public Coordinate getCoord() {
+		return coord;
+	}
 	
 }
