@@ -68,16 +68,23 @@ public class AddressController implements OSMParserListener{
 	}
 	
 	public Set<String> getAddrSearchResults(String find){
-		return getCityPostcodeFromStreet(streetSearch(find));
+		return streetSearch(find);
 	}
 	
 	private Set<String> streetSearch(String find){
 		AddressParser ap = new AddressParser();
 		Address addrBuild = ap.findMatch(find);
 		System.out.println(addrBuild.toString());
+		/*
 		Set<String> set = streets.keySet()
                 .stream()
                 .filter(s -> s.toLowerCase().startsWith(find.toLowerCase()))
+                .collect(Collectors.toSet());
+		*/
+		Set<String> set = addresses.values()
+                .stream()
+                .filter(s -> s.toStringDKAddr().toLowerCase().startsWith(find.toLowerCase()))
+                .map(Address::toStringDKAddr)
                 .collect(Collectors.toSet());
 		return set;
 	}

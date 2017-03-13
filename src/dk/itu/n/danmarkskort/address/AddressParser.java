@@ -177,23 +177,23 @@ public class AddressParser {
 	}
 	
 	public Address matchBuilder(Address addr){
-		if(addr.getPostcode() != null){
-			Postcode postcode = AddressController.getInstance().getPostcode(addr.getPostcode());
-			if(addr.getCity() == null && postcode != null) addr.setCity(postcode.getCity());
-			if(addr.getCity() != null && postcode != null){
-				
-				if(addr.getStreet() != null){
-					Street street = postcode.get(addr.getStreet());
-					if(addr.getHousenumber() != null && street != null){
-						Housenumber housenumber = street.get(addr.getHousenumber());
-						if(housenumber != null){
-							return housenumber.get(addr.getHousenumber());
-						}
-					}
-				}
-			}
+		if(addr != null){
+			if(preciseMatch(addr) != null) return preciseMatch(addr);
+			return addr;
 		}
-		return addr;
+		return null;
+	}
+	
+	public Address preciseMatch(Address addr){
+		Address result = AddressController.getInstance().getAddresses().values().stream()
+				.filter(x ->
+							addr.getStreet().equalsIgnoreCase(x.getStreet())
+							&& addr.getHousenumber().equalsIgnoreCase(x.getHousenumber())
+							&& addr.getPostcode().equalsIgnoreCase(x.getPostcode())
+							&& addr.getCity().equalsIgnoreCase(x.getCity())
+				).findFirst()
+				.orElse(null);
+		return result;
 	}
 	
 	public Address findMatch(String inputAddress){
