@@ -9,6 +9,11 @@
       <artifactId>rtree</artifactId>
       <version>0.8-RC10</version>
     </dependency>
+      <dependency>
+          <groupId>junit</groupId>
+          <artifactId>junit</artifactId>
+          <version>RELEASE</version>
+      </dependency>
   </dependencies>
   
   <build>
@@ -18,8 +23,8 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.5.1</version>
         <configuration>
-          <source/>
-          <target/>
+          <source>1.8</source>
+          <target>1.8</target>
         </configuration>
       </plugin>
     </plugins>

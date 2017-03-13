@@ -1,11 +1,14 @@
 package dk.itu.n.danmarkskort.GUI;
 
+import dk.itu.n.danmarkskort.address.AddressController;
+
 import javax.swing.*;
 import javax.swing.text.AbstractDocument;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DocumentFilter;
 import java.awt.*;
+import java.util.Set;
 
 public class TopPanel extends JPanel {
 
@@ -92,18 +95,39 @@ public class TopPanel extends JPanel {
 
         // adding drop down functionality
         ((AbstractDocument) input.getDocument()).setDocumentFilter(new TopPanel.SearchFilter());
-        input.addActionListener(e -> das.showDropdown(input));
-
+        //input.addActionListener(e -> das.showDropdown(input));
         // dummy values for the dropdown
-        das.addElement("Result1");
+ /*       das.addElement("Result1");
         das.addElement("Result2");
-        das.addElement("Long Result123");
+        das.addElement("Long Result123");*/
     }
 
-    public int getInputFieldWidth() { return searchInputWrapper.getPreferredSize().width; }
-    public int getMenuWidth() { return menu.getPreferredSize().width + style.topPanelBorderWidth() + 6; } // 6 is from insets
-    public Dimension getTopPanelDimension() { return topParent.getPreferredSize(); }
-    public JTextField getInputField() { return input; }
+    public void populateList(Set<String> items) {
+        das.hideDropdown();
+        das.clearElements();
+        int i = 0;
+        for(String st : items){
+            das.addElement(st);
+            if(++i > 10) break;
+        }
+        das.showDropdown(input);
+    }
+
+    public int getInputFieldWidth() {
+        return searchInputWrapper.getPreferredSize().width;
+    }
+
+    public int getMenuWidth() {
+        return menu.getPreferredSize().width + style.topPanelBorderWidth() + 6;
+    } // 6 is from insets
+
+    public Dimension getTopPanelDimension() {
+        return topParent.getPreferredSize();
+    }
+
+    public JTextField getInputField() {
+        return input;
+    }
 
     // used to listen to what
     private class SearchFilter extends DocumentFilter {
@@ -113,7 +137,10 @@ public class TopPanel extends JPanel {
 
             super.replace(fb, offset, length, newText, attr);
 
-            if(offset > 2) das.showDropdown(input);
+            if(offset > 2) populateList(AddressController.getInstance().getAddrSearchResults(input.getText()));
+
+            revalidate();
+            repaint();
         }
     }
 }
