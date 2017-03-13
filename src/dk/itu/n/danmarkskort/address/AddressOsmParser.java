@@ -1,9 +1,9 @@
 package dk.itu.n.danmarkskort.address;
 
-public class OsmAddressParser {
+public class AddressOsmParser {
 	private Address buildAddress;
 	
-	public OsmAddressParser(Address buildAddress){
+	public AddressOsmParser(Address buildAddress){
 		this.buildAddress = buildAddress;
 	}
 	

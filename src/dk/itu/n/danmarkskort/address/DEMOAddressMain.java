@@ -110,41 +110,18 @@ public class DEMOAddressMain extends JFrame {
 	private void btnParseAddressaction(String inputText){
 		DEMOAddressParser dEMOAddressParser = new DEMOAddressParser("resources/map.osm");
 		AddressManager addressManager = AddressManager.getInstance();
-		/*
-		addressManager.addOsmAddress(4616395489l, 55.6715887, 12.5832270, "addr:housenumber", "1");
-		addressManager.addOsmAddress(4616395489l, 55.6715887, 12.5832270, "addr:postcode", "1411");
-		addressManager.addOsmAddress(4616395489l, 55.6715887, 12.5832270, "addr:street", "Langebrogade");
-		
-		addressManager.addOsmAddress(340527455, 55.6702390, 12.5810040, "addr:city", "København K");
-		addressManager.addOsmAddress(340527455, 55.6702390, 12.5810040, "addr:country", "DK");
-		addressManager.addOsmAddress(340527455, 55.6702390, 12.5810040, "addr:housenumber", "2");
-		addressManager.addOsmAddress(340527455, 55.6702390, 12.5810040, "addr:postcode", "1411");
-		addressManager.addOsmAddress(340527455, 55.6702390, 12.5810040, "addr:street", "Langebrogade");
-		
-		addressManager.addOsmAddress(340486650, 55.6708970, 12.5859510, "addr:country", "DK");
-		addressManager.addOsmAddress(340486650, 55.6708970, 12.5859510, "addr:housenumber", "15");
-		addressManager.addOsmAddress(340486650, 55.6708970, 12.5859510, "addr:postcode", "1411");
-		addressManager.addOsmAddress(340486650, 55.6708970, 12.5859510, "addr:city", "København K");
-		addressManager.addOsmAddress(340486650, 55.6708970, 12.5859510, "addr:street", "Applebys Plads");
-		
-		addressManager.addOsmAddress(296957928, 55.6651852, 12.5812276, "addr:city", "København S");
-		addressManager.addOsmAddress(296957928, 55.6651852, 12.5812276, "addr:housenumber", "2-4");
-		addressManager.addOsmAddress(296957928, 55.6651852, 12.5812276, "addr:postcode", "2300");
-		addressManager.addOsmAddress(296957928, 55.6651852, 12.5812276, "addr:street", "Leifsgade");
-		
-		
-		Address osmAddr = addressManager.getAddressFromNodeId(4616395489l);
-		*/
 		
 		AddressParser addressParser = new AddressParser();
-		Address address = addressParser.parse(inputText);
+		Address address = addressParser.findMatch(inputText);
+		if(address != null) {
+			System.out.println("ADDRESS MATCH FOUND:\n"+address.toStringDKAddr()+"\n");
+		} else {
+			System.out.println("NO ADDRESS MATCH FOUND :( ");
+		}
 		Map<Long, Address> adresses = addressManager.getAddresses();
 		String result = "Read Input: "+inputText+"\n";
 		if(address != null)	result += "Parsed Results:\n"+address.toString()+"\n";
 		result += "Adresses found: "+adresses.size()+"\n";
-		
-		//for(Address addr : adresses.values()){ result += addr.toString()+"\n"; }
-		
 		textArea.setText(result);
 		
 		testPrint(addressManager);
@@ -161,12 +138,10 @@ public class DEMOAddressMain extends JFrame {
 		for(String s : addressManager.getStreets().keySet()){ System.out.println(s); }
 		*/
 		
-		Set<String> findStreets = addressManager.streetSearch("An");
-		System.out.println("-- Street search: "+findStreets.size()+" --");
-		for(String s : findStreets){
-			Postcode postcode = addressManager.getPostcodeFromStreet(s);
-			System.out.println("Street: "+s);
-			System.out.println("....Postcode: "+postcode.getPostcode()+ " City: "+postcode.getCity());
+		System.out.println("-- Street search: --");
+		// Print results based on search input
+		for(String f : addressManager.getAddrSearchResults("Ann")){
+			System.out.println(f);
 		}
 	}
 }

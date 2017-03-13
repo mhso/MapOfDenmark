@@ -32,8 +32,10 @@ public class Address{
 	
 	public long getNodeId() { return nodeId; }
 	public void setNodeId(long nodeId2) { this.nodeId = nodeId2; }
+	
 	public double getLat() { return lat; }
 	public void setLat(double lat) { this.lat = lat; }
+	
 	public double getLon() { return lon; }
 	public void setLon(double lon) { this.lon = lon; }
 
@@ -60,6 +62,10 @@ public class Address{
 
  	public String getCountry() { return country; }
  	public void setCountry(String country) { this.country = country; }
+ 	
+ 	public String toStringDKAddr(){
+ 		return street+" "+housenumber+ ", "+postcode+" "+city;
+ 	}
 
 	@Override
 	public String toString() {
