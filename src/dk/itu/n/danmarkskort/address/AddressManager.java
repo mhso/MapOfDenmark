@@ -8,7 +8,12 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
-public class AddressManager {
+import dk.itu.n.danmarkskort.Main;
+import dk.itu.n.danmarkskort.backend.OSMParserListener;
+import dk.itu.n.danmarkskort.models.ParsedAddress;
+import dk.itu.n.danmarkskort.models.ParsedObject;
+
+public class AddressManager implements OSMParserListener{
 	private Map<Long, Address> addresses;
 	private Map<String, Postcode> postcodes;
 	private Map<String, Postcode> streets;
@@ -135,6 +140,36 @@ public class AddressManager {
 				}
 			}
 		}
+	}
+
+	@Override
+	public void onParsingStarted() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onParsingGotObject(ParsedObject parsedObject) {
+		if(parsedObject instanceof ParsedAddress) {
+			ParsedAddress omsAddr = (ParsedAddress) parsedObject;
+			//Main.log(omsAddr.getAttributes().get("id"));
+			if(omsAddr.getAttributes().get("id") != null) {
+				long nodeId = Long.parseLong(omsAddr.getAttributes().get("id"));
+				double lat = Double.parseDouble(omsAddr.getAttributes().get("lat"));
+				double lon = Double.parseDouble(omsAddr.getAttributes().get("lon"));
+				addOsmAddress(nodeId, lat, lon, null, null);
+				for(String k : omsAddr.attributes.keySet()){
+					String v = omsAddr.attributes.get(k);
+					addOsmAddress(nodeId, lat, lon, k, v);
+				}
+			}
+		}
+	}
+
+	@Override
+	public void onParsingFinished() {
+		// TODO Auto-generated method stub
+		Main.log("Adresses found: "+addresses.size());
 	}
 	
 }

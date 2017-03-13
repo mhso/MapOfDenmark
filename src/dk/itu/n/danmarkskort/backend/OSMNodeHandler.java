@@ -33,10 +33,12 @@ public class OSMNodeHandler implements ContentHandler {
 	public void startDocument() throws SAXException {
 		createOSMDirectory();
 		Main.log("Parsing started.");
+		for(OSMParserListener listener : parser.parserListeners) listener.onParsingStarted();
 	}
 
 	public void endDocument() throws SAXException {
 		Main.log("Parsing finished with " + parsedObjects.size() + " objects.");
+		for(OSMParserListener listener : parser.parserListeners) listener.onParsingFinished();
 	}
 
 	public void startPrefixMapping(String prefix, String uri) throws SAXException {}
