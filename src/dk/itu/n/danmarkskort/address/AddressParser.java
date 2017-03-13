@@ -190,7 +190,7 @@ public class AddressParser {
 		
 		// Primary
 		if(addr.getPostcode() != null){
-			Postcode postcode = AddressManager.getInstance().getPostcode(addr.getPostcode());
+			Postcode postcode = AddressController.getInstance().getPostcode(addr.getPostcode());
 			if(addr.getCity() != null){
 				
 				if(addr.getStreet() != null && postcode != null){
