@@ -26,6 +26,16 @@ public class GraphicSpecification {
 	}
 	
 	/**
+	 * Get a single layer from an index.
+	 * 
+	 * @param index The index of the layer.
+	 * @return A GraphicLayer object indicating how the specified layer should be drawn.
+	 */
+	public GraphicLayer getLayer(int index) {
+		return layers.get(index);
+	}
+	
+	/**
 	 * Iterate over the layers in this GraphicSpecification.
 	 * 
 	 * @return An iterator over the graphical layers.
