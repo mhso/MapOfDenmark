@@ -20,7 +20,13 @@ import org.xml.sax.SAXException;
 public class GraphicRepresentation {
 	private static Map<Object, GraphicSpecification> graphicsMap = new HashMap<>();
 	
-	public GraphicSpecification getGraphics(Object mapElement) {
+	/**
+	 * Get the Graphic Specification matching the inputed Map Element.
+	 * 
+	 * @param mapElement The Map Element (a WayType or Node f.x.) to get the graphics for.
+	 * @return A Graphic Specification object representing how a Map Element should be drawn.
+	 */
+	public static GraphicSpecification getGraphics(Object mapElement) {
 		return graphicsMap.get(mapElement);
 	}
 	
@@ -33,6 +39,15 @@ public class GraphicRepresentation {
 		for(GraphicSpecification gs : graphicsMap.values()) {
 			System.out.println(gs);
 		}
+	}
+	
+	/**
+	 * Get the size of the Graphic Representation Map contained in this GraphicRepresentation class.
+	 * 
+	 * @return The Graphic Representation Map contained in this GraphicRepresentation class.
+	 */
+	public static int size() {
+		return graphicsMap.size();
 	}
 	
 	/**

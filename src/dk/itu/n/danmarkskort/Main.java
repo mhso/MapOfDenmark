@@ -1,7 +1,10 @@
 package dk.itu.n.danmarkskort;
 
 import javax.swing.*;
+
+import dk.itu.n.danmarkskort.address.AddressManager;
 import dk.itu.n.danmarkskort.backend.OSMParser;
+import dk.itu.n.danmarkskort.backend.ParserListenerTest;
 import dk.itu.n.danmarkskort.backend.TileController;
 
 public class Main {
@@ -14,17 +17,26 @@ public class Main {
 	public static TileController tileController;
 
 	public static void main(String[] args) {
-                startup(args);
-                main();
-                shutdown();
+        startup(args);
+        main();
+        shutdown();
 	}
 
 	public static void startup(String[] args) {
-		if(args.length == 1) osmParser = new OSMParser(args[0]);
-		else osmParser = new OSMParser();
+		prepareParser(args);
 		tileController = new TileController();
 	}
 
+	public static void prepareParser(String[] args) {
+		osmParser = new OSMParser();
+		
+		// Add your listeners for the parser here, if you are going to use data. 
+		osmParser.addListener(new ParserListenerTest());
+		osmParser.addListener(AddressManager.getInstance());
+		
+		if(args.length == 1) osmParser.parseFile(args[0]);
+	}
+	
 	public static void main() {
 		makeFrame();
 	}

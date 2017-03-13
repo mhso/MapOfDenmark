@@ -3,11 +3,17 @@ package dk.itu.n.danmarkskort.address;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
-public class AddressManager {
+import dk.itu.n.danmarkskort.Main;
+import dk.itu.n.danmarkskort.backend.OSMParserListener;
+import dk.itu.n.danmarkskort.models.ParsedAddress;
+import dk.itu.n.danmarkskort.models.ParsedObject;
+
+public class AddressManager implements OSMParserListener{
 	private Map<Long, Address> addresses;
 	private Map<String, Postcode> postcodes;
 	private Map<String, Postcode> streets;
@@ -61,11 +67,28 @@ public class AddressManager {
 		return streets.get(street);
 	}
 	
-	public Set<String> streetSearch(String find){
+	public Set<String> getAddrSearchResults(String find){
+		return getCityPostcodeFromStreet(streetSearch(find));
+	}
+	
+	private Set<String> streetSearch(String find){
 		Set<String> set = streets.keySet()
                 .stream()
                 .filter(s -> s.startsWith(find))
                 .collect(Collectors.toSet());
+		return set;
+	}
+	
+	private Set<String> getCityPostcodeFromStreet(Set<String> input){
+		Set<String> set = new TreeSet<String>();
+		for(String street : input){
+			Postcode postcode = getPostcodeFromStreet(street);
+			Street streetb = postcode.get(street);
+			
+			for (String housenumber : streetb.keySet()) {
+				set.add(street+" "+housenumber+", "+postcode.getPostcode()+" "+postcode.getCity());
+			}
+		}
 		return set;
 	}
 	
@@ -80,7 +103,7 @@ public class AddressManager {
 		} else {
 			addr = new Address(nodeId, lon, lon);
 		}
-		OsmAddressParser oap = new OsmAddressParser(addr);
+		AddressOsmParser oap = new AddressOsmParser(addr);
 		addr = oap.parseKeyAddr(addr, nodeId, lat, lon, k, v);
 		if(addr != null) addresses.put(addr.getNodeId(), addr);
 		
@@ -112,11 +135,41 @@ public class AddressManager {
 						street.put(addr.getHousenumber(), housenumber);
 						
 						// Adding address to the housenumber list
-						if(!housenumber.contains(addr)) housenumber.add(addr);
+						housenumber.put(addr.getHousenumber(), addr);
 					}
 				}
 			}
 		}
+	}
+
+	@Override
+	public void onParsingStarted() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onParsingGotObject(ParsedObject parsedObject) {
+		if(parsedObject instanceof ParsedAddress) {
+			ParsedAddress omsAddr = (ParsedAddress) parsedObject;
+			//Main.log(omsAddr.getAttributes().get("id"));
+			if(omsAddr.getAttributes().get("id") != null) {
+				long nodeId = Long.parseLong(omsAddr.getAttributes().get("id"));
+				double lat = Double.parseDouble(omsAddr.getAttributes().get("lat"));
+				double lon = Double.parseDouble(omsAddr.getAttributes().get("lon"));
+				addOsmAddress(nodeId, lat, lon, null, null);
+				for(String k : omsAddr.attributes.keySet()){
+					String v = omsAddr.attributes.get(k);
+					addOsmAddress(nodeId, lat, lon, k, v);
+				}
+			}
+		}
+	}
+
+	@Override
+	public void onParsingFinished() {
+		// TODO Auto-generated method stub
+		Main.log("Adresses found: "+addresses.size());
 	}
 	
 }

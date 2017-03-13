@@ -4,12 +4,12 @@ import java.io.File;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
 
 import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.Util;
@@ -18,15 +18,14 @@ import dk.itu.n.danmarkskort.models.*;
 // This class is used as content handler when reading XML (or OSM) in OSMParser.
 public class OSMNodeHandler implements ContentHandler {
 
-	private XMLReader xmlReader;
+	private OSMParser parser;
 	private String fileName;
-	private ArrayList<String> keyList = new ArrayList<String>();
-	private ParsedObject currentParsedObject = null;
-	private ArrayList<ParsedObject> parsedObjects = new ArrayList<ParsedObject>();		
+	private List<ParsedObject> currentParsedObjects = new ArrayList<ParsedObject>();
+	private List<ParsedObject> parsedObjects = new ArrayList<ParsedObject>();		
 	
-	public OSMNodeHandler(XMLReader xmlReader, String fileName) {
-		this.xmlReader = xmlReader;
+	public OSMNodeHandler(OSMParser parser, String fileName) {
 		this.fileName = fileName;
+		this.parser = parser;
 	}
 	
 	public void setDocumentLocator(Locator locator) {}
@@ -34,10 +33,12 @@ public class OSMNodeHandler implements ContentHandler {
 	public void startDocument() throws SAXException {
 		createOSMDirectory();
 		Main.log("Parsing started.");
+		for(OSMParserListener listener : parser.parserListeners) listener.onParsingStarted();
 	}
 
 	public void endDocument() throws SAXException {
 		Main.log("Parsing finished with " + parsedObjects.size() + " objects.");
+		for(OSMParserListener listener : parser.parserListeners) listener.onParsingFinished();
 	}
 
 	public void startPrefixMapping(String prefix, String uri) throws SAXException {}
@@ -49,19 +50,19 @@ public class OSMNodeHandler implements ContentHandler {
 		switch(qName) {
 		
 		case "osm":
-			addParsedObject(new ParsedOSM(), atts);
+			addParsedObject(new ParsedOSM(), atts, qName);
 			break;
 		case "note":
-			addParsedObject(new ParsedNote(), atts);
+			addParsedObject(new ParsedNote(), atts, qName);
 			break;
 		case "meta":
-			addParsedObject(new ParsedMeta(), atts);
+			addParsedObject(new ParsedMeta(), atts, qName);
 			break;
 		case "bounds":
-			addParsedObject(new ParsedBounds(), atts);
+			addParsedObject(new ParsedBounds(), atts, qName);
 			break;
 		case "node":
-			addParsedObject(new ParsedNode(), atts);
+			addParsedObject(new ParsedNode(), atts, qName);
 			break;
 		case "tag":
 			addTagToParsedObject(atts);
@@ -78,29 +79,50 @@ public class OSMNodeHandler implements ContentHandler {
 		}
 	}
 
-	public void addParsedObject(ParsedObject parsedObject, Attributes atts) {
+	public void addParsedObject(ParsedObject parsedObject, Attributes atts, String qName) {
 		parsedObject.addAttributes(atts);
-		currentParsedObject = parsedObject;
+		parsedObject.setQName(qName);
+		currentParsedObjects.add(parsedObject);
 		parsedObjects.add(parsedObject);
 	}
 	
 	public void addTagToParsedObject(Attributes atts) {
 		String key = atts.getValue("k");
+		ParsedObject lastParsedObject = getLastParsedObject();
+		
+		if(key.contains("addr:")) {
+			currentParsedObjects.remove(lastParsedObject);
+			lastParsedObject = new ParsedAddress(lastParsedObject);
+			currentParsedObjects.add(lastParsedObject);
+		}
+		
 		String value = atts.getValue("v");
 		if(key != null && value != null) {
-			currentParsedObject.addAttribute(key, value);
+			 lastParsedObject.addAttribute(key, value);
 		}
 	}
 	
-	public void endElement(String uri, String localName, String qName) throws SAXException {}
-
-	public void characters(char[] ch, int start, int length) throws SAXException {
-		if(currentParsedObject != null) {
-			String text = new String(ch, start, length);
-			if(text.trim().length() > 0) currentParsedObject.addAttribute("text", text);
+	public void endElement(String uri, String localName, String qName) throws SAXException {
+		ParsedObject lastParsedObject = getLastParsedObject();
+		if(qName.equals(lastParsedObject.getQName())) {
+			for(OSMParserListener listener : parser.parserListeners) listener.onParsingGotObject(lastParsedObject);
+			lastParsedObject.parseAttributes();
+			currentParsedObjects.remove(lastParsedObject);
 		}
 	}
 
+	public void characters(char[] ch, int start, int length) throws SAXException {
+		if(getLastParsedObject() != null) {
+			String text = new String(ch, start, length);
+			if(text.trim().length() > 0) getLastParsedObject().addAttribute("innerText", text);
+		}
+	}
+
+	private ParsedObject getLastParsedObject() {
+		if(currentParsedObjects.size() == 0) return null;
+		return currentParsedObjects.get(currentParsedObjects.size()-1);
+	}
+	
 	public void ignorableWhitespace(char[] ch, int start, int length) throws SAXException {}
 
 	public void processingInstruction(String target, String data) throws SAXException {}
