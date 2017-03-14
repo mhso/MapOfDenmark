@@ -25,7 +25,7 @@ public class TopPanel extends JPanel {
         setOpaque(false);
 
         topParent = new JPanel(new BorderLayout());
-        topParent.setBorder(BorderFactory.createLineBorder(style.panelBG(), style.topPanelBorderWidth(), true));
+        topParent.setBorder(BorderFactory.createLineBorder(style.panelBG(), style.topPanelBorderWidth(), false));
         topParent.setOpaque(false);
 
         JPanel top = new JPanel(new GridBagLayout());
@@ -36,16 +36,10 @@ public class TopPanel extends JPanel {
         gbc.weighty = 1;
 
         menu = style.menuButton();
-        menu.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, style.iconBorderColor()));
-        menu.setBackground(style.panelBG());
-        menu.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        menu.setToolTipText("Menu");
-        menu.setRolloverIcon(style.menuHoverIcon());
-
         gbc.fill = GridBagConstraints.HORIZONTAL;
         top.add(menu, gbc);
 
-        input = new JTextField(26);
+        input = new JTextField(30);
         input.setBorder(BorderFactory.createEmptyBorder(style.smallMargin(), style.smallMargin(), style.smallMargin(), style.smallMargin()));
         input.setFont(new Font("sans serif", Font.PLAIN, 14));
         input.setForeground(style.panelTextColor());
@@ -53,12 +47,6 @@ public class TopPanel extends JPanel {
         input.setCaretColor(style.panelTextColor());
 
         JButton search = style.searchButton();
-        search.setBorder(null);
-        search.setOpaque(false);
-        search.setContentAreaFilled(false);
-        search.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        search.setToolTipText("Search");
-        search.setRolloverIcon(style.searchHoverIcon());
 
         searchInputWrapper = new JPanel(new GridBagLayout());
         searchInputWrapper.setBackground(style.inputFieldBG());
@@ -73,11 +61,7 @@ public class TopPanel extends JPanel {
         top.add(searchInputWrapper, gbc);
 
         JButton route = style.routeButton();
-        route.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, style.iconBorderColor()));
-        route.setBackground(style.panelBG());
-        route.setToolTipText("Find route");
-        route.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        route.setRolloverIcon(style.routeHoverIcon());
+
         gbc.insets = new Insets(0, 3, 0, 3);
         gbc.gridx = 2;
         top.add(route, gbc);
@@ -95,11 +79,6 @@ public class TopPanel extends JPanel {
 
         // adding drop down functionality
         ((AbstractDocument) input.getDocument()).setDocumentFilter(new TopPanel.SearchFilter());
-        //input.addActionListener(e -> das.showDropdown(input));
-        // dummy values for the dropdown
- /*       das.addElement("Result1");
-        das.addElement("Result2");
-        das.addElement("Long Result123");*/
     }
 
     public void populateList(Set<String> items) {
@@ -118,7 +97,7 @@ public class TopPanel extends JPanel {
     }
 
     public int getMenuWidth() {
-        return menu.getPreferredSize().width + style.topPanelBorderWidth() + 6;
+        return menu.getPreferredSize().width + style.topPanelBorderWidth() + 12;
     } // 6 is from insets
 
     public Dimension getTopPanelDimension() {
@@ -129,7 +108,6 @@ public class TopPanel extends JPanel {
         return input;
     }
 
-    // used to listen to what
     private class SearchFilter extends DocumentFilter {
         @Override
         public void replace(FilterBypass fb, int offset, int length, String newText,
