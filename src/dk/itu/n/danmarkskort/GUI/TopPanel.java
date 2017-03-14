@@ -13,7 +13,7 @@ import java.util.Set;
 public class TopPanel extends JPanel {
 
     private Style style;
-    private DropdownAddressSearch das;
+    private DropdownAddressSearch dropSuggestions;
     private DropdownMenu dropMenu;
     private JTextField input;
     private JPanel searchInputWrapper, topParent;
@@ -44,6 +44,7 @@ public class TopPanel extends JPanel {
         input.setFont(new Font("sans serif", Font.PLAIN, 14));
         input.setForeground(style.panelTextColor());
         input.setOpaque(false);
+        input.setBackground(new Color(0,0,0,0));
         input.setCaretColor(style.panelTextColor());
 
         JButton search = style.searchButton();
@@ -70,26 +71,29 @@ public class TopPanel extends JPanel {
         add(topParent);
 
 
-        das = new DropdownAddressSearch(this);
+        dropSuggestions = new DropdownAddressSearch(this);
         dropMenu = new DropdownMenu(this, style);
 
-        menu.addActionListener(e -> {
+        menu.addActionListener(e -> dropMenu.showDropdown(menu));
+        route.addActionListener(e -> {
+            dropMenu.addToContentPane(new JPanel());
             dropMenu.showDropdown(menu);
         });
+
 
         // adding drop down functionality
         ((AbstractDocument) input.getDocument()).setDocumentFilter(new TopPanel.SearchFilter());
     }
 
     public void populateList(Set<String> items) {
-        das.hideDropdown();
-        das.clearElements();
+        dropSuggestions.hideDropdown();
+        dropSuggestions.clearElements();
         int i = 0;
         for(String st : items){
-            das.addElement(st);
+            dropSuggestions.addElement(st);
             if(++i > 10) break;
         }
-        das.showDropdown(input);
+        dropSuggestions.showDropdown(input);
     }
 
     public int getInputFieldWidth() {
