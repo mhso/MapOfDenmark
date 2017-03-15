@@ -22,7 +22,6 @@ public class OSMNodeHandler implements ContentHandler {
 	private String fileName;
 	private int lineCount;
 	private List<ParsedObject> currentParsedObjects = new ArrayList<ParsedObject>();
-	private List<ParsedObject> parsedObjects = new ArrayList<ParsedObject>();		
 	
 	public OSMNodeHandler(OSMParser parser, String fileName) {
 		this.fileName = fileName;
@@ -38,7 +37,7 @@ public class OSMNodeHandler implements ContentHandler {
 	}
 
 	public void endDocument() throws SAXException {
-		Main.log("Parsing finished with " + parsedObjects.size() + " objects.");
+		Main.log("Parsing finished.");
 		for(OSMParserListener listener : parser.parserListeners) listener.onParsingFinished();
 	}
 
@@ -86,7 +85,6 @@ public class OSMNodeHandler implements ContentHandler {
 		parsedObject.addAttributes(atts);
 		parsedObject.setQName(qName);
 		currentParsedObjects.add(parsedObject);
-		parsedObjects.add(parsedObject);
 	}
 	
 	public void addTagToParsedObject(Attributes atts) {
