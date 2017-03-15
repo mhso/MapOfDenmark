@@ -1,5 +1,6 @@
 package dk.itu.n.danmarkskort;
 
+import java.awt.Container;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileReader;
@@ -8,6 +9,9 @@ import java.io.LineNumberReader;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Map;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 public class Util {
 
@@ -21,6 +25,10 @@ public class Util {
 	
 	public static String getCurrentDirectoryPath() {
 		return System.getProperty("user.dir");
+	}
+	
+	public static String getCurrentOSMFolderPath() {
+		return Util.getCurrentDirectoryPath() + "/parsedOSMFiles/" + Main.osmParser.getChecksum();
 	}
 	
 	public static String getFileChecksum(MessageDigest digest, File file) throws IOException {
