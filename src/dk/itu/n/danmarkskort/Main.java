@@ -5,13 +5,12 @@ import javax.swing.*;
 import dk.itu.n.danmarkskort.GUI.WindowParsingLoadscreen;
 import dk.itu.n.danmarkskort.address.AddressController;
 import dk.itu.n.danmarkskort.backend.OSMParser;
-import dk.itu.n.danmarkskort.backend.ParserListenerTest;
 import dk.itu.n.danmarkskort.backend.TileController;
 
 public class Main {
 
 	public final static String APP_NAME = "Map";
-	public final static String APP_VERSION = "0.1";
+	public final static String APP_VERSION = "0.2";
 	public final static boolean debug = true;
 	public final static boolean production = false;
 	public static OSMParser osmParser;
@@ -24,17 +23,16 @@ public class Main {
 	}
 
 	public static void startup(String[] args) {
-		prepareParser(args);
+		osmParser = new OSMParser();
 		tileController = new TileController();
+		prepareParser(args);
 	}
 
 	public static void prepareParser(String[] args) {
 		WindowParsingLoadscreen loadScreen = new WindowParsingLoadscreen();
 		LoadScreenThread r = new LoadScreenThread(loadScreen);
-		osmParser = new OSMParser();
 		
 		// Add your listeners for the parser here, if you are going to use data. 
-		osmParser.addListener(new ParserListenerTest());
 		osmParser.addListener(AddressController.getInstance());
 		osmParser.addListener(loadScreen);
 		

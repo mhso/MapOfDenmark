@@ -15,7 +15,7 @@ public class CustomButton extends JButton {
         ImageIcon icon = new ImageIcon(filename);
         setIcon(new AlphaImageIcon(icon, alpha));
         setRolloverIcon(new AlphaImageIcon(icon, alphaHover));
-        setBorder(null);
+        setBorder(BorderFactory.createEmptyBorder());
         if(bg == null) {
             setOpaque(false);
             setContentAreaFilled(false);
