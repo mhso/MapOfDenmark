@@ -33,8 +33,8 @@ public class AddressParser {
 			
 			//System.out.println("PAT_SIDE Match: ["+allMatch.group()+"] Start Index: "+allMatch.start()+" End Index: "+allMatch.end());
 
-			finalBuildAddress.setDoorSide(doorSideMatch);
-			buildAddress.setDoorSide(doorSideMatch);
+			//finalBuildAddress.setDoorSide(doorSideMatch);
+			//buildAddress.setDoorSide(doorSideMatch);
 			
 			inputAddress = addrVal.cleanAddressSide(inputAddress);
 			//System.out.println("Clean side: "+inputAddress);
@@ -48,8 +48,8 @@ public class AddressParser {
 			
 			//System.out.println("PAT_FLOOR Match: ["+allMatch.group()+"] Start Index: "+allMatch.start()+" End Index: "+allMatch.end());
 
-			finalBuildAddress.setFloor(floorMatch);
-			buildAddress.setFloor(floorMatch);
+			//finalBuildAddress.setFloor(floorMatch);
+			//buildAddress.setFloor(floorMatch);
 			
 			inputAddress = addrVal.cleanAddressFloor(inputAddress);
 			//System.out.println("Clean floor: "+inputAddress);
@@ -121,8 +121,8 @@ public class AddressParser {
 		
 		if(finalBuildAddress.getStreet() == null){ finalBuildAddress.setStreet(buildAddress.getStreet()); }
 		if(finalBuildAddress.getHousenumber() == null){ finalBuildAddress.setHousenumber(buildAddress.getHousenumber()); }
-		if(finalBuildAddress.getFloor() == null){ finalBuildAddress.setFloor(buildAddress.getFloor()); }
-		if(finalBuildAddress.getDoorSide() == null){ finalBuildAddress.setDoorSide(buildAddress.getDoorSide()); }
+		//if(finalBuildAddress.getFloor() == null){ finalBuildAddress.setFloor(buildAddress.getFloor()); }
+		//if(finalBuildAddress.getDoorSide() == null){ finalBuildAddress.setDoorSide(buildAddress.getDoorSide()); }
 		if(finalBuildAddress.getPostcode() == null){ finalBuildAddress.setPostcode(buildAddress.getPostcode()); }
 		if(finalBuildAddress.getCity() == null){ finalBuildAddress.setCity(buildAddress.getCity()); }
 		

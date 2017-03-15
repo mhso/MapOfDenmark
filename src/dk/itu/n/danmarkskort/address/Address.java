@@ -12,10 +12,6 @@ public class Address{
 	private String city;
 	private String country;
 	private String housename;
-	
-	// Not part off OpenStreetMaps addr: tags
-	private String floor;
-	private String doorSide;
 
 	public Address(){
 		this.nodeId = -1l;
@@ -45,12 +41,6 @@ public class Address{
 	public String getHousenumber() { return housenumber; }
 	public void setHousenumber(String housenumber) { this.housenumber = housenumber; }
 	
- 	public String getFloor() { return floor; }
- 	public void setFloor(String floor) { this.floor = floor; }
- 	
- 	public String getDoorSide() { return doorSide; }
- 	public void setDoorSide(String doorSide) { this.doorSide = doorSide; }
-	
  	public String getPostcode() { return postcode; }
  	public void setPostcode(String postcode) { this.postcode = postcode; }
 
@@ -76,6 +66,6 @@ public class Address{
 	public String toString() {
 		return "Address [nodeId=" + nodeId + ", lat=" + lat + ", lon=" + lon + ", street=" + street + ", housenumber="
 				+ housenumber + ", postcode=" + postcode + ", city=" + city + ", country=" + country + ", housename="
-				+ housename + ", floor=" + floor + ", doorSide=" + doorSide + "]";
+				+ housename + "]";
 	}
 }

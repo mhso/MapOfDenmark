@@ -67,8 +67,14 @@ public class AddressController implements OSMParserListener{
 		return streets.get(street);
 	}
 	
-	public Set<String> getAddrSearchResults(String find){
+	public Set<String> getSearchSuggestions(String find){
 		return streetSearch(find);
+	}
+	
+	public Address getSearchResult(String find){
+		AddressParser ap = new AddressParser();
+		Address addrBuild = preciseMatch(ap.parse(find));
+		return addrBuild;
 	}
 	
 	private Set<String> streetSearch(String find){

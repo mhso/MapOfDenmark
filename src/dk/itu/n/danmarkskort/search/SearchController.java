@@ -1,12 +1,15 @@
 package dk.itu.n.danmarkskort.search;
 
+import java.util.Set;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import dk.itu.n.danmarkskort.address.Address;
+import dk.itu.n.danmarkskort.address.AddressController;
 import dk.itu.n.danmarkskort.backend.OSMParserListener;
 import dk.itu.n.danmarkskort.models.ParsedObject;
 
-public class SearchController implements OSMParserListener{
+public class SearchController{
 	private static SearchController instance;
 	private final static Lock lock = new ReentrantLock();
 	
@@ -29,28 +32,12 @@ public class SearchController implements OSMParserListener{
         }
         return instance;
     }
-
-	@Override
-	public void onParsingStarted() {
-		// TODO Auto-generated method stub
-		
+	
+	public Set<String> getSearchFieldSuggestions(String inputStr){
+		return AddressController.getInstance().getSearchSuggestions(inputStr);
 	}
-
-	@Override
-	public void onParsingGotObject(ParsedObject parsedObject) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onLineCountHundred() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onParsingFinished() {
-		// TODO Auto-generated method stub
-		
-	}
+	
+	public Address getSearchFieldAddressObj(String inputStr){
+		return AddressController.getInstance().getSearchResult(inputStr);
+	} 
 }

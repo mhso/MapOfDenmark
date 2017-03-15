@@ -51,8 +51,6 @@ public class AddressOsmParser {
 		break;
 		case "country":				buildAddress.setCountry(value);
 		break;
-		case "floor":				buildAddress.setFloor(value);
-		break;
 		case "housename":			buildAddress.setHousename(value);
 		break;
 		}
