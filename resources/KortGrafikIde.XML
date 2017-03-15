@@ -2,10 +2,54 @@
 <theme version="0.1">
 	<element>
 		<tag k="highway" v="footway"/>
-		<layer color="FF3333" lineWidth="0.0002" lineType="standard"/>
-		<layer color="0000CC" lineWidth="0.0001" lineType="dotted"/>
-		<layer color="FFFFFF" lineWidth="0.001" lineType="standard"/>
-		<layer color="0000CC" lineWidth="0.0001" lineType="dotted"/>
-		<layer color="FF3333" lineWidth="0.0002" lineType="standard"/>
+		<layer color="EB2A2A" lineWidth="0.000001" lineType="dotted"/>
+	</element>
+	<element>
+		<tag k="highway" v="motorway"/>
+		<layer color="B52929" lineWidth="0.000001" lineType="standard"/>
+		<layer color="CE4A4A" lineWidth="0.00003" lineType="standard"/>
+		<layer color="B52929" lineWidth="0.000001" lineType="standard"/>
+	</element>
+	<element>
+		<tag k="highway" v="trunk"/>
+		<layer color="91340C" lineWidth="0.000001" lineType="standard"/>
+		<layer color="F97239" lineWidth="0.00003" lineType="standard"/>
+		<layer color="91340C" lineWidth="0.000001" lineType="standard"/>
+	</element>
+	<element>
+		<tag k="highway" v="primary"/>
+		<layer color="905F2E" lineWidth="0.000001" lineType="standard"/>
+		<layer color="E89747" lineWidth="0.00003" lineType="standard"/>
+		<layer color="905F2E" lineWidth="0.000001" lineType="standard"/>
+	</element>
+	<element>
+		<tag k="highway" v="secondary"/>
+		<layer color="796530" lineWidth="0.000001" lineType="standard"/>
+		<layer color="EBBE42" lineWidth="0.00003" lineType="standard"/>
+		<layer color="796530" lineWidth="0.000001" lineType="standard"/>
+	</element>
+	<element>
+		<tag k="highway" v="tertiary"/>
+		<layer color="A19B8D" lineWidth="0.000001" lineType="standard"/>
+		<layer color="E8DDC0" lineWidth="0.00003" lineType="standard"/>
+		<layer color="A19B8D" lineWidth="0.000001" lineType="standard"/>
+	</element>
+	<element>
+		<tag k="highway" v="unclassified"/>
+		<layer color="A19B8D" lineWidth="0.000001" lineType="standard"/>
+		<layer color="E8DDC0" lineWidth="0.00002" lineType="standard"/>
+		<layer color="A19B8D" lineWidth="0.000001" lineType="standard"/>
+	</element>
+	<element>
+		<tag k="highway" v="residential"/>
+		<layer color="A19B8D" lineWidth="0.000001" lineType="standard"/>
+		<layer color="E8DDC0" lineWidth="0.00002" lineType="standard"/>
+		<layer color="A19B8D" lineWidth="0.000001" lineType="standard"/>
+	</element>
+	<element>
+		<tag k="highway" v="service"/>
+		<layer color="A19B8D" lineWidth="0.000001" lineType="standard"/>
+		<layer color="E8DDC0" lineWidth="0.00001" lineType="standard"/>
+		<layer color="A19B8D" lineWidth="0.000001" lineType="standard"/>
 	</element>
 </theme>

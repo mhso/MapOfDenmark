@@ -20,6 +20,7 @@ public class OSMNodeHandler implements ContentHandler {
 
 	private OSMParser parser;
 	private String fileName;
+	private int lineCount;
 	private List<ParsedObject> currentParsedObjects = new ArrayList<ParsedObject>();
 	private List<ParsedObject> parsedObjects = new ArrayList<ParsedObject>();		
 	
@@ -46,6 +47,8 @@ public class OSMNodeHandler implements ContentHandler {
 	public void endPrefixMapping(String prefix) throws SAXException {}
 
 	public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
+		lineCount++;
+		if(lineCount % 100 == 0) for(OSMParserListener listener : parser.parserListeners) listener.onLineCountHundred();
 		
 		switch(qName) {
 		
