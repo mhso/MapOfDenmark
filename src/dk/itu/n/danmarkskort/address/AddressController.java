@@ -12,6 +12,7 @@ import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.backend.OSMParserListener;
 import dk.itu.n.danmarkskort.models.ParsedAddress;
 import dk.itu.n.danmarkskort.models.ParsedObject;
+import jdk.nashorn.internal.ir.SetSplitState;
 
 public class AddressController implements OSMParserListener{
 	private Map<Long, Address> addresses;
@@ -74,17 +75,12 @@ public class AddressController implements OSMParserListener{
 	private Set<String> streetSearch(String find){
 		AddressParser ap = new AddressParser();
 		Address addrBuild = ap.findMatch(find);
+		String parsedFind = addrBuild.toStringShort();
 		System.out.println(addrBuild.toString());
-		/*
-		Set<String> set = streets.keySet()
-                .stream()
-                .filter(s -> s.toLowerCase().startsWith(find.toLowerCase()))
-                .collect(Collectors.toSet());
-		*/
 		Set<String> set = addresses.values()
                 .stream()
-                .filter(s -> s.toStringDKAddr().toLowerCase().startsWith(find.toLowerCase()))
-                .map(Address::toStringDKAddr)
+                .filter(s -> s.toStringShort().toLowerCase().startsWith(addrBuild.getStreet().toLowerCase()))
+                .map(Address::toStringShort)
                 .collect(Collectors.toSet());
 		return set;
 	}

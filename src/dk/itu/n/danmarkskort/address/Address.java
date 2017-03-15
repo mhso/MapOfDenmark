@@ -63,8 +63,13 @@ public class Address{
  	public String getCountry() { return country; }
  	public void setCountry(String country) { this.country = country; }
  	
- 	public String toStringDKAddr(){
- 		return street+" "+housenumber+ ", "+postcode+" "+city;
+ 	public String toStringShort(){
+ 		StringBuilder sb = new StringBuilder();
+ 			if(street != null) sb.append(street +" ");
+ 			if(housenumber != null) sb.append(housenumber + " ");
+ 			if(postcode != null) sb.append(postcode + " ");
+ 			if(city != null) sb.append(city);
+ 		return sb.toString().trim();
  	}
 
 	@Override

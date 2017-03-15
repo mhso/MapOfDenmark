@@ -114,7 +114,7 @@ public class DEMOAddressMain extends JFrame {
 		AddressParser addressParser = new AddressParser();
 		Address address = addressParser.findMatch(inputText);
 		if(address != null) {
-			System.out.println("ADDRESS MATCH FOUND:\n"+address.toStringDKAddr()+"\n");
+			System.out.println("ADDRESS MATCH FOUND:\n"+address.toStringShort()+"\n");
 		} else {
 			System.out.println("NO ADDRESS MATCH FOUND :( ");
 		}

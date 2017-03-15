@@ -184,13 +184,9 @@ public class AddressParser {
 		return null;
 	}
 	
-	public Address preciseMatch(Address addr){
+	private Address preciseMatch(Address addr){
 		Address result = AddressController.getInstance().getAddresses().values().stream()
-				.filter(x ->
-							addr.getStreet().equalsIgnoreCase(x.getStreet())
-							&& addr.getHousenumber().equalsIgnoreCase(x.getHousenumber())
-							&& addr.getPostcode().equalsIgnoreCase(x.getPostcode())
-							&& addr.getCity().equalsIgnoreCase(x.getCity())
+				.filter(x ->addr.toStringShort().equalsIgnoreCase(x.toStringShort())														
 				).findFirst()
 				.orElse(null);
 		return result;
