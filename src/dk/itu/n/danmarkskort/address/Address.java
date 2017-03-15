@@ -1,19 +1,13 @@
 package dk.itu.n.danmarkskort.address;
 
-import java.awt.geom.Point2D;
+import java.io.Serializable;
 
 public class Address{
 	private long nodeId;
-	private float lat;
-	private float lon;
+	private float lat, lon;
 	
 	// Relevant parts off OpenStreetMaps addr: tags
-	private String street;
-	private String housenumber;
-	private String postcode;
-	private String city;
-	private String country;
-	private String housename;
+	private String street, housenumber, postcode, city, country, housename;
 
 	public Address(){
 		this.nodeId = -1l;
