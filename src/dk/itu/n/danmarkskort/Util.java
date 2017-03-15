@@ -2,7 +2,9 @@ package dk.itu.n.danmarkskort;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.LineNumberReader;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Map;
@@ -51,6 +53,17 @@ public class Util {
 			String key = name.toString();
 			String value = map.get(name).toString();
 			System.out.println(key + " " + value);
+		}
+	}
+	
+	public static int getNumberOfLines(File file) {
+		try {
+			LineNumberReader  lnr = new LineNumberReader(new FileReader(file));
+			lnr.skip(Long.MAX_VALUE);
+			lnr.close();
+			return lnr.getLineNumber() + 1;
+		} catch (Exception e) {
+			return 0;
 		}
 	}
 	

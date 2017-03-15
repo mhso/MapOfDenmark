@@ -108,8 +108,8 @@ public class OSMNodeHandler implements ContentHandler {
 	public void endElement(String uri, String localName, String qName) throws SAXException {
 		ParsedObject lastParsedObject = getLastParsedObject();
 		if(qName.equals(lastParsedObject.getQName())) {
-			for(OSMParserListener listener : parser.parserListeners) listener.onParsingGotObject(lastParsedObject);
 			lastParsedObject.parseAttributes();
+			for(OSMParserListener listener : parser.parserListeners) listener.onParsingGotObject(lastParsedObject);
 			currentParsedObjects.remove(lastParsedObject);
 		}
 	}

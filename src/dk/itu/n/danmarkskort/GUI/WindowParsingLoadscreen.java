@@ -16,6 +16,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import javax.swing.border.LineBorder;
 
+import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.backend.OSMParserListener;
 import dk.itu.n.danmarkskort.models.ParsedObject;
 
@@ -84,7 +85,7 @@ public class WindowParsingLoadscreen extends JFrame implements OSMParserListener
 		long b = file.length();
 		long kb = b/1024;
 		fileSizeMB = kb/1024;
-		System.out.println("File Size: " + fileSizeMB + " MB");
+		Main.log("File Size: " + fileSizeMB + " MB");
 	}
 	
 	private void setProgressPercent() {
