@@ -14,7 +14,7 @@ public class AddressParser {
 		final String RGX_POSTCODE = "(?<postcode>[0-9]{4})";
 		
 		final Pattern PAT_POSTCODE = Pattern.compile(RGX_POSTCODE);
-		final Pattern PAT_STREET_HOUSE = Pattern.compile("^(?<street>([0-9]+\\s"+RGX_ALPHA+"+)|("+RGX_ALPHA+"+))\\s(?<housenumber>([0-9]{1,3}[a-zA-B]{1}\\s)|([0-9]{1,3}\\s))");
+		final Pattern PAT_STREET_HOUSE = Pattern.compile("^(?<street>([0-9]+\\s"+RGX_ALPHA+"+)|("+RGX_ALPHA+"+))\\s(?<housenumber>([0-9]{1,3}[a-zA-B]{1}\\s)|([0-9]{1,3}))");
 		final Pattern PAT_POSTCODE_CITY = Pattern.compile(""+RGX_POSTCODE+"\\s(?<city>"+RGX_ALPHA+"+$)");
 		final Pattern PAT_STREET = Pattern.compile("^(?<street>([0-9]+\\s"+RGX_ALPHA+"+)|("+RGX_ALPHA+"+))");
 		final Pattern PAT_CITY = Pattern.compile("(?<city>"+RGX_ALPHA+"+$)");
@@ -66,10 +66,6 @@ public class AddressParser {
 			
 			streetMatch = addrVal.insertDotAfterSingleChar(streetMatch);
 			
-			if(addrVal.confirmStreetname(streetMatch)){
-				finalBuildAddress.setStreet(streetMatch);
-			}
-			
 			buildAddress.setStreet(streetMatch);
 			buildAddress.setHousenumber(housenumberMatch);
 		}
@@ -83,17 +79,6 @@ public class AddressParser {
 			
 			//System.out.println("PAT_POSTCODE_CITY Match: ["+allMatch.group()+"] Start Index: "+allMatch.start()+" End Index: "+allMatch.end());
 			
-			if(addrVal.comparePostalcodeToCity(postcodeMatch, cityMatch)){
-				finalBuildAddress.setPostcode(postcodeMatch);
-				finalBuildAddress.setCity(cityMatch);
-			}else{
-
-				if(addrVal.getCityFromPostalcode(postcodeMatch) != null && addrVal.getPostalcodeFromCity(cityMatch) != null){
-					finalBuildAddress.setPostcode(postcodeMatch);
-					finalBuildAddress.setCity(cityMatch);
-				}
-			}
-			
 			buildAddress.setPostcode(postcodeMatch);
 			buildAddress.setCity(cityMatch);
 		}
@@ -106,13 +91,6 @@ public class AddressParser {
 			String cityMatch = null;
 			
 			//System.out.println("PAT_POSTCODE Match: ["+allMatch.group()+"] Start Index: "+allMatch.start()+" End Index: "+allMatch.end());
-
-				if(addrVal.getCityFromPostalcode(postcodeMatch) != null){
-					finalBuildAddress.setPostcode(postcodeMatch);
-					cityMatch = addrVal.getCityFromPostalcode(postcodeMatch);
-					finalBuildAddress.setCity(cityMatch);
-					
-				}
 			
 			buildAddress.setPostcode(postcodeMatch);
 			buildAddress.setCity(cityMatch);
@@ -124,12 +102,7 @@ public class AddressParser {
 			Matcher allMatch = cityPat;
 			String cityMatch = allMatch.group("city").trim();
 			
-			//System.out.println("PAT_CITY Match: ["+allMatch.group()+"] Start Index: "+allMatch.start()+" End Index: "+allMatch.end());
-			
-				if(addrVal.getPostalcodeFromCity(cityMatch) == null){
-					finalBuildAddress.setCity(cityMatch);
-				}
-			
+			//System.out.println("PAT_CITY Match: ["+allMatch.group()+"] Start Index: "+allMatch.start()+" End Index: "+allMatch.end());		
 			buildAddress.setCity(cityMatch);
 
 		}			
@@ -143,27 +116,7 @@ public class AddressParser {
 			//System.out.println("PAT_STREET Match: ["+allMatch.group()+"] Start Index: "+allMatch.start()+" End Index: "+allMatch.end());
 
 			streetMatch = addrVal.insertDotAfterSingleChar(streetMatch);
-			
-			if(addrVal.confirmStreetname(streetMatch)){
-				finalBuildAddress.setStreet(streetMatch);
-			} else {
-				if(addrVal.getPostalcodeFromCity(streetMatch) != null){
-					finalBuildAddress.setCity(streetMatch);
-					streetMatch = null;
-				}
-			}
-			
 			buildAddress.setStreet(streetMatch);
-		}
-			
-		if(finalBuildAddress.getPostcode() != null && !addrVal.comparePostalcodeToCity(finalBuildAddress.getPostcode(), finalBuildAddress.getCity())){
-			if(addrVal.getCityFromPostalcode(finalBuildAddress.getPostcode()) != null){
-				finalBuildAddress.setCity(addrVal.getCityFromPostalcode(finalBuildAddress.getPostcode()));
-			}
-		}
-		
-		if(finalBuildAddress.getPostcode() != null && addrVal.searchCityname(finalBuildAddress.getCity()).size() == 1){
-			finalBuildAddress.setCity(addrVal.getCityFromPostalcode(finalBuildAddress.getPostcode()));
 		}
 		
 		if(finalBuildAddress.getStreet() == null){ finalBuildAddress.setStreet(buildAddress.getStreet()); }
@@ -174,25 +127,5 @@ public class AddressParser {
 		if(finalBuildAddress.getCity() == null){ finalBuildAddress.setCity(buildAddress.getCity()); }
 		
 		return finalBuildAddress;
-	}
-	
-	public Address matchBuilder(Address addr){
-		if(addr != null){
-			if(preciseMatch(addr) != null) return preciseMatch(addr);
-			return addr;
-		}
-		return null;
-	}
-	
-	private Address preciseMatch(Address addr){
-		Address result = AddressController.getInstance().getAddresses().values().stream()
-				.filter(x ->addr.toStringShort().equalsIgnoreCase(x.toStringShort())														
-				).findFirst()
-				.orElse(null);
-		return result;
-	}
-	
-	public Address findMatch(String inputAddress){
-		return matchBuilder(parse(inputAddress));
 	}
 }

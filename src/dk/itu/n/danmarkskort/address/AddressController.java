@@ -12,7 +12,6 @@ import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.backend.OSMParserListener;
 import dk.itu.n.danmarkskort.models.ParsedAddress;
 import dk.itu.n.danmarkskort.models.ParsedObject;
-import jdk.nashorn.internal.ir.SetSplitState;
 
 public class AddressController implements OSMParserListener{
 	private Map<Long, Address> addresses;
@@ -74,7 +73,7 @@ public class AddressController implements OSMParserListener{
 	
 	private Set<String> streetSearch(String find){
 		AddressParser ap = new AddressParser();
-		Address addrBuild = ap.findMatch(find);
+		Address addrBuild = preciseMatch(ap.parse(find));
 		String parsedFind = addrBuild.toStringShort();
 		System.out.println(addrBuild.toString());
 		Set<String> set = addresses.values()
@@ -98,11 +97,18 @@ public class AddressController implements OSMParserListener{
 		return set;
 	}
 	
-	public void add(Address address){
-		addresses.put(address.getNodeId(), address);
-	}
 	
-	public void addOsmAddress(long nodeId, double lat, double lon, String k, String v){
+	private Address preciseMatch(Address addr){
+		Address result = addresses.values().stream()
+				.filter(x ->addr.toStringShort().equalsIgnoreCase(x.toStringShort())														
+				).findFirst()
+				.orElse(null);
+		if (result != null) return result;
+		return addr;
+	}
+
+	
+	public void addOsmAddress(long nodeId, float lat, float lon, String k, String v){
 		Address addr;
 		if (addresses.containsKey(nodeId)) {
 			addr = addresses.get(nodeId);
@@ -110,15 +116,15 @@ public class AddressController implements OSMParserListener{
 			addr = new Address(nodeId, lon, lon);
 		}
 		AddressOsmParser oap = new AddressOsmParser(addr);
-		addr = oap.parseKeyAddr(addr, nodeId, lat, lon, k, v);
+		addr = oap.parseKeyAddr(nodeId, lat, lon, k, v);
 		if(addr != null) addresses.put(addr.getNodeId(), addr);
 		
 		// Adding to the address path
 		updateAddressPathMapping(addr);
 	}
 	
-	public Address createOsmAddress(Long nodeId, Double lat, Double lon){
-		if(nodeId != null && lat != null && lon != null){
+	public Address createOsmAddress(Long nodeId, float lat, float lon){
+		if(nodeId != null && lat != -1f && lon != -1f){
 			Address addr;
 			if (addresses.containsKey(nodeId)) {
 				addr = addresses.get(nodeId);
@@ -175,23 +181,23 @@ public class AddressController implements OSMParserListener{
 			//Main.log(omsAddr.getAttributes().get("id"));
 			if(omsAddr.getAttributes().get("id") != null) {
 				long nodeId = Long.parseLong(omsAddr.getAttributes().get("id"));
-				double lat = Double.parseDouble(omsAddr.getAttributes().get("lat"));
-				double lon = Double.parseDouble(omsAddr.getAttributes().get("lon"));
+				float lat = Float.parseFloat(omsAddr.getAttributes().get("lat"));
+				float lon = Float.parseFloat(omsAddr.getAttributes().get("lon"));
 				Address addr = createOsmAddress(nodeId, lat, lon);
 				
 				AddressOsmParser aop = new AddressOsmParser(addr);
-				aop.parseKeyAddr(addr, omsAddr.attributes);				
+				aop.parseKeyAddr(omsAddr.attributes);				
 				// Adding to the address path
 				updateAddressPathMapping(addr);
 			}
 		}
 	}
-
 	@Override
 	public void onParsingFinished() {
 		// TODO Auto-generated method stub
 		Main.log("AdresseController found: "+addresses.size()+" adresses");
 	}
+	
 
 	@Override
 	public void onLineCountHundred() {

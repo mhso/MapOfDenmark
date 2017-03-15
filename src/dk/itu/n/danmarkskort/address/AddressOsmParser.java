@@ -9,7 +9,7 @@ public class AddressOsmParser {
 		this.buildAddress = buildAddress;
 	}
 	
-	public Address parseKeyAddr(Address buildAddress, long nodeId, double lat, double lon, String k, String v){
+	public Address parseKeyAddr(long nodeId, float lat, float lon, String k, String v){
 		if(isAddress(k)){
 			String cleanKey = cleanKey(k);
 			buildAddress.setNodeId(nodeId);
@@ -21,7 +21,7 @@ public class AddressOsmParser {
 		return null;
 	}
 	
-	public Address parseKeyAddr(Address buildAddress, Map<String, String> keysValues){
+	public Address parseKeyAddr(Map<String, String> keysValues){
 		for(String key : keysValues.keySet()){
 			if(isAddress(key)){
 				setKeyFromValue(cleanKey(key), keysValues.get(key));
