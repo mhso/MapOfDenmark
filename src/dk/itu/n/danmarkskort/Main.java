@@ -1,13 +1,10 @@
 package dk.itu.n.danmarkskort;
 
-import java.io.File;
-
 import javax.swing.*;
 
 import dk.itu.n.danmarkskort.GUI.WindowParsingLoadscreen;
 import dk.itu.n.danmarkskort.address.AddressController;
 import dk.itu.n.danmarkskort.backend.OSMParser;
-import dk.itu.n.danmarkskort.backend.ParserListenerTest;
 import dk.itu.n.danmarkskort.backend.TileController;
 
 public class Main {
