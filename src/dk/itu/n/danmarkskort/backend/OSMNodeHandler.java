@@ -153,6 +153,7 @@ public class OSMNodeHandler implements ContentHandler {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		parser.setChecksum(fileHash);
 		return Util.getCurrentDirectoryPath() + "/parsedOSMFiles/" + fileHash;
 	}
 	

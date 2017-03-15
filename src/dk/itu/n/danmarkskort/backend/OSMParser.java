@@ -15,6 +15,7 @@ import dk.itu.n.danmarkskort.Main;
 public class OSMParser {
 	
 	public List<OSMParserListener> parserListeners = new ArrayList<OSMParserListener>();
+	private String currentChecksum;
 	
 	public OSMParser() {
 		initialize();
@@ -46,6 +47,14 @@ public class OSMParser {
 		}
 		
 		Main.logRamUsage();
+	}
+	
+	public void setChecksum(String checksum) {
+		this.currentChecksum = checksum;
+	}
+	
+	public String getChecksum() {
+		return currentChecksum;
 	}
 	
 }

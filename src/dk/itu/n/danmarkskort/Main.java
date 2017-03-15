@@ -1,7 +1,12 @@
 package dk.itu.n.danmarkskort;
 
+import java.awt.Color;
+import java.awt.Dimension;
+
 import javax.swing.*;
 
+import dk.itu.danmarkskort.gui.map.MapCanvas;
+import dk.itu.n.danmarkskort.GUI.GUILayerController;
 import dk.itu.n.danmarkskort.GUI.WindowParsingLoadscreen;
 import dk.itu.n.danmarkskort.address.AddressController;
 import dk.itu.n.danmarkskort.backend.OSMParser;
@@ -15,7 +20,9 @@ public class Main {
 	public final static boolean production = false;
 	public static OSMParser osmParser;
 	public static TileController tileController;
-
+	public static JFrame window;
+	public static GUILayerController layerManager;
+	
 	public static void main(String[] args) {
         startup(args);
         main();
@@ -35,6 +42,7 @@ public class Main {
 		// Add your listeners for the parser here, if you are going to use data. 
 		osmParser.addListener(AddressController.getInstance());
 		osmParser.addListener(loadScreen);
+		osmParser.addListener(tileController);
 		
 		if(args.length == 1) {
 			r.setFilenameAndRun(args[0]);
@@ -60,8 +68,15 @@ public class Main {
 	}
 
     public static void makeFrame() {
-            JFrame window = new JFrame(APP_NAME);
-            window.add(new MainCanvas());
+            window = new JFrame(APP_NAME);
+            layerManager = new GUILayerController(window);
+            layerManager.setPreferredSize(new Dimension(640, 480));
+            
+            // GUI Layers
+            layerManager.addLayer(new MainCanvas());
+            layerManager.addLayer(new MapCanvas());
+            
+            window.add(layerManager);
             window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             window.pack();
             window.setLocationRelativeTo(null);
