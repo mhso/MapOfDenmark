@@ -171,5 +171,11 @@ public class AddressController implements OSMParserListener{
 		// TODO Auto-generated method stub
 		Main.log("Adresses found: "+addresses.size());
 	}
+
+	@Override
+	public void onLineCountHundred() {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }
