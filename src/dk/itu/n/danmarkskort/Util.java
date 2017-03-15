@@ -23,6 +23,10 @@ public class Util {
 		return System.getProperty("user.dir");
 	}
 	
+	public static String getCurrentOSMFolderPath() {
+		return Util.getCurrentDirectoryPath() + "/parsedOSMFiles/" + Main.osmParser.getChecksum();
+	}
+	
 	public static String getFileChecksum(MessageDigest digest, File file) throws IOException {
 		FileInputStream fis = new FileInputStream(file);
 

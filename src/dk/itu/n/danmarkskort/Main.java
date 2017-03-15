@@ -35,6 +35,7 @@ public class Main {
 		// Add your listeners for the parser here, if you are going to use data. 
 		osmParser.addListener(AddressController.getInstance());
 		osmParser.addListener(loadScreen);
+		osmParser.addListener(tileController);
 		
 		if(args.length == 1) {
 			r.setFilenameAndRun(args[0]);

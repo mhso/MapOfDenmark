@@ -1,5 +1,6 @@
 package dk.itu.n.danmarkskort.models;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -7,9 +8,13 @@ import org.xml.sax.Attributes;
 
 import dk.itu.n.danmarkskort.Util;
 
-public abstract class ParsedObject {
+public abstract class ParsedObject implements Serializable{
+
+	private static final long serialVersionUID = -7466355417577123423L;
+	
 	public Map<String, String> attributes = new HashMap<String, String>();
 	private String qName;
+	private boolean visual = false;
 	
 	public ParsedObject() {}
 	public ParsedObject(ParsedObject object) {
@@ -48,4 +53,13 @@ public abstract class ParsedObject {
 	public void setAttributes(Map<String, String> attributes) {
 		this.attributes = attributes;
 	}
+	
+	public boolean isVisual() {
+		return visual;
+	}
+	
+	public void setVisual(boolean visual) {
+		this.visual = visual;
+	}
+	
 }
