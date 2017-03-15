@@ -21,8 +21,8 @@ public class AddressParser {
 		final Pattern PAT_FLOOR = Pattern.compile("(?<floor>(kl.|st.|([0-9])+(\\.\\s(sal))))");
 		final Pattern PAT_DOORSIDE = Pattern.compile("(?<side>(tv.|mf.|th.))");
 		
-		Address buildAddress = new Address();
-		Address finalBuildAddress = new Address();
+		Address buildAddr = new Address();
+		Address finalBuildAddr = new Address();
 		AddressValidator addrVal = new AddressValidator();
 		inputAddress = addrVal.cleanAddress(inputAddress);
 		Matcher doorSidePat = PAT_DOORSIDE.matcher(inputAddress);
@@ -66,8 +66,8 @@ public class AddressParser {
 			
 			streetMatch = addrVal.insertDotAfterSingleChar(streetMatch);
 			
-			buildAddress.setStreet(streetMatch);
-			buildAddress.setHousenumber(housenumberMatch);
+			buildAddr.setStreet(streetMatch);
+			buildAddr.setHousenumber(housenumberMatch);
 		}
 		
 		Matcher postcodeCityPat = PAT_POSTCODE_CITY.matcher(inputAddress);
@@ -79,8 +79,8 @@ public class AddressParser {
 			
 			//System.out.println("PAT_POSTCODE_CITY Match: ["+allMatch.group()+"] Start Index: "+allMatch.start()+" End Index: "+allMatch.end());
 			
-			buildAddress.setPostcode(postcodeMatch);
-			buildAddress.setCity(cityMatch);
+			buildAddr.setPostcode(Integer.parseInt(postcodeMatch));
+			buildAddr.setCity(cityMatch);
 		}
 		
 		Matcher postcodePat = PAT_POSTCODE.matcher(inputAddress);
@@ -92,8 +92,8 @@ public class AddressParser {
 			
 			//System.out.println("PAT_POSTCODE Match: ["+allMatch.group()+"] Start Index: "+allMatch.start()+" End Index: "+allMatch.end());
 			
-			buildAddress.setPostcode(postcodeMatch);
-			buildAddress.setCity(cityMatch);
+			buildAddr.setPostcode(Integer.parseInt(postcodeMatch));
+			buildAddr.setCity(cityMatch);
 		}
 		
 		Matcher cityPat = PAT_CITY.matcher(inputAddress);
@@ -103,7 +103,7 @@ public class AddressParser {
 			String cityMatch = allMatch.group("city").trim();
 			
 			//System.out.println("PAT_CITY Match: ["+allMatch.group()+"] Start Index: "+allMatch.start()+" End Index: "+allMatch.end());		
-			buildAddress.setCity(cityMatch);
+			buildAddr.setCity(cityMatch);
 
 		}			
 		
@@ -116,16 +116,16 @@ public class AddressParser {
 			//System.out.println("PAT_STREET Match: ["+allMatch.group()+"] Start Index: "+allMatch.start()+" End Index: "+allMatch.end());
 
 			streetMatch = addrVal.insertDotAfterSingleChar(streetMatch);
-			buildAddress.setStreet(streetMatch);
+			buildAddr.setStreet(streetMatch);
 		}
 		
-		if(finalBuildAddress.getStreet() == null){ finalBuildAddress.setStreet(buildAddress.getStreet()); }
-		if(finalBuildAddress.getHousenumber() == null){ finalBuildAddress.setHousenumber(buildAddress.getHousenumber()); }
+		if(finalBuildAddr.getStreet() == null){ finalBuildAddr.setStreet(buildAddr.getStreet()); }
+		if(finalBuildAddr.getHousenumber() == null){ finalBuildAddr.setHousenumber(buildAddr.getHousenumber()); }
 		//if(finalBuildAddress.getFloor() == null){ finalBuildAddress.setFloor(buildAddress.getFloor()); }
 		//if(finalBuildAddress.getDoorSide() == null){ finalBuildAddress.setDoorSide(buildAddress.getDoorSide()); }
-		if(finalBuildAddress.getPostcode() == null){ finalBuildAddress.setPostcode(buildAddress.getPostcode()); }
-		if(finalBuildAddress.getCity() == null){ finalBuildAddress.setCity(buildAddress.getCity()); }
+		if(finalBuildAddr.getPostcode() == -1){ finalBuildAddr.setPostcode(buildAddr.getPostcode()); }
+		if(finalBuildAddr.getCity() == null){ finalBuildAddr.setCity(buildAddr.getCity()); }
 		
-		return finalBuildAddress;
+		return finalBuildAddr;
 	}
 }

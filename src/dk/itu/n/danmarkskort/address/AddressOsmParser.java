@@ -40,16 +40,20 @@ public class AddressOsmParser {
 	}
 	
 	private void setKeyFromValue(String key, String value){
+		value = value.trim();
 		switch(key){
 		case "street":				buildAddress.setStreet(value);
 		break;
 		case "housenumber":			buildAddress.setHousenumber(value);
 		break;
-		case "postcode":			buildAddress.setPostcode(value);
+		case "postcode":
+			try{
+				buildAddress.setPostcode(Integer.parseInt(value));
+			} catch(NumberFormatException e){
+				
+			}
 		break;
 		case "city":				buildAddress.setCity(value);
-		break;
-		case "country":				buildAddress.setCountry(value);
 		break;
 		case "housename":			buildAddress.setHousename(value);
 		break;
