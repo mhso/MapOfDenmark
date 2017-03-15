@@ -1,14 +1,11 @@
 package dk.itu.n.danmarkskort.GUI;
 
 import java.awt.BorderLayout;
-import java.util.Random;
-import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 
 import java.awt.Font;
 import java.io.File;
@@ -18,25 +15,31 @@ import javax.swing.JProgressBar;
 import java.awt.Color;
 import java.awt.Dimension;
 import javax.swing.border.LineBorder;
+
+import dk.itu.n.danmarkskort.backend.OSMParserListener;
+import dk.itu.n.danmarkskort.models.ParsedObject;
+
 import java.awt.Component;
 import javax.swing.Box;
 
-public class WindowParsingLoadscreen extends JFrame {
+public class WindowParsingLoadscreen extends JFrame implements OSMParserListener {
 
 	private JPanel contentPane;
 	private JProgressBar progressBar;
 	private JPanel panel;
 	private Component rigidArea;
 	private JLabel labelStatus;
+	private int lineCountHundreds;
+	private long fileSizeMB;
+	private boolean showObjectString = true;
+	
 	public static void main(String[] args) {
 		WindowParsingLoadscreen frame = new WindowParsingLoadscreen();
-		frame.testProgressBar();
 	}
 	
-	/**
-	 * Create the frame.
-	 */
-	public WindowParsingLoadscreen() {
+	public void initialize(String fileName) {
+		setFileSize(fileName);
+		setTitle("Parsing Data");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -75,56 +78,44 @@ public class WindowParsingLoadscreen extends JFrame {
 		setLocationRelativeTo(null);
 		setVisible(true);
 	}
-
-	private void testProgressBar() {
-		/*  
-		 * Testing the progress bar with random values.
-		 * Real values would be calculated by: 
-		 * 1. Getting file size in MB, f.x. small.osm = 182 MB.
-		 * 2. Getting a current line number while parsing the XML file (using .sax location listeners).
-		 * 3. Getting current MB parsed = currentLine * ~ 0,00006.
-		 * 4. Getting percent of total parsed data = currentMB/fileSize*100.
-		 * 5. ???
-		 * 6. PROFIT!!!
-		 * map = 3.013.103 lines, 182 MB
-		 * ratio = 6,0402847164534368722210956611838e-5
-		 * small = 156.721 lines, 9,42 MB
-		 * ratio = 6,0106814019818658635409421838809e-5
-		 */
-		
-		File file = new File("map.osm");
+	
+	private void setFileSize(String fileName) {
+		File file = new File(fileName);
 		long b = file.length();
 		long kb = b/1024;
-		long mb = kb/1024;
-		System.out.println("File Size: " + mb + " MB");
-		
-		Runnable r = new ProgressTest();
-		r.run();
+		fileSizeMB = kb/1024;
+		System.out.println("File Size: " + fileSizeMB + " MB");
 	}
 	
-	private class ProgressTest implements Runnable {
-		private String[] statues = {"Reading Nodes...", "Loading Icons...", "Loading Addresses...", "Saving Addresses...", "Calculating Roads..."};
-		private int value = 0;
-		
-		public void run() {
-			try {
-				Thread.sleep(2000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			progressBar.setIndeterminate(false);
-			Random random = new Random();
-			while(value < 100) {
-				value++;
-				progressBar.setValue(value);
-				if(random.nextInt(100) < 15) labelStatus.setText(statues[random.nextInt(statues.length)]);
-				try {
-					Thread.sleep(100 + random.nextInt(300));
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-			JOptionPane.showMessageDialog(WindowParsingLoadscreen.this, "Parsing Finished!", "Finished.", JOptionPane.INFORMATION_MESSAGE);
+	private void setProgressPercent() {
+		double currentMB = (lineCountHundreds * 0.006);
+		double percent = (currentMB/fileSizeMB) * 100;
+		progressBar.setValue((int)percent);
+	}
+	
+	@Override
+	public void onParsingStarted() {
+		progressBar.setIndeterminate(false);
+	}
+
+	@Override
+	public void onParsingGotObject(ParsedObject parsedObject) {
+		if(showObjectString) {
+			labelStatus.setText(parsedObject.toString());
+			showObjectString = false;
 		}
+	}
+
+	@Override
+	public void onLineCountHundred() {
+		lineCountHundreds++;
+		setProgressPercent();
+		showObjectString = true;
+	}
+
+	@Override
+	public void onParsingFinished() {
+		System.out.println("Done");
+		dispose();
 	}
 }

@@ -10,9 +10,11 @@ public class ParserListenerTest implements OSMParserListener{
 	public void onParsingGotObject(ParsedObject parsedObject) {
 
 	}
+	
+	public void onLineCountHundred() {
+		
+	}
 
 	public void onParsingFinished() {
 	}
-
-
 }
