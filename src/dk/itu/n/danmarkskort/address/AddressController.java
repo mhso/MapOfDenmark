@@ -67,14 +67,25 @@ public class AddressController implements OSMParserListener{
 		return streets.get(street);
 	}
 	
-	public Set<String> getAddrSearchResults(String find){
-		return getCityPostcodeFromStreet(streetSearch(find));
+	public Set<String> getSearchSuggestions(String find){
+		return streetSearch(find);
+	}
+	
+	public Address getSearchResult(String find){
+		AddressParser ap = new AddressParser();
+		Address addrBuild = preciseMatch(ap.parse(find));
+		return addrBuild;
 	}
 	
 	private Set<String> streetSearch(String find){
-		Set<String> set = streets.keySet()
+		AddressParser ap = new AddressParser();
+		Address addrBuild = preciseMatch(ap.parse(find));
+		String parsedFind = addrBuild.toStringShort();
+		//System.out.println(addrBuild.toString());
+		Set<String> set = addresses.values()
                 .stream()
-                .filter(s -> s.startsWith(find))
+                .filter(s -> s.toStringShort().toLowerCase().startsWith(addrBuild.getStreet().toLowerCase()))
+                .map(Address::toStringShort)
                 .collect(Collectors.toSet());
 		return set;
 	}
@@ -92,11 +103,18 @@ public class AddressController implements OSMParserListener{
 		return set;
 	}
 	
-	public void add(Address address){
-		addresses.put(address.getNodeId(), address);
-	}
 	
-	public void addOsmAddress(long nodeId, double lat, double lon, String k, String v){
+	private Address preciseMatch(Address addr){
+		Address result = addresses.values().stream()
+				.filter(x ->addr.toStringShort().equalsIgnoreCase(x.toStringShort())														
+				).findFirst()
+				.orElse(null);
+		if (result != null) return result;
+		return addr;
+	}
+
+	
+	public void addOsmAddress(long nodeId, float lat, float lon, String k, String v){
 		Address addr;
 		if (addresses.containsKey(nodeId)) {
 			addr = addresses.get(nodeId);
@@ -104,11 +122,25 @@ public class AddressController implements OSMParserListener{
 			addr = new Address(nodeId, lon, lon);
 		}
 		AddressOsmParser oap = new AddressOsmParser(addr);
-		addr = oap.parseKeyAddr(addr, nodeId, lat, lon, k, v);
+		addr = oap.parseKeyAddr(nodeId, lat, lon, k, v);
 		if(addr != null) addresses.put(addr.getNodeId(), addr);
 		
 		// Adding to the address path
 		updateAddressPathMapping(addr);
+	}
+	
+	public Address createOsmAddress(Long nodeId, float lat, float lon){
+		if(nodeId != null && lat != -1f && lon != -1f){
+			Address addr;
+			if (addresses.containsKey(nodeId)) {
+				addr = addresses.get(nodeId);
+			} else {
+				addr = new Address(nodeId, lon, lon);
+			}
+			addresses.put(addr.getNodeId(), addr);
+			return addr;
+			}
+		return null;
 	}
 	
 	private void updateAddressPathMapping(Address addr){
@@ -155,27 +187,27 @@ public class AddressController implements OSMParserListener{
 			//Main.log(omsAddr.getAttributes().get("id"));
 			if(omsAddr.getAttributes().get("id") != null) {
 				long nodeId = Long.parseLong(omsAddr.getAttributes().get("id"));
-				double lat = Double.parseDouble(omsAddr.getAttributes().get("lat"));
-				double lon = Double.parseDouble(omsAddr.getAttributes().get("lon"));
-				addOsmAddress(nodeId, lat, lon, null, null);
-				for(String k : omsAddr.attributes.keySet()){
-					String v = omsAddr.attributes.get(k);
-					addOsmAddress(nodeId, lat, lon, k, v);
-				}
+				float lat = Float.parseFloat(omsAddr.getAttributes().get("lat"));
+				float lon = Float.parseFloat(omsAddr.getAttributes().get("lon"));
+				Address addr = createOsmAddress(nodeId, lat, lon);
+				
+				AddressOsmParser aop = new AddressOsmParser(addr);
+				aop.parseKeyAddr(omsAddr.attributes);				
+				// Adding to the address path
+				updateAddressPathMapping(addr);
 			}
 		}
 	}
-
 	@Override
 	public void onParsingFinished() {
 		// TODO Auto-generated method stub
-		Main.log("Adresses found: "+addresses.size());
+		Main.log("AdresseController found: "+addresses.size()+" adresses");
 	}
+	
 
 	@Override
 	public void onLineCountHundred() {
 		// TODO Auto-generated method stub
 		
 	}
-	
 }

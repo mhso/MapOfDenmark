@@ -17,6 +17,7 @@ import java.awt.Dimension;
 import javax.swing.border.LineBorder;
 
 import dk.itu.n.danmarkskort.Main;
+import dk.itu.n.danmarkskort.Util;
 import dk.itu.n.danmarkskort.backend.OSMParserListener;
 import dk.itu.n.danmarkskort.models.ParsedObject;
 
@@ -31,7 +32,7 @@ public class WindowParsingLoadscreen extends JFrame implements OSMParserListener
 	private Component rigidArea;
 	private JLabel labelStatus;
 	private int lineCountHundreds;
-	private long fileSizeMB;
+	private long fileLength;
 	private boolean showObjectString = true;
 	
 	public static void main(String[] args) {
@@ -39,7 +40,7 @@ public class WindowParsingLoadscreen extends JFrame implements OSMParserListener
 	}
 	
 	public void initialize(String fileName) {
-		setFileSize(fileName);
+		getFileLength(fileName);
 		setTitle("Parsing Data");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
@@ -69,7 +70,7 @@ public class WindowParsingLoadscreen extends JFrame implements OSMParserListener
 		progressBar.setBorder(new LineBorder(new Color(0, 0, 0)));
 		progressBar.setIndeterminate(true);
 		
-		labelStatus = new JLabel("  ");
+		labelStatus = new JLabel("Preparing To Parse File...");
 		labelStatus.setHorizontalAlignment(SwingConstants.CENTER);
 		panel.add(labelStatus, BorderLayout.SOUTH);
 		
@@ -80,17 +81,19 @@ public class WindowParsingLoadscreen extends JFrame implements OSMParserListener
 		setVisible(true);
 	}
 	
-	private void setFileSize(String fileName) {
+	private void getFileLength(String fileName) {
 		File file = new File(fileName);
+		fileLength = Util.getNumberOfLines(file);
 		long b = file.length();
 		long kb = b/1024;
-		fileSizeMB = kb/1024;
-		Main.log("File Size: " + fileSizeMB + " MB");
+		long mb = kb/1024;
+		Main.log("File Name: " + file.getName()); 
+		Main.log("File Size: " + mb + " MB");
 	}
 	
 	private void setProgressPercent() {
-		double currentMB = (lineCountHundreds * 0.006);
-		double percent = (currentMB/fileSizeMB) * 100;
+		double currentLine = lineCountHundreds * 100;
+		double percent = (currentLine/fileLength) * 100;
 		progressBar.setValue((int)percent);
 	}
 	
@@ -116,7 +119,6 @@ public class WindowParsingLoadscreen extends JFrame implements OSMParserListener
 
 	@Override
 	public void onParsingFinished() {
-		System.out.println("Done");
 		dispose();
 	}
 }

@@ -21,6 +21,7 @@ public class OSMNodeHandler implements ContentHandler {
 	private OSMParser parser;
 	private String fileName;
 	private int lineCount;
+	private Locator locator;
 	private List<ParsedObject> currentParsedObjects = new ArrayList<ParsedObject>();
 	
 	public OSMNodeHandler(OSMParser parser, String fileName) {
@@ -28,7 +29,18 @@ public class OSMNodeHandler implements ContentHandler {
 		this.parser = parser;
 	}
 	
-	public void setDocumentLocator(Locator locator) {}
+	private void incrementLineCount() {
+		int currentCount = locator.getLineNumber();
+		if(lineCount == currentCount) return;
+		lineCount = currentCount;
+		if(lineCount % 100 == 0) {
+			for(OSMParserListener listener : parser.parserListeners) listener.onLineCountHundred();
+		}
+	}
+	
+	public void setDocumentLocator(Locator locator) {
+		this.locator = locator;
+	}
 
 	public void startDocument() throws SAXException {
 		createOSMDirectory();
@@ -46,8 +58,7 @@ public class OSMNodeHandler implements ContentHandler {
 	public void endPrefixMapping(String prefix) throws SAXException {}
 
 	public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
-		lineCount++;
-		if(lineCount % 100 == 0) for(OSMParserListener listener : parser.parserListeners) listener.onLineCountHundred();
+		incrementLineCount();
 		
 		switch(qName) {
 		
@@ -104,6 +115,7 @@ public class OSMNodeHandler implements ContentHandler {
 	}
 	
 	public void endElement(String uri, String localName, String qName) throws SAXException {
+		incrementLineCount();
 		ParsedObject lastParsedObject = getLastParsedObject();
 		if(qName.equals(lastParsedObject.getQName())) {
 			lastParsedObject.parseAttributes();
@@ -154,5 +166,4 @@ public class OSMNodeHandler implements ContentHandler {
 			Main.log("Using existing directory.");
 		}
 	}
-	
 }

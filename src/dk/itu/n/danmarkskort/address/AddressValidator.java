@@ -1,13 +1,11 @@
 package dk.itu.n.danmarkskort.address;
 
-import java.util.List;
-
 public class AddressValidator {
 	public AddressValidator(){
 	}
 	
 	public String cleanAddress(String inputStr){
-		System.out.println("Replace Side: "+cleanAddressSide(inputStr));
+		//System.out.println("Replace Side: "+cleanAddressSide(inputStr));
 		inputStr = inputStr.replaceAll("\\s{2,}"," ") //replace spaces etc.
 				.replaceAll("[\\t\\u002C\\u002E]"," ") //replace tabs, Comma, dots
 				.replaceAll("[^0-9a-zA-ZÊ¯Â∆ÿ≈·¡È…Ë»ˆ÷\\u002D\\s]","?")
@@ -50,31 +48,5 @@ public class AddressValidator {
 		return inputStr.replaceAll("kl.", "")
 				.replaceAll("st. ","")
 				.replaceAll("([0-9])+(\\. sal) ","");
-	}
-
-	public boolean confirmStreetname(String streetMatch) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	public boolean comparePostalcodeToCity(String postcodeMatch, String cityMatch) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	public String getCityFromPostalcode(String postcodeMatch) {
-		// TODO Auto-generated method stub
-		
-		return null;
-	}
-
-	public String getPostalcodeFromCity(String cityMatch) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public List<String> searchCityname(String city) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 }
