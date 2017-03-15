@@ -1,6 +1,5 @@
 package dk.itu.n.danmarkskort.address;
 
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -8,7 +7,6 @@ import java.util.TreeSet;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -60,8 +58,8 @@ public class AddressController implements OSMParserListener{
 	private Set<String> searchSuggestions(String find){
 		AddressParser ap = new AddressParser();
 		Address addrBuild = ap.parse(find);
-		Set<String> resultSet = new HashSet<String>();
-		Set<String> setLevens = new HashSet<String>();
+		Set<String> resultSet = new TreeSet<String>();
+		Set<String> setLevens = new TreeSet<String>();
 		if(addrBuild.getStreet() != null && !confirmStreetExist(addrBuild.getStreet())) {
 			setLevens = streetSearchLevenshteinDistance(addrBuild.getStreet());
 			resultSet.addAll(setLevens);
@@ -69,24 +67,32 @@ public class AddressController implements OSMParserListener{
 			System.out.println("Addr: accepted "+addrBuild.getStreet());
 		}
 		System.out.println("searchSuggestions: "+addrBuild.toString());
-		if(addrBuild.getHousenumber() != null){
-			Set<String>set2 = addresses.values()
-	                .stream()
-	                .filter(s -> 
-	            		s.toStringShort().toLowerCase().contains(addrBuild.getStreet().toLowerCase())
-	            			&& s.toStringShort().toLowerCase().contains(addrBuild.getHousenumber().toLowerCase()))
-	                .map(Address::toStringShort)
-			 .collect(Collectors.toCollection(TreeSet::new));
-			if(set2 != null) resultSet = set2;
-		}
 		if(resultSet.size() == 0){
-			Set<String>set = addresses.values()
+			Set<String>set = shortAddresses.keySet()
 	                .stream()
-	                .filter(s -> s.toStringShort().toLowerCase().contains(addrBuild.getStreet().toLowerCase()))
-	                .map(Address::toStringShort)
+	                .filter(s -> s.toLowerCase().contains(addrBuild.getStreet().toLowerCase()))
 	                .collect(Collectors.toSet());
 			resultSet.addAll(set);
 		}
+		if(addrBuild.getHousenumber() != null){
+			Set<String>set2 = shortAddresses.keySet()
+	                .stream()
+	                .filter(s -> 
+	                s.toLowerCase().contains(addrBuild.getStreet().toLowerCase())
+	            			&& s.toLowerCase().contains(addrBuild.getHousenumber().toLowerCase()))
+			 .collect(Collectors.toSet());
+			if(set2 != null) resultSet = set2;
+		}
+		if(addrBuild.getHousenumber() != null && addrBuild.getPostcode() == -1){
+			Set<String>set3 = shortAddresses.keySet()
+	                .stream()
+	                .filter(s -> 
+	                s.toLowerCase().contains(addrBuild.getStreet().toLowerCase())
+	            			&& s.toLowerCase().contains(addrBuild.getHousenumber().toLowerCase())
+	            			&& s.toLowerCase().contains(Integer.toString(addrBuild.getPostcode()))
+	                ).collect(Collectors.toSet());
+			if(set3 != null) resultSet = set3;
+		}	
 		return resultSet;
 	}
 	
@@ -148,12 +154,9 @@ public class AddressController implements OSMParserListener{
 	}
 	
 	private void updateAllAddressPathMapping(){
-		int i = 1;
 		for(Address addr : addresses.values()){
 			updateAddressPathMapping(addr);
 			shortAddresses.put(addr.toStringShort(), addr);
-			if(i < 10) System.out.println(addr.toStringShort());
-			i++;
 		}
 	}
 	
@@ -212,7 +215,6 @@ public class AddressController implements OSMParserListener{
 		
 		Main.log("AdresseController found: "+addresses.size()+" adresses");
 	}
-	
 
 	@Override
 	public void onLineCountHundred() {

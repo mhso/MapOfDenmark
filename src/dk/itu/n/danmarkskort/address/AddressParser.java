@@ -14,7 +14,7 @@ public class AddressParser {
 		final String RGX_POSTCODE = "(?<postcode>[0-9]{4})";
 		
 		final Pattern PAT_POSTCODE = Pattern.compile(RGX_POSTCODE);
-		final Pattern PAT_STREET_HOUSE = Pattern.compile("^(?<street>([0-9]+\\s"+RGX_ALPHA+"+)|("+RGX_ALPHA+"+))\\s(?<housenumber>([0-9]{1,3}[a-zA-B]{1}\\s)|([0-9]{1,3}))");
+		final Pattern PAT_STREET_HOUSE = Pattern.compile("^(?<street>([0-9]+\\s"+RGX_ALPHA+"+)|("+RGX_ALPHA+"+))\\s(?<housenumber>([0-9]{1,3}[a-zA-B]{1})|([0-9]{1,3}))");
 		final Pattern PAT_POSTCODE_CITY = Pattern.compile(""+RGX_POSTCODE+"\\s(?<city>"+RGX_ALPHA+"+$)");
 		final Pattern PAT_STREET = Pattern.compile("^(?<street>([0-9]+\\s"+RGX_ALPHA+"+)|("+RGX_ALPHA+"+))");
 		final Pattern PAT_CITY = Pattern.compile("(?<city>"+RGX_ALPHA+"+$)");
