@@ -24,17 +24,17 @@ public class BottomPanel extends JPanel {
     }
 
     private void addLeft() {
-
-        JPanel leftPanel = new JPanel(new GridBagLayout());
-        gbcParent.gridx = 0;
-        gbcParent.gridy = 1;
-
         GridBagConstraints gbc = new GridBagConstraints();
+
         JLabel dummy = new JLabel();
         gbc.weightx = 1;
         gbc.gridx = 1;
         gbc.gridy = 0;
         gbc.weighty = 1;
+
+        JPanel leftPanel = new JPanel(new GridBagLayout());
+        gbcParent.gridx = 0;
+        gbcParent.gridy = 1;
         leftPanel.add(dummy, gbc);
 
         gbc.weightx = 0.0;
@@ -44,7 +44,6 @@ public class BottomPanel extends JPanel {
         JLabel scale = new JLabel(style.scaleIndicator());
 
         leftPanel.add(scale, gbc);
-
         add(leftPanel, gbcParent);
     }
 
@@ -58,7 +57,6 @@ public class BottomPanel extends JPanel {
         JLabel dummy = new JLabel();
         gbcParent.gridx = 1;
         gbcParent.weightx = 1;
-
         add(dummy, gbcParent);
     }
 
@@ -74,26 +72,14 @@ public class BottomPanel extends JPanel {
         gbc.weightx = 1;
         rightParent.add(dummy, gbc);
 
-        JButton zoomIn = style.zoomInButton();
-        zoomIn.setBackground(style.zoomButtonBG());
-        zoomIn.setToolTipText("Zoom in");
-        zoomIn.setBorder(null);
-        zoomIn.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        zoomIn.setRolloverIcon(style.zoomInHoverIcon());
-
+        CustomButton zoomIn = style.zoomInButton();
         gbc.gridx = 1;
         gbc.gridy = 1;
         gbc.weighty = 0.0;
         gbc.weightx = 0.0;
         rightParent.add(zoomIn, gbc);
 
-        JButton zoomOut = style.zoomOutButton();
-        zoomOut.setBackground(style.zoomButtonBG());
-        zoomOut.setToolTipText("Zoom out");
-        zoomOut.setBorder(null);
-        zoomOut.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        zoomOut.setRolloverIcon(style.zoomOutHoverIcon());
-
+        CustomButton zoomOut = style.zoomOutButton();
         gbc.gridy = 2;
         gbc.insets = new Insets(5, 0, 0, 0);
         rightParent.add(zoomOut, gbc);

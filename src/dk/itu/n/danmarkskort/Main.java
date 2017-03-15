@@ -2,6 +2,7 @@ package dk.itu.n.danmarkskort;
 
 import javax.swing.*;
 
+import dk.itu.n.danmarkskort.GUI.WindowParsingLoadscreen;
 import dk.itu.n.danmarkskort.address.AddressController;
 import dk.itu.n.danmarkskort.backend.OSMParser;
 import dk.itu.n.danmarkskort.backend.ParserListenerTest;
@@ -28,13 +29,19 @@ public class Main {
 	}
 
 	public static void prepareParser(String[] args) {
+		WindowParsingLoadscreen loadScreen = new WindowParsingLoadscreen();
+		LoadScreenThread r = new LoadScreenThread(loadScreen);
 		osmParser = new OSMParser();
 		
 		// Add your listeners for the parser here, if you are going to use data. 
 		osmParser.addListener(new ParserListenerTest());
 		osmParser.addListener(AddressController.getInstance());
+		osmParser.addListener(loadScreen);
 		
-		if(args.length == 1) osmParser.parseFile(args[0]);
+		if(args.length == 1) {
+			r.setFilenameAndRun(args[0]);
+			osmParser.parseFile(args[0]);
+		}
 	}
 	
 	public static void main() {
@@ -54,13 +61,32 @@ public class Main {
 		log("RAM usage: " + usage + "MB");
 	}
 
-        public static void makeFrame() {
-                JFrame window = new JFrame(APP_NAME);
-                window.add(new MainCanvas());
-                window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                window.pack();
-                window.setLocationRelativeTo(null);
-                window.setVisible(true);
-        }
-
+    public static void makeFrame() {
+            JFrame window = new JFrame(APP_NAME);
+            window.add(new MainCanvas());
+            window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            window.pack();
+            window.setLocationRelativeTo(null);
+            window.setVisible(true);
+    }
+    
+    private static class LoadScreenThread implements Runnable {
+    	private WindowParsingLoadscreen loadScreen;
+    	private String fileName;
+    	
+    	public LoadScreenThread(WindowParsingLoadscreen loadScreen) {
+    		this.loadScreen = loadScreen;
+    	}
+    	
+    	public void setFilenameAndRun(String fileName) {
+    		this.fileName = fileName;
+    		run();
+    	}
+    	
+		@Override
+		public void run() {
+			loadScreen.initialize(fileName);
+		}
+    	
+    }
 }
