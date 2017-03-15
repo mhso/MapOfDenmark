@@ -34,7 +34,6 @@ public class GUILayerController extends JPanel implements ComponentListener {
 	public void setPreferredSize(Dimension d) {
 		super.setPreferredSize(d);
 		setBounds(0, 0, d.width, d.height);
-		System.out.println(d);
 		for(Container c : layers) {
 			c.setPreferredSize(d);
 			c.setBounds(0, 0, d.width, d.height);

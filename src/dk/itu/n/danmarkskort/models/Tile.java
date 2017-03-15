@@ -22,8 +22,14 @@ public class Tile {
 		return coord;
 	}
 	
-	public void request() {
-		
+	public void load() {
+		// Read file
+		// Fill parsedObjects
+		// Add reference to TileController
+	}
+	
+	public void unload() {
+		// Remove reference from TileController
 	}
 	
 	public void write() {

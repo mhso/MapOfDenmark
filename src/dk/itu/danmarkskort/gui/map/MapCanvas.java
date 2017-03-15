@@ -12,12 +12,18 @@ import java.util.Observable;
 
 import javax.swing.JPanel;
 
+import dk.itu.n.danmarkskort.Main;
+import dk.itu.n.danmarkskort.Util;
+import dk.itu.n.danmarkskort.models.Region;
+
 public class MapCanvas extends JPanel {
 
 	private static final long serialVersionUID = -4476997375977002964L;
 	
-	AffineTransform transform = new AffineTransform();
-	boolean antiAlias;
+	private AffineTransform transform = new AffineTransform();
+	private boolean antiAlias;
+	private int tileCount = 0;
+	private final int MAX_ZOOM = 20;
 	
 	public MapCanvas() {
 		new MapMouseController(this);
@@ -32,13 +38,31 @@ public class MapCanvas extends JPanel {
 	}
 	
 	public void drawMap(Graphics2D g2d) {
-		g2d.setColor(Color.DARK_GRAY);
+		
 		int boxSize = 16;
-		for(int x=0; x<this.getWidth(); x+=boxSize) {
-			for(int y=0; y<this.getWidth(); y+=boxSize) {
-				g2d.drawRect(x, y, boxSize, boxSize);
+		
+		Region mapRegion = getDisplayedRegion();
+		double x1 = Math.max(0, mapRegion.getPointFrom().getX());
+		double y1 = Math.max(0, mapRegion.getPointFrom().getY());
+		double x2 = Math.min(640, mapRegion.getPointTo().getX());
+		double y2 = Math.min(480, mapRegion.getPointTo().getY());
+		
+		tileCount = 0;
+		for(double x=x1; x<x2; x+=boxSize) {
+			for(double y=y1; y<y2; y+=boxSize) {
+				int r = (int)(Util.roundByN(50, 200 / getZoom()));
+				int g = (int)(200);
+				int b = (int)(Util.roundByN(50, 200 / getZoom()));
+				g2d.setColor(new Color(r, g, b));
+				g2d.fillRect((int)(x - x1 % 16), (int)(y - y1 % 16), boxSize, boxSize);
+				g2d.setColor(Color.WHITE);
+				g2d.drawRect((int)(x - x1 % 16), (int)(y - y1 % 16), boxSize, boxSize);
+				
+				tileCount++;
 			}
 		}
+		
+		
 	}
 
 	public void pan(double dx, double dy) {
@@ -52,6 +76,13 @@ public class MapCanvas extends JPanel {
 
 	public void zoom(double factor) {
 		transform.preConcatenate(AffineTransform.getScaleInstance(factor, factor));
+		if(transform.getScaleX() > MAX_ZOOM) {
+			factor = (20 / getZoom());
+			transform.preConcatenate(AffineTransform.getScaleInstance(factor, factor));
+		} else if(transform.getScaleX() < 1) {
+			factor = (1 / getZoom());
+			transform.preConcatenate(AffineTransform.getScaleInstance(factor, factor));
+		}
 		repaint();
 	}
 
@@ -68,4 +99,28 @@ public class MapCanvas extends JPanel {
 		repaint();
 	}
 
+	public double getZoom() {
+		return transform.getScaleX();
+	}
+	
+	public double getMapX() {
+		return (transform.getTranslateX() / getZoom()) * -1;
+	}
+	
+	public double getMapY() {
+		return (transform.getTranslateY() / getZoom()) * -1;
+	}
+	
+	public int getTileDrawnCount() {
+		return tileCount;
+	}
+	
+	public Region getDisplayedRegion() {
+		double o = -200 / getZoom();
+		double width = getPreferredSize().getWidth();
+		double height = getPreferredSize().getHeight();
+		Region r = new Region(getMapX() + o, getMapY() + o, getMapX() + width/getZoom() - o, getMapY() + height/getZoom() - o);
+		return r;
+	}
+	
 }

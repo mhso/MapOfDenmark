@@ -21,6 +21,8 @@ public class Main {
 	public static TileController tileController;
 	public static JFrame window;
 	public static GUILayerController layerManager;
+	public static MapCanvas map;
+	public static MainCanvas mainPanel;
 	
 	public static void main(String[] args) {
         startup(args);
@@ -69,11 +71,11 @@ public class Main {
     public static void makeFrame() {
             window = new JFrame(APP_NAME);
             layerManager = new GUILayerController(window);
-            layerManager.setPreferredSize(new Dimension(640, 480));
+            layerManager.setPreferredSize(new Dimension(1000, 800));
             
             // GUI Layers
-            layerManager.addLayer(new MainCanvas());
-            layerManager.addLayer(new MapCanvas());
+            layerManager.addLayer(mainPanel = new MainCanvas());
+            layerManager.addLayer(map = new MapCanvas());
             
             window.add(layerManager);
             window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
