@@ -10,7 +10,7 @@ public class Postcode {
 	public Postcode(int postcode, String city){
 		this.setPostcode(postcode);
 		this.setCity(city);
-		streetsMap = new TreeMap<String, Street>(String.CASE_INSENSITIVE_ORDER);
+		streetsMap = new TreeMap<String, Street>();
 	}
 
 	public int getPostcode() { return postcode; }

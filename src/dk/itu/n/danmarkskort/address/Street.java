@@ -8,7 +8,7 @@ public class Street {
 	
 	public Street(String street){
 		this.setStreet(street);
-		housenumbers = new TreeMap<String, Address>(String.CASE_INSENSITIVE_ORDER);
+		housenumbers = new TreeMap<String, Address>();
 	}
 
 	public String getStreet() { return street; }

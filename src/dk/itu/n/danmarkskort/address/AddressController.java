@@ -1,5 +1,6 @@
 package dk.itu.n.danmarkskort.address;
 
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -7,6 +8,8 @@ import java.util.TreeSet;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import org.apache.commons.lang3.StringUtils;
 
 import dk.itu.n.danmarkskort.Main;
@@ -17,12 +20,14 @@ import dk.itu.n.danmarkskort.models.ParsedObject;
 public class AddressController implements OSMParserListener{
 	private Map<Long, Address> addresses;
 	private Map<Integer, Postcode> postcodes;
+	private Map<String, Address> shortAddresses;
 	private static AddressController instance;
 	private final static Lock lock = new ReentrantLock();
 	
 	private AddressController(){
 		addresses =  new TreeMap<Long, Address>();
 		postcodes = new TreeMap<Integer, Postcode>();
+		shortAddresses = new TreeMap<String, Address>();
 	}
 	
 	public static AddressController getInstance(){
@@ -55,20 +60,34 @@ public class AddressController implements OSMParserListener{
 	private Set<String> searchSuggestions(String find){
 		AddressParser ap = new AddressParser();
 		Address addrBuild = ap.parse(find);
-		
+		Set<String> resultSet = new HashSet<String>();
+		Set<String> setLevens = new HashSet<String>();
 		if(addrBuild.getStreet() != null && !confirmStreetExist(addrBuild.getStreet())) {
-			streetSearchLevenshteinDistance(addrBuild.getStreet());
+			setLevens = streetSearchLevenshteinDistance(addrBuild.getStreet());
+			resultSet.addAll(setLevens);
 		} else {
 			System.out.println("Addr: accepted "+addrBuild.getStreet());
 		}
-		
 		System.out.println("searchSuggestions: "+addrBuild.toString());
-		Set<String> set = addresses.values()
-                .stream()
-                .filter(s -> s.toStringShort().toLowerCase().startsWith(addrBuild.getStreet().toLowerCase()))
-                .map(Address::toStringShort)
-                .collect(Collectors.toSet());
-		return set;
+		if(addrBuild.getHousenumber() != null){
+			Set<String>set2 = addresses.values()
+	                .stream()
+	                .filter(s -> 
+	            		s.toStringShort().toLowerCase().contains(addrBuild.getStreet().toLowerCase())
+	            			&& s.toStringShort().toLowerCase().contains(addrBuild.getHousenumber().toLowerCase()))
+	                .map(Address::toStringShort)
+			 .collect(Collectors.toCollection(TreeSet::new));
+			if(set2 != null) resultSet = set2;
+		}
+		if(resultSet.size() == 0){
+			Set<String>set = addresses.values()
+	                .stream()
+	                .filter(s -> s.toStringShort().toLowerCase().contains(addrBuild.getStreet().toLowerCase()))
+	                .map(Address::toStringShort)
+	                .collect(Collectors.toSet());
+			resultSet.addAll(set);
+		}
+		return resultSet;
 	}
 	
 	private Set<String> streetSearchLevenshteinDistance(String inputStr){
@@ -87,7 +106,7 @@ public class AddressController implements OSMParserListener{
 	
 	private Address preciseMatch(Address addr){
 		Address result = addresses.values().stream()
-				.filter(x ->addr.toStringShort().equalsIgnoreCase(x.toStringShort())														
+				.filter(x -> addr.toStringShort().equalsIgnoreCase(x.toStringShort())														
 				).findFirst()
 				.orElse(null);
 		if (result != null) return result;
@@ -96,7 +115,7 @@ public class AddressController implements OSMParserListener{
 	
 	private boolean confirmStreetExist(String inputStr){
 		Address result = addresses.values().stream()
-				.filter((x) ->  inputStr.equalsIgnoreCase(x.getStreet()))
+				.filter((x) -> inputStr.equalsIgnoreCase(x.getStreet()))
 				.findAny()
 				.orElse(null);
 		return (result != null);
@@ -129,8 +148,12 @@ public class AddressController implements OSMParserListener{
 	}
 	
 	private void updateAllAddressPathMapping(){
+		int i = 1;
 		for(Address addr : addresses.values()){
 			updateAddressPathMapping(addr);
+			shortAddresses.put(addr.toStringShort(), addr);
+			if(i < 10) System.out.println(addr.toStringShort());
+			i++;
 		}
 	}
 	
@@ -173,8 +196,8 @@ public class AddressController implements OSMParserListener{
 				long nodeId = Long.parseLong(omsAddr.getAttributes().get("id"));
 				float lat = Float.parseFloat(omsAddr.getAttributes().get("lat"));
 				float lon = Float.parseFloat(omsAddr.getAttributes().get("lon"));
-				Address addr = createOsmAddress(nodeId, lat, lon);
 				
+				Address addr = createOsmAddress(nodeId, lat, lon);
 				AddressOsmParser aop = new AddressOsmParser(addr);
 				aop.parseKeyAddr(omsAddr.attributes);				
 			}

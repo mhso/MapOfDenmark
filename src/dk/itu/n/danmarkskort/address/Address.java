@@ -1,7 +1,5 @@
 package dk.itu.n.danmarkskort.address;
 
-import java.io.Serializable;
-
 public class Address{
 	private long nodeId;
 	private float lat, lon;
@@ -52,7 +50,7 @@ public class Address{
  		StringBuilder sb = new StringBuilder();
  			if(street != null) sb.append(street +" ");
  			if(housenumber != null) sb.append(housenumber + " ");
- 			if(postcode == -1) sb.append(postcode + " ");
+ 			if(postcode != -1) sb.append(postcode + " ");
  			if(city != null) sb.append(city);
  		return sb.toString().trim();
  	}
