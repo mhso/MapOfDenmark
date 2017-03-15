@@ -1,6 +1,8 @@
 package dk.itu.n.danmarkskort.GUI;
 
+import dk.itu.n.danmarkskort.address.Address;
 import dk.itu.n.danmarkskort.address.AddressController;
+import dk.itu.n.danmarkskort.search.SearchController;
 
 import javax.swing.*;
 import javax.swing.text.AbstractDocument;
@@ -80,9 +82,15 @@ public class TopPanel extends JPanel {
             dropMenu.showDropdown(menu);
         });
 
+        search.addActionListener(e -> searchForAddress(input.getText()));
 
         // adding drop down functionality
         ((AbstractDocument) input.getDocument()).setDocumentFilter(new TopPanel.SearchFilter());
+    }
+
+    // Skal nok flyttes senere, for at overholde MVC
+    public void searchForAddress(String address) {
+        Address a = SearchController.getInstance().getSearchFieldAddressObj(address);
     }
 
     public void populateList(Set<String> items) {
@@ -113,16 +121,40 @@ public class TopPanel extends JPanel {
     }
 
     private class SearchFilter extends DocumentFilter {
+        /**
+         * Invoked prior to removal of the specified region in the
+         * specified Document. Subclasses that want to conditionally allow
+         * removal should override this and only call supers implementation as
+         * necessary, or call directly into the <code>FilterBypass</code> as
+         * necessary.
+         *
+         * @param fb     FilterBypass that can be used to mutate Document
+         * @param offset the offset from the beginning &gt;= 0
+         * @param length the number of characters to remove &gt;= 0
+         * @throws BadLocationException some portion of the removal range
+         *                              was not a valid part of the document.  The location in the exception
+         *                              is the first bad position encountered.
+         */
+        @Override
+        public void remove(FilterBypass fb, int offset, int length) throws BadLocationException {
+            super.remove(fb, offset, length);
+            dropdownSuggestions(offset, input.getText());
+        }
+
         @Override
         public void replace(FilterBypass fb, int offset, int length, String newText,
                             AttributeSet attr) throws BadLocationException {
 
             super.replace(fb, offset, length, newText, attr);
+            dropdownSuggestions(offset, input.getText());
+        }
 
-            if(offset > 2) populateList(AddressController.getInstance().getAddrSearchResults(input.getText()));
-
-            revalidate();
-            repaint();
+        public void dropdownSuggestions(int offset, String text) {
+            if(offset > 2) {
+                populateList(SearchController.getInstance().getSearchFieldSuggestions(text));
+                revalidate();
+                repaint();
+            }
         }
     }
 }
