@@ -1,15 +1,10 @@
 package dk.itu.n.danmarkskort;
 
-import dk.itu.danmarkskort.gui.map.MapCanvas;
-import dk.itu.danmarkskort.gui.map.MapMouseController;
 import dk.itu.n.danmarkskort.GUI.GUIManager;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.NoninvertibleTransformException;
-import java.awt.geom.Point2D;
-import java.util.Observable;
 
 public class MainCanvas extends JPanel {
 
