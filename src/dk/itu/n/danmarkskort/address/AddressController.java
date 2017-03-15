@@ -81,7 +81,7 @@ public class AddressController implements OSMParserListener{
 		AddressParser ap = new AddressParser();
 		Address addrBuild = preciseMatch(ap.parse(find));
 		String parsedFind = addrBuild.toStringShort();
-		System.out.println(addrBuild.toString());
+		//System.out.println(addrBuild.toString());
 		Set<String> set = addresses.values()
                 .stream()
                 .filter(s -> s.toStringShort().toLowerCase().startsWith(addrBuild.getStreet().toLowerCase()))
