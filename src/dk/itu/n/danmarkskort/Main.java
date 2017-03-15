@@ -1,6 +1,5 @@
 package dk.itu.n.danmarkskort;
 
-import java.awt.Color;
 import java.awt.Dimension;
 
 import javax.swing.*;

@@ -32,9 +32,13 @@ public class MapCanvas extends JPanel {
 	}
 	
 	public void drawMap(Graphics2D g2d) {
-		g2d.setColor(Color.RED);
-		g2d.setStroke(new BasicStroke(1));
-		g2d.drawLine(0, 0, 640, 640);
+		g2d.setColor(Color.DARK_GRAY);
+		int boxSize = 16;
+		for(int x=0; x<this.getWidth(); x+=boxSize) {
+			for(int y=0; y<this.getWidth(); y+=boxSize) {
+				g2d.drawRect(x, y, boxSize, boxSize);
+			}
+		}
 	}
 
 	public void pan(double dx, double dy) {
