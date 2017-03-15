@@ -5,7 +5,7 @@ public class AddressValidator {
 	}
 	
 	public String cleanAddress(String inputStr){
-		System.out.println("Replace Side: "+cleanAddressSide(inputStr));
+		//System.out.println("Replace Side: "+cleanAddressSide(inputStr));
 		inputStr = inputStr.replaceAll("\\s{2,}"," ") //replace spaces etc.
 				.replaceAll("[\\t\\u002C\\u002E]"," ") //replace tabs, Comma, dots
 				.replaceAll("[^0-9a-zA-ZÊ¯Â∆ÿ≈·¡È…Ë»ˆ÷\\u002D\\s]","?")
