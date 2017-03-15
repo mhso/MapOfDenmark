@@ -1,5 +1,7 @@
 package dk.itu.n.danmarkskort.address;
 
+import java.awt.geom.Point2D;
+
 public class Address{
 	private long nodeId;
 	private float lat;
@@ -23,7 +25,6 @@ public class Address{
 		this.nodeId = nodeId;
 		this.lat = lat;
 		this.lon = lon;
-	 
 	}
 	
 	public long getNodeId() { return nodeId; }
