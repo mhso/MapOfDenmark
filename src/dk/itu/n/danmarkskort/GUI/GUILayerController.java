@@ -4,17 +4,20 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
-import java.awt.event.WindowListener;
 import java.util.ArrayList;
 
-import javax.swing.JPanel;
+import javax.swing.*;
 
 import dk.itu.n.danmarkskort.Main;
 
-public class GUILayerController extends JPanel implements ComponentListener {
+public class GUILayerController extends JPanel{
+
+    public GUILayerController() {
+        setLayout(new OverlayLayout(this));
+    }
 
 	private static final long serialVersionUID = -7114065204222405886L;
-	private ArrayList<Container> layers = new ArrayList<Container>();
+	/*private ArrayList<Container> layers = new ArrayList<Container>();
 	private Container parent;
 	
 	public GUILayerController(Container parent) {
@@ -69,6 +72,6 @@ public class GUILayerController extends JPanel implements ComponentListener {
 	public void componentShown(ComponentEvent arg0) {
 		// TODO Auto-generated method stub
 		
-	}
+	}*/
 	
 }
