@@ -1,4 +1,4 @@
-package dk.itu.n.danmarkskort.Extras; /**
+package dk.itu.n.danmarkskort.extras; /**
  * @(#)AlphaImageIcon.java	1.0 08/16/10
  */
 

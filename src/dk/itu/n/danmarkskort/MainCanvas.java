@@ -1,8 +1,9 @@
 package dk.itu.n.danmarkskort;
 
-import dk.itu.n.danmarkskort.GUI.GUIManager;
-
 import javax.swing.*;
+
+import dk.itu.n.danmarkskort.gui.GUIManager;
+
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 
