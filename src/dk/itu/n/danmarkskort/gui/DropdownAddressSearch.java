@@ -1,7 +1,5 @@
 package dk.itu.n.danmarkskort.gui;
 
-import dk.itu.n.danmarkskort.gui.menu.CustomDropdown;
-
 import javax.swing.*;
 
 import java.awt.*;

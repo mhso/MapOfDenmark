@@ -10,6 +10,8 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DocumentFilter;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 public class TopPanel extends JPanel {
@@ -93,11 +95,11 @@ public class TopPanel extends JPanel {
         Address a = SearchController.getInstance().getSearchFieldAddressObj(address);
     }
 
-    public void populateSuggestions(Set<String> items) {
+    public void populateSuggestions(List<String> list) {
         dropSuggestions.setVisible(false);
         dropSuggestions.removeAll();
         int i = 0;
-        for(String st : items){
+        for(String st : list){
             dropSuggestions.addElement(st);
             if(++i > 10) break;
         }
@@ -138,7 +140,7 @@ public class TopPanel extends JPanel {
         @Override
         public void remove(FilterBypass fb, int offset, int length) throws BadLocationException {
             super.remove(fb, offset, length);
-            dropdownSuggestions(offset, input.getText());
+            dropdownSuggestions(offset - 1, input.getText());
         }
 
         @Override
@@ -150,7 +152,7 @@ public class TopPanel extends JPanel {
         }
 
         public void dropdownSuggestions(int offset, String text) {
-            if(offset > 2) {
+            if(offset > 1) {
                 populateSuggestions(SearchController.getInstance().getSearchFieldSuggestions(text));
                 revalidate();
                 repaint();

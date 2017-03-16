@@ -1,13 +1,8 @@
 package dk.itu.n.danmarkskort.gui.menu;
 
-import dk.itu.n.danmarkskort.Main;
-import dk.itu.n.danmarkskort.gui.CustomButton;
-import dk.itu.n.danmarkskort.gui.CustomScrollBarUI;
-import dk.itu.n.danmarkskort.gui.Style;
-import dk.itu.n.danmarkskort.gui.TopPanel;
+import dk.itu.n.danmarkskort.gui.*;
 
 import javax.swing.*;
-import javax.swing.plaf.ColorUIResource;
 import java.awt.*;
 
 public class DropdownMenu extends CustomDropdown {

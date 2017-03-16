@@ -1,9 +1,9 @@
 package dk.itu.n.danmarkskort.gui;
 
+import dk.itu.n.danmarkskort.extras.AlphaImageIcon;
 import javax.swing.*;
 
 import dk.itu.n.danmarkskort.extras.AlphaImageIcon;
-
 import java.awt.*;
 
 public class CustomButton extends JButton {
