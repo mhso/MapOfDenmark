@@ -9,18 +9,12 @@ public class AddressValidator {
 				.replaceAll("[\\t\\u002C\\u002E]"," ") //replace tabs, Comma, dots
 				.replaceAll("[^0-9a-zA-ZÊ¯Â∆ÿ≈·¡È…Ë»ˆ÷\\u002D\\s]","?")
 				.replaceAll("\\s{2,}"," ").trim();
-		System.out.println("Clean 1: "+inputStr);
 		inputStr = parseAddressFloor(inputStr);
-		System.out.println("Clean Floor: "+inputStr);
 		inputStr = cleanAddressFloor(inputStr);
-		System.out.println("Clean Floor: "+inputStr);
 		inputStr = parseAddressSide(inputStr);
-		System.out.println("Clean Side: "+inputStr);
 		inputStr = cleanAddressSide(inputStr);
-		System.out.println("Clean Side: "+inputStr);
 		inputStr = insertDotAfterSingleChar(inputStr);
 		inputStr = cleanSpaces(inputStr);
-		System.out.println("Clean up: "+inputStr);
 		return inputStr;
 	}
 	
