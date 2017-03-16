@@ -1,5 +1,6 @@
 package dk.itu.n.danmarkskort.models;
 
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -12,17 +13,25 @@ public class Tile {
 	private TileCoordinate coord;
 	private BufferedImage image;
 	private int zoom;
+	private boolean didRender = false;
 	private final int size = 16;
 	public ArrayList<ParsedObject> parsedObjects = new ArrayList<ParsedObject>();
 	
 	public Tile(TileCoordinate coord, int zoom) {
 		this.coord = coord;
 		this.zoom = zoom;
-		image = new BufferedImage(size, size, )
+		image = new BufferedImage(size, size, BufferedImage.TYPE_INT_RGB);
 	}
 
 	public TileCoordinate getCoord() {
 		return coord;
+	}
+	
+	public void render() {
+		if(!didRender) {
+			Graphics2D g2d = (Graphics2D) image.getGraphics();
+			
+		}
 	}
 	
 	public void load() {
