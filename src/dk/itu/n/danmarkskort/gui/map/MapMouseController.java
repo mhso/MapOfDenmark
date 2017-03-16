@@ -1,4 +1,4 @@
-package dk.itu.danmarkskort.gui.map;
+package dk.itu.n.danmarkskort.gui.map;
 
 
 import java.awt.Dimension;

@@ -4,12 +4,12 @@ import java.awt.Dimension;
 
 import javax.swing.*;
 
-import dk.itu.danmarkskort.gui.map.MapCanvas;
 import dk.itu.n.danmarkskort.GUI.GUILayerController;
 import dk.itu.n.danmarkskort.GUI.WindowParsingLoadscreen;
 import dk.itu.n.danmarkskort.address.AddressController;
 import dk.itu.n.danmarkskort.backend.OSMParser;
 import dk.itu.n.danmarkskort.backend.TileController;
+import dk.itu.n.danmarkskort.gui.map.MapCanvas;
 
 public class Main {
 
