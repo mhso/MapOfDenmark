@@ -1,5 +1,6 @@
 package dk.itu.n.danmarkskort.models;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -30,8 +31,15 @@ public class Tile {
 	public void render() {
 		if(!didRender) {
 			Graphics2D g2d = (Graphics2D) image.getGraphics();
-			
+			g2d.setColor(new Color(181, 208, 208)); // Water
+			g2d.fillRect(0, 0, size, size);
+			g2d.setColor(Color.LIGHT_GRAY);
+			g2d.drawRect(0, 0, size, size);
 		}
+	}
+	
+	public BufferedImage getImage() {
+		return image;
 	}
 	
 	public void load() {

@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
@@ -23,6 +25,8 @@ public class OSMNodeHandler implements ContentHandler {
 	private int lineCount;
 	private Locator locator;
 	private List<ParsedObject> currentParsedObjects = new ArrayList<ParsedObject>();
+	private Map<Long, ParsedNode> nodeMap = new HashMap<Long, ParsedNode>();
+	
 	
 	public OSMNodeHandler(OSMParser parser, String fileName) {
 		this.fileName = fileName;
@@ -43,14 +47,15 @@ public class OSMNodeHandler implements ContentHandler {
 	}
 
 	public void startDocument() throws SAXException {
-		createOSMDirectory();
 		Main.log("Parsing started.");
+		createOSMDirectory();
 		for(OSMParserListener listener : parser.parserListeners) listener.onParsingStarted();
 	}
 
 	public void endDocument() throws SAXException {
-		Main.log("Parsing finished.");
 		for(OSMParserListener listener : parser.parserListeners) listener.onParsingFinished();
+		nodeMap.clear();
+		Main.log("Parsing finished.");
 	}
 
 	public void startPrefixMapping(String prefix, String uri) throws SAXException {}
@@ -75,12 +80,13 @@ public class OSMNodeHandler implements ContentHandler {
 			addParsedObject(new ParsedBounds(), atts, qName);
 			break;
 		case "node":
-			addParsedObject(new ParsedNode(), atts, qName);
+			addParsedNode(new ParsedNode(), atts, qName);
 			break;
 		case "tag":
 			addTagToParsedObject(atts);
 			break;
 		case "way":
+			addParsedWay(new ParsedWay(), atts, qName);
 			break;
 		case "nd":
 			break;
@@ -114,16 +120,42 @@ public class OSMNodeHandler implements ContentHandler {
 		}
 	}
 	
+	public void addParsedNode(ParsedObject parsedObject, Attributes atts, String qName) {
+		parsedObject.addAttributes(atts);
+		parsedObject.setQName(qName);
+		currentParsedObjects.add(parsedObject);
+	}
+
+	public void addParsedWay(ParsedObject parsedObject, Attributes atts, String qName) {
+		parsedObject.addAttributes(atts);
+		parsedObject.setQName(qName);
+		currentParsedObjects.add(parsedObject);
+	}
+	
 	public void endElement(String uri, String localName, String qName) throws SAXException {
 		incrementLineCount();
 		ParsedObject lastParsedObject = getLastParsedObject();
 		if(qName.equals(lastParsedObject.getQName())) {
 			lastParsedObject.parseAttributes();
+			
+			//Add nodes to nodemap
+			if(lastParsedObject instanceof ParsedNode) {
+				ParsedNode node = (ParsedNode) lastParsedObject;
+				nodeMap.put(node.getId(), node);
+			}
+			
+			//Map nodes to way
+			if(lastParsedObject instanceof ParsedWay) {
+				ParsedWay way = (ParsedWay) lastParsedObject;
+				
+				if(nodeMap.containsKey())
+			}
+			
 			for(OSMParserListener listener : parser.parserListeners) listener.onParsingGotObject(lastParsedObject);
 			currentParsedObjects.remove(lastParsedObject);
 		}
 	}
-
+	
 	public void characters(char[] ch, int start, int length) throws SAXException {
 		if(getLastParsedObject() != null) {
 			String text = new String(ch, start, length);
