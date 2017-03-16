@@ -74,8 +74,12 @@ public class Main {
             JPanel overlay = new JPanel();
             overlay.setLayout(new OverlayLayout(overlay));
             overlay.setPreferredSize(new Dimension(WIDTH, HEIGHT));
-            overlay.add(new MainCanvas());
-            overlay.add(new MapCanvas());
+            mainPanel = new MainCanvas();
+            map = new MapCanvas();
+            map.setPreferredSize(new Dimension(WIDTH, HEIGHT));
+            overlay.add(mainPanel);
+            
+            overlay.add(map);
 
             window.add(overlay);
             window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
