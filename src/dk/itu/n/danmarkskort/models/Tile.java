@@ -1,21 +1,24 @@
 package dk.itu.n.danmarkskort.models;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.Util;
 
 public class Tile {
 
 	private TileCoordinate coord;
+	private BufferedImage image;
 	private int zoom;
+	private final int size = 16;
 	public ArrayList<ParsedObject> parsedObjects = new ArrayList<ParsedObject>();
 	
 	public Tile(TileCoordinate coord, int zoom) {
 		this.coord = coord;
 		this.zoom = zoom;
+		image = new BufferedImage(size, size, )
 	}
 
 	public TileCoordinate getCoord() {
