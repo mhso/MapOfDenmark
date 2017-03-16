@@ -17,6 +17,7 @@ public class Main {
 	public final static String APP_VERSION = "0.2";
 	public final static boolean debug = true;
 	public final static boolean production = false;
+	public final static int WIDTH = 1000, HEIGHT = 800;
 	public static OSMParser osmParser;
 	public static TileController tileController;
 	public static JFrame window;
@@ -70,14 +71,13 @@ public class Main {
 
     public static void makeFrame() {
             window = new JFrame(APP_NAME);
-            layerManager = new GUILayerController(window);
-            layerManager.setPreferredSize(new Dimension(1000, 800));
-            
-            // GUI Layers
-            layerManager.addLayer(mainPanel = new MainCanvas());
-            layerManager.addLayer(map = new MapCanvas());
-            
-            window.add(layerManager);
+            JPanel overlay = new JPanel();
+            overlay.setLayout(new OverlayLayout(overlay));
+            overlay.setPreferredSize(new Dimension(WIDTH, HEIGHT));
+            overlay.add(new MainCanvas());
+            overlay.add(new MapCanvas());
+
+            window.add(overlay);
             window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             window.pack();
             window.setLocationRelativeTo(null);
