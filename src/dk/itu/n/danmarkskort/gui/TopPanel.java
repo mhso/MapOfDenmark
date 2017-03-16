@@ -1,4 +1,4 @@
-package dk.itu.n.danmarkskort.GUI;
+package dk.itu.n.danmarkskort.gui;
 
 import dk.itu.n.danmarkskort.address.Address;
 import dk.itu.n.danmarkskort.address.AddressController;

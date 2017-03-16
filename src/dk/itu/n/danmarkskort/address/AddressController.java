@@ -136,7 +136,7 @@ public class AddressController implements OSMParserListener{
 		}
 		AddressOsmParser oap = new AddressOsmParser(addr);
 		addr = oap.parseKeyAddr(nodeId, lat, lon, k, v);
-		if(addr != null) addresses.put(addr.getNodeId(), addr);
+		//if(addr != null) addresses.put(addr.getNodeId(), addr);
 	}
 	
 	public Address createOsmAddress(Long nodeId, float lat, float lon){
@@ -147,7 +147,7 @@ public class AddressController implements OSMParserListener{
 			} else {
 				addr = new Address(nodeId, lon, lon);
 			}
-			addresses.put(addr.getNodeId(), addr);
+			//addresses.put(addr.getNodeId(), addr);
 			return addr;
 			}
 		return null;
@@ -156,7 +156,7 @@ public class AddressController implements OSMParserListener{
 	private void updateAllAddressPathMapping(){
 		for(Address addr : addresses.values()){
 			updateAddressPathMapping(addr);
-			shortAddresses.put(addr.toStringShort(), addr);
+			//shortAddresses.put(addr.toStringShort(), addr);
 		}
 	}
 	
@@ -167,7 +167,7 @@ public class AddressController implements OSMParserListener{
 				Postcode postcode = postcodes.get(addr.getPostcode());
 				
 				if(postcode == null) postcode = new Postcode(addr.getPostcode(), addr.getCity());
-				postcodes.put(addr.getPostcode(), postcode);
+				//postcodes.put(addr.getPostcode(), postcode);
 				
 				// Adding street to mapping
 				if(addr.getStreet() != null){
@@ -219,6 +219,5 @@ public class AddressController implements OSMParserListener{
 	@Override
 	public void onLineCountHundred() {
 		// TODO Auto-generated method stub
-		
 	}
 }

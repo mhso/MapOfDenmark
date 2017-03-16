@@ -1,4 +1,4 @@
-package dk.itu.n.danmarkskort.GUI;
+package dk.itu.n.danmarkskort.gui;
 
 import javax.swing.*;
 import java.awt.*;

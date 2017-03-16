@@ -13,7 +13,7 @@ public class SearchController{
 	private static SearchController instance;
 	private final static Lock lock = new ReentrantLock();
 	
-	public SearchController(){
+	private SearchController(){
 		
 	}
 		
