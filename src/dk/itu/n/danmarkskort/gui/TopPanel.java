@@ -93,9 +93,9 @@ public class TopPanel extends JPanel {
         Address a = SearchController.getInstance().getSearchFieldAddressObj(address);
     }
 
-    public void populateList(Set<String> items) {
-        dropSuggestions.hideDropdown();
-        dropSuggestions.clearElements();
+    public void populateSuggestions(Set<String> items) {
+        dropSuggestions.setVisible(false);
+        dropSuggestions.removeAll();
         int i = 0;
         for(String st : items){
             dropSuggestions.addElement(st);
@@ -151,9 +151,11 @@ public class TopPanel extends JPanel {
 
         public void dropdownSuggestions(int offset, String text) {
             if(offset > 2) {
-                populateList(SearchController.getInstance().getSearchFieldSuggestions(text));
+                populateSuggestions(SearchController.getInstance().getSearchFieldSuggestions(text));
                 revalidate();
                 repaint();
+            } else {
+                dropSuggestions.setVisible(false);
             }
         }
     }

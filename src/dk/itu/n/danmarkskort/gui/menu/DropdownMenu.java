@@ -1,5 +1,6 @@
 package dk.itu.n.danmarkskort.gui.menu;
 
+import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.gui.CustomButton;
 import dk.itu.n.danmarkskort.gui.CustomScrollBarUI;
 import dk.itu.n.danmarkskort.gui.Style;
@@ -9,7 +10,7 @@ import javax.swing.*;
 import javax.swing.plaf.ColorUIResource;
 import java.awt.*;
 
-public class DropdownMenu extends JPopupMenu{
+public class DropdownMenu extends CustomDropdown {
 
     private JPanel menuItems, wrapper;
     private JPanel routePage, aboutUsPage, settingsPage, mapLayersPage;
@@ -19,6 +20,7 @@ public class DropdownMenu extends JPopupMenu{
     private Style style;
 
     public DropdownMenu(TopPanel topPanel, Style style) {
+        super();
 
         this.topPanel = topPanel;
         this.style = style;
@@ -27,10 +29,6 @@ public class DropdownMenu extends JPopupMenu{
         aboutUsPage = new AboutUsPage();
         settingsPage = new SettingsPage();
         mapLayersPage = new MapLayersPage();
-
-        setFocusable(false);
-        setBorderPainted(false);
-        setBorder(BorderFactory.createEmptyBorder());
 
         wrapper = new JPanel(new GridBagLayout());
         gbcContainer = new GridBagConstraints();
@@ -57,11 +55,15 @@ public class DropdownMenu extends JPopupMenu{
 
         // open
         gbcMenuItems.gridy = 1;
-        menuItems.add(style.menuOpenButton(), gbcMenuItems);
+        CustomButton openButton = style.menuOpenButton();
+        openButton.addActionListener(e -> System.out.println("Open?? The Princess is in another Castle"));
+        menuItems.add(openButton, gbcMenuItems);
 
         // save
         gbcMenuItems.gridy = 2;
-        menuItems.add(style.menuSaveButton(), gbcMenuItems);
+        CustomButton saveButton = style.menuSaveButton();
+        saveButton.addActionListener(e -> System.out.println("Save?? The Princess is in another Castle"));
+        menuItems.add(saveButton, gbcMenuItems);
 
         // layers/filters
         gbcMenuItems.gridy = 3;
@@ -108,13 +110,6 @@ public class DropdownMenu extends JPopupMenu{
     public void addToContentPane(JPanel newContent) {
         contentPane.getViewport().removeAll();
         contentPane.getViewport().add(newContent);
-    }
-
-    /**
-     * Hide the Dropdown-Menu.
-     */
-    public void hideDropdown() {
-        setVisible(false);
     }
 
     /**
