@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
@@ -15,6 +16,7 @@ import javax.swing.JPanel;
 import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.Util;
 import dk.itu.n.danmarkskort.models.ParsedBounds;
+import dk.itu.n.danmarkskort.models.ParsedWay;
 import dk.itu.n.danmarkskort.models.Region;
 import dk.itu.n.danmarkskort.models.Tile;
 import dk.itu.n.danmarkskort.models.TileCoordinate;
@@ -44,28 +46,33 @@ public class MapCanvas extends JPanel {
 		if(!Main.tileController.hasBounds()) return;
 		ParsedBounds bounds = Main.tileController.getBounds();
 		
-		int boxSize = 16;
-		int horTileLimit = bounds.getHorizontalTileCount() * boxSize;
-		int verTileLimit = bounds.getVerticalTileCount() * boxSize;
-		
-		Region mapRegion = getDisplayedRegion();
-		double x1 = Math.max(0, mapRegion.getPointFrom().getX());
-		double y1 = Math.max(0, mapRegion.getPointFrom().getY());
-		double x2 = Math.min(horTileLimit, mapRegion.getPointTo().getX());
-		double y2 = Math.min(verTileLimit, mapRegion.getPointTo().getY());
-		
-		tileCount = 0;
-		Tile tile = new Tile(new TileCoordinate(1, 1), 1);
-		tile.render();
-		
-		for(double x=x1; x<x2; x+=boxSize) {
-			for(double y=y1; y<y2; y+=boxSize) {
-				int xPos = (int)(x - x1 % 16);
-				int yPos = (int)(y - y1 % 16);
-				g2d.drawImage(tile.getImage(), xPos, yPos, null);
-				tileCount++;
-			}
+		for(ParsedWay way : Main.tileController.wayList) {
+			Shape shape = way.getShape();
+			if(shape != null) g2d.draw(way.getShape());
 		}
+		
+//		int boxSize = 16;
+//		int horTileLimit = bounds.getHorizontalTileCount() * boxSize;
+//		int verTileLimit = bounds.getVerticalTileCount() * boxSize;
+//		
+//		Region mapRegion = getDisplayedRegion();
+//		double x1 = Math.max(0, mapRegion.getPointFrom().getX());
+//		double y1 = Math.max(0, mapRegion.getPointFrom().getY());
+//		double x2 = Math.min(horTileLimit, mapRegion.getPointTo().getX());
+//		double y2 = Math.min(verTileLimit, mapRegion.getPointTo().getY());
+//		
+//		tileCount = 0;
+//		Tile tile = new Tile(new TileCoordinate(1, 1), 1);
+//		tile.render();
+//		
+//		for(double x=x1; x<x2; x+=boxSize) {
+//			for(double y=y1; y<y2; y+=boxSize) {
+//				int xPos = (int)(x - x1 % 16);
+//				int yPos = (int)(y - y1 % 16);
+//				g2d.drawImage(tile.getImage(), xPos, yPos, null);
+//				tileCount++;
+//			}
+//		}
 	}
 
 	public void pan(double dx, double dy) {

@@ -14,9 +14,13 @@ import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.Robot;
 import java.awt.Toolkit;
+import java.awt.geom.Point2D;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+
+import dk.itu.n.danmarkskort.models.Coordinate;
+import dk.itu.n.danmarkskort.models.ParsedBounds;
 
 public class Util {
 
@@ -110,6 +114,25 @@ public class Util {
 			e.printStackTrace();
 			return -1;
 		}
+	}
+	
+	public static Point2D coordinateToScreen(Coordinate coord) {
+		
+		ParsedBounds bounds = Main.tileController.getBounds();
+		
+		double x = coord.getLat() - bounds.minLat;
+		double y = coord.getLong() - bounds.minLong;
+		double latDist = bounds.getWidth();
+		double lonDist = bounds.getHeight();
+		double heightDist = bounds.getPixelWidth();
+		double widthDist = bounds.getPixelHeight();
+		
+		double ratioX = widthDist / latDist;
+		double ratioY = heightDist / lonDist;
+		x *= ratioX;
+		y *= ratioY;
+		
+		return new Point2D.Double(x, y);
 	}
 	
 }

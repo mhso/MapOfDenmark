@@ -1,9 +1,12 @@
 package dk.itu.n.danmarkskort.backend;
 
+import java.util.ArrayList;
+
 import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.models.Coordinate;
 import dk.itu.n.danmarkskort.models.ParsedBounds;
 import dk.itu.n.danmarkskort.models.ParsedObject;
+import dk.itu.n.danmarkskort.models.ParsedWay;
 import dk.itu.n.danmarkskort.models.Tile;
 import dk.itu.n.danmarkskort.models.TileCoordinate;
 
@@ -12,6 +15,7 @@ public class TileController implements OSMParserListener {
 
 	private ParsedBounds mapBounds = null;
 	private final int staticZoomLevel = 1;
+	public ArrayList<ParsedWay> wayList = new ArrayList<ParsedWay>();
 	
 	public Tile requestTile(int x, int y, int zoom) {
 		Tile tile = new Tile(new TileCoordinate(x, y), zoom);
@@ -51,5 +55,9 @@ public class TileController implements OSMParserListener {
 	
 	public ParsedBounds getBounds() {
 		return mapBounds;
+	}
+
+	public void onWayLinked(ParsedWay way) {
+		wayList.add(way);
 	}
 }

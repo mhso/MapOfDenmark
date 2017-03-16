@@ -20,6 +20,7 @@ import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.Util;
 import dk.itu.n.danmarkskort.backend.OSMParserListener;
 import dk.itu.n.danmarkskort.models.ParsedObject;
+import dk.itu.n.danmarkskort.models.ParsedWay;
 
 import java.awt.Component;
 import javax.swing.Box;
@@ -120,5 +121,11 @@ public class WindowParsingLoadscreen extends JFrame implements OSMParserListener
 	@Override
 	public void onParsingFinished() {
 		dispose();
+	}
+
+	@Override
+	public void onWayLinked(ParsedWay way) {
+		// TODO Auto-generated method stub
+		
 	}
 }

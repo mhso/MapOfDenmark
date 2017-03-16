@@ -33,4 +33,12 @@ public class ParsedBounds extends ParsedObject {
 		return (int)(getHeight() / CONST_Y);
 	}
 	
+	public int getPixelWidth() {
+		return getHorizontalTileCount() * 16;
+	}
+	
+	public int getPixelHeight() {
+		return getVerticalTileCount() * 16;
+	}
+	
 }
