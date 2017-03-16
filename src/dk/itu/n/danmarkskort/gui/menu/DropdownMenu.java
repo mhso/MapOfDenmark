@@ -1,4 +1,8 @@
-package dk.itu.n.danmarkskort.gui;
+package dk.itu.n.danmarkskort.gui.menu;
+
+import dk.itu.n.danmarkskort.gui.CustomScrollBarUI;
+import dk.itu.n.danmarkskort.gui.Style;
+import dk.itu.n.danmarkskort.gui.TopPanel;
 
 import javax.swing.*;
 import javax.swing.plaf.ColorUIResource;

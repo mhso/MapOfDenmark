@@ -1,7 +1,7 @@
 package dk.itu.n.danmarkskort.gui;
 
 import dk.itu.n.danmarkskort.address.Address;
-import dk.itu.n.danmarkskort.address.AddressController;
+import dk.itu.n.danmarkskort.gui.menu.DropdownMenu;
 import dk.itu.n.danmarkskort.search.SearchController;
 
 import javax.swing.*;
