@@ -1,5 +1,6 @@
 package dk.itu.n.danmarkskort.gui.menu;
 
+import dk.itu.n.danmarkskort.gui.CustomButton;
 import dk.itu.n.danmarkskort.gui.CustomScrollBarUI;
 import dk.itu.n.danmarkskort.gui.Style;
 import dk.itu.n.danmarkskort.gui.TopPanel;
@@ -11,6 +12,7 @@ import java.awt.*;
 public class DropdownMenu extends JPopupMenu{
 
     private JPanel menuItems, wrapper;
+    private JPanel routePage, aboutUsPage, settingsPage, mapLayersPage;
     private GridBagConstraints gbcContainer;
     private JScrollPane contentPane;
     private TopPanel topPanel;
@@ -20,6 +22,11 @@ public class DropdownMenu extends JPopupMenu{
 
         this.topPanel = topPanel;
         this.style = style;
+
+        routePage = new RoutePage();
+        aboutUsPage = new AboutUsPage();
+        settingsPage = new SettingsPage();
+        mapLayersPage = new MapLayersPage();
 
         setFocusable(false);
         setBorderPainted(false);
@@ -44,7 +51,9 @@ public class DropdownMenu extends JPopupMenu{
         menuItems.setBorder(BorderFactory.createEmptyBorder(style.menuItemInsets(), style.menuItemInsets(), style.menuItemInsets(), style.menuItemInsets()));
 
         // route
-        menuItems.add(style.menuRouteButton(), gbcMenuItems);
+        CustomButton routeButton = style.menuRouteButton();
+        routeButton.addActionListener(e -> addToContentPane(routePage));
+        menuItems.add(routeButton, gbcMenuItems);
 
         // open
         gbcMenuItems.gridy = 1;
@@ -56,15 +65,22 @@ public class DropdownMenu extends JPopupMenu{
 
         // layers/filters
         gbcMenuItems.gridy = 3;
-        menuItems.add(style.menuLayerButton(), gbcMenuItems);
+        CustomButton layerButton = style.menuLayerButton();
+        layerButton.addActionListener(e -> addToContentPane(mapLayersPage));
+        menuItems.add(layerButton, gbcMenuItems);
 
         // settings
         gbcMenuItems.gridy = 4;
-        menuItems.add(style.menuSettingsButton(), gbcMenuItems);
+        CustomButton settingsButton = style.menuSettingsButton();
+        settingsButton.addActionListener(e -> addToContentPane(settingsPage));
+        menuItems.add(settingsButton, gbcMenuItems);
 
         // about us
         gbcMenuItems.gridy = 5;
-        menuItems.add(style.menuInfoButton(), gbcMenuItems);
+        CustomButton aboutUsButton = style.menuInfoButton();
+        aboutUsButton.addActionListener(e -> addToContentPane(aboutUsPage));
+        menuItems.add(aboutUsButton, gbcMenuItems);
+
         menuItems.setPreferredSize(new Dimension(topPanel.getMenuWidth(), menuItems.getPreferredSize().height));
         gbcContainer.gridx = 0;
         wrapper.add(menuItems, gbcContainer);
@@ -81,7 +97,7 @@ public class DropdownMenu extends JPopupMenu{
 
         JPanel test = new JPanel();
         test.setPreferredSize(new Dimension(80, 800));
-        test.setBackground(style.menuContentBG());
+        test.setOpaque(false);
 
         addToContentPane(test);
 
@@ -90,6 +106,7 @@ public class DropdownMenu extends JPopupMenu{
     }
 
     public void addToContentPane(JPanel newContent) {
+        contentPane.getViewport().removeAll();
         contentPane.getViewport().add(newContent);
     }
 
