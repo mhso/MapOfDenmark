@@ -10,6 +10,8 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DocumentFilter;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 public class TopPanel extends JPanel {
@@ -93,11 +95,11 @@ public class TopPanel extends JPanel {
         Address a = SearchController.getInstance().getSearchFieldAddressObj(address);
     }
 
-    public void populateList(Set<String> items) {
+    public void populateList(List<String> list) {
         dropSuggestions.hideDropdown();
         dropSuggestions.clearElements();
         int i = 0;
-        for(String st : items){
+        for(String st : list){
             dropSuggestions.addElement(st);
             if(++i > 10) break;
         }
