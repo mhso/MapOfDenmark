@@ -8,6 +8,7 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
@@ -53,68 +54,49 @@ public class AddressController implements OSMParserListener{
 	public Address getSearchResult(String find){
 		AddressParser ap = new AddressParser();
 		Address addrBuild = preciseMatch(ap.parse(find));
-		if(addrBuild != null) System.out.println("getSearchResult: "+addrBuild.toString());
+		if(addrBuild.toStringShort() != null){
+			//int listSize = AddressSearchPredicates.filterToStringShort(addresses, 
+				//	AddressSearchPredicates.toStringShortEquals(addrBuild) , 2l);
+	//		if(listSize == 1){}
+		}
+		//if(addrBuild != null) System.out.println("getSearchResult: "+addrBuild.toString());
 		return addrBuild;
 	}
 	
 	private List<String> searchSuggestions(String find){
-		System.out.println("Addr: looking for suggestions ");
+		//System.out.println("Addr: looking for suggestions ");
 		AddressParser ap = new AddressParser();
 		Address addrBuild = ap.parse(find);
 		List<String> result = new ArrayList<String>();
 		List<String> setLevens = new ArrayList<String>();
-		if(addrBuild.getStreet() != null && !confirmStreetExist(addrBuild.getStreet())) {
-			setLevens = streetSearchLevenshteinDistance(addrBuild.getStreet());
-			result.addAll(setLevens);
-		} else {
-			System.out.println("Addr: accepted "+addrBuild.getStreet());
+		if(addrBuild.getStreet() != null && !AddressSearchPredicates.confirmStreetExist(addresses, addrBuild.getStreet())) {
+			result.addAll(AddressSearchPredicates.filterToStringShort(addresses, 
+							AddressSearchPredicates.streetLevenshteinDistance(addrBuild.getStreet(),0,2) , 5l));
 		}
 		System.out.println("searchSuggestions: "+addrBuild.toString());
-		if(result.size() == 0){
-			List<String>set = shortAddresses.keySet()
-	                .stream()
-	                .filter(s -> s.toLowerCase().contains(addrBuild.getStreet().toLowerCase()))
-	                .limit(5)
-	                .collect(Collectors.toList());
-			result.addAll(set);
+
+		if(addrBuild.getStreet() != null){
+			result.addAll(AddressSearchPredicates.filterToStringShort(addresses, 
+							AddressSearchPredicates.streetContains(addrBuild.getStreet()) , 5l));
 		}
-		if(addrBuild.getHousenumber() != null){
-			List<String>res2 = shortAddresses.keySet()
-	                .stream()
-	                .filter(s -> 
-	                s.toLowerCase().contains(addrBuild.getStreet().toLowerCase())
-	            			&& s.toLowerCase().contains(addrBuild.getHousenumber().toLowerCase())
-	            	).limit(5)
-	                .collect(Collectors.toList());
-			if(res2 != null) result = res2;
+		
+		if(addrBuild.getStreet() != null && addrBuild.getHousenumber() != null){
+			result = (AddressSearchPredicates.filterToStringShort(addresses, 
+					AddressSearchPredicates.streetEqualsHousenumberContains(addrBuild) , 5l));
 		}
-		if(addrBuild.getHousenumber() != null && addrBuild.getPostcode() != -1){
-			List<String>res3 = shortAddresses.keySet()
-	                .stream()
-	                .filter(s -> 
-	                s.toLowerCase().contains(addrBuild.getStreet().toLowerCase())
-	            			&& s.toLowerCase().contains(addrBuild.getHousenumber().toLowerCase())
-	            			&& s.toLowerCase().contains(Integer.toString(addrBuild.getPostcode()))
-	                ).limit(5)
-	                .collect(Collectors.toList());
-			if(res3 != null) result = res3;
-		}	
+		
+		if(addrBuild.getPostcode() != -1){
+			result.addAll(AddressSearchPredicates.filterToStringShort(addresses, 
+					AddressSearchPredicates.postcodeEquals(Integer.toString(addrBuild.getPostcode())) , 5l));
+		}
+		
+		if(addrBuild.toStringShort() != null){
+			result = (AddressSearchPredicates.filterToStringShort(addresses, 
+					AddressSearchPredicates.toStringShortEquals(addrBuild) , 5l));
+		}
+		
 		return result;
-	}
-	
-	private List<String> streetSearchLevenshteinDistance(String inputStr){
-		List<String> list = new ArrayList<String>(); 
-		if(inputStr != null){
-			for(Postcode postcode : postcodes.values()){
-				for(String str : postcode.getStreets().keySet()){
-					if(StringUtils.getLevenshteinDistance(str.toLowerCase(), inputStr.toLowerCase()) == 1) { list.add(str);
-						System.out.println(str+" "+StringUtils.getLevenshteinDistance(str.toLowerCase(), inputStr.toLowerCase()));
-					}
-				}
-			}
-		}
-		return list;
-	}
+	}  
 	
 	private Address preciseMatch(Address addr){
 		Address result = addresses.values().stream()
@@ -125,13 +107,7 @@ public class AddressController implements OSMParserListener{
 		return addr;
 	}
 	
-	private boolean confirmStreetExist(String inputStr){
-		Address result = addresses.values().stream()
-				.filter((x) -> inputStr.equalsIgnoreCase(x.getStreet()))
-				.findAny()
-				.orElse(null);
-		return (result != null);
-	}
+	
 
 	public void addOsmAddress(long nodeId, float lat, float lon, String k, String v){
 		Address addr;
