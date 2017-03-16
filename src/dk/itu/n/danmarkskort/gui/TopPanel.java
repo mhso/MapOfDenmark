@@ -1,7 +1,7 @@
 package dk.itu.n.danmarkskort.gui;
 
 import dk.itu.n.danmarkskort.address.Address;
-import dk.itu.n.danmarkskort.address.AddressController;
+import dk.itu.n.danmarkskort.gui.menu.DropdownMenu;
 import dk.itu.n.danmarkskort.search.SearchController;
 
 import javax.swing.*;
@@ -95,9 +95,9 @@ public class TopPanel extends JPanel {
         Address a = SearchController.getInstance().getSearchFieldAddressObj(address);
     }
 
-    public void populateList(List<String> list) {
-        dropSuggestions.hideDropdown();
-        dropSuggestions.clearElements();
+    public void populateSuggestions(List<String> list) {
+        dropSuggestions.setVisible(false);
+        dropSuggestions.removeAll();
         int i = 0;
         for(String st : list){
             dropSuggestions.addElement(st);
@@ -140,7 +140,7 @@ public class TopPanel extends JPanel {
         @Override
         public void remove(FilterBypass fb, int offset, int length) throws BadLocationException {
             super.remove(fb, offset, length);
-            dropdownSuggestions(offset, input.getText());
+            dropdownSuggestions(offset - 1, input.getText());
         }
 
         @Override
@@ -152,10 +152,12 @@ public class TopPanel extends JPanel {
         }
 
         public void dropdownSuggestions(int offset, String text) {
-            if(offset > 2) {
-                populateList(SearchController.getInstance().getSearchFieldSuggestions(text));
+            if(offset > 1) {
+                populateSuggestions(SearchController.getInstance().getSearchFieldSuggestions(text));
                 revalidate();
                 repaint();
+            } else {
+                dropSuggestions.setVisible(false);
             }
         }
     }

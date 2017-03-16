@@ -4,7 +4,7 @@ import javax.swing.*;
 
 import java.awt.*;
 
-public class DropdownAddressSearch extends JPopupMenu {
+public class DropdownAddressSearch extends CustomDropdown {
 
 	private JTextField txtField;
 	private TopPanel topPanel;
@@ -13,9 +13,7 @@ public class DropdownAddressSearch extends JPopupMenu {
      * Create the panel.
      */
     public DropdownAddressSearch(TopPanel topPanel) {
-        setFocusable(false);
         this.topPanel = topPanel;
-        setBorderPainted(false);
     }
 
     /**
@@ -26,24 +24,10 @@ public class DropdownAddressSearch extends JPopupMenu {
 		menuItem.setPreferredSize(new Dimension(topPanel.getInputFieldWidth() - 2, menuItem.getPreferredSize().height));
 		menuItem.addActionListener(e -> {
 			topPanel.getInputField().setText(menuItem.getText());
-			hideDropdown();
+			setVisible(false);
 		});
 		menuItem.setBorderPainted(false);
 		add(menuItem);
-	}
-
-    /**
-     * Clear the Dropdown-Menu.
-     */
-	public void clearElements() {
-		removeAll();
-	}
-	
-	/**
-	 * Hide the Dropdown-Menu.
-	 */
-	public void hideDropdown() {
-		setVisible(false);
 	}
 
 	/**
