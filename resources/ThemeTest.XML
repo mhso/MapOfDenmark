@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<theme version="0.2">
+	<defaultfont fontsize="60" fontcolor="000000"/>
+	<lines>
+		<line>
+			<tag k="highway" v="motorway"/>
+			<innercolor color="CE4A4A"/>
+			<outercolor color="B52929"/>
+			<lineproperties linewidth="90"/>
+		</line>
+		<line>
+			<tag k="highway" v="trunk"/>
+			<innercolor color="CE4A4A"/>
+			<outercolor color="B52929"/>
+			<lineproperties linewidth="90"/>
+		</line>
+		<line>
+			<tag k="highway" v="primary"/>
+			<innercolor color="E89747"/>
+			<outercolor color="905F2E"/>
+			<lineproperties linewidth="90"/>
+		</line>
+		<line>
+			<tag k="highway" v="secondary"/>
+			<innercolor color="EBBE42"/>
+			<outercolor color="796530"/>
+			<lineproperties linewidth="90"/>
+		</line>
+	</lines>
+	<areas>
+		<area>
+			<tag k="building" v="yes"/>
+			<innercolor color="C0C0C0"/>
+			<outercolor color="606060"/>
+		</area>
+		<area>
+			<tag k="building" v="church"/>
+			<innercolor color="C0C0C0"/>
+			<outercolor color="606060"/>
+		</area>
+	</areas>
+	<labels>
+		<label>
+			<tag k="highway" v="primary"/>
+			<fontcolor fontcolor="B52929"/>
+			<fontsize fontsize="50"/>
+		</label>
+	</labels>
+	<icons>
+	</icons>
+</theme>
