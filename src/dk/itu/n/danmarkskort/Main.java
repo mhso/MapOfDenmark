@@ -1,16 +1,15 @@
 package dk.itu.n.danmarkskort;
 
-import java.awt.Color;
 import java.awt.Dimension;
 
 import javax.swing.*;
 
-import dk.itu.danmarkskort.gui.map.MapCanvas;
 import dk.itu.n.danmarkskort.GUI.GUILayerController;
 import dk.itu.n.danmarkskort.GUI.WindowParsingLoadscreen;
 import dk.itu.n.danmarkskort.address.AddressController;
 import dk.itu.n.danmarkskort.backend.OSMParser;
 import dk.itu.n.danmarkskort.backend.TileController;
+import dk.itu.n.danmarkskort.gui.map.MapCanvas;
 
 public class Main {
 
@@ -23,6 +22,8 @@ public class Main {
 	public static TileController tileController;
 	public static JFrame window;
 	public static GUILayerController layerManager;
+	public static MapCanvas map;
+	public static MainCanvas mainPanel;
 	
 	public static void main(String[] args) {
         startup(args);
@@ -70,17 +71,17 @@ public class Main {
 
     public static void makeFrame() {
             window = new JFrame(APP_NAME);
-            layerManager = new GUILayerController();
-            //layerManager = new GUILayerController(window);
-            layerManager.setPreferredSize(new Dimension(WIDTH, HEIGHT));
+            JPanel overlay = new JPanel();
+            overlay.setLayout(new OverlayLayout(overlay));
+            overlay.setPreferredSize(new Dimension(WIDTH, HEIGHT));
+            mainPanel = new MainCanvas();
+            map = new MapCanvas();
+            map.setPreferredSize(new Dimension(WIDTH, HEIGHT));
+            overlay.add(mainPanel);
             
-            // GUI Layers
-            /*layerManager.addLayer(new MainCanvas());
-            layerManager.addLayer(new MapCanvas());*/
-            layerManager.add(new MainCanvas());
-            layerManager.add(new MapCanvas());
+            overlay.add(map);
 
-            window.add(layerManager);
+            window.add(overlay);
             window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             window.pack();
             window.setLocationRelativeTo(null);
