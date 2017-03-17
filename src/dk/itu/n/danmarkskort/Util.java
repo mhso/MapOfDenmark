@@ -1,6 +1,5 @@
 package dk.itu.n.danmarkskort;
 
-import java.awt.Container;
 import java.awt.Dimension;
 import java.io.File;
 import java.io.FileInputStream;
@@ -15,8 +14,6 @@ import java.awt.Point;
 import java.awt.Robot;
 import java.awt.Toolkit;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
 
 public class Util {
 

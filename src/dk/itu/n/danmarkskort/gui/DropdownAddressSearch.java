@@ -3,19 +3,24 @@ package dk.itu.n.danmarkskort.gui;
 import javax.swing.*;
 
 import java.awt.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 
 public class DropdownAddressSearch extends CustomDropdown {
 
 	private JTextField txtField;
 	private TopPanel topPanel;
+	private Style style;
 
     /**
      * Create the panel.
      */
-    public DropdownAddressSearch(TopPanel topPanel) {
+    public DropdownAddressSearch(TopPanel topPanel, Style style) {
         this.topPanel = topPanel;
+        this.style = style;
+
+        UIManager.put("MenuItem.background", style.dropdownItemBG());
+        UIManager.put("MenuItem:foreground", style.dropdowItemTextColor());
+        UIManager.put("MenuItem.selectionBackground", style.dropdownItemBGActive());
+        UIManager.put("MenuItem.selectionForeground", style.dropdownItemTextColorActive());
     }
 
     /**
@@ -32,9 +37,9 @@ public class DropdownAddressSearch extends CustomDropdown {
 		add(menuItem);
 	}
 	
-	public void doClick() {
-		JMenuItem SelectedItem = (JMenuItem) getComponent(getSelectedIndex());
-		SelectedItem.doClick();
+	public void itemClicked() {
+		JMenuItem selectedItem = (JMenuItem) getComponent(getSelectedIndex());
+		selectedItem.doClick();
 	}
 	
 	public boolean isEmpty() {
@@ -46,7 +51,7 @@ public class DropdownAddressSearch extends CustomDropdown {
 		int i = 0;
 		for(Component c : getComponents()) {
 			JMenuItem item = (JMenuItem) c;
-			if(item.getBackground() == Color.LIGHT_GRAY) {
+			if(item.getBackground() == style.dropdownItemBGActive()) {
 				selectedIndex = i;
 				break;
 			}
@@ -58,10 +63,12 @@ public class DropdownAddressSearch extends CustomDropdown {
 	public void setSelectedElement(int index) {
 		if(getSelectedIndex() > -1) {
 			JMenuItem oldSelectedItem = (JMenuItem) getComponent(getSelectedIndex());
-			oldSelectedItem.setBackground(Color.WHITE);
+			oldSelectedItem.setBackground(style.dropdownItemBG());
+			oldSelectedItem.setForeground(style.dropdowItemTextColor());
 		}
 		JMenuItem selectedItem = (JMenuItem) getComponent(index);
-		selectedItem.setBackground(Color.LIGHT_GRAY);
+		selectedItem.setBackground(style.dropdownItemBGActive());
+		selectedItem.setForeground(style.dropdownItemTextColorActive());
 	}
 
 	/**

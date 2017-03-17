@@ -1,21 +1,18 @@
 package dk.itu.n.danmarkskort.address;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.TreeSet;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-import java.util.stream.Collectors;
-
-import org.apache.commons.lang3.StringUtils;
-
 import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.backend.OSMParserListener;
 import dk.itu.n.danmarkskort.models.ParsedAddress;
 import dk.itu.n.danmarkskort.models.ParsedObject;
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.stream.Collectors;
 
 public class AddressController implements OSMParserListener{
 	private Map<Long, Address> addresses;

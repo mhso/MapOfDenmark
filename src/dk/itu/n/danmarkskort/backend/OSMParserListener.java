@@ -4,9 +4,9 @@ import dk.itu.n.danmarkskort.models.ParsedObject;
 
 public interface OSMParserListener {
 	
-	public abstract void onParsingStarted();
-	public abstract void onParsingGotObject(ParsedObject parsedObject);
-	public abstract void onLineCountHundred();
-	public abstract void onParsingFinished();
+	 void onParsingStarted();
+	 void onParsingGotObject(ParsedObject parsedObject);
+	 void onLineCountHundred();
+	 void onParsingFinished();
 	
 }	

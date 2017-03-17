@@ -1,6 +1,7 @@
 package dk.itu.n.danmarkskort.gui;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 
 public class BottomPanel extends JPanel {
@@ -77,9 +78,11 @@ public class BottomPanel extends JPanel {
         gbc.gridy = 1;
         gbc.weighty = 0.0;
         gbc.weightx = 0.0;
+        zoomIn.setBorder(BorderFactory.createLineBorder(style.zoomButtonBG(), 5));
         rightParent.add(zoomIn, gbc);
 
         CustomButton zoomOut = style.zoomOutButton();
+        zoomOut.setBorder(BorderFactory.createLineBorder(style.zoomButtonBG(), 5));
         gbc.gridy = 2;
         gbc.insets = new Insets(5, 0, 0, 0);
         rightParent.add(zoomOut, gbc);

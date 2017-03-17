@@ -68,7 +68,7 @@ public class TopPanel extends JPanel {
 					}
 					else if(e.getKeyCode() == KeyEvent.VK_ENTER) {
 						if(dropSuggestions.getSelectedIndex() > 0) {
-							dropSuggestions.doClick();
+							dropSuggestions.itemClicked();
 						}
 					}
 				}
@@ -100,7 +100,7 @@ public class TopPanel extends JPanel {
         add(topParent);
 
 
-        dropSuggestions = new DropdownAddressSearch(this);
+        dropSuggestions = new DropdownAddressSearch(this, style);
         dropMenu = new DropdownMenu(this, style);
 
         menu.addActionListener(e -> dropMenu.showDropdown(menu));
