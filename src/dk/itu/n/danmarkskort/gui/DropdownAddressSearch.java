@@ -3,12 +3,15 @@ package dk.itu.n.danmarkskort.gui;
 import javax.swing.*;
 
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class DropdownAddressSearch extends CustomDropdown {
 
 	private JTextField txtField;
 	private TopPanel topPanel;
 	private Style style;
+	private int selectedIndex = -1;
 
     /**
      * Create the panel.
@@ -33,6 +36,13 @@ public class DropdownAddressSearch extends CustomDropdown {
 			topPanel.getInputField().setText(menuItem.getText());
 			setVisible(false);
 		});
+		menuItem.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				int index = getComponentIndex(menuItem);
+				setSelectedElement(index);
+			}
+		});
 		menuItem.setBorderPainted(false);
 		add(menuItem);
 	}
@@ -47,28 +57,20 @@ public class DropdownAddressSearch extends CustomDropdown {
 	}
 	
 	public int getSelectedIndex() {
-		int selectedIndex = -1;
-		int i = 0;
-		for(Component c : getComponents()) {
-			JMenuItem item = (JMenuItem) c;
-			if(item.getBackground() == style.dropdownItemBGActive()) {
-				selectedIndex = i;
-				break;
-			}
-			i++;
-		}
 		return selectedIndex;
 	}
 	
 	public void setSelectedElement(int index) {
 		if(getSelectedIndex() > -1) {
-			JMenuItem oldSelectedItem = (JMenuItem) getComponent(getSelectedIndex());
+			JMenuItem oldSelectedItem = (JMenuItem) getComponent(selectedIndex);
+			oldSelectedItem.setSelected(false);
 			oldSelectedItem.setBackground(style.dropdownItemBG());
 			oldSelectedItem.setForeground(style.dropdowItemTextColor());
 		}
 		JMenuItem selectedItem = (JMenuItem) getComponent(index);
 		selectedItem.setBackground(style.dropdownItemBGActive());
 		selectedItem.setForeground(style.dropdownItemTextColorActive());
+		selectedIndex = index;
 	}
 
 	/**
