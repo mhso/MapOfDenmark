@@ -9,7 +9,7 @@ import org.xml.sax.SAXException;
  * Class that implements ContentHandler (SAX Parser). 
  * Other classes can extend this class and override the methods they need.
  */
-public class SAXAdapter implements ContentHandler {
+public abstract class SAXAdapter implements ContentHandler {
 	@Override
 	public void characters(char[] ch, int start, int length) throws SAXException {}
 

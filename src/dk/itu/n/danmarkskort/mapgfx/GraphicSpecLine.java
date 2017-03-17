@@ -1,4 +1,4 @@
-package dk.itu.n.danmarkskort.models;
+package dk.itu.n.danmarkskort.mapgfx;
 
 import java.awt.BasicStroke;
 import java.awt.Graphics2D;
@@ -36,6 +36,14 @@ public class GraphicSpecLine extends WaytypeGraphicSpec {
 		graphics.setStroke(stroke);
 		
 		return graphics;
+	}
+	
+	public float getLineWidth() {
+		return lineWidth;
+	}
+	
+	public float[] getDashArr() {
+		return dashArr;
 	}
 	
 	public void setLineWidth(float lineWidth) {
