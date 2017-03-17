@@ -7,7 +7,8 @@ public class Style {
 
     private int margin, smallMargin, topPanelBorderWidth, menuItemInsets;
     private float alphaFloat, alphaHover, menuAlpha, menuAlphaHover;
-    private Color panelBG, inputFieldBG, panelTextColor, zoomButtonBG, menuContentBG, menuItemsBG, scrollBarThumb, scrollBarThumbActive;
+    private Color panelBG, inputFieldBG, panelTextColor, zoomButtonBG, menuContentBG, menuItemsBG, scrollBarThumb, scrollBarThumbActive,
+                dropdownItemBG, dropdownItemBGActive, dropdowItemTextColor, dropdownItemTextColorActive;
     private CustomButton searchButton, menuButton,routeButton, zoomInButton, zoomOutButton,
             menuLayerButton, menuSaveButton, menuOpenButton, menuSettingsButton, menuRouteButton, menuInfoButton;
     private ImageIcon scaleIndicator;
@@ -31,6 +32,11 @@ public class Style {
         menuContentBG = new Color(200, 210, 220);
         scrollBarThumb = new Color(150, 160, 170);
         scrollBarThumbActive = new Color(20, 130 , 200);
+        dropdownItemBG = new Color(255, 255, 255);
+        dropdownItemBGActive = new Color(20, 130, 200);
+        dropdowItemTextColor = new Color(0,0,0);
+        dropdownItemTextColorActive = new Color(255, 255, 255);
+
 
         searchButton = new CustomButton("resources/icons/search.png", alphaFloat, alphaHover);
         menuButton = new CustomButton("resources/icons/menu.png", alphaFloat, alphaHover);
@@ -65,6 +71,10 @@ public class Style {
     public Color menuContentBG() { return menuContentBG; }
     public Color scrollBarThumb() { return scrollBarThumb; }
     public Color scrollBarThumbActive() { return scrollBarThumbActive; }
+    public Color dropdownItemBG() { return dropdownItemBG; }
+    public Color dropdownItemBGActive() { return dropdownItemBGActive; }
+    public Color dropdowItemTextColor() { return dropdowItemTextColor; }
+    public Color dropdownItemTextColorActive() { return dropdownItemTextColorActive; }
 
     public CustomButton searchButton() { return searchButton; }
     public CustomButton menuButton() { return menuButton; }
