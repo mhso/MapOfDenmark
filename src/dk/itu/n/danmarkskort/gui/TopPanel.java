@@ -10,6 +10,8 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DocumentFilter;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -50,6 +52,29 @@ public class TopPanel extends JPanel {
         input.setOpaque(false);
         input.setBackground(new Color(0,0,0,0));
         input.setCaretColor(style.panelTextColor());
+        input.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if(!dropSuggestions.isEmpty()) {
+					if(e.getKeyCode() == KeyEvent.VK_DOWN) {
+						if(dropSuggestions.getSelectedIndex() < dropSuggestions.getComponents().length-1) {	
+							dropSuggestions.setSelectedElement(dropSuggestions.getSelectedIndex()+1);
+						}
+					}
+					else if(e.getKeyCode() == KeyEvent.VK_UP) {
+						if(dropSuggestions.getSelectedIndex() > 0) {
+							dropSuggestions.setSelectedElement(dropSuggestions.getSelectedIndex()-1);
+						}
+					}
+					else if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+						if(dropSuggestions.getSelectedIndex() > 0) {
+							dropSuggestions.doClick();
+						}
+					}
+				}
+			}
+        	
+        });
 
         JButton search = style.searchButton();
 
