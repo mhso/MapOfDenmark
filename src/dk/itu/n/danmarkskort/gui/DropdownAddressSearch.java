@@ -3,6 +3,8 @@ package dk.itu.n.danmarkskort.gui;
 import javax.swing.*;
 
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class DropdownAddressSearch extends CustomDropdown {
 
@@ -28,6 +30,38 @@ public class DropdownAddressSearch extends CustomDropdown {
 		});
 		menuItem.setBorderPainted(false);
 		add(menuItem);
+	}
+	
+	public void doClick() {
+		JMenuItem SelectedItem = (JMenuItem) getComponent(getSelectedIndex());
+		SelectedItem.doClick();
+	}
+	
+	public boolean isEmpty() {
+		return getComponents().length == 0;
+	}
+	
+	public int getSelectedIndex() {
+		int selectedIndex = -1;
+		int i = 0;
+		for(Component c : getComponents()) {
+			JMenuItem item = (JMenuItem) c;
+			if(item.getBackground() == Color.LIGHT_GRAY) {
+				selectedIndex = i;
+				break;
+			}
+			i++;
+		}
+		return selectedIndex;
+	}
+	
+	public void setSelectedElement(int index) {
+		if(getSelectedIndex() > -1) {
+			JMenuItem oldSelectedItem = (JMenuItem) getComponent(getSelectedIndex());
+			oldSelectedItem.setBackground(Color.WHITE);
+		}
+		JMenuItem selectedItem = (JMenuItem) getComponent(index);
+		selectedItem.setBackground(Color.LIGHT_GRAY);
 	}
 
 	/**
