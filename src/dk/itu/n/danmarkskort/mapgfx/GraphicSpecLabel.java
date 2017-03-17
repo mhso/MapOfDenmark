@@ -1,4 +1,4 @@
-package dk.itu.n.danmarkskort.models;
+package dk.itu.n.danmarkskort.mapgfx;
 
 import java.awt.Color;
 import java.awt.Font;

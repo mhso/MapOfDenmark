@@ -1,4 +1,4 @@
-package dk.itu.n.danmarkskort.models;
+package dk.itu.n.danmarkskort.mapgfx;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -21,6 +21,18 @@ public abstract class WaytypeGraphicSpec {
 	public Graphics2D transformOutline(Graphics2D graphics) {
 		graphics.setColor(outerColor);
 		return graphics;
+	}
+	
+	public Object getMapElement() {
+		return mapElement;
+	}
+	
+	public Color getInnerColor() {
+		return innerColor;
+	}
+	
+	public Color getOuterColor() {
+		return outerColor;
 	}
 	
 	public void setMapElement(Object mapElement) {

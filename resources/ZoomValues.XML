@@ -10,6 +10,7 @@
 	<zoomlevel level="2">
 		
 	</zoomlevel>
+		<tag k="highway" v="primary"/>
 	<zoomlevel level="3">
 		
 	</zoomlevel>
@@ -47,7 +48,7 @@
 		
 	</zoomlevel>
 	<zoomlevel level="15">
-		
+		<tag k="highway" v="footway"/>
 	</zoomlevel>
 	<zoomlevel level="16">
 		

@@ -4,41 +4,58 @@ import static org.junit.Assert.*;
 
 import java.util.List;
 
+import org.junit.Before;
 import org.junit.Test;
 
-import dk.itu.n.danmarkskort.backend.GraphicRepresentation;
-import dk.itu.n.danmarkskort.models.GraphicLayer;
-import dk.itu.n.danmarkskort.models.WaytypeGraphicSpec;
+import dk.itu.n.danmarkskort.mapgfx.GraphicRepresentation;
+import dk.itu.n.danmarkskort.mapgfx.GraphicSpecLine;
+import dk.itu.n.danmarkskort.mapgfx.WaytypeGraphicSpec;
 
 public class GraphicRepresentationTests {
+	private boolean setupDone = false;
+	
+	@Before
+	public void parseGraphicData() {
+		if(!setupDone) {
+			GraphicRepresentation.main(new String[]{"resources/ThemeTest.XML"});
+			setupDone = true;
+		}
+	}
+	
 	@Test
 	public void testParsingNotEmpty() {
-		GraphicRepresentation.main(new String[]{"resources/ThemeBasic.XML"});
-		assertFalse(GraphicRepresentation.size() == 0);
+		assertTrue(GraphicRepresentation.size() > 0);
 	}
 
 	@Test
 	public void testGraphicSpecificationNotEmpty() {
-		List<WaytypeGraphicSpec> graphicList = GraphicRepresentation.getGraphics(1);
+		List<WaytypeGraphicSpec> graphicList = GraphicRepresentation.getGraphicSpecs(0);
 		assertTrue(graphicList.size() > 0);
 	}
 	
 	@Test
-	public void testGraphicLayerColor() {
-		List<WaytypeGraphicSpec> graphicList = GraphicRepresentation.getGraphics(1);
-		assertNotNull(graphicList.get(0));
+	public void testGraphicInnerColor() {
+		List<WaytypeGraphicSpec> graphicList = GraphicRepresentation.getGraphicSpecs(0);
+		assertNotNull(graphicList.get(0).getInnerColor());
 	}
 	
 	@Test
-	public void testGraphicLayerLineWidth() {
-		List<WaytypeGraphicSpec> graphicList = GraphicRepresentation.getGraphics(1);
-		assertTrue(graphicList.get(0).transformPrimary(graphics));
+	public void testGraphicOuterColor() {
+		List<WaytypeGraphicSpec> graphicList = GraphicRepresentation.getGraphicSpecs(0);
+		assertNotNull(graphicList.get(0).getOuterColor());
 	}
 	
 	@Test
-	public void testGraphicLayerLineType() {
-		WaytypeGraphicSpec gs = GraphicRepresentation.getGraphics("motorway");
-		GraphicLayer graphicLayer = gs.getLayer(0);
-		assertNotNull(graphicLayer.getStrokeType());
+	public void testGraphicLineWidth() {
+		List<WaytypeGraphicSpec> graphicList = GraphicRepresentation.getGraphicSpecs(0);
+		GraphicSpecLine gsl = (GraphicSpecLine) graphicList.get(0);
+		assertTrue(gsl.getLineWidth() > 0);
+	}
+	
+	@Test
+	public void testGraphicLineArr() {
+		List<WaytypeGraphicSpec> graphicList = GraphicRepresentation.getGraphicSpecs(14);
+		GraphicSpecLine gsl = (GraphicSpecLine) graphicList.get(0);
+		assertNotNull(gsl.getDashArr());
 	}
 }

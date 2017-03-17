@@ -1,4 +1,4 @@
-package dk.itu.n.danmarkskort.backend;
+package dk.itu.n.danmarkskort.mapgfx;
 
 import java.awt.Color;
 import java.io.IOException;
@@ -12,16 +12,8 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
 import dk.itu.n.danmarkskort.SAXAdapter;
-import dk.itu.n.danmarkskort.models.GraphicLayer;
-import dk.itu.n.danmarkskort.models.GraphicSpecArea;
-import dk.itu.n.danmarkskort.models.GraphicSpecIcon;
-import dk.itu.n.danmarkskort.models.GraphicSpecLabel;
-import dk.itu.n.danmarkskort.models.GraphicSpecLine;
-import dk.itu.n.danmarkskort.models.WaytypeGraphicSpec;
 
 import org.xml.sax.Attributes;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 
 public class GraphicRepresentation {
@@ -35,7 +27,7 @@ public class GraphicRepresentation {
 	 * @param mapElement The Map Element (a WayType or Node f.x.) to get the graphics for.
 	 * @return A Graphic Specification object representing how a Map Element should be drawn.
 	 */
-	public static List<WaytypeGraphicSpec> getGraphics(int zoomLevel) {
+	public static List<WaytypeGraphicSpec> getGraphicSpecs(int zoomLevel) {
 		return zoomLevelArr[zoomLevel];
 	}
 	
@@ -173,6 +165,7 @@ public class GraphicRepresentation {
 					float[] dashArr = null;
 					if(atts.getValue("linedash") != null) {
 						String[] splitArr = atts.getValue("linedash").split(",");
+						dashArr = new float[splitArr.length];
 						for(int i = 0; i < splitArr.length; i++) {
 							dashArr[i] = Integer.parseInt(splitArr[i].trim());
 						}

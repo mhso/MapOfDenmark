@@ -52,7 +52,8 @@
 		</line>
 		<line>
 			<tag k="highway" v="footway"/>
-			<innercolor color="CC0000"/>
+			<innercolor color="0066CC"/>
+			<outercolor color="001933"/>
 			<lineproperties linewidth="3" linedash="10, 10"/>
 		</line>
 	</lines>
