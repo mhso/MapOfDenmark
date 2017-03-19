@@ -23,48 +23,67 @@ public class AddressSearchPredicates {
 	     
 	    public static Predicate<Address> streetLevenshteinDistance(String strInput, int minValue, int maxValue) {
 	        return p -> p.getStreet() != null 
-	        		&& StringUtils.getLevenshteinDistance(p.getStreet().toLowerCase(), strInput.toLowerCase()) > minValue
-	        		&& StringUtils.getLevenshteinDistance(p.getStreet().toLowerCase(), strInput.toLowerCase()) < maxValue;
+	        		&& StringUtils.getLevenshteinDistance(
+	        				p.getStreet().toLowerCase(), strInput.toLowerCase()) > minValue   		
+	        		&& StringUtils.getLevenshteinDistance(
+	        				p.getStreet().toLowerCase(), strInput.toLowerCase()) < maxValue;
 	    }
 	    
 	    public static Predicate<Address> streetEqualsHousenumberContains(Address addr) {
-	        return p -> p.getStreet() != null && p.getStreet().equalsIgnoreCase(addr.getStreet())
-	        		&& p.getHousenumber() != null && p.getHousenumber().toLowerCase().contains((addr.getHousenumber()));
+	        return p -> p.getStreet() != null 
+	        		&& p.getStreet().equalsIgnoreCase(addr.getStreet())
+	        		&& p.getHousenumber() != null 
+	        		&& p.getHousenumber().toLowerCase().contains((addr.getHousenumber()));
 	    }
 	    
 	    public static Predicate<Address> streetHousenumberEquals(Address addr) {
-	        return p -> p.getStreet() != null && p.getStreet().equalsIgnoreCase(addr.getStreet())
-	        		&& p.getHousenumber() != null && p.getHousenumber().equalsIgnoreCase(addr.getHousenumber().toLowerCase());
+	        return p -> p.getStreet() != null 
+	        		&& p.getStreet().equalsIgnoreCase(addr.getStreet())
+	        		&& p.getHousenumber() != null 
+	        		&& p.getHousenumber().equalsIgnoreCase(addr.getHousenumber().toLowerCase());
 	    }
 	    
 	    public static Predicate<Address> postcodeEquals(String strInput) {
-	        return p -> p.getPostcode() != -1 && Integer.toString(p.getPostcode()).equalsIgnoreCase(strInput);
+	        return p -> p.getPostcode() != -1 
+	        		&& Integer.toString(p.getPostcode()).equalsIgnoreCase(strInput);
 	    }
 	    
 	    public static Predicate<Address> toStringShortContains(String strInput) {
-	        return p -> p.toStringShort() != null && p.toStringShort().toLowerCase().contains(strInput.toLowerCase());
+	        return p -> p.toStringShort() != null 
+	        		&& p.toStringShort().toLowerCase().contains(strInput.toLowerCase());
 	    }
 	    
 	    public static Predicate<Address> toStringShortEquals(Address addr) {
-	        return p -> p.toStringShort() != null && p.toStringShort().equalsIgnoreCase((addr.toStringShort()));
+	        return p -> p.toStringShort() != null 
+	        		&& p.toStringShort().equalsIgnoreCase((addr.toStringShort()));
 	    }
 	     
-	    public static List<Address> filterAddresses(Map<Long, Address> addresses, Predicate<Address> predicate, long limit) {
-	    	if(addresses != null && predicate != null ) {
-	    		return addresses.values().stream().filter(predicate).limit(limit).collect(Collectors.<Address>toList());
-	        }
-	        return null;
+	    public static List<Address> filterAddresses(Map<Long, Address> addresses, 
+	    		Predicate<Address> predicate, long limit) {
+			    	if(addresses != null && predicate != null ) {
+			    		return addresses.values().stream().filter(predicate).limit(limit)
+			    				.collect(Collectors.<Address>toList());
+			        }
+			    	return null;
 	    }
 	    
 	    public static List<String> toStringShort(List<Address> addresses){
 	    	return addresses.stream().map(Address::toStringShort).collect(Collectors.<String>toList());
 	    }
 	    
-	    public static List<String> filterToStringShort(Map<Long, Address> addresses, Predicate<Address> predicate, long limit){
-	    	return toStringShort(filterAddresses(addresses, predicate, limit));
+	    public static List<String> filterToStringShort(Map<Long, Address> addresses, 
+	    		Predicate<Address> predicate, long limit){
+	    			return toStringShort(filterAddresses(addresses, predicate, limit));
 	    }
 	    
 	    public static boolean confirmStreetExist(Map<Long, Address> addresses, String find){
 			return (filterAddresses(addresses, streetEquals(find), 1) != null);
 		}
+	    
+	    public static Address addressEquals(Map<Long, Address> addresses, Address addr){
+			List<Address> result = (filterAddresses(addresses, 
+					toStringShortEquals(addr) , 1l));
+			if(result != null) return result.get(0);
+			return null;
+	}
 }

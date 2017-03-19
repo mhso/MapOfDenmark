@@ -53,13 +53,8 @@ public class AddressController implements OSMParserListener{
 	
 	public Address getSearchResult(String find){
 		AddressParser ap = new AddressParser();
-		Address addrBuild = preciseMatch(ap.parse(find));
-		if(addrBuild.toStringShort() != null){
-			//int listSize = AddressSearchPredicates.filterToStringShort(addresses, 
-				//	AddressSearchPredicates.toStringShortEquals(addrBuild) , 2l);
-	//		if(listSize == 1){}
-		}
-		//if(addrBuild != null) System.out.println("getSearchResult: "+addrBuild.toString());
+		Address addrBuild = AddressSearchPredicates.addressEquals(addresses, ap.parse(find));
+		if(addrBuild != null) System.out.println("getSearchResult: "+addrBuild.toString());
 		return addrBuild;
 	}
 	
@@ -89,25 +84,8 @@ public class AddressController implements OSMParserListener{
 			result.addAll(AddressSearchPredicates.filterToStringShort(addresses, 
 					AddressSearchPredicates.postcodeEquals(Integer.toString(addrBuild.getPostcode())) , 5l));
 		}
-		
-		if(addrBuild.toStringShort() != null){
-			result = (AddressSearchPredicates.filterToStringShort(addresses, 
-					AddressSearchPredicates.toStringShortEquals(addrBuild) , 5l));
-		}
-		
 		return result;
-	}  
-	
-	private Address preciseMatch(Address addr){
-		Address result = addresses.values().stream()
-				.filter(x -> addr.toStringShort().equalsIgnoreCase(x.toStringShort())														
-				).findFirst()
-				.orElse(null);
-		if (result != null) return result;
-		return addr;
 	}
-	
-	
 
 	public void addOsmAddress(long nodeId, float lat, float lon, String k, String v){
 		Address addr;
@@ -165,7 +143,7 @@ public class AddressController implements OSMParserListener{
 			}
 		}
 	}
-
+	
 	@Override
 	public void onParsingStarted() {
 		// TODO Auto-generated method stub
