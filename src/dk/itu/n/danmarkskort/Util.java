@@ -1,11 +1,19 @@
 package dk.itu.n.danmarkskort;
 
+import java.awt.Dimension;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.LineNumberReader;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Map;
+import java.awt.MouseInfo;
+import java.awt.Point;
+import java.awt.Robot;
+import java.awt.Toolkit;
+
 
 public class Util {
 
@@ -19,6 +27,10 @@ public class Util {
 	
 	public static String getCurrentDirectoryPath() {
 		return System.getProperty("user.dir");
+	}
+	
+	public static String getCurrentOSMFolderPath() {
+		return Util.getCurrentDirectoryPath() + "/parsedOSMFiles/" + Main.osmParser.getChecksum();
 	}
 	
 	public static String getFileChecksum(MessageDigest digest, File file) throws IOException {
@@ -51,6 +63,49 @@ public class Util {
 			String key = name.toString();
 			String value = map.get(name).toString();
 			System.out.println(key + " " + value);
+		}
+	}
+	
+	public static int getNumberOfLines(File file) {
+		try {
+			LineNumberReader  lnr = new LineNumberReader(new FileReader(file));
+			lnr.skip(Long.MAX_VALUE);
+			lnr.close();
+			return lnr.getLineNumber() + 1;
+		} catch (Exception e) {
+			return 0;
+		}
+	}
+	
+	public static double roundByN(int n, double value){
+	    return Math.round(value/n) * n;
+	}
+	
+	public static int mouseWarp() {
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		Point p = MouseInfo.getPointerInfo().getLocation();
+		
+		try {
+			if(p.x == 0) {
+				new Robot().mouseMove(screenSize.width - 2, p.y);
+				return 0;
+			}
+			else if(p.x == screenSize.width - 1) {
+				new Robot().mouseMove(2, p.y);
+				return 1;
+			}
+			else if(p.y == 0) {
+				new Robot().mouseMove(p.x, screenSize.height - 2);
+				return 2;
+			}
+			else if(p.y == screenSize.height - 1) {
+				new Robot().mouseMove(p.x, 2);
+				return 3;
+			}
+			return -1;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return -1;
 		}
 	}
 	

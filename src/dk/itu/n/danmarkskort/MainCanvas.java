@@ -1,48 +1,46 @@
 package dk.itu.n.danmarkskort;
 
-import dk.itu.n.danmarkskort.GUI.GUIManager;
-
-import javax.imageio.ImageIO;
 import javax.swing.*;
+
+import dk.itu.n.danmarkskort.gui.GUIManager;
+
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
+import java.awt.geom.AffineTransform;
 
 public class MainCanvas extends JPanel {
 
     public static final int WIDTH = 1000, HEIGHT = 800;
-    private final Color canvasBG = new Color(146, 171, 200);
-    BufferedImage canvasImg;
-
+    private final Color debugBackgroundColor = new Color(255, 240, 224);
+    
+    AffineTransform transform = new AffineTransform();
+	boolean antiAlias;
+	
     public MainCanvas() {
-        setPreferredSize(new Dimension(800, 600));
         setLayout(new BorderLayout());
-
-        canvasImg = null;
-        try {
-            canvasImg = ImageIO.read(new File("resources/satellite.jpeg"));
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
+        setOpaque(false);
         addGUI();
     }
 
-    @Override
     public void paintComponent(Graphics g){
         super.paintComponent(g);
-        Graphics g2d = g;
-        if(canvasImg != null) {
-            g2d.drawImage(canvasImg, 0, 0, this);
-        } else {
-            g2d.setColor(canvasBG);
-            g2d.fillRect(0, 0, WIDTH, HEIGHT);
-        }
+        Graphics2D g2d = (Graphics2D) g;
+        if(Main.debug) drawDebug(g2d);   
+    }
+    
+    public void drawDebug(Graphics2D g2d) {
+    	g2d.setColor(debugBackgroundColor);
+    	g2d.fillRect(5, 10, 110, 128);
+    	g2d.setColor(Color.BLACK);
+    	g2d.drawRect(5, 10, 110, 128);
+    	g2d.drawString("x1: " + (int)Main.map.getMapX() + ", y1: " + (int)Main.map.getMapY(), 10, 30);
+    	g2d.drawString("x2: " + (int)Main.map.getDisplayedRegion().x2 + ", y2: " + (int)Main.map.getDisplayedRegion().y2, 10, 45);
+    	g2d.drawString("Zoom: " + String.format("%.01f", Main.map.getZoom()).replace(",", "."), 10, 60);
+    	g2d.drawString("Tiles drawn: " + Main.map.getTileDrawnCount(), 10, 75);
     }
 
     private void addGUI() {
         GUIManager gui = new GUIManager();
         add(gui);
     }
+    
 }
