@@ -50,6 +50,7 @@ public class AddressOsmParser {
 			try{
 				buildAddress.setPostcode(Integer.parseInt(value));
 			} catch(NumberFormatException e){
+				e.printStackTrace();
 			}
 		break;
 		case "city":				buildAddress.setCity(value);
