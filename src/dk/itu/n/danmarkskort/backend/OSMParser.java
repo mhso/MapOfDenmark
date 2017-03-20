@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import org.xml.sax.InputSource;
@@ -47,7 +48,6 @@ public class OSMParser {
 		} else if (fileName.endsWith(".zip")) {
 			try {
 				ZipInputStream zip = new ZipInputStream(new BufferedInputStream(new FileInputStream(fileName)));
-				zip.getNextEntry();
 				loadOSM(new InputSource(zip), fileName);
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
@@ -70,7 +70,6 @@ public class OSMParser {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
 	}
 	
 	public void setChecksum(String checksum) {
