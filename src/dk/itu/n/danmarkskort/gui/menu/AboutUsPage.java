@@ -10,7 +10,6 @@ import javax.swing.border.TitledBorder;
 
 public class AboutUsPage extends JPanel  {
 	Style style;
-	private JPanel panelCenter;
     public AboutUsPage() {
     	style = new Style();
         setOpaque(false);
@@ -40,7 +39,7 @@ public class AboutUsPage extends JPanel  {
         panelEast.setBackground(style.menuContentBG());
         panelPage.add(panelEast, BorderLayout.EAST);
         
-        panelCenter = new JPanel();
+        JPanel panelCenter = new JPanel();
         panelCenter.setBackground(style.menuContentBG());
         panelPage.add(panelCenter, BorderLayout.CENTER);
         initContentPanel(panelCenter);
@@ -92,7 +91,7 @@ public class AboutUsPage extends JPanel  {
         gbc_lblDate.insets = new Insets(0, 0, 5, 5);
         gbc_lblDate.gridx = 0;
         gbc_lblDate.gridy = 3;
-        panelCenter.add(lblDate, gbc_lblDate);
+        panel.add(lblDate, gbc_lblDate);
         
         JLabel lblAppdate = new JLabel("03.20.2017");
         GridBagConstraints gbc_lblAppdate = new GridBagConstraints();
@@ -100,7 +99,7 @@ public class AboutUsPage extends JPanel  {
         gbc_lblAppdate.insets = new Insets(0, 0, 5, 0);
         gbc_lblAppdate.gridx = 1;
         gbc_lblAppdate.gridy = 3;
-        panelCenter.add(lblAppdate, gbc_lblAppdate);
+        panel.add(lblAppdate, gbc_lblAppdate);
         
         JLabel lblDescription = new JLabel("Description:");
         GridBagConstraints gbc_lblDescription = new GridBagConstraints();
@@ -122,9 +121,7 @@ public class AboutUsPage extends JPanel  {
         gbc_lblNewLabel.gridx = 1;
         gbc_lblNewLabel.gridy = 4;
         panel.add(lblAppDescription, gbc_lblNewLabel);
-        
-        
-        
+               
         JLabel lblTeamName = new JLabel("Team Name:");
         GridBagConstraints gbc_lblTeamName = new GridBagConstraints();
         gbc_lblTeamName.anchor = GridBagConstraints.WEST;

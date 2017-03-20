@@ -11,7 +11,7 @@ public class Style {
                 dropdownItemBG, dropdownItemBGActive, dropdowItemTextColor, dropdownItemTextColorActive;
     private CustomButton searchButton, menuButton,routeButton, zoomInButton, zoomOutButton,
             menuLayerButton, menuSaveButton, menuOpenButton, menuSettingsButton, menuRouteButton, menuInfoButton;
-    private ImageIcon scaleIndicator;
+    private ImageIcon scaleIndicator, arrowUpDownButton;
 
     public Style() {
         // top panel
@@ -53,6 +53,8 @@ public class Style {
         zoomOutButton = new CustomButton("resources/icons/zoomout.png", alphaFloat, alphaHover, zoomButtonBG);
 
         scaleIndicator = new ImageIcon("resources/scale.png");
+        
+        arrowUpDownButton = new ImageIcon("resources/arrowupdown.png");
 
     }
 
@@ -89,5 +91,6 @@ public class Style {
     public CustomButton menuInfoButton() { return menuInfoButton; }
 
     public ImageIcon scaleIndicator() { return scaleIndicator; }
+    public ImageIcon arrowUpDownButton() { return arrowUpDownButton; }
 
 }
