@@ -31,6 +31,7 @@ public class OSMNodeHandler implements ContentHandler {
 	
 	private void incrementLineCount() {
 		int currentCount = locator.getLineNumber();
+		
 		if(lineCount == currentCount) return;
 		lineCount = currentCount;
 		if(lineCount % 100 == 0) {
