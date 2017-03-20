@@ -9,8 +9,8 @@ public class RoutePage extends JPanel {
         setPreferredSize(new Dimension(100, 800));
         setOpaque(false);
 
-        JLabel nothing = new JLabel("Find Route Page");
-        add(nothing);
+        JLabel lblPageHeadline = new JLabel("Find Route Page");
+        add(lblPageHeadline);
     }
 
 }

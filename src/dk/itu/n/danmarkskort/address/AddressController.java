@@ -4,7 +4,6 @@ import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.backend.OSMParserListener;
 import dk.itu.n.danmarkskort.models.ParsedAddress;
 import dk.itu.n.danmarkskort.models.ParsedObject;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +11,6 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class AddressController implements OSMParserListener{
@@ -60,26 +58,55 @@ public class AddressController implements OSMParserListener{
 		AddressParser ap = new AddressParser();
 		Address addrBuild = ap.parse(find);
 		List<String> result = new ArrayList<String>();
-		List<String> setLevens = new ArrayList<String>();
-		if(addrBuild.getStreet() != null && !AddressSearchPredicates.confirmStreetExist(addresses, addrBuild.getStreet())) {
-			result.addAll(AddressSearchPredicates.filterToStringShort(addresses, 
-							AddressSearchPredicates.streetLevenshteinDistance(addrBuild.getStreet(),0,2) , 5l));
-		}
 		System.out.println("searchSuggestions: "+addrBuild.toString());
 
+		// Find suggestion from street
 		if(addrBuild.getStreet() != null){
 			result.addAll(AddressSearchPredicates.filterToStringShort(addresses, 
-							AddressSearchPredicates.streetContains(addrBuild.getStreet()) , 5l));
+							AddressSearchPredicates.streetStartsWith(addrBuild.getStreet()) , 5l));
+			// Find suggestion from street, accept 0-1 mistakes in street input
+			if (result.size() == 0) {
+				result.addAll(AddressSearchPredicates.filterToStringShort(addresses, 
+						AddressSearchPredicates.streetLevenshteinDistance(addrBuild.getStreet(),-1,2) , 5l));
+				// Find suggestion from street, accept 0-3  mistakes in street input
+				if (result.size() == 0) {
+					result.addAll(AddressSearchPredicates.filterToStringShort(addresses, 
+							AddressSearchPredicates.streetLevenshteinDistance(addrBuild.getStreet(),-1,4) , 5l));
+				}
+			}
 		}
 		
+		// Find suggestion from street and housenumber
 		if(addrBuild.getStreet() != null && addrBuild.getHousenumber() != null){
 			result = (AddressSearchPredicates.filterToStringShort(addresses, 
-					AddressSearchPredicates.streetEqualsHousenumberContains(addrBuild) , 5l));
+					AddressSearchPredicates.streetEqualsHousenumberStartsWith(addrBuild) , 5l));
+			// Find suggestion from street and housenumber, accept 0-1 mistakes in street and housenumber input
+			if (result.size() == 0) {
+				result.addAll(AddressSearchPredicates.filterToStringShort(addresses, 
+						AddressSearchPredicates.streetHousenumberLevenshteinDistance(addrBuild,-1,2,-1,2) , 5l));
+				// Find suggestion from street and housenumber, accept 0-3 mistakes in street
+				// and 0-1 mistakes in housenumber input
+				if (result.size() == 0) {
+					result.addAll(AddressSearchPredicates.filterToStringShort(addresses, 
+							AddressSearchPredicates.streetHousenumberLevenshteinDistance(addrBuild,-1,4,-1,2) , 5l));
+				}
+			}
 		}
 		
-		if(addrBuild.getPostcode() != -1){
+		if(result.size() == 0 && addrBuild.getPostcode() != -1){
 			result.addAll(AddressSearchPredicates.filterToStringShort(addresses, 
 					AddressSearchPredicates.postcodeEquals(Integer.toString(addrBuild.getPostcode())) , 5l));
+		}
+		// Remove dublicates
+		result = result.stream().distinct().collect(Collectors.toList());
+		System.out.println("Before sort");
+		for(String str : result){
+			System.out.println(str);
+		}
+		System.out.println("After sort");
+		result.stream().sorted();
+		for(String str : result){
+			System.out.println(str);
 		}
 		return result;
 	}
