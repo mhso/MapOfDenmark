@@ -10,8 +10,8 @@ public class MapLayersPage extends JPanel {
         setPreferredSize(new Dimension(80, 800));
         setOpaque(false);
 
-        JLabel nothing = new JLabel("Map Layers Page");
-        add(nothing);
+        JLabel lblPageHeadline = new JLabel("Map Layers Page");
+        add(lblPageHeadline);
     }
 
 
