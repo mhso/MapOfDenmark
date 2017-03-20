@@ -43,10 +43,10 @@ public class AboutUsPage extends JPanel  {
         panelCenter = new JPanel();
         panelCenter.setBackground(style.menuContentBG());
         panelPage.add(panelCenter, BorderLayout.CENTER);
-        contentPanel(panelCenter);
+        initContentPanel(panelCenter);
     }
     
-    private void contentPanel(JPanel panel){
+    private void initContentPanel(JPanel panel){
     	GridBagLayout gbl_panelCenter = new GridBagLayout();
         gbl_panelCenter.columnWidths = new int[]{0, 0, 0};
         gbl_panelCenter.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
