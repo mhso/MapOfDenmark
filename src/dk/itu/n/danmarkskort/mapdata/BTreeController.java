@@ -1,19 +1,46 @@
 package dk.itu.n.danmarkskort.mapdata;
 
 import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Random;
 
 public class BTreeController {
 
-    private final int maxData = 1000;
+    private transient final int maxData = 1000;
+    private boolean sortValue;
 
-    public BTreeController() {}
+    public BTreeController() {
+        sortValue = false; // true = longitude, false = latitude
+    }
 
-    // We need to take some input, and also create an implementation of QuickSelect!!
+    public BTree createBTree(ArrayList<OSMWay> list, boolean sortValue) {
+        BTree tree = new BTree();
 
-    public BTree createBTreeStructure(ArrayList<Comparable> c) {
-        return null;
+        if (list.size() <= maxData) {
+            tree.setData(list);
+            return tree;
+        } else {
+            OSMWay median = QuickSelect.quickSelect(list, list.size() / 2, sortValue);
+
+            ArrayList<OSMWay> left = new ArrayList<>(maxData / 2);
+            ArrayList<OSMWay> right = new ArrayList<>(maxData / 2);
+
+            for (OSMWay o : list) {
+                if(less(o, median, sortValue)) left.add(o);
+                else right.add(o);
+            }
+
+            if(sortValue) tree.setKey(median.getLon());
+            else tree.setKey(median.getLat());
+
+            tree.setLeft(createBTree(left, !sortValue));
+            tree.setRight(createBTree(right, !sortValue));
+
+            return tree;
+        }
+    }
+
+    private boolean less(OSMWay a, OSMWay b, boolean sortValue) {
+        if(sortValue) return a.getLon() < b.getLon();
+        return a.getLat() < b.getLat();
     }
 
 }

@@ -55,6 +55,8 @@ public class OSMNodeHandler implements ContentHandler {
 	public void endDocument() throws SAXException {
 		Main.log("Parsing finished.");
 		for(OSMParserListener listener : parser.parserListeners) listener.onParsingFinished();
+
+		Main.log("Found " + nodes.size() + " nodes");
 	}
 
 	public void startPrefixMapping(String prefix, String uri) throws SAXException {}
@@ -103,7 +105,6 @@ public class OSMNodeHandler implements ContentHandler {
         float lat = Float.parseFloat(atts.getValue("lat"));
         nodes.put(key, lon, lat);
     }
-
     public NodeMap getNodeMap() { return nodes; }
 
 	public void addParsedObject(ParsedObject parsedObject, Attributes atts, String qName) {
