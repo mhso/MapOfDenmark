@@ -9,7 +9,7 @@ public class Address{
 	private int postcode;
 
 	public Address(){
-		this.nodeId = -1l;
+		this.nodeId = -1L;
 		this.lat = -1f;
 		this.lon = -1f;
 		this.postcode = -1;

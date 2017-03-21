@@ -6,6 +6,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
+import dk.itu.n.danmarkskort.mapdata.NodeMap;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
@@ -23,10 +24,12 @@ public class OSMNodeHandler implements ContentHandler {
 	private int lineCount;
 	private Locator locator;
 	private List<ParsedObject> currentParsedObjects = new ArrayList<ParsedObject>();
+	private NodeMap nodes;
 	
 	public OSMNodeHandler(OSMParser parser, String fileName) {
 		this.fileName = fileName;
 		this.parser = parser;
+		nodes = new NodeMap(21);
 	}
 	
 	private void incrementLineCount() {
@@ -60,7 +63,7 @@ public class OSMNodeHandler implements ContentHandler {
 
 	public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
 		incrementLineCount();
-		
+		int i = 0;
 		switch(qName) {
 		
 		case "osm":
@@ -76,6 +79,7 @@ public class OSMNodeHandler implements ContentHandler {
 			addParsedObject(new ParsedBounds(), atts, qName);
 			break;
 		case "node":
+			addNode(atts);
 			addParsedObject(new ParsedNode(), atts, qName);
 			break;
 		case "tag":
@@ -93,6 +97,15 @@ public class OSMNodeHandler implements ContentHandler {
 		}
 	}
 
+	public void addNode(Attributes atts) {
+		long key = Long.parseLong(atts.getValue("id"));
+        float lon = Float.parseFloat(atts.getValue("lon"));
+        float lat = Float.parseFloat(atts.getValue("lat"));
+        nodes.put(key, lon, lat);
+    }
+
+    public NodeMap getNodeMap() { return nodes; }
+
 	public void addParsedObject(ParsedObject parsedObject, Attributes atts, String qName) {
 		parsedObject.addAttributes(atts);
 		parsedObject.setQName(qName);
@@ -101,6 +114,7 @@ public class OSMNodeHandler implements ContentHandler {
 	
 	public void addTagToParsedObject(Attributes atts) {
 		String key = atts.getValue("k");
+
 		ParsedObject lastParsedObject = getLastParsedObject();
 		
 		if(key.contains("addr:")) {

@@ -91,12 +91,7 @@ public class DropdownMenu extends CustomDropdown {
         contentPane.getViewport().setBackground(style.menuContentBG());
         contentPane.getVerticalScrollBar().setUnitIncrement(6);
         contentPane.getVerticalScrollBar().setUI(new CustomScrollBarUI(style));
-
-        JPanel test = new JPanel();
-        test.setPreferredSize(new Dimension(80, 800));
-        test.setOpaque(false);
-
-        addToContentPane(test);
+        contentPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
         gbcContainer.gridx = 1;
         wrapper.add(contentPane, gbcContainer);

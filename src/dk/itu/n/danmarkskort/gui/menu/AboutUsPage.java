@@ -23,7 +23,7 @@ public class AboutUsPage extends JPanel  {
         panelHeadline.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
         panelHeadline.setBackground(style.menuContentBG());
         panelPage.add(panelHeadline, BorderLayout.NORTH);
-        JLabel lblPageHeadline = new JLabel("About Us Page");
+        JLabel lblPageHeadline = new JLabel("About Us");
         lblPageHeadline.setFont(new Font("Tahoma", Font.BOLD, 18));
         panelHeadline.add(lblPageHeadline);
         
@@ -109,9 +109,10 @@ public class AboutUsPage extends JPanel  {
         gbc_lblDescription.gridy = 4;
         panel.add(lblDescription, gbc_lblDescription);
         
-        String appDescription = "<html>This application is made as part of our education"
-        		+ "<br>as software developers, its includes a map of Denmark,"
-        		+ "<br>Key features:"
+        String appDescription = "<html>This application is made as part of our education as"
+                + "<br>software developers, its includes a map of"
+                + "<br>Denmark."
+        		+ "<br>Key features include:"
         		+ "<br>Zoom/pan, search, routeplanning and print.";
         
         JLabel lblAppDescription = new JLabel(appDescription);
@@ -146,7 +147,7 @@ public class AboutUsPage extends JPanel  {
         gbc_lblDevelopers.gridy = 8;
         panel.add(lblDevelopers, gbc_lblDevelopers);
         
-        JLabel lblName_1 = new JLabel("Mikkel Hooge Sørensen (mhso@itu.dk)");
+        JLabel lblName_1 = new JLabel("Mikkel Hooge SÃ¸rensen (mhso@itu.dk)");
         GridBagConstraints gbc_lblName_1 = new GridBagConstraints();
         gbc_lblName_1.anchor = GridBagConstraints.WEST;
         gbc_lblName_1.insets = new Insets(0, 0, 5, 0);

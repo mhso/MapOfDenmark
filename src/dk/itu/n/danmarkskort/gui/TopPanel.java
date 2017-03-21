@@ -12,9 +12,7 @@ import javax.swing.text.DocumentFilter;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 public class TopPanel extends JPanel {
 
