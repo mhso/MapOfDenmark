@@ -12,7 +12,7 @@ public class DropdownAddressSearch extends CustomDropdown {
 	private TopPanel topPanel;
 	private Style style;
 	private int selectedIndex = -1;
-
+	
     /**
      * Create the panel.
      */
