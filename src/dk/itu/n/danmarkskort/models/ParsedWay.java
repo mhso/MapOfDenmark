@@ -1,7 +1,6 @@
 package dk.itu.n.danmarkskort.models;
 
 import java.awt.Shape;
-import java.awt.geom.Line2D;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
@@ -14,6 +13,8 @@ public class ParsedWay extends ParsedObject {
 	private ArrayList<ParsedNode> nodes = new ArrayList<ParsedNode>();
 	private ArrayList<Long> nodeIds = new ArrayList<Long>();
 	private Shape shape = null;
+	private boolean closedShape = false;
+	public WayType type = WayType.DEFAULT;
 	
 	public ParsedNode[] getNodes() {
 		return nodes.toArray(new ParsedNode[nodes.size()]);
@@ -48,7 +49,22 @@ public class ParsedWay extends ParsedObject {
 			path.lineTo(post.getX(), post.getY());
 		}
 		
+		determineType();
+		if(closedShape) path.closePath();
 		shape = path;
+	}
+	
+	public void determineType() {
+		if(attributes.containsKey("building")) {
+			type = WayType.BUILDING;
+			closedShape = true;
+		} else if("coastline".equals(attributes.get("natural"))) {
+			type = WayType.COASTLINE;
+		} else if(attributes.containsKey("highway")) {
+			type = WayType.HIGHWAY;
+		} else if("ferry".equals(attributes.get("route")) || "navigation_line".equals(attributes.get("seamark:type"))) {
+			type = WayType.ROUTE_FERRY;
+		}
 	}
 	
 	public boolean isCompletelyLinked() {

@@ -15,6 +15,7 @@ public class TileController implements OSMParserListener {
 
 	private ParsedBounds mapBounds = null;
 	private final int staticZoomLevel = 1;
+	public final int MAX_ZOOM_LEVEL = 20;
 	public ArrayList<ParsedWay> wayList = new ArrayList<ParsedWay>();
 	
 	public Tile requestTile(int x, int y, int zoom) {
@@ -46,6 +47,19 @@ public class TileController implements OSMParserListener {
 				Tile tile = new Tile(new TileCoordinate(x, y), staticZoomLevel);
 				tile.write();
 			}
+		}
+	}
+	
+	public void renderTiles() {
+		int hor = getBounds().getHorizontalTileCount();
+		int ver = getBounds().getVerticalTileCount();
+		for(int zoom=1; zoom<MAX_ZOOM_LEVEL; zoom++) {
+			int w = hor * zoom;
+			int h = ver * zoom;
+			for(int x=0; x<w; x++) {for(int y=0; y<h; y++) {
+				
+			}}
+			
 		}
 	}
 	

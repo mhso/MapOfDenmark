@@ -120,19 +120,24 @@ public class Util {
 		
 		ParsedBounds bounds = Main.tileController.getBounds();
 		
-		double x = coord.getLat() - bounds.minLat;
-		double y = coord.getLong() - bounds.minLong;
+		double x = coord.getLong() - bounds.minLong;
+		double y = coord.getLat() - bounds.minLat;
 		double latDist = bounds.getWidth();
 		double lonDist = bounds.getHeight();
-		double heightDist = bounds.getPixelWidth();
-		double widthDist = bounds.getPixelHeight();
+		double heightDist = bounds.getPixelHeight();
+		double widthDist = bounds.getPixelWidth();
 		
 		double ratioX = widthDist / latDist;
 		double ratioY = heightDist / lonDist;
 		x *= ratioX;
-		y *= ratioY;
-		
+		y *= -ratioY;
+		y += heightDist;
 		return new Point2D.Double(x, y);
+	}
+	
+	public static Point2D coordinateToScreen(Coordinate coord, double scale) {
+		Point2D p = coordinateToScreen(coord);
+		return new Point2D.Double(p.getX() * scale, p.getY() * scale);
 	}
 	
 }

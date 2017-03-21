@@ -4,7 +4,7 @@ public class ParsedBounds extends ParsedObject {
 
 	public double minLat, minLong, maxLat, maxLong;
 	public final double CONST_X = 0.01;
-	public final double CONST_Y = 0.005;
+	public final double CONST_Y = 0.0055;
 	
 	public void parseAttributes() {
 		minLat = Double.parseDouble(attributes.get("minlat"));

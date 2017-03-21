@@ -9,6 +9,7 @@ import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
+import java.awt.image.BufferedImage;
 import java.util.Observable;
 
 import javax.swing.JPanel;
@@ -20,59 +21,81 @@ import dk.itu.n.danmarkskort.models.ParsedWay;
 import dk.itu.n.danmarkskort.models.Region;
 import dk.itu.n.danmarkskort.models.Tile;
 import dk.itu.n.danmarkskort.models.TileCoordinate;
+import dk.itu.n.danmarkskort.models.WayType;
 
 public class MapCanvas extends JPanel {
 
 	private static final long serialVersionUID = -4476997375977002964L;
 	
 	private AffineTransform transform = new AffineTransform();
-	private boolean antiAlias;
+	private boolean antiAlias = true;
 	private int tileCount = 0;
 	private final int MAX_ZOOM = 20;
+	
+	private boolean did = false;
 	
 	public MapCanvas() {
 		new MapMouseController(this);
 	}
 	
 	protected void paintComponent(Graphics _g) {
-		Graphics2D g = (Graphics2D) _g;
-		g.setTransform(transform);
-		g.setStroke(new BasicStroke(Float.MIN_VALUE));
-		if (antiAlias) g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		drawMap(g);
+		drawMap((Graphics2D)_g);
 	}
 	
 	public void drawMap(Graphics2D g2d) {
 		if(!Main.tileController.hasBounds()) return;
-		ParsedBounds bounds = Main.tileController.getBounds();
+		g2d.setTransform(transform);
+		g2d.setStroke(new BasicStroke(Float.MIN_VALUE));
+		
+		for(ParsedWay way : Main.tileController.wayList) {
+			g2d.setColor(Color.BLACK);
+			g2d.setStroke(new BasicStroke(Float.MIN_VALUE));
+			Shape shape = way.getShape();
+			if(way.type == WayType.DEFAULT) g2d.draw(shape);
+			else if(way.type == WayType.BUILDING) g2d.fill(shape);
+			else if(way.type == WayType.COASTLINE) {
+				g2d.setStroke(new BasicStroke(0.2F));
+				g2d.draw(shape);
+			} else if(way.type == WayType.HIGHWAY) {
+				g2d.setStroke(new BasicStroke(0.5F));
+				g2d.draw(shape);
+			}
+		}
 		
 		for(ParsedWay way : Main.tileController.wayList) {
 			Shape shape = way.getShape();
-			if(shape != null) g2d.draw(way.getShape());
+			if(way.type == WayType.HIGHWAY) {
+				g2d.setColor(Color.WHITE);
+				g2d.setStroke(new BasicStroke(0.4F));
+				g2d.draw(shape);
+				g2d.setColor(Color.BLACK);
+			}
 		}
 		
-//		int boxSize = 16;
-//		int horTileLimit = bounds.getHorizontalTileCount() * boxSize;
-//		int verTileLimit = bounds.getVerticalTileCount() * boxSize;
-//		
-//		Region mapRegion = getDisplayedRegion();
-//		double x1 = Math.max(0, mapRegion.getPointFrom().getX());
-//		double y1 = Math.max(0, mapRegion.getPointFrom().getY());
-//		double x2 = Math.min(horTileLimit, mapRegion.getPointTo().getX());
-//		double y2 = Math.min(verTileLimit, mapRegion.getPointTo().getY());
-//		
-//		tileCount = 0;
-//		Tile tile = new Tile(new TileCoordinate(1, 1), 1);
-//		tile.render();
-//		
-//		for(double x=x1; x<x2; x+=boxSize) {
-//			for(double y=y1; y<y2; y+=boxSize) {
-//				int xPos = (int)(x - x1 % 16);
-//				int yPos = (int)(y - y1 % 16);
-//				g2d.drawImage(tile.getImage(), xPos, yPos, null);
-//				tileCount++;
-//			}
-//		}
+		int boxSize = 16;
+		
+		ParsedBounds bounds = Main.tileController.getBounds();
+		int horTileLimit = bounds.getHorizontalTileCount() * boxSize;
+		int verTileLimit = bounds.getVerticalTileCount() * boxSize;
+		
+		Region mapRegion = getDisplayedRegion();
+		double x1 = Math.max(0, mapRegion.getPointFrom().getX());
+		double y1 = Math.max(0, mapRegion.getPointFrom().getY());
+		double x2 = Math.min(horTileLimit, mapRegion.getPointTo().getX());
+		double y2 = Math.min(verTileLimit, mapRegion.getPointTo().getY());
+		
+		tileCount = 0;
+		Tile tile = new Tile(new TileCoordinate(1, 1), 1);
+		tile.render();
+		
+		for(double x=x1; x<x2; x+=boxSize) {
+			for(double y=y1; y<y2; y+=boxSize) {
+				int xPos = (int)(x - x1 % 16);
+				int yPos = (int)(y - y1 % 16);
+				g2d.drawImage(tile.getImage(), xPos, yPos, null);
+				tileCount++;
+			}
+		}
 	}
 
 	public void pan(double dx, double dy) {

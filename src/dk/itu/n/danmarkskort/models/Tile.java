@@ -1,5 +1,6 @@
 package dk.itu.n.danmarkskort.models;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
@@ -21,7 +22,7 @@ public class Tile {
 	public Tile(TileCoordinate coord, int zoom) {
 		this.coord = coord;
 		this.zoom = zoom;
-		image = new BufferedImage(size, size, BufferedImage.TYPE_INT_RGB);
+		image = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
 	}
 
 	public TileCoordinate getCoord() {
@@ -31,9 +32,10 @@ public class Tile {
 	public void render() {
 		if(!didRender) {
 			Graphics2D g2d = (Graphics2D) image.getGraphics();
-			g2d.setColor(new Color(181, 208, 208)); // Water
-			g2d.fillRect(0, 0, size, size);
-			g2d.setColor(Color.LIGHT_GRAY);
+			g2d.setStroke(new BasicStroke(Float.MIN_VALUE));
+			//g2d.setColor(new Color(181, 208, 208)); // Water
+			//g2d.fillRect(0, 0, size, size);
+			g2d.setColor(Color.DARK_GRAY);
 			g2d.drawRect(0, 0, size, size);
 		}
 	}
