@@ -48,6 +48,7 @@ public class OSMParser {
 		} else if (fileName.endsWith(".zip")) {
 			try {
 				ZipInputStream zip = new ZipInputStream(new BufferedInputStream(new FileInputStream(fileName)));
+				zip.getNextEntry();
 				loadOSM(new InputSource(zip), fileName);
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
