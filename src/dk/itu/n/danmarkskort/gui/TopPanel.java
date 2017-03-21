@@ -5,13 +5,24 @@ import dk.itu.n.danmarkskort.gui.menu.DropdownMenu;
 import dk.itu.n.danmarkskort.search.SearchController;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.text.AbstractDocument;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DocumentFilter;
+
+import com.sun.scenario.effect.DropShadow;
+
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -98,12 +109,34 @@ public class TopPanel extends JPanel {
 
         topParent.add(top);
         add(topParent);
-
-
+        
         dropSuggestions = new DropdownAddressSearch(this, style);
         dropMenu = new DropdownMenu(this, style);
-
-        menu.addActionListener(e -> dropMenu.showDropdown(menu));
+        
+        menu.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				if(!dropMenu.isVisible()) {
+					dropMenu.blockVisibility(false);
+					dropMenu.showDropdown(menu);
+				}
+			}
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				dropMenu.blockVisibility(true);
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				if(dropMenu.isVisible()) dropMenu.blockVisibility(false);
+			}
+        });
+        menu.addActionListener(e -> {
+        	if(dropMenu.isVisible() && dropMenu.isPopUpBlocked()) {
+				dropMenu.blockVisibility(false);
+				dropMenu.setVisible(false);
+        	}
+        });
+        
         route.addActionListener(e -> {
             dropMenu.addToContentPane(new JPanel());
             dropMenu.showDropdown(menu);
