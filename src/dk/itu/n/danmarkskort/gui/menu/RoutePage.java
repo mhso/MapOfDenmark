@@ -6,13 +6,16 @@ import javax.swing.border.TitledBorder;
 import dk.itu.n.danmarkskort.gui.Style;
 
 import java.awt.*;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class RoutePage extends JPanel {
 
     Style style;
-    private JTextField txtAddrfrom;
-    private JTextField txtAddreto;
-    public RoutePage() {
+    private JTextField txtAddrFrom;
+    private JTextField txtAddreTo;
+    public RoutePage(String txtAddreToSetField) {
+    	
     	style = new Style();
         setOpaque(false);
         setLayout(new BorderLayout(0, 0));
@@ -60,24 +63,42 @@ public class RoutePage extends JPanel {
         gbc_lblFrom.gridy = 1;
         panelCenter.add(lblFrom, gbc_lblFrom);
         
-        txtAddrfrom = new JTextField();
-        txtAddrfrom.setText("AddrFrom");
+        txtAddrFrom = new JTextField();
+        txtAddrFrom.setText("AddrFrom");
         GridBagConstraints gbc_txtAddrfrom = new GridBagConstraints();
         gbc_txtAddrfrom.gridwidth = 3;
         gbc_txtAddrfrom.insets = new Insets(0, 0, 5, 5);
         gbc_txtAddrfrom.fill = GridBagConstraints.HORIZONTAL;
         gbc_txtAddrfrom.gridx = 1;
         gbc_txtAddrfrom.gridy = 1;
-        panelCenter.add(txtAddrfrom, gbc_txtAddrfrom);
-        txtAddrfrom.setColumns(10);
+        panelCenter.add(txtAddrFrom, gbc_txtAddrfrom);
+        txtAddrFrom.setColumns(10);
         
-        JButton btnS = new JButton("S");
+        JButton btnS = new JButton();
+        btnS.addActionListener(e -> swapToFromFields());
+        
+        JLabel lblAddrfromconfirmed = new JLabel();
+        lblAddrfromconfirmed.setIcon(new ImageIcon("resources/icons/checked_checkbox.png"));
+        GridBagConstraints gbc_lblAddrfromconfirmed = new GridBagConstraints();
+        gbc_lblAddrfromconfirmed.insets = new Insets(0, 0, 5, 5);
+        gbc_lblAddrfromconfirmed.gridx = 4;
+        gbc_lblAddrfromconfirmed.gridy = 1;
+        panelCenter.add(lblAddrfromconfirmed, gbc_lblAddrfromconfirmed);
+        
+        JLabel lblAddrToConfirmed = new JLabel();
+        lblAddrToConfirmed.setIcon(new ImageIcon("resources/icons/unchecked_checkbox.png"));
+        GridBagConstraints gbc_lblAddrToConfirmed = new GridBagConstraints();
+        gbc_lblAddrToConfirmed.insets = new Insets(0, 0, 5, 5);
+        gbc_lblAddrToConfirmed.gridx = 4;
+        gbc_lblAddrToConfirmed.gridy = 2;
+        panelCenter.add(lblAddrToConfirmed, gbc_lblAddrToConfirmed);
+        
         btnS.setIcon(style.arrowUpDownButton());
         GridBagConstraints gbc_btnS = new GridBagConstraints();
         gbc_btnS.fill = GridBagConstraints.BOTH;
         gbc_btnS.gridheight = 2;
         gbc_btnS.insets = new Insets(0, 0, 5, 5);
-        gbc_btnS.gridx = 4;
+        gbc_btnS.gridx = 5;
         gbc_btnS.gridy = 1;
         panelCenter.add(btnS, gbc_btnS);
         
@@ -89,16 +110,16 @@ public class RoutePage extends JPanel {
         gbc_lblTo.gridy = 2;
         panelCenter.add(lblTo, gbc_lblTo);
         
-        txtAddreto = new JTextField();
-        txtAddreto.setText("AddreTo");
+        txtAddreTo = new JTextField();
+        txtAddreTo.setText(txtAddreToSetField);
         GridBagConstraints gbc_txtAddreto = new GridBagConstraints();
         gbc_txtAddreto.gridwidth = 3;
         gbc_txtAddreto.insets = new Insets(0, 0, 5, 5);
         gbc_txtAddreto.fill = GridBagConstraints.HORIZONTAL;
         gbc_txtAddreto.gridx = 1;
         gbc_txtAddreto.gridy = 2;
-        panelCenter.add(txtAddreto, gbc_txtAddreto);
-        txtAddreto.setColumns(10);
+        panelCenter.add(txtAddreTo, gbc_txtAddreto);
+        txtAddreTo.setColumns(10);
         
         JButton btnFind = new JButton("Find Route");
         GridBagConstraints gbc_btnFind = new GridBagConstraints();
@@ -108,7 +129,13 @@ public class RoutePage extends JPanel {
         panelCenter.add(btnFind, gbc_btnFind);
     }
     
-    private void initContentPanel(JPanel panel){
+    private void swapToFromFields() {
+    	String addrFromTemp = txtAddrFrom.getText();
+    	txtAddrFrom.setText(txtAddreTo.getText());
+    	txtAddreTo.setText(addrFromTemp);
+	}
+
+	private void initContentPanel(JPanel panel){
     	
     }
 }

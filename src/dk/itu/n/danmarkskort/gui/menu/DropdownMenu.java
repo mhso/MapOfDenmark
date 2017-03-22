@@ -20,7 +20,7 @@ public class DropdownMenu extends CustomDropdown {
         this.topPanel = topPanel;
         this.style = style;
 
-        routePage = new RoutePage();
+        routePage = new RoutePage("TEMP_VALUE");
         aboutUsPage = new AboutUsPage();
         settingsPage = new SettingsPage();
         mapLayersPage = new MapLayersPage();

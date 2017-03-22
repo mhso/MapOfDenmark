@@ -61,8 +61,6 @@ public class OSMParser {
 		}
 		parseTimer.off();
 		parseMemory.off();
-		Main.log(parseMemory.differenceMegabytes()+" MB");
-		Main.log(parseMemory.humanReadableByteCount(false));
 		Main.log(parseMemory.humanReadableByteCount(true));
 		Main.log("Time spend parsing: "+parseTimer.toString());
 		Main.logRamUsage();
