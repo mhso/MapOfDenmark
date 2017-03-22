@@ -8,8 +8,8 @@ public class GraphicSpecLine extends WaytypeGraphicSpec {
 	private float lineWidth;
 	private float[] dashArr;
 
-	public Graphics2D transformPrimary(Graphics2D graphics) {
-		graphics = super.transformPrimary(graphics);
+	public void transformPrimary(Graphics2D graphics) {
+		super.transformPrimary(graphics);
 		BasicStroke stroke = null;
 		if(dashArr == null) {
 			stroke = new BasicStroke(lineWidth);
@@ -20,11 +20,10 @@ public class GraphicSpecLine extends WaytypeGraphicSpec {
 		}
 		graphics.setStroke(stroke);
 		
-		return graphics;
 	}
 	
-	public Graphics2D transformOutline(Graphics2D graphics) {
-		graphics = super.transformOutline(graphics);
+	public void transformOutline(Graphics2D graphics) {
+		super.transformOutline(graphics);
 		BasicStroke stroke = null;
 		if(dashArr == null) {
 			stroke = new BasicStroke(lineWidth+0.0000001f);
@@ -34,8 +33,6 @@ public class GraphicSpecLine extends WaytypeGraphicSpec {
 					0.00008f, dashArr, 0.0f);
 		}
 		graphics.setStroke(stroke);
-		
-		return graphics;
 	}
 	
 	public float getLineWidth() {

@@ -2,8 +2,6 @@ package dk.itu.n.danmarkskort.mapgfx;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * This class is used for storing information about the visual representation of a map element (a WayType f.x.).
@@ -13,14 +11,12 @@ public abstract class WaytypeGraphicSpec {
 	private Color innerColor;
 	private Color outerColor;
 	
-	public Graphics2D transformPrimary(Graphics2D graphics) {
+	public void transformPrimary(Graphics2D graphics) {
 		graphics.setColor(innerColor);
-		return graphics;
 	}
 	
-	public Graphics2D transformOutline(Graphics2D graphics) {
+	public void transformOutline(Graphics2D graphics) {
 		graphics.setColor(outerColor);
-		return graphics;
 	}
 	
 	public Object getMapElement() {

@@ -13,10 +13,9 @@ public class GraphicSpecLabel extends WaytypeGraphicSpec {
 		this.fontColor = fontColor;
 	}
 
-	public Graphics2D transformPrimary(Graphics2D graphics) {
+	public void transformPrimary(Graphics2D graphics) {
 		super.transformPrimary(graphics);
 		graphics.setFont(new Font(graphics.getFont().getName(), Font.PLAIN, fontSize));
-		return graphics;
 	}
 	
 	public void setFontSize(int fontSize) {

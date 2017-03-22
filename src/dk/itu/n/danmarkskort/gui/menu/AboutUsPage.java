@@ -146,7 +146,7 @@ public class AboutUsPage extends JPanel  {
         gbc_lblDevelopers.gridy = 8;
         panel.add(lblDevelopers, gbc_lblDevelopers);
         
-        JLabel lblName_1 = new JLabel("Mikkel Hooge S�rensen (mhso@itu.dk)");
+        JLabel lblName_1 = new JLabel("Mikkel Hooge Sørensen (mhso@itu.dk)");
         GridBagConstraints gbc_lblName_1 = new GridBagConstraints();
         gbc_lblName_1.anchor = GridBagConstraints.WEST;
         gbc_lblName_1.insets = new Insets(0, 0, 5, 0);
