@@ -3,7 +3,6 @@ package dk.itu.n.danmarkskort.backend;
 import java.util.ArrayList;
 
 import dk.itu.n.danmarkskort.Main;
-import dk.itu.n.danmarkskort.models.Coordinate;
 import dk.itu.n.danmarkskort.models.ParsedBounds;
 import dk.itu.n.danmarkskort.models.ParsedObject;
 import dk.itu.n.danmarkskort.models.ParsedWay;
@@ -28,7 +27,7 @@ public class TileController implements OSMParserListener {
 	public void onLineCountHundred() {}
 
 	public void onParsingFinished() {
-		prepareTileFiles();
+		//prepareTileFiles();
 	}
 
 	public void onParsingGotObject(ParsedObject parsedObject) {
