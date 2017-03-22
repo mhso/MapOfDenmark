@@ -1,21 +1,32 @@
 package dk.itu.n.danmarkskort.mapdata;
 
+import dk.itu.n.danmarkskort.Main;
+import dk.itu.n.danmarkskort.address.Address;
+import dk.itu.n.danmarkskort.address.AddressOsmParser;
+import dk.itu.n.danmarkskort.backend.OSMParserListener;
+import dk.itu.n.danmarkskort.models.ParsedAddress;
+import dk.itu.n.danmarkskort.models.ParsedNode;
+import dk.itu.n.danmarkskort.models.ParsedObject;
+import dk.itu.n.danmarkskort.models.ParsedWay;
+
 import java.awt.geom.Point2D;
 
-public class NodeMap {
+public class NodeMap implements OSMParserListener {
 
-    private int capacity = 22; // actually 2^22
+    private static NodeMap instance = new NodeMap();
+    private final static int CAPACITY = 22; // actually 2^22
+    private int capacity;
     private Node[] nodes;
     private int size;
 
-    public NodeMap() {
-        this(22);
+    private NodeMap() {
+        nodes = new Node[1 << CAPACITY]; // length = 2^cap
+        size = 0;
     }
 
-    public NodeMap(int cap) {
-        capacity = cap;
-        nodes = new Node[1 << cap]; // length = 2^cap
-        size = 0;
+    public static NodeMap getInstance() {
+        if(instance == null) return instance = new NodeMap();
+        else return instance;
     }
 
     public void put(long key, float lon, float lat) { // lon = x, lat = y
@@ -35,6 +46,35 @@ public class NodeMap {
     private int getHash(long key) { return Long.hashCode(key) & (capacity); }
     public int size() { return size; }
     public int length() { return nodes.length; }
+
+    @Override
+    public void onParsingGotObject(ParsedObject parsedObject) {
+        if(parsedObject instanceof ParsedNode) {
+            ParsedNode node = (ParsedNode) parsedObject;
+            //Main.log(omsAddr.getAttributes().get("id"));
+            if(node.getAttributes().get("id") != null) {
+                long key = Long.parseLong(node.getAttributes().get("id"));
+                float lat = Float.parseFloat(node.getAttributes().get("lat"));
+                float lon = Float.parseFloat(node.getAttributes().get("lon"));
+
+                put(key, lon, lat); // creates a new node
+            }
+        }
+    }
+
+    @Override
+    public void onParsingFinished() {
+        Main.log("NodeMap: " + size() + " nodes found");
+    }
+
+    @Override
+    public void onParsingStarted() {}
+
+    @Override
+    public void onLineCountHundred() {}
+
+    @Override
+    public void onWayLinked(ParsedWay way) {}
 
     public static class Node extends Point2D.Float{
         private Node next;
