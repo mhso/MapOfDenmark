@@ -172,15 +172,16 @@ public class AddressController implements OSMParserListener{
 	public void onParsingGotObject(ParsedObject parsedObject) {
 		if(parsedObject instanceof ParsedAddress) {
 			ParsedAddress omsAddr = (ParsedAddress) parsedObject;
-			//Main.log(omsAddr.getAttributes().get("id"));
 			if(omsAddr.getAttributes().get("id") != null) {
 				long nodeId = Long.parseLong(omsAddr.getAttributes().get("id"));
 				float lat = Float.parseFloat(omsAddr.getAttributes().get("lat"));
 				float lon = Float.parseFloat(omsAddr.getAttributes().get("lon"));
 				
 				Address addr = createOsmAddress(nodeId, lat, lon);
-				AddressOsmParser aop = new AddressOsmParser(addr);
-				aop.parseKeyAddr(omsAddr.attributes);				
+				if(addr != null) {
+					AddressOsmParser aop = new AddressOsmParser(addr);
+					aop.parseKeyAddr(omsAddr.attributes);
+				}
 			}
 		}
 	}
