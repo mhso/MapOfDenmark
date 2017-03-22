@@ -54,6 +54,7 @@ public class TopPanel extends JPanel {
         gbc.weighty = 1;
 
         menu = style.menuButton();
+        menu.setToolTipText("Menu");
         gbc.fill = GridBagConstraints.HORIZONTAL;
         top.add(menu, gbc);
 
@@ -89,13 +90,15 @@ public class TopPanel extends JPanel {
         });
 
         JButton search = style.searchButton();
+        search.setToolTipText("Search");
 
         searchInputWrapper = new JPanel(new GridBagLayout());
         searchInputWrapper.setBackground(style.inputFieldBG());
-        GridBagConstraints gbc2 = new GridBagConstraints();
+        GridBagConstraints searchInputGBC = new GridBagConstraints();
 
-        searchInputWrapper.add(input, gbc2);
-        searchInputWrapper.add(search, gbc2);
+        searchInputWrapper.add(input, searchInputGBC);
+        searchInputGBC.insets = new Insets(0, 0, 0, 10);
+        searchInputWrapper.add(search, searchInputGBC);
 
         gbc.insets = new Insets(0, 6, 0, 6);
         gbc.weightx = 1;
@@ -103,6 +106,7 @@ public class TopPanel extends JPanel {
         top.add(searchInputWrapper, gbc);
 
         JButton route = style.routeButton();
+        route.setToolTipText("Directions");
 
         gbc.insets = new Insets(0, 3, 0, 3);
         gbc.gridx = 2;
