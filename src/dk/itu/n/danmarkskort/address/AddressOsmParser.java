@@ -48,7 +48,7 @@ public class AddressOsmParser {
 		break;
 		case "postcode":
 			try{
-				buildAddress.setPostcode(Integer.parseInt(value));
+				buildAddress.setPostcode(Integer.parseInt(value.replaceAll("[^0-9]", "")));
 			} catch(NumberFormatException e){
 				e.printStackTrace();
 			}
