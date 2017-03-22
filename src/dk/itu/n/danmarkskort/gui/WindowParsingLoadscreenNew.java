@@ -34,8 +34,8 @@ public class WindowParsingLoadscreenNew extends JFrame implements OSMParserListe
 	private Component rigidArea;
 	private JLabel labelStatus;
 	private BufferedImage mainImage;
-	private int lineCountHundreds;
-	private long fileLength;
+	private int fileSizeHundreds;
+	private long fileSize;
 	private boolean showObjectString = true;
 	private double currentPercent;
 	private JLabel labelPercent;
@@ -45,7 +45,7 @@ public class WindowParsingLoadscreenNew extends JFrame implements OSMParserListe
 	}
 	
 	public void initialize(String fileName) {
-		getFileLength(fileName);
+		getFileSize(fileName);
 		setTitle("Parsing Data");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
@@ -89,19 +89,16 @@ public class WindowParsingLoadscreenNew extends JFrame implements OSMParserListe
 		setVisible(true);
 	}
 	
-	private void getFileLength(String fileName) {
+	private void getFileSize(String fileName) {
 		File file = new File(fileName);
-		fileLength = Util.getNumberOfLines(file);
-		long b = file.length();
-		long kb = b/1024;
+		fileSize = Util.getFileSize(file);
+		long kb = fileSize/1024;
 		long mb = kb/1024;
 		Main.log("File Name: " + file.getName()); 
-		Main.log("File Size: " + mb + " MB");
+		Main.log("File Size: " + fileSize + " MB");
 	}
 	
 	private void setProgressPercent() {
-		double currentLine = lineCountHundreds * 100;
-		currentPercent = (currentLine/fileLength) * 100;
 		labelPercent.setText((int)currentPercent + " %");
 		contentPane.repaint();
 	}
@@ -121,7 +118,7 @@ public class WindowParsingLoadscreenNew extends JFrame implements OSMParserListe
 
 	@Override
 	public void onLineCountHundred() {
-		lineCountHundreds++;
+		currentPercent++;
 		setProgressPercent();
 		showObjectString = true;
 	}

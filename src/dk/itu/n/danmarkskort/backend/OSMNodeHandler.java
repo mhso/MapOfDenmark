@@ -1,8 +1,8 @@
 package dk.itu.n.danmarkskort.backend;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,33 +22,37 @@ public class OSMNodeHandler implements ContentHandler {
 
 	private OSMParser parser;
 	private String fileName;
-	private int lineCount;
+	private int byteCount;
 	private Locator locator;
 	private List<ParsedObject> currentParsedObjects = new ArrayList<ParsedObject>();
 	private NodeMap nodes;
-	private FileInputStream fis;
+	private InputStream inputStream;
+	private long fileSize;
 	
-	public OSMNodeHandler(OSMParser parser, String fileName, FileInputStream fis) {
+	public OSMNodeHandler(OSMParser parser, String fileName) {
 		this.fileName = fileName;
+		fileSize = Util.getFileSize(new File(fileName));
+		System.out.println(fileSize);
 		this.parser = parser;
 		nodes = new NodeMap(21);
-		this.fis = fis;
+		inputStream = parser.getInputStream();
 	}
 	
 	private void incrementLineCount() {
+		if(locator.getLineNumber() % 100 != 0) return;
+		int currentCount = 0;
 		try {
-			System.out.println("fis.available: "+(fis.available()/Math.pow(1024, 2))+" MB");
+			currentCount = (int)((((double)fileSize-(double)inputStream.available())/(double)fileSize)*100);
+			// System.out.println(currentCount);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		int currentCount = locator.getLineNumber();
 		
-		if(lineCount == currentCount) return;
-		lineCount = currentCount;
-		if(lineCount % 100 == 0) {
-			for(OSMParserListener listener : parser.parserListeners) listener.onLineCountHundred();
-		}
+		if(currentCount == byteCount) return;
+		byteCount = currentCount;
+		
+		for(OSMParserListener listener : parser.parserListeners) listener.onLineCountHundred();
 	}
 	
 	public void setDocumentLocator(Locator locator) {

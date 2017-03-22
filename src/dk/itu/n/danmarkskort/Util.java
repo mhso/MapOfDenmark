@@ -66,6 +66,10 @@ public class Util {
 		}
 	}
 	
+	public static long getFileSize(File file) {
+		return file.length();
+	}
+	
 	public static int getNumberOfLines(File file) {
 		try {
 			LineNumberReader  lnr = new LineNumberReader(new FileReader(file));
