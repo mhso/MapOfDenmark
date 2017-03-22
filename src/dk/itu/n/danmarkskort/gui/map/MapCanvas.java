@@ -1,26 +1,24 @@
 package dk.itu.n.danmarkskort.gui.map;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.RenderingHints;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
-import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Observable;
 
 import javax.swing.JPanel;
 
 import dk.itu.n.danmarkskort.Main;
-import dk.itu.n.danmarkskort.Util;
-import dk.itu.n.danmarkskort.models.ParsedBounds;
+import dk.itu.n.danmarkskort.mapgfx.GraphicRepresentation;
+import dk.itu.n.danmarkskort.mapgfx.GraphicSpecArea;
+import dk.itu.n.danmarkskort.mapgfx.GraphicSpecLine;
+import dk.itu.n.danmarkskort.mapgfx.WaytypeGraphicSpec;
 import dk.itu.n.danmarkskort.models.ParsedWay;
 import dk.itu.n.danmarkskort.models.Region;
-import dk.itu.n.danmarkskort.models.Tile;
-import dk.itu.n.danmarkskort.models.TileCoordinate;
 import dk.itu.n.danmarkskort.models.WayType;
 
 public class MapCanvas extends JPanel {
@@ -43,7 +41,25 @@ public class MapCanvas extends JPanel {
 	public void drawMap(Graphics2D g2d) {
 		if(!Main.tileController.hasBounds()) return;
 		g2d.setTransform(transform);
-		g2d.drawString("Danmark", 50, 50);
+		
+		List<WaytypeGraphicSpec> graphicSpecs = 
+				GraphicRepresentation.getGraphicSpecs((int)getZoom());
+		
+		for(WaytypeGraphicSpec wgs : graphicSpecs) {
+			List<ParsedWay> ways = Main.tileController.getWaysOfType(wgs.getMapElement());
+			if(wgs.getMapElement() == null) continue;
+			for(ParsedWay way : ways) {
+				Shape shape = way.getShape();
+				wgs.transformOutline(g2d);
+				if(wgs instanceof GraphicSpecLine) g2d.draw(shape);
+				else if(wgs instanceof GraphicSpecArea) g2d.fill(shape);
+				wgs.transformPrimary(g2d);
+				if(wgs instanceof GraphicSpecLine) g2d.draw(shape);
+				else if(wgs instanceof GraphicSpecArea) g2d.fill(shape);
+			}
+			
+		}
+		
 	}
 
 	public void pan(double dx, double dy) {

@@ -3,6 +3,7 @@ package dk.itu.n.danmarkskort.mapgfx;
 import java.awt.Color;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +13,7 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
 import dk.itu.n.danmarkskort.SAXAdapter;
+import dk.itu.n.danmarkskort.models.WayType;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -19,7 +21,7 @@ import org.xml.sax.SAXException;
 public class GraphicRepresentation {
 	private static ArrayList<WaytypeGraphicSpec>[] zoomLevelArr 
 		= new ArrayList[20];
-	private static Map<Object, Integer> zoomMap = new HashMap<>();
+	private static EnumMap<WayType, Integer> zoomMap = new EnumMap<>(WayType.class);
 	
 	/**
 	 * Get the Graphic Specification matching the inputed Map Element.
@@ -37,11 +39,6 @@ public class GraphicRepresentation {
 	 */
 	public static void main(String[] args) {
 		if(args.length > 0) parseData(new InputSource(args[0]));
-		for(int i = 0; i < zoomLevelArr.length; i++) {
-			for(WaytypeGraphicSpec gs : zoomLevelArr[i]) {
-				System.out.println(gs);
-			}
-		}
 	}
 	
 	/**
@@ -90,6 +87,10 @@ public class GraphicRepresentation {
 		return new Color(r, g, b);
 	}
 	
+	private static WayType stringToEnum(String waytype) {
+		return WayType.valueOf(waytype);
+	}
+	
 	private static class ZoomHandler extends SAXAdapter {
 		private int currentZoomValue;
 		
@@ -100,14 +101,14 @@ public class GraphicRepresentation {
 					currentZoomValue = Integer.parseInt(atts.getValue("level"));
 				break;
 				case "tag":
-					zoomMap.put(atts.getValue("v"), currentZoomValue-1);
+					zoomMap.put(stringToEnum(atts.getValue("v")), currentZoomValue-1);
 				break;
 			}
 		}
 	}
 	
 	private static class GraphicsHandler extends SAXAdapter {
-		private static Object mapElement;
+		private static WayType mapElement;
 		private static WaytypeGraphicSpec gs;
 		private static int defaultFontSize;
 		private static Color defaultFontColor;
@@ -135,7 +136,7 @@ public class GraphicRepresentation {
 				throws SAXException {
 			switch(qName) {
 				case "tag":
-					mapElement = atts.getValue("v");
+					mapElement = stringToEnum(atts.getValue("v"));
 					gs.setMapElement(mapElement);
 				break;
 				case "defaultfont": 
@@ -161,7 +162,7 @@ public class GraphicRepresentation {
 					gs.setOuterColor(parseColor(atts.getValue("color")));
 				break;
 				case "lineproperties":
-					float lineWidth = (float)(Double.parseDouble(atts.getValue("linewidth")) + Math.pow(10, -5));
+					float lineWidth = (float)(Double.parseDouble(atts.getValue("linewidth")) * 0.0005);
 					float[] dashArr = null;
 					if(atts.getValue("linedash") != null) {
 						String[] splitArr = atts.getValue("linedash").split(",");
