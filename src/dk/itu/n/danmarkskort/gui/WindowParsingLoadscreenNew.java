@@ -63,6 +63,7 @@ public class WindowParsingLoadscreenNew extends JFrame implements OSMParserListe
 		JPanel statusPanel = new JPanel();
 		statusPanel.setBorder(new EmptyBorder(5, 30, 5, 5));
 		statusPanel.setLayout(new BorderLayout(5, 5));
+		statusPanel.setOpaque(false);
 		contentPane.add(statusPanel, BorderLayout.SOUTH);
 		
 		JPanel percentPanel = new JPanel();
