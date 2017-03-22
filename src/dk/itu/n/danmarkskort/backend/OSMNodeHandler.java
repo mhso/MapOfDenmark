@@ -37,13 +37,12 @@ public class OSMNodeHandler implements ContentHandler {
 	public OSMNodeHandler(OSMParser parser, String fileName) {
 		this.fileName = fileName;
 		fileSize = Util.getFileSize(new File(fileName));
-		System.out.println(fileSize);
 		this.parser = parser;
 		inputStream = parser.getInputStream();
 	}
 	
 	private void incrementLineCount() {
-		if(locator.getLineNumber() % 100 != 0) return;
+		if(locator.getLineNumber() % 1000 != 0) return;
 		int currentCount = 0;
 		try {
 			currentCount = (int)((((double)fileSize-(double)inputStream.available())/(double)fileSize)*100);
