@@ -37,7 +37,7 @@ public class Main {
 	}
 
 	public static void prepareParser(String[] args) {
-		WindowParsingLoadscreenNew loadScreen = new WindowParsingLoadscreenNew();
+		WindowParsingLoadscreen loadScreen = new WindowParsingLoadscreen();
 		LoadScreenThread loadScreenThread = new LoadScreenThread(loadScreen);
 		
 		// Add your listeners for the parser here, if you are going to use data. 
@@ -88,10 +88,10 @@ public class Main {
     }
     
     private static class LoadScreenThread implements Runnable {
-    	private WindowParsingLoadscreenNew loadScreen;
+    	private WindowParsingLoadscreen loadScreen;
     	private String fileName;
     	
-    	public LoadScreenThread(WindowParsingLoadscreenNew loadScreen) {
+    	public LoadScreenThread(WindowParsingLoadscreen loadScreen) {
     		this.loadScreen = loadScreen;
     	}
     	
