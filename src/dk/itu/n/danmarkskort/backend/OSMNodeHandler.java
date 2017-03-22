@@ -95,7 +95,6 @@ public class OSMNodeHandler implements ContentHandler {
 			break;
 		case "member":
 			break;
-
 		}
 	}
 

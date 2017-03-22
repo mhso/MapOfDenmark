@@ -2,17 +2,17 @@ package dk.itu.n.danmarkskort.mapdata;
 
 import java.util.ArrayList;
 
-public class BTreeController {
+public class KDTreeController {
 
     private transient final int maxData = 1000;
     private boolean sortValue;
 
-    public BTreeController() {
+    public KDTreeController() {
         sortValue = false; // true = longitude, false = latitude
     }
 
-    public BTree createBTree(ArrayList<OSMWay> list, boolean sortValue) {
-        BTree tree = new BTree();
+    public KDTree createKDTree(ArrayList<OSMWay> list, boolean sortValue) {
+        KDTree tree = new KDTree();
 
         if (list.size() <= maxData) {
             tree.setData(list);
@@ -20,8 +20,8 @@ public class BTreeController {
         } else {
             OSMWay median = QuickSelect.quickSelect(list, list.size() / 2, sortValue);
 
-            ArrayList<OSMWay> left = new ArrayList<>(maxData / 2);
-            ArrayList<OSMWay> right = new ArrayList<>(maxData / 2);
+            ArrayList<OSMWay> left = new ArrayList<>((list.size() + 1) / 2);
+            ArrayList<OSMWay> right = new ArrayList<>((list.size() + 1) / 2);
 
             for (OSMWay o : list) {
                 if(less(o, median, sortValue)) left.add(o);
@@ -31,8 +31,10 @@ public class BTreeController {
             if(sortValue) tree.setKey(median.getLon());
             else tree.setKey(median.getLat());
 
-            tree.setLeft(createBTree(left, !sortValue));
-            tree.setRight(createBTree(right, !sortValue));
+            tree.setData(null);
+
+            tree.setLeft(createKDTree(left, !sortValue));
+            tree.setRight(createKDTree(right, !sortValue));
 
             return tree;
         }
@@ -42,5 +44,4 @@ public class BTreeController {
         if(sortValue) return a.getLon() < b.getLon();
         return a.getLat() < b.getLat();
     }
-
 }
