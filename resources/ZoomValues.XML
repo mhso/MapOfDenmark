@@ -1,16 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <zoomvalues version="0.1">
 	<zoomlevel level="1">
-		<tag k="highway" v="motorway"/>
-		<tag k="highway" v="trunk"/>
-		<tag k="highway" v="primary"/>
-		<tag k="highway" v="secondary"/>
-		<tag k="building" v="yes"/>
+		<tag k="highway" v="HIGHWAY_MOTORWAY"/>
+		<tag k="highway" v="HIGHWAY_TRUNK"/>
+		<tag k="highway" v="HIGHWAY_PRIMARY"/>
+		<tag k="highway" v="HIGHWAY_SECONDARY"/>
+		<tag k="highway" v="HIGHWAY_TERTIARY"/>
+		<tag k="highway" v="WAY_UNDEFINED"/>
+		<tag k="highway" v="HIGHWAY_RESIDENTAL"/>
+		<tag k="building" v="BUILDING"/>
 	</zoomlevel>
 	<zoomlevel level="2">
-		
+		<tag k="highway" v="HIGHWAY_MOTORWAY"/>
+		<tag k="highway" v="HIGHWAY_TRUNK"/>
+		<tag k="highway" v="HIGHWAY_PRIMARY"/>
+		<tag k="highway" v="HIGHWAY_SECONDARY"/>
+		<tag k="highway" v="HIGHWAY_TERTIARY"/>
+		<tag k="highway" v="WAY_UNDEFINED"/>
+		<tag k="highway" v="HIGHWAY_RESIDENTAL"/>
+		<tag k="building" v="BUILDING"/>
 	</zoomlevel>
-		<tag k="highway" v="primary"/>
 	<zoomlevel level="3">
 		
 	</zoomlevel>
@@ -18,7 +27,7 @@
 		
 	</zoomlevel>
 	<zoomlevel level="5">
-		<tag k="building" v="church"/>
+		<tag k="highway" v="WAY_SERVICE"/>
 	</zoomlevel>
 	<zoomlevel level="6">
 		
@@ -48,7 +57,7 @@
 		
 	</zoomlevel>
 	<zoomlevel level="15">
-		<tag k="highway" v="footway"/>
+		<tag k="highway" v="HIGHWAY_FOOTWAY"/>
 	</zoomlevel>
 	<zoomlevel level="16">
 		
