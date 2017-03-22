@@ -47,12 +47,21 @@ public class OSMParser {
 		parseTimer.on();
 		parseMemory.on();
 		if (fileName.endsWith(".osm")) {
-			loadOSM(new InputSource(fileName), fileName);
+			try {
+				FileInputStream fis2 = new FileInputStream(fileName);
+				loadOSM(new InputSource(fis2), fileName, fis2);
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
 		} else if (fileName.endsWith(".zip")) {
 			try {
-				ZipInputStream zip = new ZipInputStream(new BufferedInputStream(new FileInputStream(fileName)));
-				zip.getNextEntry();
-				loadOSM(new InputSource(zip), fileName);
+				FileInputStream fis = new FileInputStream(fileName);
+				ZipInputStream zip = new ZipInputStream(new BufferedInputStream(fis));
+				ZipEntry bdfd = zip.getNextEntry();
+				System.out.println("fis.available: "+(fis.available()/Math.pow(1024, 2))+" MB");
+				loadOSM(new InputSource(zip), fileName, fis);
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
@@ -66,10 +75,11 @@ public class OSMParser {
 		Main.logRamUsage();
 	}
 	
-	private void loadOSM(InputSource source, String fileName) {
+	private void loadOSM(InputSource source, String fileName, FileInputStream fis) {
+		
 		try {
 			XMLReader reader = XMLReaderFactory.createXMLReader();
-			reader.setContentHandler(new OSMNodeHandler(this, fileName));  // Handles the actual XML with the OSMNodeHandler
+			reader.setContentHandler(new OSMNodeHandler(this, fileName, fis));  // Handles the actual XML with the OSMNodeHandler
 			reader.parse(source);
 		} catch (SAXException e) {
 			e.printStackTrace();
