@@ -9,7 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 
 public class AddressSearchPredicates {
 	    public static Predicate<Address> streetStartsWith(String strInput) {
-	    	System.out.println("String: "+strInput);
+	    	
 	        return p ->  p.getStreet() != null && p.getStreet().toLowerCase().startsWith(strInput.toLowerCase());
 	    }
 	    
