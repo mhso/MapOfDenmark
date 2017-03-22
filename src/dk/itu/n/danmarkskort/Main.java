@@ -59,8 +59,8 @@ public class Main {
 
 	}
 
-	public static void log(String text) {
-		if(debug) System.out.println("[" + APP_NAME + " " + APP_VERSION + "] " + text);
+	public static void log(Object text) {
+		if(debug) System.out.println("[" + APP_NAME + " " + APP_VERSION + "] " + text.toString());
 	}
 
 	public static void logRamUsage() {

@@ -5,23 +5,30 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
+import java.awt.image.BufferedImage;
 import java.util.Observable;
 
 import javax.swing.JPanel;
 
 import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.Util;
+import dk.itu.n.danmarkskort.models.ParsedBounds;
+import dk.itu.n.danmarkskort.models.ParsedWay;
 import dk.itu.n.danmarkskort.models.Region;
+import dk.itu.n.danmarkskort.models.Tile;
+import dk.itu.n.danmarkskort.models.TileCoordinate;
+import dk.itu.n.danmarkskort.models.WayType;
 
 public class MapCanvas extends JPanel {
 
 	private static final long serialVersionUID = -4476997375977002964L;
 	
 	private AffineTransform transform = new AffineTransform();
-	private boolean antiAlias;
+	private boolean antiAlias = true;
 	private int tileCount = 0;
 	private final int MAX_ZOOM = 20;
 	
@@ -30,39 +37,13 @@ public class MapCanvas extends JPanel {
 	}
 	
 	protected void paintComponent(Graphics _g) {
-		Graphics2D g = (Graphics2D) _g;
-		g.setTransform(transform);
-		g.setStroke(new BasicStroke(Float.MIN_VALUE));
-		if (antiAlias) g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		drawMap(g);
+		drawMap((Graphics2D)_g);
 	}
 	
 	public void drawMap(Graphics2D g2d) {
-		
-		int boxSize = 16;
-		
-		Region mapRegion = getDisplayedRegion();
-		double x1 = Math.max(0, mapRegion.getPointFrom().getX());
-		double y1 = Math.max(0, mapRegion.getPointFrom().getY());
-		double x2 = Math.min(640, mapRegion.getPointTo().getX());
-		double y2 = Math.min(480, mapRegion.getPointTo().getY());
-		
-		tileCount = 0;
-		for(double x=x1; x<x2; x+=boxSize) {
-			for(double y=y1; y<y2; y+=boxSize) {
-				int r = (int)(Util.roundByN(50, 200 / getZoom()));
-				int g = (int)(200);
-				int b = (int)(Util.roundByN(50, 200 / getZoom()));
-				g2d.setColor(new Color(r, g, b));
-				g2d.fillRect((int)(x - x1 % 16), (int)(y - y1 % 16), boxSize, boxSize);
-				g2d.setColor(Color.WHITE);
-				g2d.drawRect((int)(x - x1 % 16), (int)(y - y1 % 16), boxSize, boxSize);
-				
-				tileCount++;
-			}
-		}
-		
-		
+		if(!Main.tileController.hasBounds()) return;
+		g2d.setTransform(transform);
+		g2d.drawString("Danmark", 50, 50);
 	}
 
 	public void pan(double dx, double dy) {

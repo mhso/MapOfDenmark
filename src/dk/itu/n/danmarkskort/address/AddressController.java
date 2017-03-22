@@ -4,6 +4,7 @@ import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.backend.OSMParserListener;
 import dk.itu.n.danmarkskort.models.ParsedAddress;
 import dk.itu.n.danmarkskort.models.ParsedObject;
+import dk.itu.n.danmarkskort.models.ParsedWay;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -197,5 +198,11 @@ public class AddressController implements OSMParserListener{
 	@Override
 	public void onLineCountHundred() {
 		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void onWayLinked(ParsedWay way) {
+		// TODO Auto-generated method stub
+		
 	}
 }
