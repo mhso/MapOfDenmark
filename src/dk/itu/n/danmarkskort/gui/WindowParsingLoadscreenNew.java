@@ -21,6 +21,7 @@ import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.Util;
 import dk.itu.n.danmarkskort.backend.OSMParserListener;
 import dk.itu.n.danmarkskort.models.ParsedObject;
+import dk.itu.n.danmarkskort.models.ParsedWay;
 
 import java.awt.Component;
 
@@ -39,10 +40,6 @@ public class WindowParsingLoadscreenNew extends JFrame implements OSMParserListe
 	private boolean showObjectString = true;
 	private double currentPercent;
 	private JLabel labelPercent;
-	
-	public static void main(String[] args) {
-		WindowParsingLoadscreen frame = new WindowParsingLoadscreen();
-	}
 	
 	public void initialize(String fileName) {
 		getFileSize(fileName);
@@ -175,5 +172,7 @@ public class WindowParsingLoadscreenNew extends JFrame implements OSMParserListe
 			}
 		}
 	}
+
+	public void onWayLinked(ParsedWay way) {}
 }
 

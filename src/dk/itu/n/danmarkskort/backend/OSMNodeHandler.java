@@ -5,9 +5,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import dk.itu.n.danmarkskort.mapdata.NodeMap;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
@@ -24,8 +25,12 @@ public class OSMNodeHandler implements ContentHandler {
 	private String fileName;
 	private int byteCount;
 	private Locator locator;
+
 	private List<ParsedObject> currentParsedObjects = new ArrayList<ParsedObject>();
-	private NodeMap nodes;
+	private Map<Long, ParsedNode> nodeMap = new HashMap<Long, ParsedNode>();
+	private ArrayList<ParsedWay> wayQueueList = new ArrayList<ParsedWay>();
+	private int totalWays = 0;
+	private int completedWays = 0;
 	private InputStream inputStream;
 	private long fileSize;
 	
@@ -34,7 +39,6 @@ public class OSMNodeHandler implements ContentHandler {
 		fileSize = Util.getFileSize(new File(fileName));
 		System.out.println(fileSize);
 		this.parser = parser;
-		nodes = new NodeMap(21);
 		inputStream = parser.getInputStream();
 	}
 	
@@ -43,9 +47,7 @@ public class OSMNodeHandler implements ContentHandler {
 		int currentCount = 0;
 		try {
 			currentCount = (int)((((double)fileSize-(double)inputStream.available())/(double)fileSize)*100);
-			// System.out.println(currentCount);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -60,16 +62,32 @@ public class OSMNodeHandler implements ContentHandler {
 	}
 
 	public void startDocument() throws SAXException {
-		createOSMDirectory();
 		Main.log("Parsing started.");
+		createOSMDirectory();
 		for(OSMParserListener listener : parser.parserListeners) listener.onParsingStarted();
 	}
 
 	public void endDocument() throws SAXException {
-		Main.log("Parsing finished.");
+		Main.log("Linking ways");
+		
+		//Link the final ways
+		for(ParsedWay way : wayQueueList) {
+			if(linkWay(way)) completedWays++;
+			for(OSMParserListener listener : parser.parserListeners) {
+				if(way.getNodes().length > 1) {
+					way.createShape();
+					listener.onWayLinked(way);
+				}
+			}
+		}
+		
+		Main.log(completedWays + " fully linked ways, " + (totalWays - completedWays) + " incomplete.");
+		wayQueueList.clear();
+		
 		for(OSMParserListener listener : parser.parserListeners) listener.onParsingFinished();
 
-		Main.log("Found " + nodes.size() + " nodes");
+		nodeMap.clear();
+		Main.log("Parsing finished.");
 	}
 
 	public void startPrefixMapping(String prefix, String uri) throws SAXException {}
@@ -78,7 +96,7 @@ public class OSMNodeHandler implements ContentHandler {
 
 	public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
 		incrementLineCount();
-		int i = 0;
+
 		switch(qName) {
 		
 		case "osm":
@@ -94,15 +112,16 @@ public class OSMNodeHandler implements ContentHandler {
 			addParsedObject(new ParsedBounds(), atts, qName);
 			break;
 		case "node":
-			addNode(atts);
-			addParsedObject(new ParsedNode(), atts, qName);
+			addParsedNode(new ParsedNode(), atts, qName);
 			break;
 		case "tag":
 			addTagToParsedObject(atts);
 			break;
 		case "way":
+			addParsedWay(new ParsedWay(), atts, qName);
 			break;
 		case "nd":
+			addNdToParsedObject(atts);
 			break;
 		case "relation":
 			break;
@@ -110,14 +129,6 @@ public class OSMNodeHandler implements ContentHandler {
 			break;
 		}
 	}
-
-	public void addNode(Attributes atts) {
-		long key = Long.parseLong(atts.getValue("id"));
-        float lon = Float.parseFloat(atts.getValue("lon"));
-        float lat = Float.parseFloat(atts.getValue("lat"));
-        nodes.put(key, lon, lat);
-    }
-    public NodeMap getNodeMap() { return nodes; }
 
 	public void addParsedObject(ParsedObject parsedObject, Attributes atts, String qName) {
 		parsedObject.addAttributes(atts);
@@ -130,7 +141,7 @@ public class OSMNodeHandler implements ContentHandler {
 
 		ParsedObject lastParsedObject = getLastParsedObject();
 		
-		if(key.contains("addr:")) {
+		if(key.contains("addr:") && lastParsedObject instanceof ParsedNode) {
 			currentParsedObjects.remove(lastParsedObject);
 			lastParsedObject = new ParsedAddress(lastParsedObject);
 			currentParsedObjects.add(lastParsedObject);
@@ -142,16 +153,69 @@ public class OSMNodeHandler implements ContentHandler {
 		}
 	}
 	
+	public void addNdToParsedObject(Attributes atts) {
+		ParsedObject current = getLastParsedObject();
+		if(current instanceof ParsedWay) {
+			ParsedWay way = (ParsedWay) current;
+			way.addNodeId(Long.parseLong(atts.getValue("ref")));
+		}
+	}
+	
+	public void addParsedNode(ParsedObject parsedObject, Attributes atts, String qName) {
+		parsedObject.addAttributes(atts);
+		parsedObject.setQName(qName);
+		currentParsedObjects.add(parsedObject);
+	}
+
+	public void addParsedWay(ParsedObject parsedObject, Attributes atts, String qName) {
+		parsedObject.addAttributes(atts);
+		parsedObject.setQName(qName);
+		currentParsedObjects.add(parsedObject);
+	}
+	
 	public void endElement(String uri, String localName, String qName) throws SAXException {
 		incrementLineCount();
 		ParsedObject lastParsedObject = getLastParsedObject();
 		if(qName.equals(lastParsedObject.getQName())) {
 			lastParsedObject.parseAttributes();
-			for(OSMParserListener listener : parser.parserListeners) listener.onParsingGotObject(lastParsedObject);
+			
+			//Add nodes to nodemap
+			if(lastParsedObject instanceof ParsedNode) {
+				ParsedNode node = (ParsedNode) lastParsedObject;
+				nodeMap.put(node.getId(), node);
+			}
+			
+			//Map nodes to way
+			if(lastParsedObject instanceof ParsedWay) {
+				ParsedWay way = (ParsedWay) lastParsedObject;
+				if(!linkWay(way)) wayQueueList.add(way);
+				else completedWays ++;
+				totalWays ++;
+			}
+			
+			if(lastParsedObject instanceof ParsedWay) {
+				ParsedWay way = (ParsedWay)lastParsedObject;
+				if(way.isCompletelyLinked()) for(OSMParserListener listener : parser.parserListeners) listener.onWayLinked(way);
+			} else {
+				for(OSMParserListener listener : parser.parserListeners) listener.onParsingGotObject(lastParsedObject);
+			}
 			currentParsedObjects.remove(lastParsedObject);
 		}
 	}
-
+	
+	public boolean linkWay(ParsedWay way) {
+		ArrayList<Long> ids = new ArrayList<Long>(way.getNodeIds());
+		
+		for(long id : ids) {
+			if(nodeMap.containsKey(id)) {
+				way.addNode(nodeMap.get(id));
+				nodeMap.remove(id);
+			}
+		}
+		
+		return (way.isCompletelyLinked());
+	}
+	
 	public void characters(char[] ch, int start, int length) throws SAXException {
 		if(getLastParsedObject() != null) {
 			String text = new String(ch, start, length);
