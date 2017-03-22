@@ -1,6 +1,7 @@
 package dk.itu.n.danmarkskort.backend;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -25,14 +26,22 @@ public class OSMNodeHandler implements ContentHandler {
 	private Locator locator;
 	private List<ParsedObject> currentParsedObjects = new ArrayList<ParsedObject>();
 	private NodeMap nodes;
+	private FileInputStream fis;
 	
-	public OSMNodeHandler(OSMParser parser, String fileName) {
+	public OSMNodeHandler(OSMParser parser, String fileName, FileInputStream fis) {
 		this.fileName = fileName;
 		this.parser = parser;
 		nodes = new NodeMap(21);
+		this.fis = fis;
 	}
 	
 	private void incrementLineCount() {
+		try {
+			System.out.println("fis.available: "+(fis.available()/Math.pow(1024, 2))+" MB");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		int currentCount = locator.getLineNumber();
 		
 		if(lineCount == currentCount) return;
