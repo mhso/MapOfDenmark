@@ -3,19 +3,27 @@ package dk.itu.n.danmarkskort.gui;
 import javax.swing.*;
 
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
-public class DropdownAddressSearch extends JPopupMenu {
+public class DropdownAddressSearch extends CustomDropdown {
 
 	private JTextField txtField;
 	private TopPanel topPanel;
-
+	private Style style;
+	private int selectedIndex = -1;
+	
     /**
      * Create the panel.
      */
-    public DropdownAddressSearch(TopPanel topPanel) {
-        setFocusable(false);
+    public DropdownAddressSearch(TopPanel topPanel, Style style) {
         this.topPanel = topPanel;
-        setBorderPainted(false);
+        this.style = style;
+
+        UIManager.put("MenuItem.background", style.dropdownItemBG());
+        UIManager.put("MenuItem:foreground", style.dropdowItemTextColor());
+        UIManager.put("MenuItem.selectionBackground", style.dropdownItemBGActive());
+        UIManager.put("MenuItem.selectionForeground", style.dropdownItemTextColorActive());
     }
 
     /**
@@ -26,24 +34,43 @@ public class DropdownAddressSearch extends JPopupMenu {
 		menuItem.setPreferredSize(new Dimension(topPanel.getInputFieldWidth() - 2, menuItem.getPreferredSize().height));
 		menuItem.addActionListener(e -> {
 			topPanel.getInputField().setText(menuItem.getText());
-			hideDropdown();
+			setVisible(false);
+		});
+		menuItem.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				int index = getComponentIndex(menuItem);
+				setSelectedElement(index);
+			}
 		});
 		menuItem.setBorderPainted(false);
 		add(menuItem);
 	}
-
-    /**
-     * Clear the Dropdown-Menu.
-     */
-	public void clearElements() {
-		removeAll();
+	
+	public void itemClicked() {
+		JMenuItem selectedItem = (JMenuItem) getComponent(getSelectedIndex());
+		selectedItem.doClick();
 	}
 	
-	/**
-	 * Hide the Dropdown-Menu.
-	 */
-	public void hideDropdown() {
-		setVisible(false);
+	public boolean isEmpty() {
+		return getComponents().length == 0;
+	}
+	
+	public int getSelectedIndex() {
+		return selectedIndex;
+	}
+	
+	public void setSelectedElement(int index) {
+		if(getSelectedIndex() > -1) {
+			JMenuItem oldSelectedItem = (JMenuItem) getComponent(selectedIndex);
+			oldSelectedItem.setSelected(false);
+			oldSelectedItem.setBackground(style.dropdownItemBG());
+			oldSelectedItem.setForeground(style.dropdowItemTextColor());
+		}
+		JMenuItem selectedItem = (JMenuItem) getComponent(index);
+		selectedItem.setBackground(style.dropdownItemBGActive());
+		selectedItem.setForeground(style.dropdownItemTextColorActive());
+		selectedIndex = index;
 	}
 
 	/**

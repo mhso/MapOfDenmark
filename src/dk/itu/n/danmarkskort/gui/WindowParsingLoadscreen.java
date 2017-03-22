@@ -8,7 +8,10 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 
 import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 
 import javax.swing.SwingConstants;
 import javax.swing.JProgressBar;
@@ -23,6 +26,8 @@ import dk.itu.n.danmarkskort.models.ParsedObject;
 import dk.itu.n.danmarkskort.models.ParsedWay;
 
 import java.awt.Component;
+
+import javax.imageio.ImageIO;
 import javax.swing.Box;
 
 public class WindowParsingLoadscreen extends JFrame implements OSMParserListener {

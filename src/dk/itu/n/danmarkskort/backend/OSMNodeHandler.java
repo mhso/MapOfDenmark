@@ -1,6 +1,7 @@
 package dk.itu.n.danmarkskort.backend;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -30,13 +31,14 @@ public class OSMNodeHandler implements ContentHandler {
 	private int totalWays = 0;
 	private int completedWays = 0;
 	
-	public OSMNodeHandler(OSMParser parser, String fileName) {
+	public OSMNodeHandler(OSMParser parser, String fileName, FileInputStream fis) {
 		this.fileName = fileName;
 		this.parser = parser;
 	}
 	
 	private void incrementLineCount() {
 		int currentCount = locator.getLineNumber();
+		
 		if(lineCount == currentCount) return;
 		lineCount = currentCount;
 		if(lineCount % 100 == 0) {
@@ -72,6 +74,7 @@ public class OSMNodeHandler implements ContentHandler {
 		wayQueueList.clear();
 		
 		for(OSMParserListener listener : parser.parserListeners) listener.onParsingFinished();
+
 		nodeMap.clear();
 		Main.log("Parsing finished.");
 	}
@@ -82,7 +85,7 @@ public class OSMNodeHandler implements ContentHandler {
 
 	public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
 		incrementLineCount();
-		
+
 		switch(qName) {
 		
 		case "osm":
@@ -113,7 +116,6 @@ public class OSMNodeHandler implements ContentHandler {
 			break;
 		case "member":
 			break;
-
 		}
 	}
 
@@ -125,6 +127,7 @@ public class OSMNodeHandler implements ContentHandler {
 	
 	public void addTagToParsedObject(Attributes atts) {
 		String key = atts.getValue("k");
+
 		ParsedObject lastParsedObject = getLastParsedObject();
 		
 		if(key.contains("addr:") && lastParsedObject instanceof ParsedNode) {

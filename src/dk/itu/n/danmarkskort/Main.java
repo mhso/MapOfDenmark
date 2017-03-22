@@ -7,8 +7,8 @@ import javax.swing.*;
 import dk.itu.n.danmarkskort.address.AddressController;
 import dk.itu.n.danmarkskort.backend.OSMParser;
 import dk.itu.n.danmarkskort.backend.TileController;
-import dk.itu.n.danmarkskort.gui.GUILayerController;
 import dk.itu.n.danmarkskort.gui.WindowParsingLoadscreen;
+import dk.itu.n.danmarkskort.gui.WindowParsingLoadscreenNew;
 import dk.itu.n.danmarkskort.gui.map.MapCanvas;
 
 public class Main {
@@ -21,7 +21,6 @@ public class Main {
 	public static OSMParser osmParser;
 	public static TileController tileController;
 	public static JFrame window;
-	public static GUILayerController layerManager;
 	public static MapCanvas map;
 	public static MainCanvas mainPanel;
 	
@@ -39,7 +38,7 @@ public class Main {
 
 	public static void prepareParser(String[] args) {
 		WindowParsingLoadscreen loadScreen = new WindowParsingLoadscreen();
-		LoadScreenThread r = new LoadScreenThread(loadScreen);
+		LoadScreenThread loadScreenThread = new LoadScreenThread(loadScreen);
 		
 		// Add your listeners for the parser here, if you are going to use data. 
 		osmParser.addListener(AddressController.getInstance());
@@ -47,7 +46,7 @@ public class Main {
 		osmParser.addListener(tileController);
 		
 		if(args.length == 1) {
-			r.setFilenameAndRun(args[0]);
+			loadScreenThread.setFilenameAndRun(args[0]);
 			osmParser.parseFile(args[0]);
 		}
 	}

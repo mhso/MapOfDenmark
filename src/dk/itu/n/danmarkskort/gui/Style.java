@@ -7,10 +7,11 @@ public class Style {
 
     private int margin, smallMargin, topPanelBorderWidth, menuItemInsets;
     private float alphaFloat, alphaHover, menuAlpha, menuAlphaHover;
-    private Color panelBG, inputFieldBG, panelTextColor, zoomButtonBG, menuContentBG, menuItemsBG, scrollBarThumb, scrollBarThumbActive;
+    private Color panelBG, inputFieldBG, panelTextColor, zoomButtonBG, menuContentBG, menuItemsBG, scrollBarThumb, scrollBarThumbActive,
+                dropdownItemBG, dropdownItemBGActive, dropdowItemTextColor, dropdownItemTextColorActive;
     private CustomButton searchButton, menuButton,routeButton, zoomInButton, zoomOutButton,
             menuLayerButton, menuSaveButton, menuOpenButton, menuSettingsButton, menuRouteButton, menuInfoButton;
-    private ImageIcon scaleIndicator;
+    private ImageIcon scaleIndicator, arrowUpDownButton;
 
     public Style() {
         // top panel
@@ -31,6 +32,11 @@ public class Style {
         menuContentBG = new Color(200, 210, 220);
         scrollBarThumb = new Color(150, 160, 170);
         scrollBarThumbActive = new Color(20, 130 , 200);
+        dropdownItemBG = new Color(255, 255, 255);
+        dropdownItemBGActive = new Color(20, 130, 200);
+        dropdowItemTextColor = new Color(0,0,0);
+        dropdownItemTextColorActive = new Color(255, 255, 255);
+
 
         searchButton = new CustomButton("resources/icons/search.png", alphaFloat, alphaHover);
         menuButton = new CustomButton("resources/icons/menu.png", alphaFloat, alphaHover);
@@ -47,6 +53,8 @@ public class Style {
         zoomOutButton = new CustomButton("resources/icons/zoomout.png", alphaFloat, alphaHover, zoomButtonBG);
 
         scaleIndicator = new ImageIcon("resources/scale.png");
+        
+        arrowUpDownButton = new ImageIcon("resources/icons/arrowupdown.png");
 
     }
 
@@ -65,6 +73,10 @@ public class Style {
     public Color menuContentBG() { return menuContentBG; }
     public Color scrollBarThumb() { return scrollBarThumb; }
     public Color scrollBarThumbActive() { return scrollBarThumbActive; }
+    public Color dropdownItemBG() { return dropdownItemBG; }
+    public Color dropdownItemBGActive() { return dropdownItemBGActive; }
+    public Color dropdowItemTextColor() { return dropdowItemTextColor; }
+    public Color dropdownItemTextColorActive() { return dropdownItemTextColorActive; }
 
     public CustomButton searchButton() { return searchButton; }
     public CustomButton menuButton() { return menuButton; }
@@ -79,5 +91,6 @@ public class Style {
     public CustomButton menuInfoButton() { return menuInfoButton; }
 
     public ImageIcon scaleIndicator() { return scaleIndicator; }
+    public ImageIcon arrowUpDownButton() { return arrowUpDownButton; }
 
 }

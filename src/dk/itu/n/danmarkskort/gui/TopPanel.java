@@ -1,15 +1,31 @@
 package dk.itu.n.danmarkskort.gui;
 
 import dk.itu.n.danmarkskort.address.Address;
-import dk.itu.n.danmarkskort.address.AddressController;
+import dk.itu.n.danmarkskort.gui.menu.DropdownMenu;
+import dk.itu.n.danmarkskort.gui.menu.RoutePage;
 import dk.itu.n.danmarkskort.search.SearchController;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.text.AbstractDocument;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DocumentFilter;
+
+import com.sun.scenario.effect.DropShadow;
+
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 public class TopPanel extends JPanel {
@@ -38,6 +54,7 @@ public class TopPanel extends JPanel {
         gbc.weighty = 1;
 
         menu = style.menuButton();
+        menu.setToolTipText("Menu");
         gbc.fill = GridBagConstraints.HORIZONTAL;
         top.add(menu, gbc);
 
@@ -48,15 +65,40 @@ public class TopPanel extends JPanel {
         input.setOpaque(false);
         input.setBackground(new Color(0,0,0,0));
         input.setCaretColor(style.panelTextColor());
+        input.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if(!dropSuggestions.isEmpty()) {
+					if(e.getKeyCode() == KeyEvent.VK_DOWN) {
+						if(dropSuggestions.getSelectedIndex() < dropSuggestions.getComponents().length-1) {	
+							dropSuggestions.setSelectedElement(dropSuggestions.getSelectedIndex()+1);
+						}
+					}
+					else if(e.getKeyCode() == KeyEvent.VK_UP) {
+						if(dropSuggestions.getSelectedIndex() > 0) {
+							dropSuggestions.setSelectedElement(dropSuggestions.getSelectedIndex()-1);
+						}
+					}
+					else if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+						if(dropSuggestions.getSelectedIndex() > 0) {
+							dropSuggestions.itemClicked();
+						}
+					}
+				}
+			}
+        	
+        });
 
         JButton search = style.searchButton();
+        search.setToolTipText("Search");
 
         searchInputWrapper = new JPanel(new GridBagLayout());
         searchInputWrapper.setBackground(style.inputFieldBG());
-        GridBagConstraints gbc2 = new GridBagConstraints();
+        GridBagConstraints searchInputGBC = new GridBagConstraints();
 
-        searchInputWrapper.add(input, gbc2);
-        searchInputWrapper.add(search, gbc2);
+        searchInputWrapper.add(input, searchInputGBC);
+        searchInputGBC.insets = new Insets(0, 0, 0, 10);
+        searchInputWrapper.add(search, searchInputGBC);
 
         gbc.insets = new Insets(0, 6, 0, 6);
         gbc.weightx = 1;
@@ -64,6 +106,7 @@ public class TopPanel extends JPanel {
         top.add(searchInputWrapper, gbc);
 
         JButton route = style.routeButton();
+        route.setToolTipText("Directions");
 
         gbc.insets = new Insets(0, 3, 0, 3);
         gbc.gridx = 2;
@@ -71,14 +114,36 @@ public class TopPanel extends JPanel {
 
         topParent.add(top);
         add(topParent);
-
-
-        dropSuggestions = new DropdownAddressSearch(this);
+        
+        dropSuggestions = new DropdownAddressSearch(this, style);
         dropMenu = new DropdownMenu(this, style);
-
-        menu.addActionListener(e -> dropMenu.showDropdown(menu));
+        
+        menu.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				if(!dropMenu.isVisible()) {
+					dropMenu.blockVisibility(false);
+					dropMenu.showDropdown(menu);
+				}
+			}
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				dropMenu.blockVisibility(true);
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				if(dropMenu.isVisible()) dropMenu.blockVisibility(false);
+			}
+        });
+        menu.addActionListener(e -> {
+        	if(dropMenu.isVisible() && dropMenu.isPopUpBlocked()) {
+				dropMenu.blockVisibility(false);
+				dropMenu.setVisible(false);
+        	}
+        });
+        
         route.addActionListener(e -> {
-            dropMenu.addToContentPane(new JPanel());
+            dropMenu.addToContentPane(new RoutePage(input.getText()));
             dropMenu.showDropdown(menu);
         });
 
@@ -93,11 +158,11 @@ public class TopPanel extends JPanel {
         Address a = SearchController.getInstance().getSearchFieldAddressObj(address);
     }
 
-    public void populateList(Set<String> items) {
-        dropSuggestions.hideDropdown();
-        dropSuggestions.clearElements();
+    public void populateSuggestions(List<String> list) {
+        dropSuggestions.setVisible(false);
+        dropSuggestions.removeAll();
         int i = 0;
-        for(String st : items){
+        for(String st : list){
             dropSuggestions.addElement(st);
             if(++i > 10) break;
         }
@@ -138,7 +203,7 @@ public class TopPanel extends JPanel {
         @Override
         public void remove(FilterBypass fb, int offset, int length) throws BadLocationException {
             super.remove(fb, offset, length);
-            dropdownSuggestions(offset, input.getText());
+            dropdownSuggestions(offset - 1, input.getText());
         }
 
         @Override
@@ -150,10 +215,12 @@ public class TopPanel extends JPanel {
         }
 
         public void dropdownSuggestions(int offset, String text) {
-            if(offset > 2) {
-                populateList(SearchController.getInstance().getSearchFieldSuggestions(text));
+            if(offset > 1) {
+                populateSuggestions(SearchController.getInstance().getSearchFieldSuggestions(text));
                 revalidate();
                 repaint();
+            } else {
+                dropSuggestions.setVisible(false);
             }
         }
     }

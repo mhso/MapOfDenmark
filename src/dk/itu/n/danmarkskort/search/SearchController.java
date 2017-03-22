@@ -1,19 +1,17 @@
 package dk.itu.n.danmarkskort.search;
 
-import java.util.Set;
+import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import dk.itu.n.danmarkskort.address.Address;
 import dk.itu.n.danmarkskort.address.AddressController;
-import dk.itu.n.danmarkskort.backend.OSMParserListener;
-import dk.itu.n.danmarkskort.models.ParsedObject;
 
 public class SearchController{
 	private static SearchController instance;
 	private final static Lock lock = new ReentrantLock();
 	
-	public SearchController(){
+	private SearchController(){
 		
 	}
 		
@@ -33,7 +31,7 @@ public class SearchController{
         return instance;
     }
 	
-	public Set<String> getSearchFieldSuggestions(String inputStr){
+	public List<String> getSearchFieldSuggestions(String inputStr){
 		return AddressController.getInstance().getSearchSuggestions(inputStr);
 	}
 	

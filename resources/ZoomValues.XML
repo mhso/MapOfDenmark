@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<zoomvalues version="0.1">
+	<zoomlevel level="1">
+		<tag k="highway" v="motorway"/>
+		<tag k="highway" v="trunk"/>
+		<tag k="highway" v="primary"/>
+		<tag k="highway" v="secondary"/>
+		<tag k="building" v="yes"/>
+	</zoomlevel>
+	<zoomlevel level="2">
+		
+	</zoomlevel>
+		<tag k="highway" v="primary"/>
+	<zoomlevel level="3">
+		
+	</zoomlevel>
+	<zoomlevel level="4">
+		
+	</zoomlevel>
+	<zoomlevel level="5">
+		<tag k="building" v="church"/>
+	</zoomlevel>
+	<zoomlevel level="6">
+		
+	</zoomlevel>
+	<zoomlevel level="7">
+		
+	</zoomlevel>
+	<zoomlevel level="8">
+		
+	</zoomlevel>
+	<zoomlevel level="9">
+		
+	</zoomlevel>
+	<zoomlevel level="10">
+		
+	</zoomlevel>
+	<zoomlevel level="11">
+		
+	</zoomlevel>
+	<zoomlevel level="12">
+		
+	</zoomlevel>
+	<zoomlevel level="13">
+		
+	</zoomlevel>
+	<zoomlevel level="14">
+		
+	</zoomlevel>
+	<zoomlevel level="15">
+		<tag k="highway" v="footway"/>
+	</zoomlevel>
+	<zoomlevel level="16">
+		
+	</zoomlevel>
+	<zoomlevel level="17">
+		
+	</zoomlevel>
+	<zoomlevel level="18">
+		
+	</zoomlevel>
+	<zoomlevel level="19">
+		
+	</zoomlevel>
+	<zoomlevel level="20">
+		
+	</zoomlevel>
+</zoomvalues>
