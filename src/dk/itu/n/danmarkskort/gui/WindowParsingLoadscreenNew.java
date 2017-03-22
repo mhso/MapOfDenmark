@@ -31,10 +31,8 @@ public class WindowParsingLoadscreenNew extends JFrame implements OSMParserListe
 
 	private JPanel contentPane;
 	private JPanel panel;
-	private Component rigidArea;
 	private JLabel labelStatus;
 	private BufferedImage mainImage;
-	private int fileSizeHundreds;
 	private long fileSize;
 	private boolean showObjectString = true;
 	private double currentPercent;
@@ -63,22 +61,24 @@ public class WindowParsingLoadscreenNew extends JFrame implements OSMParserListe
 		panel.setLayout(new BorderLayout(0, 5));
 		
 		JPanel statusPanel = new JPanel();
+		statusPanel.setBorder(new EmptyBorder(5, 30, 5, 5));
 		statusPanel.setLayout(new BorderLayout(5, 5));
-		statusPanel.setOpaque(false);
-		panel.add(statusPanel, BorderLayout.EAST);
+		contentPane.add(statusPanel, BorderLayout.SOUTH);
+		
+		JPanel percentPanel = new JPanel();
+		percentPanel.setLayout(new BorderLayout(5, 5));
+		percentPanel.setOpaque(false);
+		panel.add(percentPanel, BorderLayout.EAST);
 		
 		labelPercent = new JLabel("0 %");
 		labelPercent.setForeground(Color.RED);
 		labelPercent.setHorizontalAlignment(SwingConstants.RIGHT);
 		labelPercent.setFont(new Font("Monotype Corsiva", Font.PLAIN, 50));
-		statusPanel.add(labelPercent, BorderLayout.NORTH);
+		percentPanel.add(labelPercent, BorderLayout.NORTH);
 		
 		labelStatus = new JLabel("Preparing To Parse File...");
-		labelStatus.setHorizontalAlignment(SwingConstants.RIGHT);
-		statusPanel.add(labelStatus, BorderLayout.EAST);
-		
-		rigidArea = Box.createRigidArea(new Dimension(20, 20));
-		contentPane.add(rigidArea, BorderLayout.SOUTH);
+		labelStatus.setHorizontalAlignment(SwingConstants.LEFT);
+		statusPanel.add(labelStatus, BorderLayout.WEST);
 		
 		setPreferredSize(new Dimension(mainImage.getWidth(), mainImage.getHeight()+80));
 		
@@ -95,7 +95,7 @@ public class WindowParsingLoadscreenNew extends JFrame implements OSMParserListe
 		long kb = fileSize/1024;
 		long mb = kb/1024;
 		Main.log("File Name: " + file.getName()); 
-		Main.log("File Size: " + fileSize + " MB");
+		Main.log("File Size: " + mb + " MB");
 	}
 	
 	private void setProgressPercent() {
