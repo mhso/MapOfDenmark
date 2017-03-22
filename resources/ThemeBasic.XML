@@ -54,7 +54,7 @@
 			<tag k="highway" v="HIGHWAY_FOOTWAY"/>
 			<innercolor color="0066CC"/>
 			<outercolor color="001933"/>
-			<lineproperties linewidth="3" linedash="10, 10"/>
+			<lineproperties linewidth="10" linedash="5, 5"/>
 		</line>
 	</lines>
 	<areas>

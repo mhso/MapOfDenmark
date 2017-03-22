@@ -7,21 +7,12 @@
 		<tag k="highway" v="HIGHWAY_SECONDARY"/>
 		<tag k="highway" v="HIGHWAY_TERTIARY"/>
 		<tag k="highway" v="WAY_UNDEFINED"/>
-		<tag k="highway" v="HIGHWAY_RESIDENTAL"/>
 		<tag k="building" v="BUILDING"/>
 	</zoomlevel>
 	<zoomlevel level="2">
-		<tag k="highway" v="HIGHWAY_MOTORWAY"/>
-		<tag k="highway" v="HIGHWAY_TRUNK"/>
-		<tag k="highway" v="HIGHWAY_PRIMARY"/>
-		<tag k="highway" v="HIGHWAY_SECONDARY"/>
-		<tag k="highway" v="HIGHWAY_TERTIARY"/>
-		<tag k="highway" v="WAY_UNDEFINED"/>
-		<tag k="highway" v="HIGHWAY_RESIDENTAL"/>
-		<tag k="building" v="BUILDING"/>
 	</zoomlevel>
 	<zoomlevel level="3">
-		
+		<tag k="highway" v="HIGHWAY_RESIDENTAL"/>
 	</zoomlevel>
 	<zoomlevel level="4">
 		

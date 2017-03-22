@@ -30,7 +30,12 @@ public class GraphicRepresentation {
 	 * @return A Graphic Specification object representing how a Map Element should be drawn.
 	 */
 	public static List<WaytypeGraphicSpec> getGraphicSpecs(int zoomLevel) {
-		return zoomLevelArr[zoomLevel];
+		zoomLevel -= 1;
+		List<WaytypeGraphicSpec> cummulativeList = new ArrayList<>();
+		for(int i = zoomLevel; i >= 0; i--) {
+			cummulativeList.addAll(zoomLevelArr[i]);
+		}
+		return cummulativeList;
 	}
 	
 	/**
@@ -108,6 +113,8 @@ public class GraphicRepresentation {
 	}
 	
 	private static class GraphicsHandler extends SAXAdapter {
+		private static final float LINE_MAGNIFYING_VALUE = 0.001f;
+		
 		private static WayType mapElement;
 		private static WaytypeGraphicSpec gs;
 		private static int defaultFontSize;
@@ -162,7 +169,7 @@ public class GraphicRepresentation {
 					gs.setOuterColor(parseColor(atts.getValue("color")));
 				break;
 				case "lineproperties":
-					float lineWidth = (float)(Double.parseDouble(atts.getValue("linewidth")) * 0.0005);
+					float lineWidth = (float)(Double.parseDouble(atts.getValue("linewidth")) * LINE_MAGNIFYING_VALUE);
 					float[] dashArr = null;
 					if(atts.getValue("linedash") != null) {
 						String[] splitArr = atts.getValue("linedash").split(",");
