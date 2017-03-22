@@ -10,6 +10,7 @@ import dk.itu.n.danmarkskort.backend.TileController;
 import dk.itu.n.danmarkskort.gui.WindowParsingLoadscreen;
 import dk.itu.n.danmarkskort.gui.WindowParsingLoadscreenNew;
 import dk.itu.n.danmarkskort.gui.map.MapCanvas;
+import dk.itu.n.danmarkskort.mapdata.NodeMap;
 
 public class Main {
 
@@ -42,6 +43,7 @@ public class Main {
 		
 		// Add your listeners for the parser here, if you are going to use data. 
 		osmParser.addListener(AddressController.getInstance());
+		osmParser.addListener(NodeMap.getInstance());
 		osmParser.addListener(loadScreen);
 		osmParser.addListener(tileController);
 		
