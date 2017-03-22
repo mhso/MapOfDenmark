@@ -5,14 +5,17 @@ import java.util.Map;
 public class AddressOsmParser {
 	private Address buildAddress;
 	
+	
 	public AddressOsmParser(Address buildAddress){
 		this.buildAddress = buildAddress;
 	}
 	
-	public Address parseKeyAddr(long nodeId, String k, String v){
+	public Address parseKeyAddr(long nodeId, float lat, float lon, String k, String v){
 		if(isAddress(k)){
 			String cleanKey = cleanKey(k);
 			buildAddress.setNodeId(nodeId);
+			buildAddress.setLat(lat);
+			buildAddress.setLon(lon);
 			setKeyFromValue(cleanKey, v);
 			return buildAddress;
 		}
@@ -56,8 +59,6 @@ public class AddressOsmParser {
 			}
 		break;
 		case "city":				buildAddress.setCity(value);
-		break;
-		case "housename":			buildAddress.setHousename(value);
 		break;
 		}
 	}
