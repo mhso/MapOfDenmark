@@ -9,7 +9,6 @@ public class ParsedNode extends ParsedObject{
 		id = Long.parseLong(attributes.get("id"));
 		lat = Float.parseFloat(attributes.get("lat"));
 		lon = Float.parseFloat(attributes.get("lon"));
-
 	}
 	
 	public long getId() { return id; }

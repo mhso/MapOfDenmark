@@ -11,30 +11,30 @@ public class KDTreeController {
         sortValue = false; // true = longitude, false = latitude
     }
 
-    public KDTree createKDTree(ArrayList<OSMWay> list, boolean sortValue) {
+    public KDTree createKDTree(ArrayList<OSMWay> list, boolean sortByLon) {
         KDTree tree = new KDTree();
 
         if (list.size() <= maxData) {
             tree.setData(list);
             return tree;
         } else {
-            OSMWay median = QuickSelect.quickSelect(list, list.size() / 2, sortValue);
+            OSMWay median = QuickSelect.quickSelect(list, list.size() / 2, sortByLon);
 
             ArrayList<OSMWay> left = new ArrayList<>((list.size() + 1) / 2);
             ArrayList<OSMWay> right = new ArrayList<>((list.size() + 1) / 2);
 
             for (OSMWay o : list) {
-                if(less(o, median, sortValue)) left.add(o);
+                if(less(o, median, sortByLon)) left.add(o);
                 else right.add(o);
             }
 
-            if(sortValue) tree.setKey(median.getLon());
+            if(sortByLon) tree.setKey(median.getLon());
             else tree.setKey(median.getLat());
 
             tree.setData(null);
 
-            tree.setLeft(createKDTree(left, !sortValue));
-            tree.setRight(createKDTree(right, !sortValue));
+            tree.setLeft(createKDTree(left, !sortByLon));
+            tree.setRight(createKDTree(right, !sortByLon));
 
             return tree;
         }

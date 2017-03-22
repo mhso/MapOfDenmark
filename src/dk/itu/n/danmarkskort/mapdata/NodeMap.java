@@ -43,7 +43,10 @@ public class NodeMap implements OSMParserListener {
     }
 
     // & initialCapacity makes sure we don't get arrayIndexOutOfBound later
-    private int getHash(long key) { return Long.hashCode(key) & (capacity); }
+    private int getHash(long key) {
+        return Long.hashCode(key) & (capacity);
+    }
+
     public int size() { return size; }
     public int length() { return nodes.length; }
 
@@ -51,7 +54,6 @@ public class NodeMap implements OSMParserListener {
     public void onParsingGotObject(ParsedObject parsedObject) {
         if(parsedObject instanceof ParsedNode) {
             ParsedNode node = (ParsedNode) parsedObject;
-            //Main.log(omsAddr.getAttributes().get("id"));
             if(node.getAttributes().get("id") != null) {
                 long key = Long.parseLong(node.getAttributes().get("id"));
                 float lat = Float.parseFloat(node.getAttributes().get("lat"));
