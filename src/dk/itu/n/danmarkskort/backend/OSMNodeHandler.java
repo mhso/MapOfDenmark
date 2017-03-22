@@ -11,8 +11,12 @@ import java.util.Map;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
+import org.xml.sax.InputSource;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
+
+import com.sun.org.apache.xerces.internal.parsers.XMLParser;
 
 import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.Util;
@@ -27,17 +31,16 @@ public class OSMNodeHandler implements ContentHandler {
 	private Locator locator;
 
 	private List<ParsedObject> currentParsedObjects = new ArrayList<ParsedObject>();
-	private Map<Long, ParsedNode> nodeMap = new HashMap<Long, ParsedNode>();
-	private ArrayList<ParsedWay> wayQueueList = new ArrayList<ParsedWay>();
-	private int totalWays = 0;
-	private int completedWays = 0;
+	private HashMap<Long, ParsedWay> pendingWays = new HashMap<Long, ParsedWay>();
+
 	private InputStream inputStream;
 	private long fileSize;
+	private int step = 0;
 	
 	public OSMNodeHandler(OSMParser parser, String fileName) {
 		this.fileName = fileName;
-		fileSize = Util.getFileSize(new File(fileName));
 		this.parser = parser;
+		fileSize = Util.getFileSize(new File(fileName));
 		inputStream = parser.getInputStream();
 	}
 	
@@ -61,34 +64,27 @@ public class OSMNodeHandler implements ContentHandler {
 	}
 
 	public void startDocument() throws SAXException {
-		Main.log("Parsing started.");
-		createOSMDirectory();
-		for(OSMParserListener listener : parser.parserListeners) listener.onParsingStarted();
+		Main.log("Parsing round " + step + " started.");
+		if(step == 0) {
+			//createOSMDirectory();
+			for(OSMParserListener listener : parser.parserListeners) listener.onParsingStarted();
+		}
 	}
 
 	public void endDocument() throws SAXException {
-		Main.log("Linking ways");
-		
-		//Link the final ways
-		for(ParsedWay way : wayQueueList) {
-			if(linkWay(way)) completedWays++;
-			for(OSMParserListener listener : parser.parserListeners) {
-				if(way.getNodes().length > 1) {
-					way.createShape();
-					listener.onWayLinked(way);
-				}
+		for(OSMParserListener listener : parser.parserListeners) listener.onParsingFinished();
+		currentParsedObjects.clear();
+		if(step == 0) {
+			step ++;
+			return;
+		} else if(step == 1) {
+			for(ParsedWay way : pendingWays.values()) {
+				
 			}
 		}
-		
-		Main.log(completedWays + " fully linked ways, " + (totalWays - completedWays) + " incomplete.");
-		wayQueueList.clear();
-		
-		for(OSMParserListener listener : parser.parserListeners) listener.onParsingFinished();
-
-		nodeMap.clear();
 		Main.log("Parsing finished.");
 	}
-
+	
 	public void startPrefixMapping(String prefix, String uri) throws SAXException {}
 
 	public void endPrefixMapping(String prefix) throws SAXException {}
@@ -111,7 +107,7 @@ public class OSMNodeHandler implements ContentHandler {
 			addParsedObject(new ParsedBounds(), atts, qName);
 			break;
 		case "node":
-			addParsedNode(new ParsedNode(), atts, qName);
+			if(step == 1) addParsedNode(new ParsedNode(), atts, qName);
 			break;
 		case "tag":
 			addTagToParsedObject(atts);
@@ -162,6 +158,15 @@ public class OSMNodeHandler implements ContentHandler {
 	
 	public void addParsedNode(ParsedObject parsedObject, Attributes atts, String qName) {
 		parsedObject.addAttributes(atts);
+		long id = Long.parseLong(atts.getValue("id"));
+		ParsedWay way = pendingWays.get(id);
+		if(way != null) {
+			pendingWays.remove(id);
+			way.addNode((ParsedNode)parsedObject);
+			if(!pendingWays.containsValue(way)) {
+				for(OSMParserListener listener : parser.parserListeners) listener.onWayLinked(way);
+			}
+		}
 		parsedObject.setQName(qName);
 		currentParsedObjects.add(parsedObject);
 	}
@@ -178,23 +183,9 @@ public class OSMNodeHandler implements ContentHandler {
 		if(qName.equals(lastParsedObject.getQName())) {
 			lastParsedObject.parseAttributes();
 			
-			//Add nodes to nodemap
-			if(lastParsedObject instanceof ParsedNode) {
-				ParsedNode node = (ParsedNode) lastParsedObject;
-				nodeMap.put(node.getId(), node);
-			}
-			
-			//Map nodes to way
-			if(lastParsedObject instanceof ParsedWay) {
-				ParsedWay way = (ParsedWay) lastParsedObject;
-				if(!linkWay(way)) wayQueueList.add(way);
-				else completedWays ++;
-				totalWays ++;
-			}
-			
 			if(lastParsedObject instanceof ParsedWay) {
 				ParsedWay way = (ParsedWay)lastParsedObject;
-				if(way.isCompletelyLinked()) for(OSMParserListener listener : parser.parserListeners) listener.onWayLinked(way);
+				for(Long id : way.getNodeIds()) pendingWays.put(id, way);
 			} else {
 				for(OSMParserListener listener : parser.parserListeners) listener.onParsingGotObject(lastParsedObject);
 			}
@@ -203,14 +194,6 @@ public class OSMNodeHandler implements ContentHandler {
 	}
 	
 	public boolean linkWay(ParsedWay way) {
-		ArrayList<Long> ids = new ArrayList<Long>(way.getNodeIds());
-		
-		for(long id : ids) {
-			if(nodeMap.containsKey(id)) {
-				way.addNode(nodeMap.get(id));
-				nodeMap.remove(id);
-			}
-		}
 		
 		return (way.isCompletelyLinked());
 	}

@@ -41,9 +41,8 @@ public class Main {
 		WindowParsingLoadscreenNew loadScreen = new WindowParsingLoadscreenNew();
 		LoadScreenThread loadScreenThread = new LoadScreenThread(loadScreen);
 		
-		// Add your listeners for the parser here, if you are going to use data. 
+//		 Add your listeners for the parser here, if you are going to use data. 
 		osmParser.addListener(AddressController.getInstance());
-		osmParser.addListener(NodeMap.getInstance());
 		osmParser.addListener(loadScreen);
 		osmParser.addListener(tileController);
 		

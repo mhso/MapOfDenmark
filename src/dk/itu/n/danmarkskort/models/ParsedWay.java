@@ -4,14 +4,14 @@ import java.awt.Shape;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.List;
 
 import dk.itu.n.danmarkskort.Util;
 
 public class ParsedWay extends ParsedObject {
 
-	private ArrayList<ParsedNode> nodes = new ArrayList<ParsedNode>();
-	private ArrayList<Long> nodeIds = new ArrayList<Long>();
-	private Shape shape = null;
+	private List<ParsedNode> nodes = new ArrayList<ParsedNode>();
+	private List<Long> nodeIds = new ArrayList<Long>();
 	private boolean closedShape = false;
 	public WayType type = WayType.UNDEFINED;
 	
@@ -19,7 +19,7 @@ public class ParsedWay extends ParsedObject {
 		return nodes.toArray(new ParsedNode[nodes.size()]);
 	}
 	
-	public ArrayList<Long> getNodeIds() {
+	public List<Long> getNodeIds() {
 		return nodeIds;
 	}
 	
@@ -32,11 +32,11 @@ public class ParsedWay extends ParsedObject {
 		long id = node.getId();
 		if(nodeIds.contains(id)) {
 			nodeIds.remove(id);
-			if(isCompletelyLinked() && shape == null) createShape();
+			isCompletelyLinked();
 		}
 	}
 	
-	public void createShape() {
+	public Shape getShape() {
 		Path2D path = new Path2D.Float();
 		ParsedNode first = get(0);
 		Point2D firstPost = Util.coordinateToScreen(first.getPosition());
@@ -48,9 +48,8 @@ public class ParsedWay extends ParsedObject {
 			path.lineTo(post.getX(), post.getY());
 		}
 		
-		determineType();
 		if(closedShape) path.closePath();
-		shape = path;
+		return path;
 	}
 	
 	public void determineType() {
@@ -186,10 +185,9 @@ public class ParsedWay extends ParsedObject {
 		return nodes.get(index);
 	}
 	
-	public Shape getShape() {
-		return shape;
+	public void parseAttributes() {
+		determineType();
+		attributes.clear();
 	}
-	
-	public void parseAttributes() {}
 	
 }

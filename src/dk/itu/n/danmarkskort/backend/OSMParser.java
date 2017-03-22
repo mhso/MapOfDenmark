@@ -84,9 +84,20 @@ public class OSMParser {
 	private void loadOSM(InputSource source, String fileName) {
 		
 		try {
+			
+			// Round 1 (ways)
+			InputSource inputStream = new InputSource(new FileInputStream(fileName));
 			XMLReader reader = XMLReaderFactory.createXMLReader();
-			reader.setContentHandler(new OSMNodeHandler(this, fileName));  // Handles the actual XML with the OSMNodeHandler
-			reader.parse(source);
+			OSMNodeHandler handler = new OSMNodeHandler(this, fileName);
+			reader.setContentHandler(handler);
+			reader.parse(inputStream);
+			
+			// Round 2 (everything else)
+			inputStream = new InputSource(new FileInputStream(fileName));
+			reader.parse(inputStream);
+			
+			
+			
 		} catch (SAXException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
