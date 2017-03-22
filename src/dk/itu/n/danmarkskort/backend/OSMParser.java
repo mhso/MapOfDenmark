@@ -4,6 +4,7 @@ import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -17,12 +18,14 @@ import org.xml.sax.helpers.XMLReaderFactory;
 import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.MemoryUtil;
 import dk.itu.n.danmarkskort.TimerUtil;
+import dk.itu.n.danmarkskort.Util;
 
 // This class can parse an OSM file, and turn it into tile files. 
 public class OSMParser {
 	
 	public List<OSMParserListener> parserListeners = new ArrayList<OSMParserListener>();
 	private String currentChecksum;
+	private InputStream inputStream;
 	
 	public OSMParser() {
 		initialize();
@@ -41,6 +44,10 @@ public class OSMParser {
 		parserListeners.add(listener);
 	}
 	
+	public InputStream getInputStream() {
+		return inputStream;
+	}
+	
 	public void parseFile(String fileName) {
 		TimerUtil parseTimer = new TimerUtil();
 		MemoryUtil parseMemory = new MemoryUtil();
@@ -48,8 +55,8 @@ public class OSMParser {
 		parseMemory.on();
 		if (fileName.endsWith(".osm")) {
 			try {
-				FileInputStream fis2 = new FileInputStream(fileName);
-				loadOSM(new InputSource(fis2), fileName, fis2);
+				inputStream = new FileInputStream(fileName);
+				loadOSM(new InputSource(inputStream), fileName);
 			} catch (FileNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -57,11 +64,10 @@ public class OSMParser {
 			
 		} else if (fileName.endsWith(".zip")) {
 			try {
-				FileInputStream fis = new FileInputStream(fileName);
-				ZipInputStream zip = new ZipInputStream(new BufferedInputStream(fis));
-				ZipEntry bdfd = zip.getNextEntry();
-				System.out.println("fis.available: "+(fis.available()/Math.pow(1024, 2))+" MB");
-				loadOSM(new InputSource(zip), fileName, fis);
+				inputStream = new FileInputStream(fileName);
+				ZipInputStream zip = new ZipInputStream(new BufferedInputStream(inputStream));
+				zip.getNextEntry();
+				loadOSM(new InputSource(zip), fileName);
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
@@ -75,11 +81,11 @@ public class OSMParser {
 		Main.logRamUsage();
 	}
 	
-	private void loadOSM(InputSource source, String fileName, FileInputStream fis) {
+	private void loadOSM(InputSource source, String fileName) {
 		
 		try {
 			XMLReader reader = XMLReaderFactory.createXMLReader();
-			reader.setContentHandler(new OSMNodeHandler(this, fileName, fis));  // Handles the actual XML with the OSMNodeHandler
+			reader.setContentHandler(new OSMNodeHandler(this, fileName));  // Handles the actual XML with the OSMNodeHandler
 			reader.parse(source);
 		} catch (SAXException e) {
 			e.printStackTrace();
