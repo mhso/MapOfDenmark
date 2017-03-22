@@ -37,7 +37,6 @@ public class OSMNodeHandler implements ContentHandler {
 	public OSMNodeHandler(OSMParser parser, String fileName) {
 		this.fileName = fileName;
 		fileSize = Util.getFileSize(new File(fileName));
-		System.out.println(fileSize);
 		this.parser = parser;
 		inputStream = parser.getInputStream();
 	}

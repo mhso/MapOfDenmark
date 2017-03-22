@@ -104,25 +104,25 @@ public class AddressController implements OSMParserListener{
 		return result;
 	}
 
-	public void addOsmAddress(long nodeId, float lat, float lon, String k, String v){
+	public void addOsmAddress(long nodeId, String k, String v){
 		Address addr;
 		if (addresses.containsKey(nodeId)) {
 			addr = addresses.get(nodeId);
 		} else {
-			addr = new Address(nodeId, lon, lon);
+			addr = new Address(nodeId);
 		}
 		AddressOsmParser oap = new AddressOsmParser(addr);
-		addr = oap.parseKeyAddr(nodeId, lat, lon, k, v);
+		addr = oap.parseKeyAddr(nodeId, k, v);
 		if(addr != null) addresses.put(addr.getNodeId(), addr);
 	}
 	
-	public Address createOsmAddress(Long nodeId, float lat, float lon){
-		if(nodeId != null && lat != -1f && lon != -1f){
+	public Address createOsmAddress(Long nodeId){
+		if(nodeId != null){
 			Address addr;
 			if (addresses.containsKey(nodeId)) {
 				addr = addresses.get(nodeId);
 			} else {
-				addr = new Address(nodeId, lon, lon);
+				addr = new Address(nodeId);
 			}
 			addresses.put(addr.getNodeId(), addr);
 			return addr;
@@ -174,10 +174,8 @@ public class AddressController implements OSMParserListener{
 			ParsedAddress omsAddr = (ParsedAddress) parsedObject;
 			if(omsAddr.getAttributes().get("id") != null) {
 				long nodeId = Long.parseLong(omsAddr.getAttributes().get("id"));
-				float lat = Float.parseFloat(omsAddr.getAttributes().get("lat"));
-				float lon = Float.parseFloat(omsAddr.getAttributes().get("lon"));
 				
-				Address addr = createOsmAddress(nodeId, lat, lon);
+				Address addr = createOsmAddress(nodeId);
 				if(addr != null) {
 					AddressOsmParser aop = new AddressOsmParser(addr);
 					aop.parseKeyAddr(omsAddr.attributes);

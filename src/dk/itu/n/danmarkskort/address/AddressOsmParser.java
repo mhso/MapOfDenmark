@@ -9,12 +9,10 @@ public class AddressOsmParser {
 		this.buildAddress = buildAddress;
 	}
 	
-	public Address parseKeyAddr(long nodeId, float lat, float lon, String k, String v){
+	public Address parseKeyAddr(long nodeId, String k, String v){
 		if(isAddress(k)){
 			String cleanKey = cleanKey(k);
 			buildAddress.setNodeId(nodeId);
-			buildAddress.setLat(lat);
-			buildAddress.setLon(lon);
 			setKeyFromValue(cleanKey, v);
 			return buildAddress;
 		}
@@ -47,10 +45,14 @@ public class AddressOsmParser {
 		case "housenumber":			buildAddress.setHousenumber(value);
 		break;
 		case "postcode":
+			int postcodeTemp = -1;
 			try{
-				buildAddress.setPostcode(Integer.parseInt(value.replaceAll("[^0-9]", "")));
+				postcodeTemp = Integer.parseInt(value);
 			} catch(NumberFormatException e){
-				e.printStackTrace();
+				postcodeTemp = Integer.parseInt(value.replaceAll("[^0-9]", ""));
+				//e.printStackTrace();
+			} finally{
+				buildAddress.setPostcode(postcodeTemp);
 			}
 		break;
 		case "city":				buildAddress.setCity(value);
