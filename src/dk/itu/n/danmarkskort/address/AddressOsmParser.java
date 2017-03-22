@@ -52,7 +52,8 @@ public class AddressOsmParser {
 			try{
 				postcodeTemp = Integer.parseInt(value);
 			} catch(NumberFormatException e){
-				postcodeTemp = Integer.parseInt(value.replaceAll("[^0-9]", ""));
+				String str = value.replaceAll("[^0-9]", "");
+				if(str.length() == 4) postcodeTemp = Integer.parseInt(str);
 				//e.printStackTrace();
 			} finally{
 				buildAddress.setPostcode(postcodeTemp);

@@ -19,7 +19,6 @@ public class AddressController implements OSMParserListener{
 	private Map<Integer, String> postcodes;
 	//private Map<Integer, Postcode> postcodes;
 	//private Map<String, Address> shortAddresses;
-	PostcodeCityCombination postcodeCityCombination = new PostcodeCityCombination();
 	private static AddressController instance;
 	private final static Lock lock = new ReentrantLock();
 	
@@ -52,7 +51,7 @@ public class AddressController implements OSMParserListener{
 	public Address getSearchResult(String find){
 		AddressParser ap = new AddressParser();
 		Address addrBuild = AddressSearchPredicates.addressEquals(addresses, ap.parse(find));
-		if(addrBuild != null) System.out.println("getSearchResult: "+addrBuild.toString());
+		//if(addrBuild != null) System.out.println("getSearchResult: "+addrBuild.toString());
 		return addrBuild;
 	}
 	
@@ -174,7 +173,6 @@ public class AddressController implements OSMParserListener{
 	public void onParsingGotObject(ParsedObject parsedObject) {
 		if(parsedObject instanceof ParsedAddress) {
 			ParsedAddress omsAddr = (ParsedAddress) parsedObject;
-			//Main.log(omsAddr.getAttributes().get("id"));
 			if(omsAddr.getAttributes().get("id") != null) {
 				long nodeId = Long.parseLong(omsAddr.getAttributes().get("id"));
 				float lat = Float.parseFloat(omsAddr.getAttributes().get("lat"));
@@ -183,7 +181,7 @@ public class AddressController implements OSMParserListener{
 				Address addr = createOsmAddress(nodeId, lat, lon);
 				AddressOsmParser aop = new AddressOsmParser(addr);
 				aop.parseKeyAddr(omsAddr.attributes);
-				postcodeCityCombination.add(addr.getPostcode(), addr.getCity());
+				PostcodeCityCombination.getInstance().add(addr.getPostcode(), addr.getCity());
 			}
 		}
 	}
@@ -194,7 +192,10 @@ public class AddressController implements OSMParserListener{
 		// Adding to the address path
 		//updateAllAddressPathMapping();
 		
-		postcodeCityCombination.printCombinationMap();
+		System.out.println("DECIDING POSTCODE/CITY MATCHES");
+		PostcodeCityCombination.getInstance().printCombinationMap();
+		System.out.println("FINAL POSTCODE/CITY MATCHES");
+		PostcodeCityCombination.getInstance().printBestMaches();
 		
 		Main.log("AdresseController found: "+addresses.size()+" adresses");
 	}
