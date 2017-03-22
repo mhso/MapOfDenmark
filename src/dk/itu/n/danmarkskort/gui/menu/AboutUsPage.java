@@ -23,7 +23,7 @@ public class AboutUsPage extends JPanel  {
         panelHeadline.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
         panelHeadline.setBackground(style.menuContentBG());
         panelPage.add(panelHeadline, BorderLayout.NORTH);
-        JLabel lblPageHeadline = new JLabel("About Us");
+        JLabel lblPageHeadline = new JLabel("About Us Page");
         lblPageHeadline.setFont(new Font("Tahoma", Font.BOLD, 18));
         panelHeadline.add(lblPageHeadline);
         
@@ -109,10 +109,9 @@ public class AboutUsPage extends JPanel  {
         gbc_lblDescription.gridy = 4;
         panel.add(lblDescription, gbc_lblDescription);
         
-        String appDescription = "<html>This application is made as part of our education as"
-                + "<br>software developers, its includes a map of"
-                + "<br>Denmark."
-        		+ "<br>Key features include:"
+        String appDescription = "<html>This application is made as part of our education"
+        		+ "<br>as software developers, its includes a map of Denmark,"
+        		+ "<br>Key features:"
         		+ "<br>Zoom/pan, search, routeplanning and print.";
         
         JLabel lblAppDescription = new JLabel(appDescription);

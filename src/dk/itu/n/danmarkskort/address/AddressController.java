@@ -6,6 +6,7 @@ import dk.itu.n.danmarkskort.models.ParsedAddress;
 import dk.itu.n.danmarkskort.models.ParsedObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -15,15 +16,15 @@ import java.util.stream.Collectors;
 
 public class AddressController implements OSMParserListener{
 	private Map<Long, Address> addresses;
-	private Map<Integer, Postcode> postcodes;
-	private Map<String, Address> shortAddresses;
+	//private Map<Integer, Postcode> postcodes;
+	//private Map<String, Address> shortAddresses;
 	private static AddressController instance;
 	private final static Lock lock = new ReentrantLock();
 	
 	private AddressController(){
 		addresses =  new TreeMap<Long, Address>();
-		postcodes = new TreeMap<Integer, Postcode>();
-		shortAddresses = new TreeMap<String, Address>();
+		//postcodes = new TreeMap<Integer, Postcode>();
+		//shortAddresses = new TreeMap<String, Address>();
 	}
 	
 	public static AddressController getInstance(){
@@ -99,15 +100,7 @@ public class AddressController implements OSMParserListener{
 		}
 		// Remove dublicates
 		result = result.stream().distinct().collect(Collectors.toList());
-		System.out.println("Before sort");
-		for(String str : result){
-			System.out.println(str);
-		}
-		System.out.println("After sort");
-		result.stream().sorted();
-		for(String str : result){
-			System.out.println(str);
-		}
+		
 		return result;
 	}
 
@@ -140,11 +133,12 @@ public class AddressController implements OSMParserListener{
 	private void updateAllAddressPathMapping(){
 		for(Address addr : addresses.values()){
 			updateAddressPathMapping(addr);
-			shortAddresses.put(addr.toStringShort(), addr);
+			//shortAddresses.put(addr.toStringShort(), addr);
 		}
 	}
 	
 	private void updateAddressPathMapping(Address addr){
+		/**
 		if(addr != null){
 			// Adding postcode to mapping
 			if(addr.getPostcode() != -1){
@@ -165,7 +159,7 @@ public class AddressController implements OSMParserListener{
 					}
 				}
 			}
-		}
+		} */
 	}
 	
 	@Override
@@ -195,7 +189,7 @@ public class AddressController implements OSMParserListener{
 		// TODO Auto-generated method stub
 		
 		// Adding to the address path
-		updateAllAddressPathMapping();
+		//updateAllAddressPathMapping();
 		
 		Main.log("AdresseController found: "+addresses.size()+" adresses");
 	}

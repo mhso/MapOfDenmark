@@ -15,6 +15,7 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
 import dk.itu.n.danmarkskort.Main;
+import dk.itu.n.danmarkskort.MemoryUtil;
 import dk.itu.n.danmarkskort.TimerUtil;
 
 // This class can parse an OSM file, and turn it into tile files. 
@@ -42,7 +43,9 @@ public class OSMParser {
 	
 	public void parseFile(String fileName) {
 		TimerUtil parseTimer = new TimerUtil();
+		MemoryUtil parseMemory = new MemoryUtil();
 		parseTimer.on();
+		parseMemory.on();
 		if (fileName.endsWith(".osm")) {
 			loadOSM(new InputSource(fileName), fileName);
 		} else if (fileName.endsWith(".zip")) {
@@ -57,6 +60,8 @@ public class OSMParser {
 			}
 		}
 		parseTimer.off();
+		parseMemory.off();
+		Main.log(parseMemory.humanReadableByteCount(true));
 		Main.log("Time spend parsing: "+parseTimer.toString());
 		Main.logRamUsage();
 	}
@@ -64,7 +69,7 @@ public class OSMParser {
 	private void loadOSM(InputSource source, String fileName) {
 		try {
 			XMLReader reader = XMLReaderFactory.createXMLReader();
-			reader.setContentHandler(new OSMNodeHandler(this, fileName));
+			reader.setContentHandler(new OSMNodeHandler(this, fileName));  // Handles the actual XML with the OSMNodeHandler
 			reader.parse(source);
 		} catch (SAXException e) {
 			e.printStackTrace();

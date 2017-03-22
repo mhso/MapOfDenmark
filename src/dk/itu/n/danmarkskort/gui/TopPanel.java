@@ -2,6 +2,7 @@ package dk.itu.n.danmarkskort.gui;
 
 import dk.itu.n.danmarkskort.address.Address;
 import dk.itu.n.danmarkskort.gui.menu.DropdownMenu;
+import dk.itu.n.danmarkskort.gui.menu.RoutePage;
 import dk.itu.n.danmarkskort.search.SearchController;
 
 import javax.swing.*;
@@ -138,7 +139,7 @@ public class TopPanel extends JPanel {
         });
         
         route.addActionListener(e -> {
-            dropMenu.addToContentPane(new JPanel());
+            dropMenu.addToContentPane(new RoutePage(input.getText()));
             dropMenu.showDropdown(menu);
         });
 

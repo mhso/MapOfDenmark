@@ -54,7 +54,7 @@ public class Style {
 
         scaleIndicator = new ImageIcon("resources/scale.png");
         
-        arrowUpDownButton = new ImageIcon("resources/arrowupdown.png");
+        arrowUpDownButton = new ImageIcon("resources/icons/arrowupdown.png");
 
     }
 
