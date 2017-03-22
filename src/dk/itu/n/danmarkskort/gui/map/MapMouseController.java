@@ -9,8 +9,11 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.geom.Point2D;
 
+import javax.swing.SwingUtilities;
+
 import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.Util;
+import dk.itu.n.danmarkskort.gui.DropdownRightClick;
 public class MapMouseController extends MouseAdapter {
 
 	MapCanvas canvas;
@@ -21,6 +24,13 @@ public class MapMouseController extends MouseAdapter {
 		canvas.addMouseListener(this);
 		canvas.addMouseMotionListener(this);
 		canvas.addMouseWheelListener(this);
+	}
+	
+	public void mouseClicked(MouseEvent e) {
+		if(SwingUtilities.isRightMouseButton(e)) {
+			DropdownRightClick drc = new DropdownRightClick();
+			drc.show(canvas, e.getX(), e.getY());
+		}
 	}
 
 	public void mousePressed(MouseEvent e) {
