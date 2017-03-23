@@ -7,24 +7,21 @@ import dk.itu.n.danmarkskort.models.ParsedObject;
 import dk.itu.n.danmarkskort.models.ParsedWay;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 public class AddressController implements OSMParserListener{
 	private Map<Long, Address> addresses;
-	//private Map<Integer, Postcode> postcodes;
-	//private Map<String, Address> shortAddresses;
+
 	private static AddressController instance;
 	private final static Lock lock = new ReentrantLock();
 	
 	private AddressController(){
-		addresses =  new TreeMap<Long, Address>();
-		//postcodes = new TreeMap<Integer, Postcode>();
-		//shortAddresses = new TreeMap<String, Address>();
+		addresses =  new HashMap<Long, Address>();
 	}
 	
 	public static AddressController getInstance(){
@@ -50,7 +47,6 @@ public class AddressController implements OSMParserListener{
 	public Address getSearchResult(String find){
 		AddressParser ap = new AddressParser();
 		Address addrBuild = AddressSearchPredicates.addressEquals(addresses, ap.parse(find));
-		if(addrBuild != null) System.out.println("getSearchResult: "+addrBuild.toString());
 		return addrBuild;
 	}
 	
@@ -98,68 +94,22 @@ public class AddressController implements OSMParserListener{
 			result.addAll(AddressSearchPredicates.filterToStringShort(addresses, 
 					AddressSearchPredicates.postcodeEquals(Integer.toString(addrBuild.getPostcode())) , 5l));
 		}
-		// Remove dublicates
-		result = result.stream().distinct().collect(Collectors.toList());
-		
-		return result;
-	}
-
-	public void addOsmAddress(long nodeId, String k, String v){
-		Address addr;
-		if (addresses.containsKey(nodeId)) {
-			addr = addresses.get(nodeId);
-		} else {
-			addr = new Address(nodeId);
-		}
-		AddressOsmParser oap = new AddressOsmParser(addr);
-		addr = oap.parseKeyAddr(nodeId, k, v);
-		if(addr != null) addresses.put(addr.getNodeId(), addr);
+		// Remove dublicates and return
+		return result.stream().distinct().collect(Collectors.toList());
 	}
 	
-	public Address createOsmAddress(Long nodeId){
+	public Address createOsmAddress(Long nodeId, float lat, float lon, Map<String, String> attributes){
 		if(nodeId != null){
-			Address addr;
-			if (addresses.containsKey(nodeId)) {
-				addr = addresses.get(nodeId);
-			} else {
-				addr = new Address(nodeId);
-			}
-			addresses.put(addr.getNodeId(), addr);
-			return addr;
-			}
-		return null;
-	}
-	
-	private void updateAllAddressPathMapping(){
-		for(Address addr : addresses.values()){
-			updateAddressPathMapping(addr);
-			//shortAddresses.put(addr.toStringShort(), addr);
-		}
-	}
-	
-	private void updateAddressPathMapping(Address addr){
-		/**
-		if(addr != null){
-			// Adding postcode to mapping
-			if(addr.getPostcode() != -1){
-				Postcode postcode = postcodes.get(addr.getPostcode());
-				
-				if(postcode == null) postcode = new Postcode(addr.getPostcode(), addr.getCity());
-				postcodes.put(addr.getPostcode(), postcode);
-				
-				// Adding street to mapping
-				if(addr.getStreet() != null){
-					Street street = postcode.getStreets().get(addr.getStreet());
-					if(street == null) street = new Street(addr.getStreet());
-					postcode.getStreets().put(addr.getStreet(), street);
-					
-					// Adding housenumber to map
-					if(addr.getHousenumber() != null){
-						street.getHousenumbers().put(addr.getHousenumber(), addr);
+				Address addr = addresses.get(nodeId);
+				if (addr == null) addr = new Address(nodeId, lon, lon);
+					AddressOsmParser aop = new AddressOsmParser(addr);
+					aop.parseKeyAddr(attributes);
+					if(addr.getCity() != null){
+						PostcodeCityCombination.getInstance().add(addr.getPostcode(), addr.getCity());
 					}
-				}
-			}
-		} */
+					return addr;
+		}
+		return null;
 	}
 	
 	@Override
@@ -174,22 +124,20 @@ public class AddressController implements OSMParserListener{
 			ParsedAddress omsAddr = (ParsedAddress) parsedObject;
 			if(omsAddr.getAttributes().get("id") != null) {
 				long nodeId = Long.parseLong(omsAddr.getAttributes().get("id"));
+				float lat = Float.parseFloat(omsAddr.getAttributes().get("lat"));
+				float lon = Float.parseFloat(omsAddr.getAttributes().get("lon"));
 				
-				Address addr = createOsmAddress(nodeId);
-				if(addr != null) {
-					AddressOsmParser aop = new AddressOsmParser(addr);
-					aop.parseKeyAddr(omsAddr.attributes);
-				}
+				Address addr = createOsmAddress(nodeId, lat, lon, omsAddr.attributes);
+				if(addr != null) addresses.put(addr.getNodeId(), addr);
 			}
 		}
 	}
+	
 	@Override
 	public void onParsingFinished() {
 		// TODO Auto-generated method stub
-		
-		// Adding to the address path
-		//updateAllAddressPathMapping();
-		
+		PostcodeCityCombination.getInstance().bestMatches();
+		PostcodeCityCombination.getInstance().clearCombinations();
 		Main.log("AdresseController found: "+addresses.size()+" adresses");
 	}
 
