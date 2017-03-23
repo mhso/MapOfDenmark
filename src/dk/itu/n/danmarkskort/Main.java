@@ -7,10 +7,9 @@ import javax.swing.*;
 import dk.itu.n.danmarkskort.address.AddressController;
 import dk.itu.n.danmarkskort.backend.OSMParser;
 import dk.itu.n.danmarkskort.backend.TileController;
-import dk.itu.n.danmarkskort.gui.WindowParsingLoadscreen;
 import dk.itu.n.danmarkskort.gui.WindowParsingLoadscreenNew;
 import dk.itu.n.danmarkskort.gui.map.MapCanvas;
-import dk.itu.n.danmarkskort.mapdata.NodeMap;
+import dk.itu.n.danmarkskort.lightweight.LightWeightParser;
 
 public class Main {
 
@@ -24,6 +23,8 @@ public class Main {
 	public static JFrame window;
 	public static MapCanvas map;
 	public static MainCanvas mainPanel;
+
+	public final static boolean lightweight = true;
 	
 	public static void main(String[] args) {
         startup(args);
@@ -32,9 +33,15 @@ public class Main {
 	}
 
 	public static void startup(String[] args) {
-		osmParser = new OSMParser();
-		tileController = new TileController();
-		prepareParser(args);
+		if(lightweight) {
+			osmParser = new OSMParser();
+			new LightWeightParser(osmParser);
+		} else {
+			osmParser = new OSMParser();
+			tileController = new TileController();
+			prepareParser(args);
+		}
+
 	}
 
 	public static void prepareParser(String[] args) {

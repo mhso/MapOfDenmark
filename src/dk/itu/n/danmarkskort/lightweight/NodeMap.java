@@ -1,6 +1,7 @@
-package dk.itu.n.danmarkskort.mapdata;
+package dk.itu.n.danmarkskort.lightweight;
 
 import java.awt.geom.Point2D;
+import java.util.Map;
 
 public class NodeMap {
 
@@ -24,12 +25,19 @@ public class NodeMap {
         size++;
     }
 
-    public Point2D get(long key) {
+    public Node putAndTake(long key, float lon, float lat) {
+        put(key, lon,lat);
+        return nodes[getHash(key)];
+    }
+
+    public Node get(long key) {
         for(Node node = nodes[getHash(key)]; node != null; node = node.getNext()) {
             if(node.getKey() == key) return node;
         }
         return null;
     }
+
+    public int size() { return size; }
 
     // & initialCapacity makes sure we don't get arrayIndexOutOfBound later
     private int getHash(long key) {
@@ -40,15 +48,19 @@ public class NodeMap {
         public static final long serialVersionUID = 20170322L;
         private Node next;
         private long key;
+        private float lon, lat;
 
         // Total memory usage of a Node is 32 bytes.
         public Node(long key, Node next, float lat, float lon) {
-            super(lon, lat); // x, y
-            this.next = next;
             this.key = key;
+            this.next = next;
+            this.lon = lon;
+            this.lat = lat;
         }
 
         public Node getNext() { return next; }
         public long getKey() { return key; }
+        public float getLon() { return x; }
+        public float getLat() { return y; }
     }
 }
