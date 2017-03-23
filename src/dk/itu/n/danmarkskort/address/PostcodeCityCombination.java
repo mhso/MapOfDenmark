@@ -59,12 +59,13 @@ public class PostcodeCityCombination {
 				int count2 = combinations.get(entry2);
 				
 				if(postcode1 == postcode2 && city1.equalsIgnoreCase(city2) && count1 >= count2){
-					bestMatches.put(postcode1, city1);
+					if(city1 != null) bestMatches.put(postcode1, city1);
 				} else {
-					bestMatches.put(postcode2, city2);
+					if(city2 != null) bestMatches.put(postcode2, city2);
 				}
 			}
-		}		
+		}
+		System.out.println("bestMatches size: "+bestMatches.size());
 		return bestMatches;
 	}
 	
