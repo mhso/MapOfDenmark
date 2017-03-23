@@ -3,11 +3,13 @@ package dk.itu.n.danmarkskort.mapgfx;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
+import dk.itu.n.danmarkskort.models.WayType;
+
 /**
  * This class is used for storing information about the visual representation of a map element (a WayType f.x.).
  */
 public abstract class WaytypeGraphicSpec {
-	private Object mapElement;
+	private WayType mapElement;
 	private Color innerColor;
 	private Color outerColor;
 	
@@ -19,7 +21,7 @@ public abstract class WaytypeGraphicSpec {
 		graphics.setColor(outerColor);
 	}
 	
-	public Object getMapElement() {
+	public WayType getMapElement() {
 		return mapElement;
 	}
 	
@@ -31,7 +33,7 @@ public abstract class WaytypeGraphicSpec {
 		return outerColor;
 	}
 	
-	public void setMapElement(Object mapElement) {
+	public void setMapElement(WayType mapElement) {
 		this.mapElement = mapElement;
 	}
 	

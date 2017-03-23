@@ -1,13 +1,16 @@
 package dk.itu.n.danmarkskort.backend;
 
 import java.util.ArrayList;
+import java.util.EnumMap;
 
 import dk.itu.n.danmarkskort.Main;
+import dk.itu.n.danmarkskort.mapgfx.GraphicRepresentation;
 import dk.itu.n.danmarkskort.models.ParsedBounds;
 import dk.itu.n.danmarkskort.models.ParsedObject;
 import dk.itu.n.danmarkskort.models.ParsedWay;
 import dk.itu.n.danmarkskort.models.Tile;
 import dk.itu.n.danmarkskort.models.TileCoordinate;
+import dk.itu.n.danmarkskort.models.WayType;
 
 // This class is used to extract exact information from tile files. 
 public class TileController implements OSMParserListener {
@@ -15,7 +18,7 @@ public class TileController implements OSMParserListener {
 	private ParsedBounds mapBounds = null;
 	private final int staticZoomLevel = 1;
 	public final int MAX_ZOOM_LEVEL = 20;
-	public ArrayList<ParsedWay> wayList = new ArrayList<ParsedWay>();
+	public EnumMap<WayType, ArrayList<ParsedWay>> ways = new EnumMap<WayType, ArrayList<ParsedWay>>(WayType.class);
 	
 	public Tile requestTile(int x, int y, int zoom) {
 		Tile tile = new Tile(new TileCoordinate(x, y), zoom);
@@ -23,11 +26,13 @@ public class TileController implements OSMParserListener {
 		return tile;
 	}
 
-	public void onParsingStarted() {}
+	public void onParsingStarted() {
+		prepareWays();
+	}
 	public void onLineCountHundred() {}
 
 	public void onParsingFinished() {
-		//prepareTileFiles();
+		GraphicRepresentation.main(new String[]{"resources/ThemeBasic.XML"});
 	}
 
 	public void onParsingGotObject(ParsedObject parsedObject) {
@@ -70,7 +75,15 @@ public class TileController implements OSMParserListener {
 		return mapBounds;
 	}
 
+	public void prepareWays() {
+		for(WayType wayType : WayType.values()) ways.put(wayType, new ArrayList<ParsedWay>());
+	}
+	
 	public void onWayLinked(ParsedWay way) {
-		wayList.add(way);
+		ways.get(way.type).add(way);
+	}
+	
+	public ArrayList<ParsedWay> getWaysOfType(WayType type) {
+		return ways.get(type);
 	}
 }
