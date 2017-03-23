@@ -7,16 +7,11 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
-import org.xml.sax.InputSource;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
-
-import com.sun.org.apache.xerces.internal.parsers.XMLParser;
 
 import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.Util;
@@ -34,6 +29,7 @@ public class OSMNodeHandler implements ContentHandler {
 	private HashMap<Long, ParsedWay> pendingWays = new HashMap<Long, ParsedWay>();
 
 	private InputStream inputStream;
+
 	private long fileSize;
 	private int step = 0;
 	
@@ -72,16 +68,16 @@ public class OSMNodeHandler implements ContentHandler {
 	}
 
 	public void endDocument() throws SAXException {
+		Main.log("Ending step " + step);
 		for(OSMParserListener listener : parser.parserListeners) listener.onParsingFinished();
 		currentParsedObjects.clear();
 		if(step == 0) {
 			step ++;
 			return;
-		} else if(step == 1) {
-			for(ParsedWay way : pendingWays.values()) {
-				
-			}
 		}
+		
+		for(OSMParserListener listener : parser.parserListeners) listener.onParsingFinished();
+		pendingWays.clear();
 		Main.log("Parsing finished.");
 	}
 	
@@ -90,8 +86,8 @@ public class OSMNodeHandler implements ContentHandler {
 	public void endPrefixMapping(String prefix) throws SAXException {}
 
 	public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
-		incrementLineCount();
-
+		//incrementLineCount();
+		if(step == 1) Main.log("Starting element");
 		switch(qName) {
 		
 		case "osm":
@@ -107,7 +103,7 @@ public class OSMNodeHandler implements ContentHandler {
 			addParsedObject(new ParsedBounds(), atts, qName);
 			break;
 		case "node":
-			if(step == 1) addParsedNode(new ParsedNode(), atts, qName);
+			addParsedNode(new ParsedNode(), atts, qName);
 			break;
 		case "tag":
 			addTagToParsedObject(atts);
@@ -194,7 +190,6 @@ public class OSMNodeHandler implements ContentHandler {
 	}
 	
 	public boolean linkWay(ParsedWay way) {
-		
 		return (way.isCompletelyLinked());
 	}
 	
