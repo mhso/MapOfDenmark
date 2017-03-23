@@ -9,6 +9,8 @@ import dk.itu.n.danmarkskort.models.WayType;
  * This class is used for storing information about the visual representation of a map element (a WayType f.x.).
  */
 public abstract class WaytypeGraphicSpec {
+	protected static final float OUTLINE_WIDTH = 0.00001f;
+	
 	private WayType mapElement;
 	private Color innerColor;
 	private Color outerColor;

@@ -26,7 +26,7 @@ public class GraphicSpecLine extends WaytypeGraphicSpec {
 		super.transformOutline(graphics);
 		BasicStroke stroke = null;
 		if(dashArr == null) {
-			stroke = new BasicStroke(lineWidth+0.0000001f);
+			stroke = new BasicStroke(lineWidth+OUTLINE_WIDTH);
 		}
 		else {
 			stroke = new BasicStroke(lineWidth, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 
