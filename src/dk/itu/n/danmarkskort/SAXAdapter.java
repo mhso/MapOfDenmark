@@ -12,7 +12,7 @@ import org.xml.sax.SAXException;
 public abstract class SAXAdapter implements ContentHandler {
 	@Override
 	public void characters(char[] ch, int start, int length) throws SAXException {}
-
+	
 	@Override
 	public void endDocument() throws SAXException {}
 

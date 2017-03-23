@@ -30,7 +30,12 @@ public class GraphicRepresentation {
 	 * @return A Graphic Specification object representing how a Map Element should be drawn.
 	 */
 	public static List<WaytypeGraphicSpec> getGraphicSpecs(int zoomLevel) {
-		return zoomLevelArr[zoomLevel];
+		zoomLevel -= 1;
+		List<WaytypeGraphicSpec> cummulativeList = new ArrayList<>();
+		for(int i = zoomLevel; i >= 0; i--) {
+			cummulativeList.addAll(zoomLevelArr[i]);
+		}
+		return cummulativeList;
 	}
 	
 	/**
@@ -100,14 +105,16 @@ public class GraphicRepresentation {
 				case "zoomlevel":
 					currentZoomValue = Integer.parseInt(atts.getValue("level"));
 				break;
-				case "tag":
-					zoomMap.put(stringToEnum(atts.getValue("v")), currentZoomValue-1);
+				case "type":
+					zoomMap.put(stringToEnum(atts.getValue("name")), currentZoomValue-1);
 				break;
 			}
 		}
 	}
 	
 	private static class GraphicsHandler extends SAXAdapter {
+		private static final float LINE_MAGNIFYING_VALUE = 0.001f;
+		
 		private static WayType mapElement;
 		private static WaytypeGraphicSpec gs;
 		private static int defaultFontSize;
@@ -135,8 +142,8 @@ public class GraphicRepresentation {
 		public void startElement(String uri, String localname, String qName, Attributes atts) 
 				throws SAXException {
 			switch(qName) {
-				case "tag":
-					mapElement = stringToEnum(atts.getValue("v"));
+				case "type":
+					mapElement = stringToEnum(atts.getValue("name"));
 					gs.setMapElement(mapElement);
 				break;
 				case "defaultfont": 
@@ -162,7 +169,7 @@ public class GraphicRepresentation {
 					gs.setOuterColor(parseColor(atts.getValue("color")));
 				break;
 				case "lineproperties":
-					float lineWidth = (float)(Double.parseDouble(atts.getValue("linewidth")) * 0.0005);
+					float lineWidth = (float)(Double.parseDouble(atts.getValue("linewidth")) * LINE_MAGNIFYING_VALUE);
 					float[] dashArr = null;
 					if(atts.getValue("linedash") != null) {
 						String[] splitArr = atts.getValue("linedash").split(",");

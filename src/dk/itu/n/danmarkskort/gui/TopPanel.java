@@ -115,7 +115,7 @@ public class TopPanel extends JPanel {
         topParent.add(top);
         add(topParent);
         
-        dropSuggestions = new DropdownAddressSearch(this, style);
+        dropSuggestions = new DropdownAddressSearch(searchInputWrapper, style);
         dropMenu = new DropdownMenu(this, style);
         
         menu.addMouseListener(new MouseAdapter() {
@@ -163,14 +163,10 @@ public class TopPanel extends JPanel {
         dropSuggestions.removeAll();
         int i = 0;
         for(String st : list){
-            dropSuggestions.addElement(st);
+            dropSuggestions.addElement(input, st);
             if(++i > 10) break;
         }
         dropSuggestions.showDropdown(input);
-    }
-
-    public int getInputFieldWidth() {
-        return searchInputWrapper.getPreferredSize().width;
     }
 
     public int getMenuWidth() {
@@ -179,10 +175,6 @@ public class TopPanel extends JPanel {
 
     public Dimension getTopPanelDimension() {
         return topParent.getPreferredSize();
-    }
-
-    public JTextField getInputField() {
-        return input;
     }
 
     private class SearchFilter extends DocumentFilter {
