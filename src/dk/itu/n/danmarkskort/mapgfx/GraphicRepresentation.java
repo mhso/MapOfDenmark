@@ -105,8 +105,8 @@ public class GraphicRepresentation {
 				case "zoomlevel":
 					currentZoomValue = Integer.parseInt(atts.getValue("level"));
 				break;
-				case "tag":
-					zoomMap.put(stringToEnum(atts.getValue("v")), currentZoomValue-1);
+				case "type":
+					zoomMap.put(stringToEnum(atts.getValue("name")), currentZoomValue-1);
 				break;
 			}
 		}
@@ -142,8 +142,8 @@ public class GraphicRepresentation {
 		public void startElement(String uri, String localname, String qName, Attributes atts) 
 				throws SAXException {
 			switch(qName) {
-				case "tag":
-					mapElement = stringToEnum(atts.getValue("v"));
+				case "type":
+					mapElement = stringToEnum(atts.getValue("name"));
 					gs.setMapElement(mapElement);
 				break;
 				case "defaultfont": 
