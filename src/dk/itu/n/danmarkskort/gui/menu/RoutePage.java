@@ -17,6 +17,7 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 import java.util.List;
 import java.awt.event.ActionEvent;
 
@@ -27,8 +28,8 @@ public class RoutePage extends JPanel {
     private JTextField txtAddreTo;
     private DropdownAddressSearch dropSuggestionsAddrFrom;
     private DropdownAddressSearch dropSuggestionsAddrTo;
-    private final ImageIcon ADDR_ICON_VALID = new ImageIcon("resources/icons/checked_checkbox.png");	
-	private final ImageIcon ADDR_ICON_INVALID = new ImageIcon("resources/icons/unchecked_checkbox.png");
+    private final ImageIcon ADDR_ICON_VALID = new ImageIcon("resources/icons/checked_checkbox3.png");	
+	private final ImageIcon ADDR_ICON_INVALID = new ImageIcon("resources/icons/unchecked_checkbox3.png");
     
     public RoutePage(String txtAddreToSetField) {
     	
@@ -67,9 +68,10 @@ public class RoutePage extends JPanel {
         GridBagLayout gbl_panelCenter = new GridBagLayout();
         gbl_panelCenter.columnWidths = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
         gbl_panelCenter.rowHeights = new int[]{0, 0, 0, 0, 0};
-        gbl_panelCenter.columnWeights = new double[]{0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+        gbl_panelCenter.columnWeights = new double[]{0.0, 1.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
         gbl_panelCenter.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
         panelCenter.setLayout(gbl_panelCenter);
+        
         
         JLabel lblFrom = new JLabel("From:");
         GridBagConstraints gbc_lblFrom = new GridBagConstraints();
@@ -190,6 +192,7 @@ public class RoutePage extends JPanel {
         
         JButton btnFind = new JButton("Find Route");
         GridBagConstraints gbc_btnFind = new GridBagConstraints();
+        gbc_btnFind.anchor = GridBagConstraints.EAST;
         gbc_btnFind.insets = new Insets(0, 0, 0, 5);
         gbc_btnFind.gridx = 3;
         gbc_btnFind.gridy = 3;
@@ -226,7 +229,7 @@ public class RoutePage extends JPanel {
         }
         das.showDropdown(textField);
     }
-	
+
 	
 	
 	private class SearchFilter extends DocumentFilter {
