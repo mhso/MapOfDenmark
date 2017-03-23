@@ -7,13 +7,13 @@ public class QuickSelect {
 
     // finds the Kth smallest item of the list.
     // In out case the median, aka the length/2-th item
-    public static OSMWay quickSelect(ArrayList<OSMWay> list, int k, boolean sortValue) {
+    public static OSMWay quickSelect(ArrayList<OSMWay> list, int k, boolean sortByLon) {
         shuffle(list);
 
         int lo = 0, hi = list.size() - 1;
 
         while(hi > lo) {
-            int j = partition(list, lo, hi, sortValue);
+            int j = partition(list, lo, hi, sortByLon);
             if(j == k) return list.get(k);
             else if(j > k) hi = j - 1;
             else if(j < k ) lo = j + 1;
@@ -49,8 +49,8 @@ public class QuickSelect {
         }
     }
 
-    private static boolean less(OSMWay a, OSMWay b, boolean sortValue) {
-        if(sortValue) return a.getLon() < b.getLon();
+    private static boolean less(OSMWay a, OSMWay b, boolean sortByLon) {
+        if(sortByLon) return a.getLon() < b.getLon();
         return a.getLat() < b.getLat();
     }
 }
