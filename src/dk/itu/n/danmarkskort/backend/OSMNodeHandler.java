@@ -177,11 +177,13 @@ public class OSMNodeHandler implements ContentHandler {
 		ParsedObject lastParsedObject = getLastParsedObject();
 		if(qName.equals(lastParsedObject.getQName())) {
 			lastParsedObject.parseAttributes();
-			
+
+
 			//Add nodes to nodemap
 			if(lastParsedObject instanceof ParsedNode) {
 				ParsedNode node = (ParsedNode) lastParsedObject;
 				nodeMap.put(node.getId(), node);
+				node.removeAttributes();
 			}
 			
 			//Map nodes to way
