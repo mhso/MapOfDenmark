@@ -5,13 +5,15 @@ import dk.itu.n.danmarkskort.SAXAdapter;
 import dk.itu.n.danmarkskort.backend.OSMParser;
 import dk.itu.n.danmarkskort.lightweight.models.*;
 import org.xml.sax.Attributes;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class LightWeightParser extends SAXAdapter {
+public class LightWeightParser implements ContentHandler {
 
     private String filename;
     private OSMParser parser;
@@ -19,12 +21,12 @@ public class LightWeightParser extends SAXAdapter {
 
     private float minLatBoundary, minLonBoundary, maxLatBoundary, maxLonBoundary, lonFactor;
 
-    private NodeMap nodeMap;
+    private NodeMap nodeMap = new NodeMap();
     //private EnumMap<LWWayType, ArrayList<ParsedItem>> ways;
-    private HashMap<Long, ParsedWay> ways;
-    private ArrayList<ParsedRelation> relations;
-    private ArrayList<ParsedAddress> addresses;
-    private ArrayList<ParsedSinglePointTag> singlePointTags;
+    private HashMap<Long, ParsedWay> ways = new HashMap<>();
+    private ArrayList<ParsedRelation> relations = new ArrayList<>();
+    private ArrayList<ParsedAddress> addresses = new ArrayList<>();
+    private ArrayList<ParsedSinglePointTag> singlePointTags = new ArrayList<>();
 
     private NodeMap.Node currentNode;
     private ParsedItem currentTag;
@@ -32,8 +34,8 @@ public class LightWeightParser extends SAXAdapter {
     private ParsedRelation currentRelation;
     private ParsedSinglePointTag currentSinglePointTag;
     private ParsedAddress currentAddress;
-    private ArrayList<ParsedWay> currentMembers;
-    private ArrayList<Float> currentCoords;
+    private ArrayList<ParsedWay> currentMembers = new ArrayList<>();
+    private ArrayList<Float> currentCoords = new ArrayList<>();
 
     private String currentType; // bør være en waytype senere
     private String currentName;
@@ -48,7 +50,7 @@ public class LightWeightParser extends SAXAdapter {
     private int numAddresses;
     private int numSinglePointTags;
 
-    public LightWeightParser(OSMParser parser) {
+    public LightWeightParser(OSMParser parser, String filename) {
         this.parser = parser;
         this.filename = filename;
         this.inputStream = parser.getInputStream();
@@ -109,6 +111,7 @@ public class LightWeightParser extends SAXAdapter {
     }
 
     public void endElement(String uri, String localName, String qName) throws SAXException {
+    	Main.log(qName);
         switch(qName) {
             case "node":
                 if(currentAddress != null) {
@@ -136,9 +139,11 @@ public class LightWeightParser extends SAXAdapter {
         }
     }
 
+    int count = 0;
+    
     private void newWayRef(Attributes atts) {
         long ref = Long.parseLong(atts.getValue("ref"));
-        if(ways.containsKey(ref)) {
+        if(ways.containsKey(ref)) {        	
             currentMembers.add(ways.get(ref));
             ways.remove(ref);
         } else Main.log("This shouldn't happen");
@@ -147,6 +152,7 @@ public class LightWeightParser extends SAXAdapter {
     private void newNodeRef(Attributes atts) {
         long ref = Long.parseLong(atts.getValue("ref"));
         NodeMap.Node node = nodeMap.get(ref);
+        Main.log("count: " + ++count);
         currentCoords.add(node.getLon());
         currentCoords.add(node.getLat());
     }
@@ -184,23 +190,70 @@ public class LightWeightParser extends SAXAdapter {
     private void newTag(Attributes atts) {
         String k = atts.getValue("k");
         String v = atts.getValue("v");
+        if(k == null || v == null) return;
         switch(k) {
             case "addr:city":
-                currentAddress = new ParsedAddress(v);
+                if(currentAddress == null) currentAddress = new ParsedAddress();
+                currentAddress.setCity(v);
                 if(currentNode != null) currentAddress.setPoint(currentNode.getLon(), currentNode.getLat());
                 else currentAddress.setPoint(currentCoords.get(0), currentCoords.get(1));
                 break;
             case "addr:housenumber":
+            	if(currentAddress == null) currentAddress = new ParsedAddress();
                 currentAddress.setHousenumber(v);
                 break;
             case "addr:postcode":
+            	if(currentAddress == null) currentAddress = new ParsedAddress();
                 currentAddress.setPostcode(v);
                 break;
             case "addr:street":
+            	if(currentAddress == null) currentAddress = new ParsedAddress();
                 currentAddress.setStreet(v);
                 break;
             case "highway":
                 currentType = v;
         }
     }
+
+	@Override
+	public void characters(char[] arg0, int arg1, int arg2) throws SAXException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void endPrefixMapping(String prefix) throws SAXException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void ignorableWhitespace(char[] ch, int start, int length) throws SAXException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void processingInstruction(String target, String data) throws SAXException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setDocumentLocator(Locator locator) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void skippedEntity(String name) throws SAXException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void startPrefixMapping(String prefix, String uri) throws SAXException {
+		// TODO Auto-generated method stub
+		
+	}
 }

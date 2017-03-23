@@ -35,7 +35,7 @@ public class Main {
 	public static void startup(String[] args) {
 		if(lightweight) {
 			osmParser = new OSMParser();
-			new LightWeightParser(osmParser);
+			prepareParser(args);
 		} else {
 			osmParser = new OSMParser();
 			tileController = new TileController();
@@ -86,7 +86,7 @@ public class Main {
             map.setPreferredSize(new Dimension(WIDTH, HEIGHT));
             overlay.add(mainPanel);
             
-            overlay.add(map);
+            if(!lightweight) overlay.add(map);
 
             window.add(overlay);
             window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
