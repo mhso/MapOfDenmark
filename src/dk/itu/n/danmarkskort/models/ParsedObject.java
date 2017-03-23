@@ -61,5 +61,9 @@ public abstract class ParsedObject implements Serializable{
 	public void setVisual(boolean visual) {
 		this.visual = visual;
 	}
-	
+
+	public void removeAttributes() {
+		attributes.clear();
+		attributes = null;
+	}
 }
