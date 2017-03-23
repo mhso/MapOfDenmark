@@ -87,7 +87,8 @@ public class OSMParser {
 		
 		try {
 			XMLReader reader = XMLReaderFactory.createXMLReader();
-			reader.setContentHandler(new LightWeightParser(this, fileName));  // Handles the actual XML with the OSMNodeHandler
+			if(Main.lightweight) reader.setContentHandler(new LightWeightParser());
+			else reader.setContentHandler(new OSMNodeHandler(this, fileName));
 			reader.parse(source);
 		} catch (SAXException e) {
 			e.printStackTrace();

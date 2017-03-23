@@ -9,7 +9,6 @@ import dk.itu.n.danmarkskort.backend.OSMParser;
 import dk.itu.n.danmarkskort.backend.TileController;
 import dk.itu.n.danmarkskort.gui.WindowParsingLoadscreenNew;
 import dk.itu.n.danmarkskort.gui.map.MapCanvas;
-import dk.itu.n.danmarkskort.lightweight.LightWeightParser;
 
 public class Main {
 
@@ -24,7 +23,7 @@ public class Main {
 	public static MapCanvas map;
 	public static MainCanvas mainPanel;
 
-	public final static boolean lightweight = true;
+	public final static boolean lightweight = false;
 	
 	public static void main(String[] args) {
         startup(args);
