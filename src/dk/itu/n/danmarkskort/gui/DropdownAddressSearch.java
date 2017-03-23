@@ -9,17 +9,16 @@ import java.awt.event.MouseEvent;
 public class DropdownAddressSearch extends CustomDropdown {
 
 	private JTextField txtField;
-	private TopPanel topPanel;
 	private Style style;
 	private int selectedIndex = -1;
+	private Component widthComponent;
 	
     /**
      * Create the panel.
      */
-    public DropdownAddressSearch(TopPanel topPanel, Style style) {
-        this.topPanel = topPanel;
+    public DropdownAddressSearch(Component widthComponent, Style style) {
         this.style = style;
-
+        this.widthComponent = widthComponent;
         UIManager.put("MenuItem.background", style.dropdownItemBG());
         UIManager.put("MenuItem:foreground", style.dropdowItemTextColor());
         UIManager.put("MenuItem.selectionBackground", style.dropdownItemBGActive());
@@ -29,11 +28,12 @@ public class DropdownAddressSearch extends CustomDropdown {
     /**
      * Adds an element to the dropdown
      */
-	public void addElement(String text) {
+	public void addElement(JTextField inputField, String text) {
 		JMenuItem menuItem = new JMenuItem(text);
-		menuItem.setPreferredSize(new Dimension(topPanel.getInputFieldWidth() - 2, menuItem.getPreferredSize().height));
+		menuItem.setPreferredSize(new Dimension(widthComponent.getPreferredSize().width - 2, 
+				menuItem.getPreferredSize().height));
 		menuItem.addActionListener(e -> {
-			topPanel.getInputField().setText(menuItem.getText());
+			inputField.setText(menuItem.getText());
 			setVisible(false);
 		});
 		menuItem.addMouseListener(new MouseAdapter() {
