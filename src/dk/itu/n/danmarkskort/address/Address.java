@@ -2,7 +2,7 @@ package dk.itu.n.danmarkskort.address;
 
 public class Address{
 	private long nodeId;
-	private float lat, lon;
+	private float[] latLon;
 	
 	// Relevant parts off OpenStreetMaps addr: tags
 	private String street, housenumber, city;
@@ -11,26 +11,21 @@ public class Address{
 
 	public Address(){
 		this.nodeId = -1L;
-		this.lat = -1f;
-		this.lon = -1f;
+		this.latLon = new float[]{-1f,-1f};
 		this.postcode = -1;
 	}
 	
 	public Address(long nodeId, float lat, float lon){
 		this.nodeId = nodeId;
-		this.lat = lat;
-		this.lon = lon;
+		this.latLon = new float[]{lat,lon};
 		this.postcode = -1;
 	}
 	
 	public long getNodeId() { return nodeId; }
 	public void setNodeId(long nodeId) { this.nodeId = nodeId; }
 	
-	public double getLat() { return lat; }
-	public void setLat(float lat) { this.lat = lat; }
-	
-	public double getLon() { return lon; }
-	public void setLon(float lon) { this.lon = lon; }
+	public float[] getLatLon() { return latLon; }
+	public void setLatLon(float[] latLon) { this.latLon = latLon; }
 
 	public String getStreet() { return street; }
 	public void setStreet(String street) { this.street = street; }
@@ -58,7 +53,7 @@ public class Address{
 
 	@Override
 	public String toString() {
-		return "Address [nodeId=" + nodeId + ", lat=" + lat + ", lon=" + lon + ", street=" + street + ", housenumber="
+		return "Address [nodeId=" + nodeId + ", lat=" + latLon[0] + ", lon=" + latLon[1] + ", street=" + street + ", housenumber="
 				+ housenumber + ", postcode=" + postcode + ", city=" + city + "]";
 	}
 }
