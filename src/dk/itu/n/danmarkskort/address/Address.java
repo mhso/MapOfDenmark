@@ -5,7 +5,7 @@ public class Address{
 	private float lat, lon;
 	
 	// Relevant parts off OpenStreetMaps addr: tags
-	private String street, housenumber, city, housename;
+	private String street, housenumber, city;
 
 	private int postcode;
 
@@ -41,8 +41,11 @@ public class Address{
  	public int getPostcode() { return postcode; }
  	public void setPostcode(int postcode) { this.postcode = postcode; }
 
- 	public String getCity() { return city; }
  	public void setCity(String city) { this.city = city; }
+ 	public String getCity() {
+ 		if(city != null) return city;
+ 		return PostcodeCityCombination.getInstance().getCity(postcode);
+ 	}
  	
  	public String toStringShort(){
  		StringBuilder sb = new StringBuilder();

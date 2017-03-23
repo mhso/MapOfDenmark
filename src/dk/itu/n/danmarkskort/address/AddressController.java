@@ -7,6 +7,7 @@ import dk.itu.n.danmarkskort.models.ParsedObject;
 import dk.itu.n.danmarkskort.models.ParsedWay;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -16,16 +17,12 @@ import java.util.stream.Collectors;
 
 public class AddressController implements OSMParserListener{
 	private Map<Long, Address> addresses;
-	private Map<Integer, String> postcodes;
-	//private Map<Integer, Postcode> postcodes;
-	//private Map<String, Address> shortAddresses;
+
 	private static AddressController instance;
 	private final static Lock lock = new ReentrantLock();
 	
 	private AddressController(){
 		addresses =  new TreeMap<Long, Address>();
-		//postcodes = new TreeMap<Integer, Postcode>();
-		//shortAddresses = new TreeMap<String, Address>();
 	}
 	
 	public static AddressController getInstance(){
@@ -108,7 +105,9 @@ public class AddressController implements OSMParserListener{
 				if (addr == null) addr = new Address(nodeId, lon, lon);
 					AddressOsmParser aop = new AddressOsmParser(addr);
 					aop.parseKeyAddr(attributes);
-					PostcodeCityCombination.getInstance().add(addr.getPostcode(), addr.getCity());
+					if(addr.getCity() != null){
+						PostcodeCityCombination.getInstance().add(addr.getPostcode(), addr.getCity());
+					}
 					return addr;
 		}
 		return null;
@@ -138,10 +137,8 @@ public class AddressController implements OSMParserListener{
 	@Override
 	public void onParsingFinished() {
 		// TODO Auto-generated method stub
-		if(PostcodeCityCombination.getInstance().getBestMatches() != null){
-			postcodes.putAll(PostcodeCityCombination.getInstance().getBestMatches());
-			System.out.println(postcodes);
-		}
+		PostcodeCityCombination.getInstance().bestMatches();
+		PostcodeCityCombination.getInstance().clearCombinations();
 		Main.log("AdresseController found: "+addresses.size()+" adresses");
 	}
 
