@@ -4,50 +4,50 @@ public enum WayType {
 	UNDEFINED, 			// Udefinerbar.
 	
 	BUILDING, 			// Bygning.
-	COASTLINE, 			// Køstlinje.
+	COASTLINE, 			// Kystlinje.
 	FOREST, 			// Skov.
-	GRASS,				// Græs.
+	GRASS,				// GrÃ¦s.
 	PARK,				// Park.
 	ORCHARD,			// Plantage.
-	INDUSTRIAL,			// Industriområde.
-	ROUTE_FERRY,		// Færgeroute.
-	WETLAND,			// Vådområde.
-	SPORT,				// Toturområde.
+	INDUSTRIAL,			// IndustriomrÃ¥de.
+	ROUTE_FERRY,		// FÃ¦rgeroute.
+	WETLAND,			// VÃ¥domrÃ¥de.
+	SPORT,				// TorturomrÃ¥de.
 	PLAYGROUND,			// Legeplads.
 	ALLOTMENTS,			// Koloni
 	SAND,				// Sand.
 	CONSTRUCTION,		// Byggeplads.
 	TRAIN_STATION,		// Togstation.
 	SCRUB,				// Krat.
-	RETAIL,				// Købe-ting-sted.
-	MILITARY,			// Militærområde.
-	CEMETERY,			// Kirkegård.
+	RETAIL,				// KÃ¸be-ting-sted.
+	MILITARY,			// MilitÃ¦romrÃ¥de.
+	CEMETERY,			// KirkegÃ¥rd.
 	STADIUM,
 	
 	WAY_UNDEFINED,		// Udefinerbar vej.
 	WAY_TRACK,			// Spor.
 	WAY_PATH,			// Sti.
 	WAY_SERVICE,    	// Parkeringssti.
-	WAY_BREAKWATER, 	// Bølgebryder.
+	WAY_BREAKWATER, 	// BÃ¸lgebryder.
 	WAY_PIER,			// Pier.
-	WAY_POWER_LINE,		// Strømkabel.
-	WAY_EMBANKMENT,		// Dæmning.
-	HEDGE,				// Hæk.
+	WAY_POWER_LINE,		// StrÃ¸mkabel.
+	WAY_EMBANKMENT,		// DÃ¦mning.
+	HEDGE,				// HÃ¦k.
 	
 	HIGHWAY_PRIMARY,	// Vej. ??
 	HIGHWAY_SECONDARY,	// Vej. ??
 	HIGHWAY_TERTIARY,	// Vej. ??
-	HIGHWAY_DRIVEWAY,	// Indkørsel.
-	HIGHWAY_RESIDENTAL, // Vej i beboerområde.
+	HIGHWAY_DRIVEWAY,	// IndkÃ¸rsel.
+	HIGHWAY_RESIDENTAL, // Vej i beboeromrÃ¥de.
 	HIGHWAY_TRUNK, 		// Motor-trafikvej.
 	HIGHWAY_MOTORWAY,	// Motorvej
 	HIGHWAY_CYCLEWAY,	// Cykelsti.
 	HIGHWAY_FOOTWAY,	// Gangsti.
 	HIGHWAY_STEPS,		// Trappe.
 	
-	WATER_STREAM,		// Bæk.
-	WATER_DITCH,		// Grøft.
-	WATER_DITCH_TUNNEL, // Grøft-tunnel.
+	WATER_STREAM,		// BÃ¦k.
+	WATER_DITCH,		// GrÃ¸ft.
+	WATER_DITCH_TUNNEL, // GrÃ¸ft-tunnel.
 	WATER_RIVER,		// Flod.
 	WATER				// Almindeligt vand.
 	
