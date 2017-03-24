@@ -8,7 +8,7 @@ import java.awt.*;
 public class DropdownMenu extends CustomDropdown {
 
     private JPanel menuItems, wrapper;
-    private JPanel routePage, aboutUsPage, settingsPage, mapLayersPage;
+    private JPanel routePage, aboutUsPage, settingsPage, mapLayersPage, loadPage, savePage;
     private GridBagConstraints gbcContainer;
     private JScrollPane contentPane;
     private TopPanel topPanel;
@@ -22,9 +22,11 @@ public class DropdownMenu extends CustomDropdown {
         this.style = style;
 
         routePage = new RoutePage("TEMP_VALUE");
-        aboutUsPage = new AboutUsPage();
+        loadPage = new LoadPage();
+        savePage = new SavePage();
         settingsPage = new SettingsPage();
         mapLayersPage = new MapLayersPage();
+        aboutUsPage = new AboutUsPage();
 
         wrapper = new JPanel(new GridBagLayout());
         gbcContainer = new GridBagConstraints();
@@ -52,13 +54,13 @@ public class DropdownMenu extends CustomDropdown {
         // open
         gbcMenuItems.gridy = 1;
         CustomButton openButton = style.menuOpenButton();
-        openButton.addActionListener(e -> System.out.println("Open?? The Princess is in another Castle"));
+        openButton.addActionListener(e -> addToContentPane(loadPage));
         menuItems.add(openButton, gbcMenuItems);
 
         // save
         gbcMenuItems.gridy = 2;
         CustomButton saveButton = style.menuSaveButton();
-        saveButton.addActionListener(e -> System.out.println("Save?? The Princess is in another Castle"));
+        saveButton.addActionListener(e -> addToContentPane(savePage));
         menuItems.add(saveButton, gbcMenuItems);
 
         // layers/filters

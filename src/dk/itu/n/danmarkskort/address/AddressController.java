@@ -55,7 +55,7 @@ public class AddressController implements OSMParserListener{
 		AddressParser ap = new AddressParser();
 		Address addrBuild = ap.parse(find);
 		List<String> result = new ArrayList<String>();
-		System.out.println("searchSuggestions: "+addrBuild.toString());
+		//System.out.println("searchSuggestions: "+addrBuild.toString());
 
 		// Find suggestion from street
 		if(addrBuild.getStreet() != null){

@@ -38,7 +38,9 @@ public class Address{
 
  	public void setCity(String city) { this.city = city; }
  	public String getCity() {
- 		if(city != null) return city;
+ 		if(city != null) { 
+ 			return city;
+ 		};
  		return PostcodeCityCombination.getInstance().getCity(postcode);
  	}
  	
@@ -47,13 +49,13 @@ public class Address{
  			if(street != null) sb.append(street +" ");
  			if(housenumber != null) sb.append(housenumber + " ");
  			if(postcode != -1) sb.append(postcode + " ");
- 			if(city != null) sb.append(city);
+ 			if(getCity() != null) sb.append(getCity());
  		return sb.toString().trim();
  	}
 
 	@Override
 	public String toString() {
 		return "Address [nodeId=" + nodeId + ", lat=" + lonLat[0] + ", lon=" + lonLat[1] + ", street=" + street + ", housenumber="
-				+ housenumber + ", postcode=" + postcode + ", city=" + city + "]";
+				+ housenumber + ", postcode=" + postcode + ", city=" + getCity() + "]";
 	}
 }

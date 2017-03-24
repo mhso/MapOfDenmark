@@ -155,7 +155,8 @@ public class TopPanel extends JPanel {
 
     // Skal nok flyttes senere, for at overholde MVC
     public void searchForAddress(String address) {
-        Address a = SearchController.getInstance().getSearchFieldAddressObj(address);
+        Address addr = SearchController.getInstance().getSearchFieldAddressObj(address);
+        if(addr != null )System.out.println("Toppanel->searchForAddress: "+addr.toString());
     }
 
     public void populateSuggestions(List<String> list) {
