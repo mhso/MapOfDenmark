@@ -15,13 +15,13 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 public class AddressController implements OSMParserListener{
-	private Map<Long, Address> addresses;
+	private Map<float[], Address> addresses;
 
 	private static AddressController instance;
 	private final static Lock lock = new ReentrantLock();
 	
 	private AddressController(){
-		addresses =  new HashMap<Long, Address>();
+		addresses =  new HashMap<float[], Address>();
 	}
 	
 	public static AddressController getInstance(){
@@ -98,10 +98,10 @@ public class AddressController implements OSMParserListener{
 		return result.stream().distinct().collect(Collectors.toList());
 	}
 	
-	public Address createOsmAddress(Long nodeId, float lat, float lon, Map<String, String> attributes){
-		if(nodeId != null){
-				Address addr = addresses.get(nodeId);
-				if (addr == null) addr = new Address(nodeId, lon, lon);
+	public Address createOsmAddress(float[] lonLat, Map<String, String> attributes){
+		if(lonLat != null){
+				Address addr = addresses.get(lonLat);
+				if (addr == null) addr = new Address(lonLat);
 					AddressOsmParser aop = new AddressOsmParser(addr);
 					aop.parseKeyAddr(attributes);
 					if(addr.getCity() != null){
@@ -126,9 +126,9 @@ public class AddressController implements OSMParserListener{
 				long nodeId = Long.parseLong(omsAddr.getAttributes().get("id"));
 				float lat = Float.parseFloat(omsAddr.getAttributes().get("lat"));
 				float lon = Float.parseFloat(omsAddr.getAttributes().get("lon"));
-				
-				Address addr = createOsmAddress(nodeId, lat, lon, omsAddr.attributes);
-				if(addr != null) addresses.put(addr.getNodeId(), addr);
+				float[] lonLat = new float[] {lon,lat};
+				Address addr = createOsmAddress(lonLat, omsAddr.attributes);
+				if(addr != null) addresses.put(addr.getLonLat(), addr);
 			}
 		}
 	}
