@@ -19,6 +19,7 @@ import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.MemoryUtil;
 import dk.itu.n.danmarkskort.TimerUtil;
 import dk.itu.n.danmarkskort.Util;
+import dk.itu.n.danmarkskort.lightweight.LightWeightParser;
 
 // This class can parse an OSM file, and turn it into tile files. 
 public class OSMParser {
@@ -53,6 +54,7 @@ public class OSMParser {
 		MemoryUtil parseMemory = new MemoryUtil();
 		parseTimer.on();
 		parseMemory.on();
+		
 		if (fileName.endsWith(".osm")) {
 			try {
 				inputStream = new FileInputStream(fileName);
@@ -85,7 +87,8 @@ public class OSMParser {
 		
 		try {
 			XMLReader reader = XMLReaderFactory.createXMLReader();
-			reader.setContentHandler(new OSMNodeHandler(this, fileName));  // Handles the actual XML with the OSMNodeHandler
+			if(Main.lightweight) reader.setContentHandler(new LightWeightParser());
+			else reader.setContentHandler(new OSMNodeHandler(this, fileName));
 			reader.parse(source);
 		} catch (SAXException e) {
 			e.printStackTrace();

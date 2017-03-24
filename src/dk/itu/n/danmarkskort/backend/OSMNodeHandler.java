@@ -26,9 +26,9 @@ public class OSMNodeHandler implements ContentHandler {
 	private int byteCount;
 	private Locator locator;
 
-	private List<ParsedObject> currentParsedObjects = new ArrayList<ParsedObject>();
-	private Map<Long, ParsedNode> nodeMap = new HashMap<Long, ParsedNode>();
-	private ArrayList<ParsedWay> wayQueueList = new ArrayList<ParsedWay>();
+	private List<ParsedObject> currentParsedObjects = new ArrayList<>();
+	private Map<Long, ParsedNode> nodeMap = new HashMap<>();
+	private ArrayList<ParsedWay> wayQueueList = new ArrayList<>();
 	private int totalWays = 0;
 	private int completedWays = 0;
 	private InputStream inputStream;
