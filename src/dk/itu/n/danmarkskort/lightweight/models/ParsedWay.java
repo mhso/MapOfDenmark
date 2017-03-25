@@ -2,7 +2,7 @@ package dk.itu.n.danmarkskort.lightweight.models;
 
 import java.util.ArrayList;
 
-public class ParsedWay{
+public class ParsedWay extends ParsedItem{
 
     private long id;
     private float[] coords;
@@ -11,13 +11,17 @@ public class ParsedWay{
         this.id = id;
     }
 
-    public void nodesToCoords(ArrayList<Float> coords) {
+    public void setCoords(ArrayList<Float> coords) {
         this.coords = new float[coords.size()];
         for(int i = 0; i < coords.size(); i++) {
             this.coords[i] = coords.get(i);
         }
     }
-
-    public long getID() { return id; }
     public float[] getCoords() { return coords; }
+    public long getID() { return id; }
+
+    @Override
+    public float getFirstLon() { return coords[0]; }
+    @Override
+    public float getFirstLat() { return coords[1]; }
 }

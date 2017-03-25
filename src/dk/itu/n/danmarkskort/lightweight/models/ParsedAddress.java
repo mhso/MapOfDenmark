@@ -1,18 +1,19 @@
 package dk.itu.n.danmarkskort.lightweight.models;
 
-public class ParsedAddress extends ParsedItem{
+public class ParsedAddress{
 
     private String city, street, housenumber, postcode;
-    private float lat, lon;
+    private float[] coords;
 
-    public void setStreet(String street) { this.street = street; }
-    public void setHousenumber(String housenumber) { this.housenumber = housenumber;}
-    public void setPostcode(String postcode) { this.postcode = postcode; }
-    public void setPoint(float lon, float lat) {
-        this.lon = lon;
-        this.lat = lat;
-    }
-    public void setCity(String city) {
-    	this.city = city;
-    }
+    public void setCity(String c) { city = c; }
+    public void setPostcode(String p) { postcode = p; }
+    public void setStreet(String s) { street = s; }
+    public void setHousenumber(String h) { housenumber = h; }
+    public void setCoords(float[] c) { coords = c;}
+
+    public String getCity() { return city; }
+    public String getStreet() { return street; }
+    public String getHousenumber() { return housenumber; }
+    public String getPostcode() { return postcode; }
+    public float[] getCoords() { return coords; }
 }

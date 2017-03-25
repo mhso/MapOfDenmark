@@ -44,6 +44,8 @@ public enum WayType {
 	HIGHWAY_CYCLEWAY,	// Cykelsti.
 	HIGHWAY_FOOTWAY,	// Gangsti.
 	HIGHWAY_STEPS,		// Trappe.
+	HIGHWAY_ROAD,		// mindre landevej. Fremgår vist som unclassified i .osm
+	HIGHWAY_SERVICE,	// serviceveje
 	
 	WATER_STREAM,		// Bæk.
 	WATER_DITCH,		// Grøft.

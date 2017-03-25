@@ -24,11 +24,6 @@ public class NodeMap {
         size++;
     }
 
-    public Node putAndTake(long key, float lon, float lat) {
-        put(key, lon,lat);
-        return nodes[getHash(key)];
-    }
-
     public Node get(long key) {
         int i = 0;
         for(Node node = nodes[getHash(key)]; node != null; node = node.getNext()) {
@@ -62,5 +57,6 @@ public class NodeMap {
         public long getKey() { return key; }
         public float getLon() { return lon; }
         public float getLat() { return lat; }
+        public float[] getPoint() { return new float[]{lon, lat}; }
     }
 }

@@ -23,10 +23,7 @@ import dk.itu.n.danmarkskort.backend.OSMParserListener;
 import dk.itu.n.danmarkskort.models.ParsedObject;
 import dk.itu.n.danmarkskort.models.ParsedWay;
 
-import java.awt.Component;
-
 import javax.imageio.ImageIO;
-import javax.swing.Box;
 
 public class WindowParsingLoadscreenNew extends JFrame implements OSMParserListener {
 
