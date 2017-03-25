@@ -143,7 +143,7 @@ public class TopPanel extends JPanel {
         });
         
         route.addActionListener(e -> {
-            dropMenu.addToContentPane(new RoutePage(input.getText()));
+            dropMenu.addToContentPane(new RoutePage(dropMenu, input.getText()));
             dropMenu.showDropdown(menu);
         });
 
