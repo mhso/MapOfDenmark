@@ -1,11 +1,10 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<theme version="0.2">
-	<defaultfont fontsize="60" fontcolor="000000"/>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><theme version="0.3">
+	<defaultfont fontcolor="000000" fontsize="60"/>
 	<lines>
 		<line>
 			<type name="HIGHWAY_MOTORWAY"/>
-			<innercolor color="CE4A4A"/>
-			<outercolor color="B52929"/>
+			<innercolor color="FF0000"/>
+			<outercolor color="660000"/>
 			<lineproperties linewidth="90"/>
 		</line>
 		<line>
@@ -54,7 +53,13 @@
 			<type name="HIGHWAY_FOOTWAY"/>
 			<innercolor color="0066CC"/>
 			<outercolor color="001933"/>
-			<lineproperties linewidth="10" linedash="5, 5"/>
+			<lineproperties linedash="5, 5" linewidth="10"/>
+		</line>
+		<line>
+			<type name="HIGHWAY_CYCLEWAY"/>
+			<innercolor color="0000FF"/>
+			<outercolor color="000000"/>
+			<lineproperties linedash="5, 5" linewidth="10"/>
 		</line>
 	</lines>
 	<areas>
@@ -67,6 +72,16 @@
 			<type name="GRASS"/>
 			<innercolor color="00CC00"/>
 			<outercolor color="003300"/>
+		</area>
+		<area>
+			<type name="SPORT"/>
+			<innercolor color="00FF99"/>
+			<outercolor color="003300"/>
+		</area>
+		<area>
+			<type name="PARK"/>
+			<innercolor color="33FF33"/>
+			<outercolor color="003333"/>
 		</area>
 		<area>
 			<type name="FOREST"/>
