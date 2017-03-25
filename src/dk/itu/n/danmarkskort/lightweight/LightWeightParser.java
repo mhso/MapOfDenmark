@@ -6,11 +6,13 @@ import dk.itu.n.danmarkskort.address.AddressController;
 import dk.itu.n.danmarkskort.lightweight.models.*;
 import dk.itu.n.danmarkskort.lightweight.models.ParsedAddress;
 import dk.itu.n.danmarkskort.lightweight.models.ParsedWay;
+import dk.itu.n.danmarkskort.mapdata.KDTree;
 import dk.itu.n.danmarkskort.models.WayType;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.HashMap;
 
 public class LightWeightParser extends SAXAdapter {
@@ -20,6 +22,7 @@ public class LightWeightParser extends SAXAdapter {
     private NodeMap nodeMap;
     private HashMap<Long, ParsedWay> wayMap;
     private HashMap<Long, ParsedRelation> relationMap;
+    private EnumMap<WayType, KDTree> waytypeMap;
 
     private ParsedWay way;
     private ParsedRelation relation;
@@ -68,14 +71,16 @@ public class LightWeightParser extends SAXAdapter {
                 float lon = Float.parseFloat(atts.getValue("lon"));
                 float lat = Float.parseFloat(atts.getValue("lat"));
                 nodeMap.put(id, lon * lonFactor, -lat);
-                node = nodeMap.get(Long.parseLong(atts.getValue("id"));
+                node = nodeMap.get(Long.parseLong(atts.getValue("id")));
                 break;
             case "way":
                 way = new ParsedWay(Long.parseLong(atts.getValue("id")));
+                wayMap.put(way.getID(), way);
                 coords = new ArrayList<>();
                 break;
             case "relation":
                 relation = new ParsedRelation(Long.parseLong(atts.getValue("id")));
+                relationMap.put(relation.getID(), relation);
                 memberWays = new ArrayList<>();
                 memberNodes = new ArrayList<>();
                 memberRelations = new ArrayList<>();
@@ -86,17 +91,17 @@ public class LightWeightParser extends SAXAdapter {
                 coords.add(node.getLat());
                 break;
             case "member":
-                id = Long.parseLong(atts.getValue("ref"));
+                long ref = Long.parseLong(atts.getValue("ref"));
                 String type = atts.getValue("type");
                 switch(type) {
                     case "node":
-                        memberNodes.add(nodeMap.get(id));
+                        relation.addNode(nodeMap.get(ref).getPoint());
                         break;
                     case "way":
-                        memberWays.add(wayMap.get(id));
+                        relation.addWay(wayMap.get(ref));
                         break;
                     case "relation":
-                        memberRelations.add(relationMap.get(id));
+                        relation.addRelation(relationMap.get(ref));
                         break;
                 }
                 break;
@@ -169,24 +174,10 @@ public class LightWeightParser extends SAXAdapter {
     }
 
     private void addCurrent() {
-        if(way != null) {
-            way.setCoords(coords);
-            wayMap.put(way.getID(), way);
-        }
-        if(relation != null) {
-            relation.setWays(memberWays);
-            relationMap.put(relation.getID(), relation);
-        }
         if(address != null) {
-            if (node != null) address.setCoords(node);
-            else if (way != null) address.setCoords(way.getCoords());
-            else if (relation != null) {
-                //Main.log(address.getCity() + " " + address.getStreet() + " "+ address.getHousenumber());
-                if(!memberWays.isEmpty()) address.setCoords(memberWays.get(0).getCoords());
-                else if(!memberNodes.isEmpty()) address.setCoords(memberNodes.get(0).getPoint());
-                else if(!memberRelations.isEmpty())  address.setCoords(memberRelations.get(0).getWays()[0].getCoords());
-                else { Main.log("I hope this doesnt happen");}
-        }
+            if (node != null) address.setCoords(node.getPoint());
+            else if (way != null) address.setWay(way);
+            else if (relation != null) address.setRelation(relation);
             AddressController.getInstance().addressParsed(address);
         }
         cleanUp();
@@ -201,7 +192,7 @@ public class LightWeightParser extends SAXAdapter {
         memberRelations = null;
         address = null;
         node = null;
-        type = null;
+        waytype = null;
     }
 
     private void finalClean() {
