@@ -13,6 +13,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JLabel;
@@ -241,7 +242,11 @@ public class ThemeAddElement extends JFrame {
 		dialog.setContentPane(dialogContentPane);
 		
 		WayType[] wayTypes = WayType.values();
-		JList<WayType> list = new JList<>(wayTypes);
+		List<WayType> unusedWaytypes = new ArrayList<WayType>();
+		for(int i = 0; i < wayTypes.length; i++) {
+			if(!elements.contains(wayTypes[i].toString())) unusedWaytypes.add(wayTypes[i]);
+		}
+		JList<WayType> list = new JList<>(unusedWaytypes.toArray(new WayType[unusedWaytypes.size()]));
 		list.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {

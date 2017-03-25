@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?><zoomvalues version="0.2">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<zoomvalues version="0.2">
 	<zoomlevel level="1">
 		<type name="GRASS"/>
 		<type name="FOREST"/>
@@ -12,11 +13,12 @@
 	<zoomlevel level="2">
 		<type name="SPORT"/>
 		<type name="PARK"/>
-		<type name="WAY_UNDEFINED"/>
+		
 	</zoomlevel>
 	<zoomlevel level="3">
 		<type name="HIGHWAY_RESIDENTAL"/>
-	</zoomlevel>
+	<type name="WAY_UNDEFINED"/>
+</zoomlevel>
 	<zoomlevel level="4">
 		
 	</zoomlevel>
