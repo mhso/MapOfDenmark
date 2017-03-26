@@ -7,6 +7,11 @@ import dk.itu.n.danmarkskort.gui.Style;
 
 import java.awt.*;
 import javax.swing.border.TitledBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.awt.event.ActionEvent;
 
 public class LoadPage extends JPanel  {
 	Style style;
@@ -43,51 +48,99 @@ public class LoadPage extends JPanel  {
         panelCenter.setBackground(style.menuContentBG());
         panelPage.add(panelCenter, BorderLayout.CENTER);
         initContentPanel(panelCenter);
+        GridBagLayout gbl_panelCenter = new GridBagLayout();
+        gbl_panelCenter.columnWidths = new int[]{0, 0, 0};
+        gbl_panelCenter.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0};
+        gbl_panelCenter.columnWeights = new double[]{0.0, 1.0, Double.MIN_VALUE};
+        gbl_panelCenter.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+        panelCenter.setLayout(gbl_panelCenter);
+        
+        JLabel lblCurrentMap = new JLabel("Current Map:");
+        GridBagConstraints gbc_lblCurrentMap = new GridBagConstraints();
+        gbc_lblCurrentMap.insets = new Insets(0, 0, 5, 5);
+        gbc_lblCurrentMap.gridx = 0;
+        gbc_lblCurrentMap.gridy = 1;
+        panelCenter.add(lblCurrentMap, gbc_lblCurrentMap);
+        
+        JLabel lblCurrentmapfilename = new JLabel("CurrentMapFileName");
+        GridBagConstraints gbc_lblCurrentmapfilename = new GridBagConstraints();
+        gbc_lblCurrentmapfilename.insets = new Insets(0, 0, 5, 0);
+        gbc_lblCurrentmapfilename.gridx = 1;
+        gbc_lblCurrentmapfilename.gridy = 1;
+        panelCenter.add(lblCurrentmapfilename, gbc_lblCurrentmapfilename);
+        
+        JLabel lblFilesize = new JLabel("Filesize:");
+        GridBagConstraints gbc_lblFilesize = new GridBagConstraints();
+        gbc_lblFilesize.insets = new Insets(0, 0, 5, 5);
+        gbc_lblFilesize.gridx = 0;
+        gbc_lblFilesize.gridy = 2;
+        panelCenter.add(lblFilesize, gbc_lblFilesize);
+        
+        JLabel lblCurrentmapfilesize = new JLabel("CurrentMapFileSize");
+        GridBagConstraints gbc_lblCurrentmapfilesize = new GridBagConstraints();
+        gbc_lblCurrentmapfilesize.insets = new Insets(0, 0, 5, 0);
+        gbc_lblCurrentmapfilesize.gridx = 1;
+        gbc_lblCurrentmapfilesize.gridy = 2;
+        panelCenter.add(lblCurrentmapfilesize, gbc_lblCurrentmapfilesize);
+        
+        JLabel lblAddressesFound = new JLabel("Addresses found:");
+        GridBagConstraints gbc_lblAddressesFound = new GridBagConstraints();
+        gbc_lblAddressesFound.insets = new Insets(0, 0, 5, 5);
+        gbc_lblAddressesFound.gridx = 0;
+        gbc_lblAddressesFound.gridy = 3;
+        panelCenter.add(lblAddressesFound, gbc_lblAddressesFound);
+        
+        JLabel lblCurrentmapaddressesfound = new JLabel("CurrentMapAddressesFound");
+        GridBagConstraints gbc_lblCurrentmapaddressesfound = new GridBagConstraints();
+        gbc_lblCurrentmapaddressesfound.insets = new Insets(0, 0, 5, 0);
+        gbc_lblCurrentmapaddressesfound.gridx = 1;
+        gbc_lblCurrentmapaddressesfound.gridy = 3;
+        panelCenter.add(lblCurrentmapaddressesfound, gbc_lblCurrentmapaddressesfound);
+        
+        JLabel lblMapBounds = new JLabel("Map bounds:");
+        GridBagConstraints gbc_lblMapBounds = new GridBagConstraints();
+        gbc_lblMapBounds.insets = new Insets(0, 0, 5, 5);
+        gbc_lblMapBounds.gridx = 0;
+        gbc_lblMapBounds.gridy = 4;
+        panelCenter.add(lblMapBounds, gbc_lblMapBounds);
+        
+        JButton btnLoadNewMapFile = new JButton("Load new map file");
+        btnLoadNewMapFile.addActionListener(e -> loadNewMapFile());
+        GridBagConstraints gbc_btnLoadNewMapFile = new GridBagConstraints();
+        gbc_btnLoadNewMapFile.gridx = 1;
+        gbc_btnLoadNewMapFile.gridy = 7;
+        panelCenter.add(btnLoadNewMapFile, gbc_btnLoadNewMapFile);
     }
     
-    private void initContentPanel(JPanel panel){
+    private void loadNewMapFile(){
+		JFileChooser fc = viewFileChooser("Load View To File", "Load");
+		int fcVal = fc.showOpenDialog(this);
+		
+		if (fcVal == JFileChooser.APPROVE_OPTION) {
+			File file = fc.getSelectedFile();
+			if(!file.getAbsolutePath().endsWith(".osm")){
+				file = new File(file + ".osm");
+			}
+			//model.loadNewModel(file.getAbsolutePath());
+        } else {
+        }
+
+	}
+	
+	private JFileChooser viewFileChooser(String dialogTitle, String approveBtnTxt){
+		JFileChooser fc = new JFileChooser();
+		fc.setDialogTitle(dialogTitle);
+		fc.setApproveButtonText(approveBtnTxt);
+		fc.setAcceptAllFileFilterUsed(false);
+		fc.setFileSelectionMode(JFileChooser.APPROVE_OPTION);
+		fc.addChoosableFileFilter(new FileNameExtensionFilter("*.osm", "osm"));
+		fc.addChoosableFileFilter(new FileNameExtensionFilter("*.zip", "zip"));
+		fc.setCurrentDirectory(new File(System.getProperty("user.home")));
+		return fc;
+	}
+
+	private void initContentPanel(JPanel panel){
     	GridBagLayout gbl_panelCenter = new GridBagLayout();
-        gbl_panelCenter.columnWidths = new int[]{0, 0, 0};
-        gbl_panelCenter.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-        gbl_panelCenter.columnWeights = new double[]{0.0, 1.0, Double.MIN_VALUE};
-        gbl_panelCenter.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
-        panel.setLayout(gbl_panelCenter);
         
-        JLabel lblName = new JLabel("Name:");
-        GridBagConstraints gbc_lblName = new GridBagConstraints();
-        gbc_lblName.anchor = GridBagConstraints.WEST;
-        gbc_lblName.insets = new Insets(0, 0, 5, 5);
-        gbc_lblName.gridx = 0;
-        gbc_lblName.gridy = 1;
-        panel.add(lblName, gbc_lblName);
-        
-        JLabel lblAppname = new JLabel(Main.APP_NAME);
-        GridBagConstraints gbc_lblAppname = new GridBagConstraints();
-        gbc_lblAppname.anchor = GridBagConstraints.WEST;
-        gbc_lblAppname.insets = new Insets(0, 0, 5, 0);
-        gbc_lblAppname.gridx = 1;
-        gbc_lblAppname.gridy = 1;
-        panel.add(lblAppname, gbc_lblAppname);
-        
-        JLabel lblDescription = new JLabel("Description:");
-        GridBagConstraints gbc_lblDescription = new GridBagConstraints();
-        gbc_lblDescription.anchor = GridBagConstraints.NORTHWEST;
-        gbc_lblDescription.insets = new Insets(0, 0, 5, 5);
-        gbc_lblDescription.gridx = 0;
-        gbc_lblDescription.gridy = 4;
-        panel.add(lblDescription, gbc_lblDescription);
-        
-        String appDescription = "<html>This application is made as part of our education"
-        		+ "<br>as software developers, its includes a map of Denmark,"
-        		+ "<br>Key features:"
-        		+ "<br>Zoom/pan, search, routeplanning and print.";
-        
-        JLabel lblAppDescription = new JLabel(appDescription);
-        GridBagConstraints gbc_lblNewLabel = new GridBagConstraints();
-        gbc_lblNewLabel.anchor = GridBagConstraints.NORTHWEST;
-        gbc_lblNewLabel.insets = new Insets(0, 0, 5, 0);
-        gbc_lblNewLabel.gridx = 1;
-        gbc_lblNewLabel.gridy = 4;
-        panel.add(lblAppDescription, gbc_lblNewLabel);
     }
 }
