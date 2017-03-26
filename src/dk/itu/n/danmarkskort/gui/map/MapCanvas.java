@@ -24,27 +24,27 @@ import dk.itu.n.danmarkskort.models.WayType;
 public class MapCanvas extends JPanel {
 
 	private static final long serialVersionUID = -4476997375977002964L;
-	
+
 	private AffineTransform transform = new AffineTransform();
 	private boolean antiAlias = true;
 	private int tileCount = 0;
 	private final int MAX_ZOOM = 20;
-	
+
 	public MapCanvas() {
 		new MapMouseController(this);
 	}
-	
+
 	protected void paintComponent(Graphics _g) {
 		drawMap((Graphics2D)_g);
 	}
-	
+
 	public void drawMap(Graphics2D g2d) {
 		if(!Main.tileController.hasBounds()) return;
 		g2d.setTransform(transform);
-		
-		List<WaytypeGraphicSpec> graphicSpecs = 
+
+		List<WaytypeGraphicSpec> graphicSpecs =
 				GraphicRepresentation.getGraphicSpecs((int)getZoom());
-		
+
 		for(WaytypeGraphicSpec wgs : graphicSpecs) {
 			List<ParsedWay> ways = Main.tileController.getWaysOfType(wgs.getMapElement());
 			if(wgs.getMapElement() == null) continue;
@@ -57,9 +57,9 @@ public class MapCanvas extends JPanel {
 				if(wgs instanceof GraphicSpecLine) g2d.draw(shape);
 				else if(wgs instanceof GraphicSpecArea) g2d.fill(shape);
 			}
-			
+
 		}
-		
+
 	}
 
 	public void pan(double dx, double dy) {
@@ -99,19 +99,19 @@ public class MapCanvas extends JPanel {
 	public double getZoom() {
 		return transform.getScaleX();
 	}
-	
+
 	public double getMapX() {
 		return (transform.getTranslateX() / getZoom()) * -1;
 	}
-	
+
 	public double getMapY() {
 		return (transform.getTranslateY() / getZoom()) * -1;
 	}
-	
+
 	public int getTileDrawnCount() {
 		return tileCount;
 	}
-	
+
 	public Region getDisplayedRegion() {
 		double o = -200 / getZoom();
 		double width = getPreferredSize().getWidth();
@@ -119,5 +119,5 @@ public class MapCanvas extends JPanel {
 		Region r = new Region(getMapX() + o, getMapY() + o, getMapX() + width/getZoom() - o, getMapY() + height/getZoom() - o);
 		return r;
 	}
-	
+
 }
