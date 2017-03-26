@@ -3,6 +3,7 @@ package dk.itu.n.danmarkskort.mapgfx;
 import java.awt.Color;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +13,7 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
 import dk.itu.n.danmarkskort.SAXAdapter;
+import dk.itu.n.danmarkskort.models.WayType;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -19,7 +21,7 @@ import org.xml.sax.SAXException;
 public class GraphicRepresentation {
 	private static ArrayList<WaytypeGraphicSpec>[] zoomLevelArr 
 		= new ArrayList[20];
-	private static Map<Object, Integer> zoomMap = new HashMap<>();
+	private static EnumMap<WayType, Integer> zoomMap = new EnumMap<>(WayType.class);
 	
 	/**
 	 * Get the Graphic Specification matching the inputed Map Element.
@@ -28,7 +30,12 @@ public class GraphicRepresentation {
 	 * @return A Graphic Specification object representing how a Map Element should be drawn.
 	 */
 	public static List<WaytypeGraphicSpec> getGraphicSpecs(int zoomLevel) {
-		return zoomLevelArr[zoomLevel];
+		zoomLevel -= 1;
+		List<WaytypeGraphicSpec> cummulativeList = new ArrayList<>();
+		for(int i = zoomLevel; i >= 0; i--) {
+			cummulativeList.addAll(zoomLevelArr[i]);
+		}
+		return cummulativeList;
 	}
 	
 	/**
@@ -37,11 +44,6 @@ public class GraphicRepresentation {
 	 */
 	public static void main(String[] args) {
 		if(args.length > 0) parseData(new InputSource(args[0]));
-		for(int i = 0; i < zoomLevelArr.length; i++) {
-			for(WaytypeGraphicSpec gs : zoomLevelArr[i]) {
-				System.out.println(gs);
-			}
-		}
 	}
 	
 	/**
@@ -90,6 +92,10 @@ public class GraphicRepresentation {
 		return new Color(r, g, b);
 	}
 	
+	private static WayType stringToEnum(String waytype) {
+		return WayType.valueOf(waytype);
+	}
+	
 	private static class ZoomHandler extends SAXAdapter {
 		private int currentZoomValue;
 		
@@ -99,15 +105,17 @@ public class GraphicRepresentation {
 				case "zoomlevel":
 					currentZoomValue = Integer.parseInt(atts.getValue("level"));
 				break;
-				case "tag":
-					zoomMap.put(atts.getValue("v"), currentZoomValue-1);
+				case "type":
+					zoomMap.put(stringToEnum(atts.getValue("name")), currentZoomValue-1);
 				break;
 			}
 		}
 	}
 	
 	private static class GraphicsHandler extends SAXAdapter {
-		private static Object mapElement;
+		private static final float LINE_MAGNIFYING_VALUE = 0.001f;
+		
+		private static WayType mapElement;
 		private static WaytypeGraphicSpec gs;
 		private static int defaultFontSize;
 		private static Color defaultFontColor;
@@ -134,8 +142,8 @@ public class GraphicRepresentation {
 		public void startElement(String uri, String localname, String qName, Attributes atts) 
 				throws SAXException {
 			switch(qName) {
-				case "tag":
-					mapElement = atts.getValue("v");
+				case "type":
+					mapElement = stringToEnum(atts.getValue("name"));
 					gs.setMapElement(mapElement);
 				break;
 				case "defaultfont": 
@@ -161,7 +169,7 @@ public class GraphicRepresentation {
 					gs.setOuterColor(parseColor(atts.getValue("color")));
 				break;
 				case "lineproperties":
-					float lineWidth = (float)(Double.parseDouble(atts.getValue("linewidth")) + Math.pow(10, -5));
+					float lineWidth = (float)(Double.parseDouble(atts.getValue("linewidth")) * LINE_MAGNIFYING_VALUE);
 					float[] dashArr = null;
 					if(atts.getValue("linedash") != null) {
 						String[] splitArr = atts.getValue("linedash").split(",");

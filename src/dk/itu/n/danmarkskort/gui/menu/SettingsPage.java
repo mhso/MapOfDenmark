@@ -10,8 +10,8 @@ public class SettingsPage extends JPanel {
         setPreferredSize(new Dimension(100, 800));
         setOpaque(false);
 
-        JLabel nothing = new JLabel("Settings Page");
-        add(nothing);
+        JLabel lblPageHeadline = new JLabel("Settings Page");
+        add(lblPageHeadline);
     }
 
 }

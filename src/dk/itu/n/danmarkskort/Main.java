@@ -7,7 +7,7 @@ import javax.swing.*;
 import dk.itu.n.danmarkskort.address.AddressController;
 import dk.itu.n.danmarkskort.backend.OSMParser;
 import dk.itu.n.danmarkskort.backend.TileController;
-import dk.itu.n.danmarkskort.gui.WindowParsingLoadscreen;
+import dk.itu.n.danmarkskort.gui.WindowParsingLoadscreenNew;
 import dk.itu.n.danmarkskort.gui.map.MapCanvas;
 
 public class Main {
@@ -22,6 +22,8 @@ public class Main {
 	public static JFrame window;
 	public static MapCanvas map;
 	public static MainCanvas mainPanel;
+
+	public final static boolean lightweight = false;
 	
 	public static void main(String[] args) {
         startup(args);
@@ -30,13 +32,19 @@ public class Main {
 	}
 
 	public static void startup(String[] args) {
-		osmParser = new OSMParser();
-		tileController = new TileController();
-		prepareParser(args);
+		if(lightweight) {
+			osmParser = new OSMParser();
+			prepareParser(args);
+		} else {
+			osmParser = new OSMParser();
+			tileController = new TileController();
+			prepareParser(args);
+		}
+
 	}
 
 	public static void prepareParser(String[] args) {
-		WindowParsingLoadscreen loadScreen = new WindowParsingLoadscreen();
+		WindowParsingLoadscreenNew loadScreen = new WindowParsingLoadscreenNew();
 		LoadScreenThread loadScreenThread = new LoadScreenThread(loadScreen);
 		
 		// Add your listeners for the parser here, if you are going to use data. 
@@ -58,8 +66,8 @@ public class Main {
 
 	}
 
-	public static void log(String text) {
-		if(debug) System.out.println("[" + APP_NAME + " " + APP_VERSION + "] " + text);
+	public static void log(Object text) {
+		if(debug) System.out.println("[" + APP_NAME + " " + APP_VERSION + "] " + text.toString());
 	}
 
 	public static void logRamUsage() {
@@ -77,7 +85,7 @@ public class Main {
             map.setPreferredSize(new Dimension(WIDTH, HEIGHT));
             overlay.add(mainPanel);
             
-            overlay.add(map);
+            if(!lightweight) overlay.add(map);
 
             window.add(overlay);
             window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -87,10 +95,10 @@ public class Main {
     }
     
     private static class LoadScreenThread implements Runnable {
-    	private WindowParsingLoadscreen loadScreen;
+    	private WindowParsingLoadscreenNew loadScreen;
     	private String fileName;
     	
-    	public LoadScreenThread(WindowParsingLoadscreen loadScreen) {
+    	public LoadScreenThread(WindowParsingLoadscreenNew loadScreen) {
     		this.loadScreen = loadScreen;
     	}
     	

@@ -2,28 +2,28 @@ package dk.itu.n.danmarkskort.mapgfx;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.util.ArrayList;
-import java.util.List;
+
+import dk.itu.n.danmarkskort.models.WayType;
 
 /**
  * This class is used for storing information about the visual representation of a map element (a WayType f.x.).
  */
 public abstract class WaytypeGraphicSpec {
-	private Object mapElement;
+	protected static final float OUTLINE_WIDTH = 0.00001f;
+	
+	private WayType mapElement;
 	private Color innerColor;
 	private Color outerColor;
 	
-	public Graphics2D transformPrimary(Graphics2D graphics) {
+	public void transformPrimary(Graphics2D graphics) {
 		graphics.setColor(innerColor);
-		return graphics;
 	}
 	
-	public Graphics2D transformOutline(Graphics2D graphics) {
+	public void transformOutline(Graphics2D graphics) {
 		graphics.setColor(outerColor);
-		return graphics;
 	}
 	
-	public Object getMapElement() {
+	public WayType getMapElement() {
 		return mapElement;
 	}
 	
@@ -35,7 +35,7 @@ public abstract class WaytypeGraphicSpec {
 		return outerColor;
 	}
 	
-	public void setMapElement(Object mapElement) {
+	public void setMapElement(WayType mapElement) {
 		this.mapElement = mapElement;
 	}
 	

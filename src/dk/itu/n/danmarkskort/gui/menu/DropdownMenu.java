@@ -4,15 +4,21 @@ import dk.itu.n.danmarkskort.gui.*;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class DropdownMenu extends CustomDropdown {
 
     private JPanel menuItems, wrapper;
-    private JPanel routePage, aboutUsPage, settingsPage, mapLayersPage;
+    private JPanel aboutUsPage, settingsPage, mapLayersPage;
+    private RoutePage routePage;
     private GridBagConstraints gbcContainer;
     private JScrollPane contentPane;
     private TopPanel topPanel;
     private Style style;
+    private boolean popUpBlocked;
 
     public DropdownMenu(TopPanel topPanel, Style style) {
         super();
@@ -20,7 +26,7 @@ public class DropdownMenu extends CustomDropdown {
         this.topPanel = topPanel;
         this.style = style;
 
-        routePage = new RoutePage();
+        routePage = new RoutePage(this, "TEMP_VALUE");
         aboutUsPage = new AboutUsPage();
         settingsPage = new SettingsPage();
         mapLayersPage = new MapLayersPage();
@@ -91,12 +97,8 @@ public class DropdownMenu extends CustomDropdown {
         contentPane.getViewport().setBackground(style.menuContentBG());
         contentPane.getVerticalScrollBar().setUnitIncrement(6);
         contentPane.getVerticalScrollBar().setUI(new CustomScrollBarUI(style));
-
-        JPanel test = new JPanel();
-        test.setPreferredSize(new Dimension(80, 800));
-        test.setOpaque(false);
-
-        addToContentPane(test);
+        
+        contentPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
         gbcContainer.gridx = 1;
         wrapper.add(contentPane, gbcContainer);
@@ -106,6 +108,19 @@ public class DropdownMenu extends CustomDropdown {
         contentPane.getViewport().removeAll();
         contentPane.getViewport().add(newContent);
     }
+    
+    public boolean isPopUpBlocked() {
+    	return popUpBlocked;
+    }
+    
+    public void blockVisibility(boolean blocked) {
+		popUpBlocked = blocked;
+	}
+    
+    public void setVisible(boolean visible) {
+		if(popUpBlocked) return;
+		else super.setVisible(visible);
+	}
 
     /**
      * Show the Dropdown-Menu at the specified Component.
@@ -118,6 +133,5 @@ public class DropdownMenu extends CustomDropdown {
         show(source,
                 loc.x - style.topPanelBorderWidth() - 6,
                 loc.y + source.getHeight() + style.topPanelBorderWidth() + 1);
-
     }
 }

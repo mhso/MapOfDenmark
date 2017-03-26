@@ -9,7 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 
 public class AddressSearchPredicates {
 	    public static Predicate<Address> streetStartsWith(String strInput) {
-	    	System.out.println("String: "+strInput);
+	    	
 	        return p ->  p.getStreet() != null && p.getStreet().toLowerCase().startsWith(strInput.toLowerCase());
 	    }
 	    
@@ -29,11 +29,33 @@ public class AddressSearchPredicates {
 	        				p.getStreet().toLowerCase(), strInput.toLowerCase()) < maxValue;
 	    }
 	    
-	    public static Predicate<Address> streetEqualsHousenumberContains(Address addr) {
+	    public static Predicate<Address> streetHousenumberLevenshteinDistance(Address addr, 
+	    		int minValueStreet, int maxValueStreet, 
+	    		int minValueHousenumber, int maxValueHouseNumber) {
+	        return p -> p.getStreet() != null 
+	        		&& StringUtils.getLevenshteinDistance(
+	        				p.getStreet().toLowerCase(), addr.getStreet().toLowerCase()) > minValueStreet   		
+	        		&& StringUtils.getLevenshteinDistance(
+	        				p.getStreet().toLowerCase(), addr.getStreet().toLowerCase()) < maxValueStreet
+	        		&& p.getHousenumber() != null 
+	    	        && StringUtils.getLevenshteinDistance(
+	    	        		p.getHousenumber().toLowerCase(), addr.getHousenumber().toLowerCase()) > minValueHousenumber   		
+	    	        && StringUtils.getLevenshteinDistance(
+	    	        		p.getHousenumber().toLowerCase(), addr.getHousenumber().toLowerCase()) < maxValueHouseNumber;
+	    }
+	    
+	    public static Predicate<Address> streetEqualsHousenumberStartsWith(Address addr) {
 	        return p -> p.getStreet() != null 
 	        		&& p.getStreet().equalsIgnoreCase(addr.getStreet())
 	        		&& p.getHousenumber() != null 
 	        		&& p.getHousenumber().toLowerCase().contains((addr.getHousenumber()));
+	    }
+	    
+	    public static Predicate<Address> streetEqualsHousenumberContains(Address addr) {
+	        return p -> p.getStreet() != null 
+	        		&& p.getStreet().equalsIgnoreCase(addr.getStreet())
+	        		&& p.getHousenumber() != null 
+	        		&& p.getHousenumber().toLowerCase().startsWith((addr.getHousenumber()));
 	    }
 	    
 	    public static Predicate<Address> streetHousenumberEquals(Address addr) {
@@ -83,7 +105,7 @@ public class AddressSearchPredicates {
 	    public static Address addressEquals(Map<Long, Address> addresses, Address addr){
 			List<Address> result = (filterAddresses(addresses, 
 					toStringShortEquals(addr) , 1l));
-			if(result != null) return result.get(0);
+			if(result != null && result.size() > 0) return result.get(0);
 			return null;
 	}
 }

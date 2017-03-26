@@ -23,86 +23,72 @@ public class AddressParserTest {
 	
 	@Test
 	public void testAddrCase1_EvilA() {
-		Address addr = ap.parse(" Rued     Langgaards Vej 7. 2300	 København S. ");
+		Address addr = ap.parse(" Rued     Langgaards Vej 7. 2300	 Kï¿½benhavn S. ");
 		//Not used in parsing
 		assertEquals(-1l, addr.getNodeId());
-		assertEquals(-1d, addr.getLat(), 0.0);
-		assertEquals(-1d, addr.getLon(), 0.0);
 		
 		//Might be parsed
 		assertEquals("Rued Langgaards Vej", addr.getStreet());
 		assertEquals("7", addr.getHousenumber());
 		assertEquals("2300", addr.getPostcode());
-		assertEquals("København S", addr.getCity());
-		assertNull(addr.getHousename());
+		assertEquals("Kï¿½benhavn S", addr.getCity());
 		assertNull(addr.getNodeId());
 	}
 	
 	@Test
 	public void testAddrCase1_EvilB() {
-		Address addr = ap.parse(" Rued     Langgaards Vej #7./ 2300	 København S. ");
+		Address addr = ap.parse(" Rued     Langgaards Vej #7./ 2300	 Kï¿½benhavn S. ");
 		//Not used in parsing
 		assertEquals(-1l, addr.getNodeId());
-		assertEquals(-1d, addr.getLat(), 0.0);
-		assertEquals(-1d, addr.getLon(), 0.0);
 		
 		//Might be parsed
 		assertEquals("Rued Langgaards Vej", addr.getStreet());
 		assertEquals("7", addr.getHousenumber());
 		assertEquals("2300", addr.getPostcode());
-		assertEquals("København S", addr.getCity());
-		assertNull(addr.getHousename());
+		assertEquals("Kï¿½benhavn S", addr.getCity());
 		assertNull(addr.getNodeId());
 	}
 
 	@Test
 	public void testAddrCase1_A() {
-		Address addr = ap.parse("Rued Langgaards Vej 7, 2300 København S");
+		Address addr = ap.parse("Rued Langgaards Vej 7, 2300 Kï¿½benhavn S");
 		//Not used in parsing
 		assertEquals(-1l, addr.getNodeId());
-		assertEquals(-1d, addr.getLat(), 0.0);
-		assertEquals(-1d, addr.getLon(), 0.0);
 		
 		//Might be parsed
 		assertEquals("Rued Langgaards Vej", addr.getStreet());
 		assertEquals("7", addr.getHousenumber());
 		assertEquals("2300", addr.getPostcode());
-		assertEquals("København S", addr.getCity());
-		assertNull(addr.getHousename());
+		assertEquals("Kï¿½benhavn S", addr.getCity());
 		assertNull(addr.getNodeId());
 	}
 	
 	@Test
 	public void testAddrCase1_B() {
-		Address addr = ap.parse("rued langgaards vej 7, 2300 københavn s");
+		Address addr = ap.parse("rued langgaards vej 7, 2300 kï¿½benhavn s");
 		//Not used in parsing
 		assertEquals(-1l, addr.getNodeId());
-		assertEquals(-1d, addr.getLat(), 0.0);
-		assertEquals(-1d, addr.getLon(), 0.0);
+
 		
 		//Might be parsed
 		assertEquals("rued langgaards vej", addr.getStreet());
 		assertEquals("7", addr.getHousenumber());
 		assertEquals("2300", addr.getPostcode());
-		assertEquals("københavn s", addr.getCity());
-		assertNull(addr.getHousename());
+		assertEquals("kï¿½benhavn s", addr.getCity());
 		assertNull(addr.getNodeId());
 	}
 	
 	@Test
 	public void testAddrCase1_C() {
-		Address addr = ap.parse("rued langgaards vej 7 2300 københavn s");
+		Address addr = ap.parse("rued langgaards vej 7 2300 kï¿½benhavn s");
 		//Not used in parsing
 		assertEquals(-1l, addr.getNodeId());
-		assertEquals(-1d, addr.getLat(), 0.0);
-		assertEquals(-1d, addr.getLon(), 0.0);
 		
 		//Might be parsed
 		assertEquals("rued langgaards vej", addr.getStreet());
 		assertEquals("7", addr.getHousenumber());
 		assertEquals("2300", addr.getPostcode());
-		assertEquals("københavn s", addr.getCity());
-		assertNull(addr.getHousename());
+		assertEquals("kï¿½benhavn s", addr.getCity());
 		assertNull(addr.getNodeId());
 	}
 	
@@ -111,48 +97,39 @@ public class AddressParserTest {
 		Address addr = ap.parse("rued langgaards vej 7, 2300");
 		//Not used in parsing
 		assertEquals(-1l, addr.getNodeId());
-		assertEquals(-1d, addr.getLat(), 0.0);
-		assertEquals(-1d, addr.getLon(), 0.0);
 		
 		//Might be parsed
 		assertEquals("rued langgaards vej", addr.getStreet());
 		assertEquals("7", addr.getHousenumber());
 		assertEquals("2300", addr.getPostcode());
 		assertNull(addr.getCity());
-		assertNull(addr.getHousename());
 		assertNull(addr.getNodeId());
 	}
 	
 	@Test
 	public void testAddrCase1_E() {
-		Address addr = ap.parse("rued langgaards vej 7, københavn s");
+		Address addr = ap.parse("rued langgaards vej 7, kï¿½benhavn s");
 		//Not used in parsing
 		assertEquals(-1l, addr.getNodeId());
-		assertEquals(-1d, addr.getLat(), 0.0);
-		assertEquals(-1d, addr.getLon(), 0.0);
 		
 		//Might be parsed
 		assertEquals("rued langgaards vej", addr.getStreet());
 		assertEquals("7", addr.getHousenumber());
 		assertNull(addr.getPostcode());
-		assertEquals("københavn s", addr.getCity());
-		assertNull(addr.getHousename());
+		assertEquals("kï¿½benhavn s", addr.getCity());
 	}
 	
 	@Test
 	public void testAddrCase1_F() {
-		Address addr = ap.parse("rued langgaards vej, københavn s");
+		Address addr = ap.parse("rued langgaards vej, kï¿½benhavn s");
 		//Not used in parsing
 		assertEquals(-1l, addr.getNodeId());
-		assertEquals(-1d, addr.getLat(), 0.0);
-		assertEquals(-1d, addr.getLon(), 0.0);
 		
 		//Might be parsed
 		assertEquals("rued langgaards vej", addr.getStreet());
 		assertNull(addr.getHousenumber());
 		assertNull(addr.getPostcode());
-		assertEquals("københavn s", addr.getCity());
-		assertNull(addr.getHousename());
+		assertEquals("kï¿½benhavn s", addr.getCity());
 	}
 	
 	@Test
@@ -160,15 +137,12 @@ public class AddressParserTest {
 		Address addr = ap.parse("rued langgaards vej 2300");
 		//Not used in parsing
 		assertEquals(-1l, addr.getNodeId());
-		assertEquals(-1d, addr.getLat(), 0.0);
-		assertEquals(-1d, addr.getLon(), 0.0);
 		
 		//Might be parsed
 		assertEquals("rued langgaards vej", addr.getStreet());
 		assertNull(addr.getHousenumber());
 		assertEquals("2300", addr.getPostcode());
 		assertNull(addr.getCity());
-		assertNull(addr.getHousename());
 		assertNull(addr.getNodeId());
 	}
 }
