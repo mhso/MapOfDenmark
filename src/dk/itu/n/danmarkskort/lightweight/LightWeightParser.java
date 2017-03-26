@@ -6,7 +6,6 @@ import dk.itu.n.danmarkskort.address.AddressController;
 import dk.itu.n.danmarkskort.lightweight.models.*;
 import dk.itu.n.danmarkskort.lightweight.models.ParsedAddress;
 import dk.itu.n.danmarkskort.lightweight.models.ParsedWay;
-import dk.itu.n.danmarkskort.mapdata.KDTree;
 import dk.itu.n.danmarkskort.models.WayType;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -22,21 +21,20 @@ public class LightWeightParser extends SAXAdapter {
     private NodeMap nodeMap;
     private HashMap<Long, ParsedWay> wayMap;
     private HashMap<Long, ParsedRelation> relationMap;
-    private EnumMap<WayType, KDTree> waytypeMap;
+    //private EnumMap<WayType, KDTree> waytypeMap;
+    private EnumMap<WayType, ArrayList<ParsedItem>> waytypeEnumMap;
 
     private ParsedWay way;
     private ParsedRelation relation;
-    private ArrayList<Float> coords;
     private NodeMap.Node node;
     private ParsedAddress address;
-    private long id;
 
-    private ArrayList<ParsedRelation> memberRelations;
-    private ArrayList<NodeMap.Node> memberNodes;
-    private ArrayList<ParsedWay> memberWays;
-
+    private ArrayList<Float> currentNodes;
+    private ArrayList<ParsedWay> currentWays;
+    private ArrayList<ParsedRelation> currentRelations;
 
     private WayType waytype;
+    private long id;
 
     public void startDocument() throws SAXException {
         nodeMap = new NodeMap();
@@ -76,32 +74,31 @@ public class LightWeightParser extends SAXAdapter {
             case "way":
                 way = new ParsedWay(Long.parseLong(atts.getValue("id")));
                 wayMap.put(way.getID(), way);
-                coords = new ArrayList<>();
                 break;
             case "relation":
                 relation = new ParsedRelation(Long.parseLong(atts.getValue("id")));
                 relationMap.put(relation.getID(), relation);
-                memberWays = new ArrayList<>();
-                memberNodes = new ArrayList<>();
-                memberRelations = new ArrayList<>();
                 break;
             case "nd":
                 NodeMap.Node node = nodeMap.get(Long.parseLong(atts.getValue("ref")));
-                coords.add(node.getLon());
-                coords.add(node.getLat());
+                currentNodes.add(node.getLon());
+                currentNodes.add(node.getLat());
                 break;
             case "member":
                 long ref = Long.parseLong(atts.getValue("ref"));
                 String type = atts.getValue("type");
                 switch(type) {
                     case "node":
-                        relation.addNode(nodeMap.get(ref).getPoint());
+                        if(nodeMap.get(ref) != null) {
+                            currentNodes.add(nodeMap.get(ref).getLon());
+                            currentNodes.add(nodeMap.get(ref).getLat());
+                        }
                         break;
                     case "way":
-                        relation.addWay(wayMap.get(ref));
+                        if(wayMap.containsKey(ref)) currentWays.add(wayMap.get(ref));
                         break;
                     case "relation":
-                        relation.addRelation(relationMap.get(ref));
+                        if(relationMap.containsKey(ref)) currentRelations.add(relationMap.get(ref));
                         break;
                 }
                 break;
@@ -165,34 +162,43 @@ public class LightWeightParser extends SAXAdapter {
 
     public void endElement(String uri, String localName, String qName) throws SAXException {
         switch(qName) {
-            case "node":
-            case "way":
             case "relation":
+                if(!currentRelations.isEmpty()) relation.addRelations(currentRelations);
+                if(!currentWays.isEmpty()) relation.addWays(currentWays);
+                if(!currentNodes.isEmpty()) relation.addNodes(currentNodes);
+                addCurrent();
+                break;
+            case "way":
+                if(!currentNodes.isEmpty()) way.addNodes(currentNodes);
+                addCurrent();
+                break;
+            case "node":
                 addCurrent();
                 break;
         }
     }
 
     private void addCurrent() {
+
         if(address != null) {
-            if (node != null) address.setCoords(node.getPoint());
+            if(node != null) address.setCoords(node.getPoint());
             else if (way != null) address.setWay(way);
             else if (relation != null) address.setRelation(relation);
             AddressController.getInstance().addressParsed(address);
         }
+
         cleanUp();
     }
 
     private void cleanUp() {
-        coords = null;
         way = null;
         relation = null;
-        memberNodes = null;
-        memberWays = null;
-        memberRelations = null;
         address = null;
         node = null;
         waytype = null;
+        currentNodes = new ArrayList<>();
+        currentWays = new ArrayList<>();
+        currentRelations = new ArrayList<>();
     }
 
     private void finalClean() {

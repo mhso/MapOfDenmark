@@ -33,28 +33,25 @@ public class AddressController implements OSMParserListener{
         HashMap<String, HashMap> postcode;
         HashMap<String, Float[]> street;
 
-        // does the postcode exist in our directory?
-        if(addressDatabase.containsKey(address.getPostcode())) postcode = addressDatabase.get(address.getPostcode());
-        else {
+        if(addressDatabase.containsKey(address.getPostcode())) {
+        	postcode = addressDatabase.get(address.getPostcode());
+		} else {
             postcode = new HashMap<>();
             addressDatabase.put(address.getPostcode(), postcode);
         }
 
-        // does the street exist in the postcode directory?
-        if(postcode.containsKey(address.getStreet())) street = postcode.get(address.getStreet());
-        else {
+        if(postcode.containsKey(address.getStreet())) {
+        	street = postcode.get(address.getStreet());
+		} else {
             street = new HashMap<>();
             postcode.put(address.getStreet(), street);
         }
 
-        // does the housenumber exist in the street directory?
         if(!street.containsKey(address.getHousenumber())) {
-            float[] coords = address.getCoords();
-            Float[] coordsWrap = new Float[coords.length];
-            for(int i = 0; i < coords.length; i++) coordsWrap[i] = coords[i];
-            street.put(address.getHousenumber(), coordsWrap);
+        	Float[] coords = new Float[]{address.getFirstLon(), address.getFirstLat()};
+            street.put(address.getHousenumber(), coords);
             numAddresses++;
-        } // we don't do anything with duplicate addresses
+        }
     }
 
 	public static AddressController getInstance(){

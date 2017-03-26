@@ -1,6 +1,6 @@
 package dk.itu.n.danmarkskort.lightweight.models;
 
-public class ParsedAddress{
+public class ParsedAddress {
 
     private String city, street, housenumber, postcode;
     private float[] coords;
@@ -20,4 +20,20 @@ public class ParsedAddress{
     public String getHousenumber() { return housenumber; }
     public String getPostcode() { return postcode; }
     public float[] getCoords() { return coords; }
+    public ParsedWay getWay() { return way; }
+    public ParsedRelation getRelation() { return relation; }
+
+    public float getFirstLon() {
+        if(coords != null) return coords[0];
+        else if (way != null) return way.getFirstLon();
+        else if(relation != null) return relation.getFirstLon();
+        return -1;
+    }
+
+    public float getFirstLat() {
+        if(coords != null) return coords[1];
+        else if (way != null) return way.getFirstLat();
+        else if(relation != null) return relation.getFirstLat();
+        return -1;
+    }
 }
