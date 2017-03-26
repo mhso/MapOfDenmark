@@ -54,7 +54,7 @@ public class ParsedWay extends ParsedObject {
 	}
 	
 	public void determineType() {
-		if(attributes.containsKey("building") || "residential".equals(attributes.get("landuse"))) {
+		if(attributes.containsKey("building")) {
 			type = WayType.BUILDING;
 			if("train_station".equals(attributes.get("buidling"))) {
 				type = WayType.TRAIN_STATION;
@@ -91,6 +91,10 @@ public class ParsedWay extends ParsedObject {
 		}
 		else if("grass".equals(attributes.get("landuse"))) {
 			type = WayType.GRASS;
+			closedShape = true;
+		}
+		else if("grass".equals(attributes.get("landuse"))) {
+			type = WayType.FARMLAND;
 			closedShape = true;
 		}
 		else if("scrub".equals(attributes.get("natural"))) {
