@@ -7,13 +7,17 @@ import java.util.ArrayList;
 public class KDTreeLeaf extends KDTree {
 
     private KDTree parent;
-    private ArrayList<ParsedItem> data;
+    private ParsedItem[] data;
 
-    public KDTreeLeaf(ArrayList<ParsedItem> list, KDTree parent) {
-        data = list;
+    public KDTreeLeaf(ParsedItem[] array, KDTree parent) {
+        data = array;
     }
 
-    public ArrayList<ParsedItem> getData() { return data; }
+    public KDTreeLeaf(ArrayList<ParsedItem> list, KDTree parent) {
+        data = KDUtil.listToArray(list);
+    }
+
+    public ParsedItem[] getData() { return data; }
     @Override
     public KDTree getParent() { return parent; }
 }
