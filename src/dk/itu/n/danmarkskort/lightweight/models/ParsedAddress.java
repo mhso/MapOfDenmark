@@ -1,18 +1,39 @@
 package dk.itu.n.danmarkskort.lightweight.models;
 
-public class ParsedAddress extends ParsedItem{
+public class ParsedAddress {
 
     private String city, street, housenumber, postcode;
-    private float lat, lon;
+    private float[] coords;
+    private ParsedWay way;
+    private ParsedRelation relation;
 
-    public void setStreet(String street) { this.street = street; }
-    public void setHousenumber(String housenumber) { this.housenumber = housenumber;}
-    public void setPostcode(String postcode) { this.postcode = postcode; }
-    public void setPoint(float lon, float lat) {
-        this.lon = lon;
-        this.lat = lat;
+    public void setCity(String c) { city = c; }
+    public void setPostcode(String p) { postcode = p; }
+    public void setStreet(String s) { street = s; }
+    public void setHousenumber(String h) { housenumber = h; }
+    public void setWay(ParsedWay w) { way = w; }
+    public void setRelation(ParsedRelation r) { relation = r; }
+    public void setCoords(float[] c) { coords = c;}
+
+    public String getCity() { return city; }
+    public String getStreet() { return street; }
+    public String getHousenumber() { return housenumber; }
+    public String getPostcode() { return postcode; }
+    public float[] getCoords() { return coords; }
+    public ParsedWay getWay() { return way; }
+    public ParsedRelation getRelation() { return relation; }
+
+    public float getFirstLon() {
+        if(coords != null) return coords[0];
+        else if (way != null) return way.getFirstLon();
+        else if(relation != null) return relation.getFirstLon();
+        return -1;
     }
-    public void setCity(String city) {
-    	this.city = city;
+
+    public float getFirstLat() {
+        if(coords != null) return coords[1];
+        else if (way != null) return way.getFirstLat();
+        else if(relation != null) return relation.getFirstLat();
+        return -1;
     }
 }
