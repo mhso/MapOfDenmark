@@ -6,7 +6,6 @@ import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 
@@ -19,7 +18,6 @@ import dk.itu.n.danmarkskort.mapgfx.GraphicSpecLine;
 import dk.itu.n.danmarkskort.mapgfx.WaytypeGraphicSpec;
 import dk.itu.n.danmarkskort.models.ParsedWay;
 import dk.itu.n.danmarkskort.models.Region;
-import dk.itu.n.danmarkskort.models.WayType;
 
 public class MapCanvas extends JPanel {
 
@@ -50,10 +48,13 @@ public class MapCanvas extends JPanel {
 			if(wgs.getMapElement() == null) continue;
 			for(ParsedWay way : ways) {
 				Shape shape = way.getShape();
+
 				wgs.transformOutline(g2d);
 				if(wgs instanceof GraphicSpecLine) g2d.draw(shape);
 				else if(wgs instanceof GraphicSpecArea) g2d.fill(shape);
+
 				wgs.transformPrimary(g2d);
+
 				if(wgs instanceof GraphicSpecLine) g2d.draw(shape);
 				else if(wgs instanceof GraphicSpecArea) g2d.fill(shape);
 			}
