@@ -2,10 +2,7 @@ package dk.itu.n.danmarkskort.address;
 
 public class Address{
 	private float[] lonLat;
-	
-	// Relevant parts off OpenStreetMaps addr: tags
 	private String street, housenumber, city;
-
 	private int postcode;
 
 	public Address(){
@@ -49,7 +46,7 @@ public class Address{
 
 	@Override
 	public String toString() {
-		return "Address [lat=" + lonLat[0] + ", lon=" + lonLat[1] + ", street=" + street + ", housenumber="
+		return "Address [lon=" + lonLat[0] + ", lat=" + lonLat[1] + ", street=" + street + ", housenumber="
 				+ housenumber + ", postcode=" + postcode + ", city=" + getCity() + "]";
 	}
 }

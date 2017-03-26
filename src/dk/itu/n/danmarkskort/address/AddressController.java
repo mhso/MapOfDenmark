@@ -94,20 +94,20 @@ public class AddressController implements OSMParserListener{
 			result.addAll(AddressSearchPredicates.filterToStringShort(addresses, 
 					AddressSearchPredicates.postcodeEquals(Integer.toString(addrBuild.getPostcode())) , 5l));
 		}
-		// Remove dublicates and return
+		// Remove duplicates and return
 		return result.stream().distinct().collect(Collectors.toList());
 	}
 	
 	public Address createOsmAddress(float[] lonLat, Map<String, String> attributes){
 		if(lonLat != null){
-				Address addr = addresses.get(lonLat);
-				if (addr == null) addr = new Address(lonLat);
-					AddressOsmParser aop = new AddressOsmParser(addr);
-					aop.parseKeyAddr(attributes);
-					if(addr.getCity() != null){
-						PostcodeCityCombination.getInstance().add(addr.getPostcode(), addr.getCity());
-					}
-					return addr;
+			Address addr = addresses.get(lonLat);
+			if (addr == null) addr = new Address(lonLat);
+			AddressOsmParser aop = new AddressOsmParser(addr);
+			aop.parseKeyAddr(attributes);
+			if(addr.getCity() != null){
+				PostcodeCityCombination.getInstance().add(addr.getPostcode(), addr.getCity());
+			}
+			return addr;
 		}
 		return null;
 	}
@@ -122,14 +122,11 @@ public class AddressController implements OSMParserListener{
 	public void onParsingGotObject(ParsedObject parsedObject) {
 		if(parsedObject instanceof ParsedAddress) {
 			ParsedAddress omsAddr = (ParsedAddress) parsedObject;
-			if(omsAddr.getAttributes().get("id") != null) {
-				long nodeId = Long.parseLong(omsAddr.getAttributes().get("id"));
-				float lat = Float.parseFloat(omsAddr.getAttributes().get("lat"));
-				float lon = Float.parseFloat(omsAddr.getAttributes().get("lon"));
-				float[] lonLat = new float[] {lon,lat};
-				Address addr = createOsmAddress(lonLat, omsAddr.attributes);
-				if(addr != null) addresses.put(addr.getLonLat(), addr);
-			}
+			float lon = Float.parseFloat(omsAddr.getAttributes().get("lon"));
+			float lat = Float.parseFloat(omsAddr.getAttributes().get("lat"));
+			float[] lonLat = new float[] {lon,lat};
+			Address addr = createOsmAddress(lonLat, omsAddr.attributes);
+			if(addr != null) addresses.put(addr.getLonLat(), addr);
 		}
 	}
 	

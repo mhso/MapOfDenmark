@@ -15,6 +15,7 @@ import java.awt.event.ActionEvent;
 
 public class SavePage extends JPanel  {
 	Style style;
+	
     public SavePage() {
     	style = new Style();
         setOpaque(false);

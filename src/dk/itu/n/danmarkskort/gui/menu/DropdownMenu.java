@@ -50,11 +50,6 @@ public class DropdownMenu extends CustomDropdown {
         menuItems.setBackground(style.menuItemsBG());
         menuItems.setBorder(BorderFactory.createEmptyBorder(style.menuItemInsets(), style.menuItemInsets(), style.menuItemInsets(), style.menuItemInsets()));
 
-        // route
-        CustomButton routeButton = style.menuRouteButton();
-        routeButton.addActionListener(e -> addToContentPane(routePage));
-        menuItems.add(routeButton, gbcMenuItems);
-
         // open
         gbcMenuItems.gridy = 1;
         CustomButton openButton = style.menuOpenButton();
