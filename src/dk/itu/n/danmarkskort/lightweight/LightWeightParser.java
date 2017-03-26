@@ -2,10 +2,14 @@ package dk.itu.n.danmarkskort.lightweight;
 
 import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.SAXAdapter;
+import dk.itu.n.danmarkskort.TimerUtil;
 import dk.itu.n.danmarkskort.address.AddressController;
 import dk.itu.n.danmarkskort.lightweight.models.*;
 import dk.itu.n.danmarkskort.lightweight.models.ParsedAddress;
 import dk.itu.n.danmarkskort.lightweight.models.ParsedWay;
+import dk.itu.n.danmarkskort.mapdata.KDTree;
+import dk.itu.n.danmarkskort.mapdata.KDTreeLeaf;
+import dk.itu.n.danmarkskort.mapdata.KDTreeNode;
 import dk.itu.n.danmarkskort.models.WayType;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -21,8 +25,10 @@ public class LightWeightParser extends SAXAdapter {
     private NodeMap nodeMap;
     private HashMap<Long, ParsedWay> wayMap;
     private HashMap<Long, ParsedRelation> relationMap;
-    //private EnumMap<WayType, KDTree> waytypeMap;
-    private EnumMap<WayType, ArrayList<ParsedItem>> waytypeEnumMap;
+
+    // bør efter endt OSM indlæsning omdanne alle ArrayLists til KD-træer
+    public EnumMap<WayType, ArrayList<ParsedItem>> enumMap;
+    public EnumMap<WayType, KDTree> enumMapKD;
 
     private ParsedWay way;
     private ParsedRelation relation;
@@ -40,12 +46,34 @@ public class LightWeightParser extends SAXAdapter {
         nodeMap = new NodeMap();
         wayMap = new HashMap<>();
         relationMap = new HashMap<>();
+
+        enumMap = new EnumMap<>(WayType.class);
+        for(WayType waytype : WayType.values()) enumMap.put(waytype, new ArrayList<>());
+
         Main.log("Parsing started.");
     }
 
     public void endDocument() throws SAXException {
         Main.log("Parsing finished.");
-        Main.log("Nodes: " + nodeMap.size() + ", Ways: " + wayMap.size() + ", Relations: " + relationMap.size());
+
+        int count = 0;
+        for(WayType wt : WayType.values()) count += enumMap.get(wt).size();
+        Main.log("Ways and Relations saved: " + count);
+
+        Main.log("Converting WayType ArrayLists to KDTrees");
+
+        enumMapKD = new EnumMap<>(WayType.class);
+        for(WayType wt : WayType.values()) {
+            Main.log(wt);
+            ArrayList<ParsedItem> current = enumMap.get(wt);
+            KDTree tree;
+            if(current.isEmpty()) tree = null;
+            else if(current.size() < 1000) tree = new KDTreeLeaf(current, null);
+            else tree = new KDTreeNode(current);
+            enumMap.remove(wt);
+            enumMapKD.put(wt, tree);
+        }
+
         AddressController.getInstance().onLWParsingFinished();
         finalClean();
     }
@@ -73,11 +101,11 @@ public class LightWeightParser extends SAXAdapter {
                 break;
             case "way":
                 way = new ParsedWay(Long.parseLong(atts.getValue("id")));
-                wayMap.put(way.getID(), way);
+                // no longer needed? wayMap.put(way.getID(), way);
                 break;
             case "relation":
                 relation = new ParsedRelation(Long.parseLong(atts.getValue("id")));
-                relationMap.put(relation.getID(), relation);
+                // no longer needed? relationMap.put(relation.getID(), relation);
                 break;
             case "nd":
                 NodeMap.Node node = nodeMap.get(Long.parseLong(atts.getValue("ref")));
@@ -103,60 +131,27 @@ public class LightWeightParser extends SAXAdapter {
                 }
                 break;
             case "tag":
-                waytype = null;
                 String k = atts.getValue("k");
                 String v = atts.getValue("v");
-                switch (k) {
-                    case "highway":
-                        switch(v) {
-                            case "motorway_link":
-                            case "motorway":
-                                waytype = WayType.HIGHWAY_MOTORWAY;
-                                break;
-                            case "trunk_link":
-                            case "trunk":
-                                waytype = WayType.HIGHWAY_TRUNK;
-                                break;
-                            case "primary_link":
-                            case "primary":
-                                waytype = WayType.HIGHWAY_PRIMARY;
-                                break;
-                            case "secondary_link":
-                            case "secondary":
-                                waytype = WayType.HIGHWAY_SECONDARY;
-                                break;
-                            case "tertiary_link":
-                            case "tertiary":
-                                waytype = WayType.HIGHWAY_TERTIARY;
-                                break;
-                            case "residential":
-                                waytype = WayType.HIGHWAY_RESIDENTAL;
-                                break;
-                            case "unclassified":
-                                waytype = WayType.HIGHWAY_ROAD;
-                                break;
-                            case "service":
-                                waytype = WayType.HIGHWAY_SERVICE;
-                                break;
-                        }
+                switch(k) {
                     case "addr:city":
-                        if(address == null) address = new ParsedAddress();
+                        if (address == null) address = new ParsedAddress();
                         address.setCity(v);
                         break;
                     case "addr:postcode":
-                        if(address == null) address = new ParsedAddress();
+                        if (address == null) address = new ParsedAddress();
                         address.setPostcode(v);
                         break;
                     case "addr:housenumber":
-                        if(address == null) address = new ParsedAddress();
+                        if (address == null) address = new ParsedAddress();
                         address.setHousenumber(v);
                         break;
                     case "addr:street":
-                        if(address == null) address = new ParsedAddress();
+                        if (address == null) address = new ParsedAddress();
                         address.setStreet(v);
                         break;
                 }
-                break;
+                waytype = WayTypeUtil.tagToType(k, v);
         }
     }
 
@@ -179,14 +174,17 @@ public class LightWeightParser extends SAXAdapter {
     }
 
     private void addCurrent() {
-
+        if (waytype != null) {
+            if(relation != null) enumMap.get(waytype).add(relation);
+            if(way != null) enumMap.get(waytype).add(way);
+            if(node != null) ;// do something eventually;
+        }
         if(address != null) {
             if(node != null) address.setCoords(node.getPoint());
             else if (way != null) address.setWay(way);
             else if (relation != null) address.setRelation(relation);
             AddressController.getInstance().addressParsed(address);
         }
-
         cleanUp();
     }
 

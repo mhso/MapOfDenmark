@@ -54,6 +54,10 @@ public class AddressController implements OSMParserListener{
         }
     }
 
+	public void onLWParsingFinished() {
+		Main.log("Addresses: " + numAddresses);
+	}
+
 	public static AddressController getInstance(){
         if (instance == null) {
             lock.lock();
@@ -147,10 +151,6 @@ public class AddressController implements OSMParserListener{
 		// TODO Auto-generated method stub
 		
 	}
-
-	public void onLWParsingFinished() {
-	    Main.log("Addresses: " + numAddresses);
-    }
 
 	@Override
 	public void onParsingGotObject(ParsedObject parsedObject) {
