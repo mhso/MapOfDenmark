@@ -4,6 +4,10 @@ import dk.itu.n.danmarkskort.gui.*;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class DropdownMenu extends CustomDropdown {
 
@@ -21,7 +25,7 @@ public class DropdownMenu extends CustomDropdown {
         this.topPanel = topPanel;
         this.style = style;
 
-        routePage = new RoutePage("TEMP_VALUE");
+        routePage = new RoutePage(this, "TEMP_VALUE");
         loadPage = new LoadPage();
         savePage = new SavePage();
         settingsPage = new SettingsPage();

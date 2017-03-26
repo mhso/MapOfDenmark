@@ -16,6 +16,7 @@ import dk.itu.n.danmarkskort.search.SearchController;
 
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
@@ -33,8 +34,8 @@ public class RoutePage extends JPanel {
     private final ImageIcon ADDR_ICON_VALID = new ImageIcon("resources/icons/happiness.png");	
 	private final ImageIcon ADDR_ICON_INVALID = new ImageIcon("resources/icons/sad_red.png");
     
-    public RoutePage(String txtAddreToSetField) {
-    	
+    public RoutePage(DropdownMenu menu, String txtAddreToSetField) {
+    	this.menu = menu;
     	style = new Style();
         setOpaque(false);
         setLayout(new BorderLayout(0, 0));
@@ -165,7 +166,7 @@ public class RoutePage extends JPanel {
         gbc_txtAddreto.gridx = 1;
         gbc_txtAddreto.gridy = 2;
         panelCenter.add(txtAddreTo, gbc_txtAddreto);
-        txtAddreTo.setColumns(10);
+        txtAddreTo.setColumns(15);
         dropSuggestionsAddrTo = new DropdownAddressSearch(txtAddreTo, style);
         ((AbstractDocument) txtAddreTo.getDocument()).setDocumentFilter(new SearchFilter(txtAddreTo, dropSuggestionsAddrTo));
         txtAddreTo.addKeyListener(new KeyAdapter() {
@@ -235,15 +236,15 @@ public class RoutePage extends JPanel {
     }
 	
 	public void populateSuggestions(DropdownAddressSearch das, JTextField textField, List<String> list) {
+		menu.blockVisibility(true);
 		das.setVisible(false);
 		das.removeAll();
         for(String st : list){
         	das.addElement(textField, st);
         }
         das.showDropdown(textField);
+        menu.blockVisibility(false);
     }
-
-	
 	
 	private class SearchFilter extends DocumentFilter {
 		JTextField input;
