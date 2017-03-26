@@ -33,7 +33,8 @@ public class RoutePage extends JPanel {
     private DropdownAddressSearch dropSuggestionsAddrTo;
     private final ImageIcon ADDR_ICON_VALID = new ImageIcon("resources/icons/happiness.png");	
 	private final ImageIcon ADDR_ICON_INVALID = new ImageIcon("resources/icons/sad_red.png");
-    
+	private DropdownMenu menu;
+	
     public RoutePage(DropdownMenu menu, String txtAddreToSetField) {
     	this.menu = menu;
     	style = new Style();
