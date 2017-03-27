@@ -54,7 +54,7 @@ public class ParsedWay extends ParsedObject {
 	}
 	
 	public void determineType() {
-		if(attributes.containsKey("building") || "residential".equals(attributes.get("landuse"))) {
+		if(attributes.containsKey("building")) {//|| "residential".equals(attributes.get("landuse"))) {
 			type = WayType.BUILDING;
 			if("train_station".equals(attributes.get("buidling"))) {
 				type = WayType.TRAIN_STATION;
