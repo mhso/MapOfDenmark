@@ -1,6 +1,7 @@
 package dk.itu.n.danmarkskort;
 
 import java.awt.Dimension;
+import java.awt.Toolkit;
 
 import javax.swing.*;
 
@@ -77,6 +78,7 @@ public class Main {
 
     public static void makeFrame() {
             window = new JFrame(APP_NAME);
+            window.setIconImage(Toolkit.getDefaultToolkit().getImage("resources/icons/map-icon.png"));
             JPanel overlay = new JPanel();
             overlay.setLayout(new OverlayLayout(overlay));
             overlay.setPreferredSize(new Dimension(WIDTH, HEIGHT));
