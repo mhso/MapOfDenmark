@@ -57,9 +57,9 @@ public class RoutePlannerMain {
 	private void initialize() {
 		frmRouteplanner = new JFrame();
 		frmRouteplanner.setIconImage(Toolkit.getDefaultToolkit().getImage("resources/icons/map-icon.png"));
-		frmRouteplanner.setTitle("RoutePlanner");
+		frmRouteplanner.setTitle("Route planner");
 		frmRouteplanner.setBounds(100, 100, 697, 573);
-		frmRouteplanner.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmRouteplanner.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frmRouteplanner.getContentPane().setLayout(new BorderLayout(0, 0));
 		
 		JPanel panelHeadline = new JPanel();
@@ -101,10 +101,10 @@ public class RoutePlannerMain {
 		JScrollPane scrollPane = new JScrollPane();
 		panelRouteContent.add(scrollPane);
 		
-		
 		JPanel panel = new JPanel();
 		scrollPane.setViewportView(panel);
 		
+		JPanel panelRouteWest = new JPanel();
 		panelRouteImage = new JPanel();
 		
 		JLabel lblRouteimage = new JLabel("");
@@ -113,10 +113,12 @@ public class RoutePlannerMain {
 		panelRouteImage.add(lblRouteimage, BorderLayout.NORTH);
 
 		panelRouteDescription = new JPanel();
-		//panelRouteDescription.setLayout(new BoxLayout());
+		panelRouteDescription.setLayout(new BoxLayout(panelRouteDescription, BoxLayout.Y_AXIS));
+		panel.setLayout(new BorderLayout(0, 0));
 
-		panel.add(panelRouteImage);
-		panel.add(panelRouteDescription);
+		panel.add(panelRouteWest, BorderLayout.WEST);
+		panel.add(panelRouteImage, BorderLayout.NORTH);
+		panel.add(panelRouteDescription, BorderLayout.CENTER);
 		
 		JPanel panelEast = new JPanel();
 		frmRouteplanner.getContentPane().add(panelEast, BorderLayout.EAST);
@@ -125,6 +127,8 @@ public class RoutePlannerMain {
 		frmRouteplanner.getContentPane().add(panelSouth, BorderLayout.SOUTH);
 		
 		RoutePart();
+		
+		frmRouteplanner.setVisible(true);
 	}
 	
 	private void toggleShowHideRouteImage(){
@@ -149,10 +153,16 @@ public class RoutePlannerMain {
 	
 	private void RoutePart(){
 		List<JPanel> partList = new ArrayList<JPanel>();
-		partList.add(new RoutePart("Kør mod Roskildevej", "600m"));
-		partList.add(new RoutePart("Kør mod Sverigesvej", "250m"));
-		partList.add(new RoutePart("Kør mod Amagerbrogade", "1,5Km"));
-		partList.add(new RoutePart("Ankommet ved distination Rosenhave", ""));
+		int pos = 1;
+		partList.add(new RoutePart(pos++, "Kør mod Roskildevej", "600m"));
+		partList.add(new RoutePart(pos++, "Kør mod Sverigesvej", "250m"));
+		partList.add(new RoutePart(pos++, "Kør mod Sverigesvej", "250m"));
+		partList.add(new RoutePart(pos++, "Kør mod Sverigesvej", "250m"));
+		partList.add(new RoutePart(pos++, "Kør mod Sverigesvej", "250m"));
+		
+		partList.add(new RoutePart(pos++, "Kør mod Amagerbrogade", "1,5Km"));
+		partList.add(new RoutePart(pos++, "Ankommet ved distination Rosenhave", ""));
+		
 		for(JPanel part : partList){
 			panelRouteDescription.add(part);
 		}

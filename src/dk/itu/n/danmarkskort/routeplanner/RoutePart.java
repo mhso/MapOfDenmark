@@ -8,13 +8,13 @@ import java.awt.Insets;
 
 public class RoutePart extends JPanel {
 
-	private final String ROUTE_DESCRIPTION, ROUTE_DISTANCE;
+	private final String ROUTE_DESCRIPTION, ROUTE_DISTANCE, ROUTE_POSITION;
 	
-	public RoutePart(String RouteDescription, String RouteDistance) {
+	public RoutePart(int routePosition, String routeDescription, String routeDistance) {
 		
-		ROUTE_DESCRIPTION = RouteDescription;
-		ROUTE_DISTANCE = RouteDistance;
-		
+		ROUTE_POSITION = routePosition+"";
+		ROUTE_DESCRIPTION = routeDescription;
+		ROUTE_DISTANCE = routeDistance;
 		
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
@@ -30,19 +30,27 @@ public class RoutePart extends JPanel {
 		gbc_lblRouteIcon.gridy = 0;
 		add(lblRouteIcon, gbc_lblRouteIcon);
 		
+		JLabel lblRoutePosition = new JLabel(ROUTE_POSITION);
+		GridBagConstraints gbc_lblRouteposition = new GridBagConstraints();
+		gbc_lblRouteposition.insets = new Insets(0, 0, 5, 5);
+		gbc_lblRouteposition.gridx = 1;
+		gbc_lblRouteposition.gridy = 0;
+		add(lblRoutePosition, gbc_lblRouteposition);
+		
 		JLabel lblRoutedescription = new JLabel(ROUTE_DESCRIPTION);
 		GridBagConstraints gbc_lblRoutedescription = new GridBagConstraints();
 		gbc_lblRoutedescription.anchor = GridBagConstraints.WEST;
 		gbc_lblRoutedescription.insets = new Insets(0, 0, 5, 5);
-		gbc_lblRoutedescription.gridx = 1;
+		gbc_lblRoutedescription.gridx = 2;
 		gbc_lblRoutedescription.gridy = 0;
 		add(lblRoutedescription, gbc_lblRoutedescription);
 		
 		JLabel lblRoutedistance = new JLabel(ROUTE_DISTANCE);
 		GridBagConstraints gbc_lblRoutedistance = new GridBagConstraints();
+		gbc_lblRoutedistance.insets = new Insets(0, 0, 5, 0);
 		gbc_lblRoutedistance.anchor = GridBagConstraints.EAST;
 		gbc_lblRoutedistance.gridx = 13;
-		gbc_lblRoutedistance.gridy = 1;
+		gbc_lblRoutedistance.gridy = 0;
 		add(lblRoutedistance, gbc_lblRoutedistance);
 		
 	}

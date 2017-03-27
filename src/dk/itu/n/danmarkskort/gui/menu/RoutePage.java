@@ -12,6 +12,7 @@ import dk.itu.n.danmarkskort.address.Address;
 import dk.itu.n.danmarkskort.gui.DropdownAddressSearch;
 import dk.itu.n.danmarkskort.gui.Style;
 import dk.itu.n.danmarkskort.gui.TopPanel;
+import dk.itu.n.danmarkskort.routeplanner.RoutePlannerMain;
 import dk.itu.n.danmarkskort.search.SearchController;
 
 import java.awt.*;
@@ -71,9 +72,9 @@ public class RoutePage extends JPanel {
         initContentPanel(panelCenter);
         GridBagLayout gbl_panelCenter = new GridBagLayout();
         gbl_panelCenter.columnWidths = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-        gbl_panelCenter.rowHeights = new int[]{0, 0, 0, 0, 0};
+        gbl_panelCenter.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0};
         gbl_panelCenter.columnWeights = new double[]{0.0, 1.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
-        gbl_panelCenter.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+        gbl_panelCenter.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
         panelCenter.setLayout(gbl_panelCenter);
         
         
@@ -195,11 +196,59 @@ public class RoutePage extends JPanel {
         });
         
         JButton btnFind = new JButton("Find Route");
+        btnFind.addActionListener( e -> openFindRoute());
+        
+        JRadioButton rdbtnCar = new JRadioButton("Car");
+        rdbtnCar.setBackground(style.menuContentBG());
+        rdbtnCar.setSelected(true);
+        GridBagConstraints gbc_rdbtnCar = new GridBagConstraints();
+        gbc_rdbtnCar.anchor = GridBagConstraints.WEST;
+        gbc_rdbtnCar.insets = new Insets(0, 0, 5, 5);
+        gbc_rdbtnCar.gridx = 2;
+        gbc_rdbtnCar.gridy = 3;
+        panelCenter.add(rdbtnCar, gbc_rdbtnCar);
+        
+        JRadioButton rdbtnBike = new JRadioButton("Bike");
+        rdbtnBike.setBackground(style.menuContentBG());
+        GridBagConstraints gbc_rdbtnBike = new GridBagConstraints();
+        gbc_rdbtnBike.anchor = GridBagConstraints.WEST;
+        gbc_rdbtnBike.insets = new Insets(0, 0, 5, 5);
+        gbc_rdbtnBike.gridx = 3;
+        gbc_rdbtnBike.gridy = 3;
+        panelCenter.add(rdbtnBike, gbc_rdbtnBike);
+        
+        ButtonGroup radioButtonGroupMovementType = new ButtonGroup();
+        radioButtonGroupMovementType.add(rdbtnCar);
+        radioButtonGroupMovementType.add(rdbtnBike);
+        
+        JRadioButton rdbtnFastest = new JRadioButton("Fastest");
+        rdbtnFastest.setBackground(style.menuContentBG());
+        rdbtnFastest.setSelected(true);
+        GridBagConstraints gbc_rdbtnFastest = new GridBagConstraints();
+        gbc_rdbtnFastest.anchor = GridBagConstraints.WEST;
+        gbc_rdbtnFastest.insets = new Insets(0, 0, 5, 5);
+        gbc_rdbtnFastest.gridx = 2;
+        gbc_rdbtnFastest.gridy = 4;
+        panelCenter.add(rdbtnFastest, gbc_rdbtnFastest);
+        
+        JRadioButton rdbtnShortest = new JRadioButton("Shortest");
+        rdbtnShortest.setBackground(style.menuContentBG());
+        GridBagConstraints gbc_rdbtnShortest = new GridBagConstraints();
+        gbc_rdbtnShortest.anchor = GridBagConstraints.WEST;
+        gbc_rdbtnShortest.insets = new Insets(0, 0, 5, 5);
+        gbc_rdbtnShortest.gridx = 3;
+        gbc_rdbtnShortest.gridy = 4;
+        panelCenter.add(rdbtnShortest, gbc_rdbtnShortest);
+        
+        ButtonGroup radioButtonGroupRouteType = new ButtonGroup();
+        radioButtonGroupRouteType.add(rdbtnFastest);
+        radioButtonGroupRouteType.add(rdbtnShortest);
+        
         GridBagConstraints gbc_btnFind = new GridBagConstraints();
         gbc_btnFind.anchor = GridBagConstraints.EAST;
         gbc_btnFind.insets = new Insets(0, 0, 0, 5);
         gbc_btnFind.gridx = 3;
-        gbc_btnFind.gridy = 3;
+        gbc_btnFind.gridy = 6;
         panelCenter.add(btnFind, gbc_btnFind);
         
         
@@ -230,6 +279,11 @@ public class RoutePage extends JPanel {
     	ImageIcon imageToShow = ADDR_ICON_INVALID;
     	if (valid)  imageToShow = ADDR_ICON_VALID;
     	labelName.setIcon(imageToShow);
+    }
+    
+    private void openFindRoute(){
+    	System.out.println("openFindRoute");
+    	RoutePlannerMain routePlannerMain =  new RoutePlannerMain();
     }
 
 	private void initContentPanel(JPanel panel){
