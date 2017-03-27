@@ -1,5 +1,6 @@
 package dk.itu.n.danmarkskort.mapdata;
 
+import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.lightweight.models.ParsedItem;
 
 import java.util.ArrayList;
@@ -15,23 +16,27 @@ public class KDTreeNode extends KDTree {
     private KDTree parent; // should this just be deleted? At least now we can move both up and down
 
     public KDTreeNode(ArrayList<ParsedItem> list) {
-        this(list, null, true);
+        this(KDUtil.listToArray(list), null, true);
     }
 
-    public KDTreeNode(ArrayList<ParsedItem> list, KDTree parent, boolean sortByLon) {
+    public KDTreeNode(ParsedItem[] array, KDTree parent, boolean sortByLon) {
         this.parent = parent;
-        createStructure(list, sortByLon);
+        createStructure(array, sortByLon);
     }
-
-    public void createStructure(ArrayList<ParsedItem> list, boolean sortByLon) {
+ int count = 0;
+    public void createStructure(ParsedItem[] array, boolean sortByLon) {
         //  finds the median of the given list, either by lon or lat values
-        ParsedItem median = QuickSelect.quickSelect(list, list.size() / 2, sortByLon);
+        ParsedItem median = QuickSelect.quickSelect(array, array.length / 2, sortByLon);
 
-        ArrayList<ParsedItem> leftList = new ArrayList<>((list.size() + 1) / 2);
-        for(int i = 0; i < list.size(); i++) leftList.add(list.get(i));
-
-        ArrayList<ParsedItem> rightList = new ArrayList<>((list.size() + 1) / 2);
-        for(int i = list.size() / 2; i < list.size(); i ++) rightList.add(list.get(i));
+        ParsedItem[] leftArray = new ParsedItem[(array.length + 1) / 2];
+        for(int i = 0; i < leftArray.length; i++) {
+            leftArray[i] = array[i];
+        }
+        ParsedItem[] rightArray = new ParsedItem[(array.length + 1) / 2];
+        for(int i = 0; i < rightArray.length; i ++) {
+            rightArray[i] = array[i + rightArray.length - 1];
+            //Main.log(count++ + " " + i + " " + rightArray.length + " " + (i + rightArray.length));
+        }
 
         // We need to know by what either lat or lon value the data set has been split
         if(sortByLon) {
@@ -46,11 +51,12 @@ public class KDTreeNode extends KDTree {
         // this will, however, slow down the creation of KDTree
         // but, it will ensure that we get all the elements we want to paint when we are drawing!
 
-        if(leftList.size() > 1000) leftChild = new KDTreeNode(leftList, this, !sortByLon);
-        else leftChild = new KDTreeLeaf(leftList, this);
+        if(leftArray.length > 1000) leftChild = new KDTreeNode(leftArray, this, !sortByLon);
+        else leftChild = new KDTreeLeaf(leftArray, this);
 
-        if(rightList.size() > 1000) rightChild = new KDTreeNode(rightList, this, !sortByLon);
-        else rightChild = new KDTreeLeaf(rightList, this);
+        if(rightArray.length > 1000) rightChild = new KDTreeNode(rightArray, this, !sortByLon);
+        else rightChild = new KDTreeLeaf(rightArray, this);
+        Main.log("finished a KD run");
     }
 
     public KDTree getRightChild() { return rightChild; }

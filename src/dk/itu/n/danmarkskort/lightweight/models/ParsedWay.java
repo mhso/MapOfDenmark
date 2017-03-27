@@ -1,5 +1,7 @@
 package dk.itu.n.danmarkskort.lightweight.models;
 
+import java.awt.*;
+import java.awt.geom.Path2D;
 import java.util.ArrayList;
 
 public class ParsedWay extends ParsedItem{
@@ -20,6 +22,15 @@ public class ParsedWay extends ParsedItem{
 
     public float[] getCoords() { return coords; }
     public long getID() { return id; }
+
+    public Shape getShape() {
+        Path2D path = new Path2D.Float();
+        path.moveTo(coords[0], coords[1]);
+        for(int i = 1; i < coords.length;) path.lineTo(coords[i++], coords[i++]);
+        if(coords[0] == coords[coords.length - 2] && coords[1] == coords[coords.length - 1]) path.closePath();
+
+        return path;
+    }
 
     @Override
     public float getFirstLon() {

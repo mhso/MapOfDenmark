@@ -6,7 +6,6 @@ import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 
@@ -19,7 +18,6 @@ import dk.itu.n.danmarkskort.mapgfx.GraphicSpecLine;
 import dk.itu.n.danmarkskort.mapgfx.WaytypeGraphicSpec;
 import dk.itu.n.danmarkskort.models.ParsedWay;
 import dk.itu.n.danmarkskort.models.Region;
-import dk.itu.n.danmarkskort.models.WayType;
 
 public class MapCanvas extends JPanel {
 
@@ -29,6 +27,7 @@ public class MapCanvas extends JPanel {
 	private boolean antiAlias = true;
 	private int tileCount = 0;
 	private final int MAX_ZOOM = 20;
+	private int zoomLevel = 1;
 
 	public MapCanvas() {
 		new MapMouseController(this);
@@ -50,10 +49,13 @@ public class MapCanvas extends JPanel {
 			if(wgs.getMapElement() == null) continue;
 			for(ParsedWay way : ways) {
 				Shape shape = way.getShape();
+
 				wgs.transformOutline(g2d);
 				if(wgs instanceof GraphicSpecLine) g2d.draw(shape);
 				else if(wgs instanceof GraphicSpecArea) g2d.fill(shape);
+
 				wgs.transformPrimary(g2d);
+
 				if(wgs instanceof GraphicSpecLine) g2d.draw(shape);
 				else if(wgs instanceof GraphicSpecArea) g2d.fill(shape);
 			}
@@ -71,13 +73,16 @@ public class MapCanvas extends JPanel {
 		repaint();
 	}
 
-	public void zoom(double factor) {
+	public void zoom(int mouseScrolls) {
+		if(zoomLevel + mouseScrolls < 1 || zoomLevel + mouseScrolls > MAX_ZOOM) return;
+		zoomLevel += mouseScrolls;
+		double factor = Math.pow(0.9, mouseScrolls);
 		transform.preConcatenate(AffineTransform.getScaleInstance(factor, factor));
 		if(transform.getScaleX() > MAX_ZOOM) {
-			factor = (20 / getZoom());
+			factor = (int)(MAX_ZOOM / getZoom());
 			transform.preConcatenate(AffineTransform.getScaleInstance(factor, factor));
 		} else if(transform.getScaleX() < 1) {
-			factor = (1 / getZoom());
+			factor = (int)(1 / getZoom());
 			transform.preConcatenate(AffineTransform.getScaleInstance(factor, factor));
 		}
 		repaint();
@@ -97,7 +102,7 @@ public class MapCanvas extends JPanel {
 	}
 
 	public double getZoom() {
-		return transform.getScaleX();
+		return zoomLevel;
 	}
 
 	public double getMapX() {

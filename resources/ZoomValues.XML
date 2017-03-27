@@ -2,7 +2,8 @@
 <zoomvalues version="0.2">
 	<zoomlevel level="1">
 		<type name="GRASS"/>
-		<type name="FOREST"/>
+		<type name="COASTLINE"/>
+<type name="FOREST"/>
 		<type name="HIGHWAY_MOTORWAY"/>
 		<type name="HIGHWAY_TRUNK"/>
 		<type name="HIGHWAY_PRIMARY"/>

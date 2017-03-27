@@ -18,8 +18,8 @@ public class TileController implements OSMParserListener {
 	private ParsedBounds mapBounds = null;
 	private final int staticZoomLevel = 1;
 	public final int MAX_ZOOM_LEVEL = 20;
-	public EnumMap<WayType, ArrayList<ParsedWay>> ways = new EnumMap<WayType, ArrayList<ParsedWay>>(WayType.class);
-	
+	public EnumMap<WayType, ArrayList<ParsedWay>> ways = new EnumMap<>(WayType.class);
+
 	public Tile requestTile(int x, int y, int zoom) {
 		Tile tile = new Tile(new TileCoordinate(x, y), zoom);
 		tile.load();
@@ -76,7 +76,7 @@ public class TileController implements OSMParserListener {
 	}
 
 	public void prepareWays() {
-		for(WayType wayType : WayType.values()) ways.put(wayType, new ArrayList<ParsedWay>());
+		for(WayType wayType : WayType.values()) ways.put(wayType, new ArrayList<>());
 	}
 	
 	public void onWayLinked(ParsedWay way) {
