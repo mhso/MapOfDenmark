@@ -64,7 +64,6 @@ public class LightWeightParser extends SAXAdapter {
 
         enumMapKD = new EnumMap<>(WayType.class);
         for(WayType wt : WayType.values()) {
-            Main.log(wt);
             ArrayList<ParsedItem> current = enumMap.get(wt);
             KDTree tree;
             if(current.isEmpty()) tree = null;

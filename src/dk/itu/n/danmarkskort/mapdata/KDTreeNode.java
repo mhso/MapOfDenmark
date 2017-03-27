@@ -23,19 +23,19 @@ public class KDTreeNode extends KDTree {
         this.parent = parent;
         createStructure(array, sortByLon);
     }
- int count = 0;
+
     public void createStructure(ParsedItem[] array, boolean sortByLon) {
         //  finds the median of the given list, either by lon or lat values
-        ParsedItem median = QuickSelect.quickSelect(array, array.length / 2, sortByLon);
+        ParsedItem median = QuickSelect.quickSelect(array, (array.length + 1) / 2, sortByLon);
 
         ParsedItem[] leftArray = new ParsedItem[(array.length + 1) / 2];
         for(int i = 0; i < leftArray.length; i++) {
             leftArray[i] = array[i];
         }
-        ParsedItem[] rightArray = new ParsedItem[(array.length + 1) / 2];
+
+        ParsedItem[] rightArray = new ParsedItem[array.length - leftArray.length];
         for(int i = 0; i < rightArray.length; i ++) {
-            rightArray[i] = array[i + rightArray.length - 1];
-            //Main.log(count++ + " " + i + " " + rightArray.length + " " + (i + rightArray.length));
+            rightArray[i] = array[i + leftArray.length];
         }
 
         // We need to know by what either lat or lon value the data set has been split
@@ -56,13 +56,16 @@ public class KDTreeNode extends KDTree {
 
         if(rightArray.length > 1000) rightChild = new KDTreeNode(rightArray, this, !sortByLon);
         else rightChild = new KDTreeLeaf(rightArray, this);
-        Main.log("finished a KD run");
     }
 
     public KDTree getRightChild() { return rightChild; }
     public KDTree getLeftChild() { return leftChild; }
     public float getLeftSplit() { return leftSplit; }
     public float getRightSplit() { return rightSplit; }
+
+    @Override
     public KDTree getParent() { return parent; }
+    @Override
+    public int size() { return leftChild.size() + rightChild.size(); }
 
 }

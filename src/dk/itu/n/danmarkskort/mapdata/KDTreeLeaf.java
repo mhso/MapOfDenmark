@@ -20,4 +20,7 @@ public class KDTreeLeaf extends KDTree {
     public ParsedItem[] getData() { return data; }
     @Override
     public KDTree getParent() { return parent; }
+    @Override public int size() {
+        return data.length;
+    }
 }
