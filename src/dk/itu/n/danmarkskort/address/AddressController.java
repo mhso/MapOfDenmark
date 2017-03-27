@@ -18,12 +18,15 @@ public class AddressController implements OSMParserListener{
 	private Map<float[], Address> addresses;
 
 	private static AddressController instance;
+	private HashMap<String, HashMap> addressDatabase;
+
 	private final static Lock lock = new ReentrantLock();
 
 	private int numAddresses;
 	
 	private AddressController(){
 		addresses =  new HashMap<float[], Address>();
+		addressDatabase = new HashMap<>();
 	}
 	int count = 0;
 
