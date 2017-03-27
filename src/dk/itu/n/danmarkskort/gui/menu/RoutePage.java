@@ -87,7 +87,6 @@ public class RoutePage extends JPanel {
         panelCenter.add(lblFrom, gbc_lblFrom);
         
         txtAddrFrom = new JTextField();
-        txtAddrFrom.setText("AddrFrom");
         GridBagConstraints gbc_txtAddrfrom = new GridBagConstraints();
         gbc_txtAddrfrom.gridwidth = 3;
         gbc_txtAddrfrom.insets = new Insets(0, 0, 5, 5);
@@ -282,7 +281,6 @@ public class RoutePage extends JPanel {
     }
     
     private void openFindRoute(){
-    	System.out.println("openFindRoute");
     	RoutePlannerMain routePlannerMain =  new RoutePlannerMain();
     }
 

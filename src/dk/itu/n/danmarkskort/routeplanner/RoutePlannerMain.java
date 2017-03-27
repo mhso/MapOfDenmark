@@ -10,6 +10,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.Image;
 
 import javax.swing.JScrollPane;
 import javax.swing.BoxLayout;
@@ -26,6 +27,7 @@ public class RoutePlannerMain {
 	private JPanel panelRouteImage, panelRouteDescription;
 	private final ImageIcon ROUTE_IMAGE;
 	private JButton btnHideImage, btnHideDescription;
+	private JLabel lblRouteimage;
 
 	/**
 	 * Launch the application.
@@ -126,10 +128,18 @@ public class RoutePlannerMain {
 		JPanel panelSouth = new JPanel();
 		frmRouteplanner.getContentPane().add(panelSouth, BorderLayout.SOUTH);
 		
+//		routeImage();
 		RoutePart();
 		
 		frmRouteplanner.setVisible(true);
 	}
+	
+//	private void routeImage(){
+//		panelRouteImage.getWidth();
+//		ROUTE_IMAGE.getIconWidth();
+//		ImageIcon routeImageScaled = new ImageIcon(new ImageIcon("resources/routeplanner/demo_routeplanner.PNG").getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH));
+//		lblRouteimage.setIcon(routeImageScaled);
+//	}
 	
 	private void toggleShowHideRouteImage(){
 		if(panelRouteImage.isVisible()) {

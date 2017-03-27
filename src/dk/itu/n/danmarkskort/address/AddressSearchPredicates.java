@@ -103,7 +103,7 @@ public class AddressSearchPredicates {
 		}
 	    
 	    public static Address addressEquals(Map<float[], Address> addresses, Address addr){
-	    	System.out.println(addr.toStringShort());
+	    	//System.out.println(addr.toStringShort());
 			List<Address> result = (filterAddresses(addresses, 
 					toStringShortEquals(addr) , 1l));
 			if(result != null && result.size() > 0) return result.get(0);

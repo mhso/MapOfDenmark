@@ -25,7 +25,6 @@ public class DropdownMenu extends CustomDropdown {
         this.topPanel = topPanel;
         this.style = style;
 
-        routePage = new RoutePage(this, "TEMP_VALUE");
         loadPage = new LoadPage();
         savePage = new SavePage();
         settingsPage = new SettingsPage();
