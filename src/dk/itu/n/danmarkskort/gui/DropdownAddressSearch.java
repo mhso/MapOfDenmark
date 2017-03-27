@@ -79,6 +79,7 @@ public class DropdownAddressSearch extends CustomDropdown {
 	 */
 	public void showDropdown(Component source) {
 		Point loc = source.getLocation();
+		System.out.println(source.getPreferredSize());
 		show(source, loc.x, loc.y+source.getHeight());
 	}
 }

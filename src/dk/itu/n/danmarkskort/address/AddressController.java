@@ -16,14 +16,48 @@ import java.util.stream.Collectors;
 
 public class AddressController implements OSMParserListener{
 	private Map<Long, Address> addresses;
+	private HashMap<String, HashMap> addressDatabase;
 
 	private static AddressController instance;
 	private final static Lock lock = new ReentrantLock();
+
+	private int numAddresses;
 	
 	private AddressController(){
 		addresses =  new HashMap<Long, Address>();
+		addressDatabase = new HashMap<>();
 	}
-	
+	int count = 0;
+
+    public void addressParsed(dk.itu.n.danmarkskort.lightweight.models.ParsedAddress address) {
+        HashMap<String, HashMap> postcode;
+        HashMap<String, Float[]> street;
+
+        if(addressDatabase.containsKey(address.getPostcode())) {
+        	postcode = addressDatabase.get(address.getPostcode());
+		} else {
+            postcode = new HashMap<>();
+            addressDatabase.put(address.getPostcode(), postcode);
+        }
+
+        if(postcode.containsKey(address.getStreet())) {
+        	street = postcode.get(address.getStreet());
+		} else {
+            street = new HashMap<>();
+            postcode.put(address.getStreet(), street);
+        }
+
+        if(!street.containsKey(address.getHousenumber())) {
+        	Float[] coords = new Float[]{address.getFirstLon(), address.getFirstLat()};
+            street.put(address.getHousenumber(), coords);
+            numAddresses++;
+        }
+    }
+
+	public void onLWParsingFinished() {
+		Main.log("Addresses: " + numAddresses);
+	}
+
 	public static AddressController getInstance(){
         if (instance == null) {
             lock.lock();
