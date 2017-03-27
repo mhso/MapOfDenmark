@@ -54,15 +54,7 @@ public class ParsedWay extends ParsedObject {
 	}
 	
 	public void determineType() {
-		// Eventuel smart måde, så vi ikke skal tilføje WayTypes to steder:
-		/* for(WayType way : WayType.values()) {
-			String wayString = way.toString();
-			String[] splitArr = way.toString().split("_");
-			// Fx HIGHWAY_MOTORWAY
-			// eller BUILDING_CHURCH
-			if(splitArr[1].equals(attributes.get(splitArr[0]))) type = way;
-		}*/
-		if(attributes.containsKey("building")) {
+		if(attributes.containsKey("building")) {//|| "residential".equals(attributes.get("landuse"))) {
 			type = WayType.BUILDING;
 			if("train_station".equals(attributes.get("buidling"))) {
 				type = WayType.TRAIN_STATION;

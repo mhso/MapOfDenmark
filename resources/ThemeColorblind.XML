@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<theme version="0.3">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><theme version="0.3">
 	<defaultfont fontcolor="000000" fontsize="60"/>
 	<lines>
 		<line>
@@ -73,11 +72,6 @@
 			<type name="GRASS"/>
 			<innercolor color="00CC00"/>
 			<outercolor color="003300"/>
-		</area>
-		<area>
-			<type name="FARMLAND"/>
-			<innercolor color="FFCC99"/>
-			<outercolor color="CCCCCC"/>
 		</area>
 		<area>
 			<type name="SPORT"/>

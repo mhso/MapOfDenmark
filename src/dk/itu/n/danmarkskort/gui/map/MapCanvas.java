@@ -27,7 +27,6 @@ public class MapCanvas extends JPanel {
 	private boolean antiAlias = true;
 	private int tileCount = 0;
 	private final int MAX_ZOOM = 20;
-	private int zoomLevel = 1;
 
 	public MapCanvas() {
 		new MapMouseController(this);
@@ -45,8 +44,8 @@ public class MapCanvas extends JPanel {
 				GraphicRepresentation.getGraphicSpecs((int)getZoom());
 
 		for(WaytypeGraphicSpec wgs : graphicSpecs) {
-			List<ParsedWay> ways = Main.tileController.getWaysOfType(wgs.getMapElement());
-			if(wgs.getMapElement() == null) continue;
+			List<ParsedWay> ways = Main.tileController.getWaysOfType(wgs.getWayType());
+			if(wgs.getWayType() == null) continue;
 			for(ParsedWay way : ways) {
 				Shape shape = way.getShape();
 
@@ -73,16 +72,13 @@ public class MapCanvas extends JPanel {
 		repaint();
 	}
 
-	public void zoom(int mouseScrolls) {
-		if(zoomLevel + mouseScrolls < 1 || zoomLevel + mouseScrolls > MAX_ZOOM) return;
-		zoomLevel += mouseScrolls;
-		double factor = Math.pow(0.9, mouseScrolls);
+	public void zoom(double factor) {
 		transform.preConcatenate(AffineTransform.getScaleInstance(factor, factor));
 		if(transform.getScaleX() > MAX_ZOOM) {
-			factor = (int)(MAX_ZOOM / getZoom());
+			factor = (20 / getZoom());
 			transform.preConcatenate(AffineTransform.getScaleInstance(factor, factor));
 		} else if(transform.getScaleX() < 1) {
-			factor = (int)(1 / getZoom());
+			factor = (1 / getZoom());
 			transform.preConcatenate(AffineTransform.getScaleInstance(factor, factor));
 		}
 		repaint();
@@ -102,7 +98,7 @@ public class MapCanvas extends JPanel {
 	}
 
 	public double getZoom() {
-		return zoomLevel;
+		return transform.getScaleX();
 	}
 
 	public double getMapX() {
