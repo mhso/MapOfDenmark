@@ -55,6 +55,7 @@ public class LightWeightParser extends SAXAdapter {
 
     public void endDocument() throws SAXException {
         Main.log("Parsing finished.");
+        Main.log("Max lon: " + maxLonBoundary + ", " + "Min lon: " + minLonBoundary);
 
         int count = 0;
         for(WayType wt : WayType.values()) count += enumMap.get(wt).size();

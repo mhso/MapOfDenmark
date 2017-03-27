@@ -48,7 +48,8 @@ public class GraphicRepresentation {
 	/**
 	 * Get the size of the Graphic Representation Map contained in this GraphicRepresentation class.
 	 * 
-	 * @return The Graphic Representation Map contained in this GraphicRepresentation class.
+	 * @return The Graphic Representation Map contained in this GraphicRepresentation class, IE: The amount of
+	 * WayTypes, that have Graphic Specifications associated with them.
 	 */
 	public static int size() {
 		return zoomMap.size();

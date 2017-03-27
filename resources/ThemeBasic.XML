@@ -75,7 +75,7 @@
 			<outercolor color="003300"/>
 		</area>
 		<area>
-<type name="COASTLINE"/>
+<type name="FARMLAND"/>
 <innercolor color="FFCC99"/>
 <outercolor color="CCCCCC"/>
 </area>
