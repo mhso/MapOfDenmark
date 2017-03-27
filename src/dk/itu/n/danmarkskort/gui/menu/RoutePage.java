@@ -8,6 +8,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.DocumentFilter;
 import javax.swing.text.DocumentFilter.FilterBypass;
 
+import dk.itu.n.danmarkskort.address.Address;
 import dk.itu.n.danmarkskort.gui.DropdownAddressSearch;
 import dk.itu.n.danmarkskort.gui.Style;
 import dk.itu.n.danmarkskort.gui.TopPanel;
@@ -27,12 +28,13 @@ public class RoutePage extends JPanel {
     Style style;
     private JTextField txtAddrFrom;
     private JTextField txtAddreTo;
+    JLabel lblAddrFromConfirmed, lblAddrToConfirmed;
     private DropdownAddressSearch dropSuggestionsAddrFrom;
     private DropdownAddressSearch dropSuggestionsAddrTo;
-    private final ImageIcon ADDR_ICON_VALID = new ImageIcon("resources/icons/checked_checkbox3.png");	
-	private final ImageIcon ADDR_ICON_INVALID = new ImageIcon("resources/icons/unchecked_checkbox3.png");
+    private final ImageIcon ADDR_ICON_VALID = new ImageIcon("resources/icons/happiness.png");	
+	private final ImageIcon ADDR_ICON_INVALID = new ImageIcon("resources/icons/sad_red.png");
 	private DropdownMenu menu;
-    
+	
     public RoutePage(DropdownMenu menu, String txtAddreToSetField) {
     	this.menu = menu;
     	style = new Style();
@@ -123,15 +125,15 @@ public class RoutePage extends JPanel {
         JButton btnS = new JButton();
         btnS.addActionListener(e -> swapToFromFields());
         
-        JLabel lblAddrfromconfirmed = new JLabel();
-        lblAddrfromconfirmed.setIcon(ADDR_ICON_INVALID);
+        lblAddrFromConfirmed = new JLabel();
+        lblAddrFromConfirmed.setIcon(ADDR_ICON_INVALID);
         GridBagConstraints gbc_lblAddrfromconfirmed = new GridBagConstraints();
         gbc_lblAddrfromconfirmed.insets = new Insets(0, 0, 5, 5);
         gbc_lblAddrfromconfirmed.gridx = 4;
         gbc_lblAddrfromconfirmed.gridy = 1;
-        panelCenter.add(lblAddrfromconfirmed, gbc_lblAddrfromconfirmed);
+        panelCenter.add(lblAddrFromConfirmed, gbc_lblAddrfromconfirmed);
         
-        JLabel lblAddrToConfirmed = new JLabel();
+        lblAddrToConfirmed = new JLabel();
         lblAddrToConfirmed.setIcon(ADDR_ICON_INVALID);
         GridBagConstraints gbc_lblAddrToConfirmed = new GridBagConstraints();
         gbc_lblAddrToConfirmed.insets = new Insets(0, 0, 5, 5);
@@ -199,28 +201,39 @@ public class RoutePage extends JPanel {
         gbc_btnFind.gridx = 3;
         gbc_btnFind.gridy = 3;
         panelCenter.add(btnFind, gbc_btnFind);
+        
+        
+        validateToFromFields();
     }
     
     private void swapToFromFields() {
     	String addrFromTemp = txtAddrFrom.getText();
     	txtAddrFrom.setText(txtAddreTo.getText());
     	txtAddreTo.setText(addrFromTemp);
+    	validateToFromFields();
+	}
+    
+    private void validateToFromFields() {
+    	updateValidInputAddrTo(txtAddrFrom, lblAddrFromConfirmed);
+    	updateValidInputAddrTo(txtAddreTo, lblAddrToConfirmed);
 	}
     
     private boolean updateValidInputAddrTo(JTextField field, JLabel labelName){
-    	boolean valid = true;
+    	boolean valid = false;
+    	Address addr = SearchController.getInstance().getSearchFieldAddressObj(field.getText());
+    	if(addr != null) valid = true;
     	changeValidAddrIcon(labelName, valid);
     	return false;
     }
     
     private void changeValidAddrIcon(JLabel labelName, boolean valid){
-    	ImageIcon imageToShow = ADDR_ICON_VALID;
-    	if (valid)  imageToShow = ADDR_ICON_INVALID;
+    	ImageIcon imageToShow = ADDR_ICON_INVALID;
+    	if (valid)  imageToShow = ADDR_ICON_VALID;
     	labelName.setIcon(imageToShow);
     }
 
 	private void initContentPanel(JPanel panel){
-    	
+		
     }
 	
 	public void populateSuggestions(DropdownAddressSearch das, JTextField textField, List<String> list) {

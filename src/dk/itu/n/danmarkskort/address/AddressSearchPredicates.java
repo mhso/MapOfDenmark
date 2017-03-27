@@ -80,7 +80,7 @@ public class AddressSearchPredicates {
 	        		&& p.toStringShort().equalsIgnoreCase((addr.toStringShort()));
 	    }
 	     
-	    public static List<Address> filterAddresses(Map<Long, Address> addresses, 
+	    public static List<Address> filterAddresses(Map<float[], Address> addresses, 
 	    		Predicate<Address> predicate, long limit) {
 			    	if(addresses != null && predicate != null ) {
 			    		return addresses.values().stream().filter(predicate).limit(limit)
@@ -93,16 +93,17 @@ public class AddressSearchPredicates {
 	    	return addresses.stream().map(Address::toStringShort).collect(Collectors.<String>toList());
 	    }
 	    
-	    public static List<String> filterToStringShort(Map<Long, Address> addresses, 
+	    public static List<String> filterToStringShort(Map<float[], Address> addresses, 
 	    		Predicate<Address> predicate, long limit){
 	    			return toStringShort(filterAddresses(addresses, predicate, limit));
 	    }
 	    
-	    public static boolean confirmStreetExist(Map<Long, Address> addresses, String find){
+	    public static boolean confirmStreetExist(Map<float[], Address> addresses, String find){
 			return (filterAddresses(addresses, streetEquals(find), 1) != null);
 		}
 	    
-	    public static Address addressEquals(Map<Long, Address> addresses, Address addr){
+	    public static Address addressEquals(Map<float[], Address> addresses, Address addr){
+	    	System.out.println(addr.toStringShort());
 			List<Address> result = (filterAddresses(addresses, 
 					toStringShortEquals(addr) , 1l));
 			if(result != null && result.size() > 0) return result.get(0);
