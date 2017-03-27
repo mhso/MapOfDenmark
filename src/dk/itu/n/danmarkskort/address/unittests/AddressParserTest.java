@@ -32,7 +32,6 @@ public class AddressParserTest {
 		assertEquals("7", addr.getHousenumber());
 		assertEquals("2300", addr.getPostcode());
 		assertEquals("K�benhavn S", addr.getCity());
-		assertNull(addr.getHousename());
 		assertNull(addr.getNodeId());
 	}
 	
@@ -47,7 +46,6 @@ public class AddressParserTest {
 		assertEquals("7", addr.getHousenumber());
 		assertEquals("2300", addr.getPostcode());
 		assertEquals("K�benhavn S", addr.getCity());
-		assertNull(addr.getHousename());
 		assertNull(addr.getNodeId());
 	}
 
@@ -62,7 +60,6 @@ public class AddressParserTest {
 		assertEquals("7", addr.getHousenumber());
 		assertEquals("2300", addr.getPostcode());
 		assertEquals("K�benhavn S", addr.getCity());
-		assertNull(addr.getHousename());
 		assertNull(addr.getNodeId());
 	}
 	
@@ -78,7 +75,6 @@ public class AddressParserTest {
 		assertEquals("7", addr.getHousenumber());
 		assertEquals("2300", addr.getPostcode());
 		assertEquals("k�benhavn s", addr.getCity());
-		assertNull(addr.getHousename());
 		assertNull(addr.getNodeId());
 	}
 	
@@ -93,7 +89,6 @@ public class AddressParserTest {
 		assertEquals("7", addr.getHousenumber());
 		assertEquals("2300", addr.getPostcode());
 		assertEquals("k�benhavn s", addr.getCity());
-		assertNull(addr.getHousename());
 		assertNull(addr.getNodeId());
 	}
 	
@@ -108,7 +103,6 @@ public class AddressParserTest {
 		assertEquals("7", addr.getHousenumber());
 		assertEquals("2300", addr.getPostcode());
 		assertNull(addr.getCity());
-		assertNull(addr.getHousename());
 		assertNull(addr.getNodeId());
 	}
 	
@@ -123,7 +117,6 @@ public class AddressParserTest {
 		assertEquals("7", addr.getHousenumber());
 		assertNull(addr.getPostcode());
 		assertEquals("k�benhavn s", addr.getCity());
-		assertNull(addr.getHousename());
 	}
 	
 	@Test
@@ -137,7 +130,6 @@ public class AddressParserTest {
 		assertNull(addr.getHousenumber());
 		assertNull(addr.getPostcode());
 		assertEquals("k�benhavn s", addr.getCity());
-		assertNull(addr.getHousename());
 	}
 	
 	@Test
@@ -151,7 +143,6 @@ public class AddressParserTest {
 		assertNull(addr.getHousenumber());
 		assertEquals("2300", addr.getPostcode());
 		assertNull(addr.getCity());
-		assertNull(addr.getHousename());
 		assertNull(addr.getNodeId());
 	}
 }

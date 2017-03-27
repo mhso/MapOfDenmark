@@ -23,7 +23,7 @@ public class AboutUsPage extends JPanel  {
         panelHeadline.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
         panelHeadline.setBackground(style.menuContentBG());
         panelPage.add(panelHeadline, BorderLayout.NORTH);
-        JLabel lblPageHeadline = new JLabel("About Us Page");
+        JLabel lblPageHeadline = new JLabel("About");
         lblPageHeadline.setFont(new Font("Tahoma", Font.BOLD, 18));
         panelHeadline.add(lblPageHeadline);
         

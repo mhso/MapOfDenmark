@@ -2,11 +2,24 @@ package dk.itu.n.danmarkskort.gui.menu;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
+import javax.swing.text.AbstractDocument;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DocumentFilter;
+import javax.swing.text.DocumentFilter.FilterBypass;
 
+import dk.itu.n.danmarkskort.gui.DropdownAddressSearch;
 import dk.itu.n.danmarkskort.gui.Style;
+import dk.itu.n.danmarkskort.gui.TopPanel;
+import dk.itu.n.danmarkskort.search.SearchController;
 
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.List;
 import java.awt.event.ActionEvent;
 
 public class RoutePage extends JPanel {
@@ -14,8 +27,14 @@ public class RoutePage extends JPanel {
     Style style;
     private JTextField txtAddrFrom;
     private JTextField txtAddreTo;
-    public RoutePage(String txtAddreToSetField) {
-    	
+    private DropdownAddressSearch dropSuggestionsAddrFrom;
+    private DropdownAddressSearch dropSuggestionsAddrTo;
+    private final ImageIcon ADDR_ICON_VALID = new ImageIcon("resources/icons/checked_checkbox3.png");	
+	private final ImageIcon ADDR_ICON_INVALID = new ImageIcon("resources/icons/unchecked_checkbox3.png");
+	private DropdownMenu menu;
+    
+    public RoutePage(DropdownMenu menu, String txtAddreToSetField) {
+    	this.menu = menu;
     	style = new Style();
         setOpaque(false);
         setLayout(new BorderLayout(0, 0));
@@ -28,7 +47,7 @@ public class RoutePage extends JPanel {
         panelHeadline.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
         panelHeadline.setBackground(style.menuContentBG());
         panelPage.add(panelHeadline, BorderLayout.NORTH);
-        JLabel lblPageHeadline = new JLabel("Find Route Page");
+        JLabel lblPageHeadline = new JLabel("Find Route");
         lblPageHeadline.setFont(new Font("Tahoma", Font.BOLD, 18));
         panelHeadline.add(lblPageHeadline);
         
@@ -51,9 +70,10 @@ public class RoutePage extends JPanel {
         GridBagLayout gbl_panelCenter = new GridBagLayout();
         gbl_panelCenter.columnWidths = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
         gbl_panelCenter.rowHeights = new int[]{0, 0, 0, 0, 0};
-        gbl_panelCenter.columnWeights = new double[]{0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+        gbl_panelCenter.columnWeights = new double[]{0.0, 1.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
         gbl_panelCenter.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
         panelCenter.setLayout(gbl_panelCenter);
+        
         
         JLabel lblFrom = new JLabel("From:");
         GridBagConstraints gbc_lblFrom = new GridBagConstraints();
@@ -73,12 +93,38 @@ public class RoutePage extends JPanel {
         gbc_txtAddrfrom.gridy = 1;
         panelCenter.add(txtAddrFrom, gbc_txtAddrfrom);
         txtAddrFrom.setColumns(10);
+        dropSuggestionsAddrFrom = new DropdownAddressSearch(txtAddrFrom, style);
+        ((AbstractDocument) txtAddrFrom.getDocument()).setDocumentFilter(new SearchFilter(txtAddrFrom, dropSuggestionsAddrFrom));
+        txtAddrFrom.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if(!dropSuggestionsAddrFrom.isEmpty()) {
+					if(e.getKeyCode() == KeyEvent.VK_DOWN) {
+						if(dropSuggestionsAddrFrom.getSelectedIndex() < dropSuggestionsAddrFrom.getComponents().length-1) {	
+							dropSuggestionsAddrFrom.setSelectedElement(dropSuggestionsAddrFrom.getSelectedIndex()+1);
+						}
+					}
+					else if(e.getKeyCode() == KeyEvent.VK_UP) {
+						if(dropSuggestionsAddrFrom.getSelectedIndex() > 0) {
+							dropSuggestionsAddrFrom.setSelectedElement(dropSuggestionsAddrFrom.getSelectedIndex()-1);
+						}
+					}
+					else if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+						if(dropSuggestionsAddrFrom.getSelectedIndex() > 0) {
+							dropSuggestionsAddrFrom.itemClicked();
+						}
+					}
+				}
+			}
+        	
+        });
+        
         
         JButton btnS = new JButton();
         btnS.addActionListener(e -> swapToFromFields());
         
         JLabel lblAddrfromconfirmed = new JLabel();
-        lblAddrfromconfirmed.setIcon(new ImageIcon("resources/icons/checked_checkbox.png"));
+        lblAddrfromconfirmed.setIcon(ADDR_ICON_INVALID);
         GridBagConstraints gbc_lblAddrfromconfirmed = new GridBagConstraints();
         gbc_lblAddrfromconfirmed.insets = new Insets(0, 0, 5, 5);
         gbc_lblAddrfromconfirmed.gridx = 4;
@@ -86,7 +132,7 @@ public class RoutePage extends JPanel {
         panelCenter.add(lblAddrfromconfirmed, gbc_lblAddrfromconfirmed);
         
         JLabel lblAddrToConfirmed = new JLabel();
-        lblAddrToConfirmed.setIcon(new ImageIcon("resources/icons/unchecked_checkbox.png"));
+        lblAddrToConfirmed.setIcon(ADDR_ICON_INVALID);
         GridBagConstraints gbc_lblAddrToConfirmed = new GridBagConstraints();
         gbc_lblAddrToConfirmed.insets = new Insets(0, 0, 5, 5);
         gbc_lblAddrToConfirmed.gridx = 4;
@@ -119,10 +165,36 @@ public class RoutePage extends JPanel {
         gbc_txtAddreto.gridx = 1;
         gbc_txtAddreto.gridy = 2;
         panelCenter.add(txtAddreTo, gbc_txtAddreto);
-        txtAddreTo.setColumns(10);
+        txtAddreTo.setColumns(15);
+        dropSuggestionsAddrTo = new DropdownAddressSearch(txtAddreTo, style);
+        ((AbstractDocument) txtAddreTo.getDocument()).setDocumentFilter(new SearchFilter(txtAddreTo, dropSuggestionsAddrTo));
+        txtAddreTo.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if(!dropSuggestionsAddrTo.isEmpty()) {
+					if(e.getKeyCode() == KeyEvent.VK_DOWN) {
+						if(dropSuggestionsAddrTo.getSelectedIndex() < dropSuggestionsAddrTo.getComponents().length-1) {	
+							dropSuggestionsAddrTo.setSelectedElement(dropSuggestionsAddrTo.getSelectedIndex()+1);
+						}
+					}
+					else if(e.getKeyCode() == KeyEvent.VK_UP) {
+						if(dropSuggestionsAddrTo.getSelectedIndex() > 0) {
+							dropSuggestionsAddrTo.setSelectedElement(dropSuggestionsAddrTo.getSelectedIndex()-1);
+						}
+					}
+					else if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+						if(dropSuggestionsAddrTo.getSelectedIndex() > 0) {
+							dropSuggestionsAddrTo.itemClicked();
+						}
+					}
+				}
+			}
+        	
+        });
         
         JButton btnFind = new JButton("Find Route");
         GridBagConstraints gbc_btnFind = new GridBagConstraints();
+        gbc_btnFind.anchor = GridBagConstraints.EAST;
         gbc_btnFind.insets = new Insets(0, 0, 0, 5);
         gbc_btnFind.gridx = 3;
         gbc_btnFind.gridy = 3;
@@ -134,8 +206,80 @@ public class RoutePage extends JPanel {
     	txtAddrFrom.setText(txtAddreTo.getText());
     	txtAddreTo.setText(addrFromTemp);
 	}
+    
+    private boolean updateValidInputAddrTo(JTextField field, JLabel labelName){
+    	boolean valid = true;
+    	changeValidAddrIcon(labelName, valid);
+    	return false;
+    }
+    
+    private void changeValidAddrIcon(JLabel labelName, boolean valid){
+    	ImageIcon imageToShow = ADDR_ICON_VALID;
+    	if (valid)  imageToShow = ADDR_ICON_INVALID;
+    	labelName.setIcon(imageToShow);
+    }
 
 	private void initContentPanel(JPanel panel){
     	
+    }
+	
+	public void populateSuggestions(DropdownAddressSearch das, JTextField textField, List<String> list) {
+		menu.blockVisibility(true);
+		das.setVisible(false);
+		das.removeAll();
+        for(String st : list){
+        	das.addElement(textField, st);
+        }
+        das.showDropdown(textField);
+        menu.blockVisibility(false);
+    }
+	
+	private class SearchFilter extends DocumentFilter {
+		JTextField input;
+		DropdownAddressSearch das;
+		
+		public SearchFilter(JTextField input, DropdownAddressSearch das){
+			this.input = input;
+			this.das = das;
+		}
+		
+		
+        /**
+         * Invoked prior to removal of the specified region in the
+         * specified Document. Subclasses that want to conditionally allow
+         * removal should override this and only call supers implementation as
+         * necessary, or call directly into the <code>FilterBypass</code> as
+         * necessary.
+         *
+         * @param fb     FilterBypass that can be used to mutate Document
+         * @param offset the offset from the beginning &gt;= 0
+         * @param length the number of characters to remove &gt;= 0
+         * @throws BadLocationException some portion of the removal range
+         *                              was not a valid part of the document.  The location in the exception
+         *                              is the first bad position encountered.
+         */
+        @Override
+        public void remove(FilterBypass fb, int offset, int length) throws BadLocationException {
+            super.remove(fb, offset, length);
+            dropdownSuggestions(offset - 1, input.getText());
+        }
+
+        @Override
+        public void replace(FilterBypass fb, int offset, int length, String newText,
+                            AttributeSet attr) throws BadLocationException {
+
+            super.replace(fb, offset, length, newText, attr);
+            dropdownSuggestions(offset, input.getText());
+        }
+        
+        public void dropdownSuggestions(int offset, String text) {
+            if(offset > 1) {
+                populateSuggestions(das, input, SearchController.getInstance().getSearchFieldSuggestions(text));
+                revalidate();
+                repaint();
+            } else {
+            	das.setVisible(false);
+            }
+        }
     }
 }

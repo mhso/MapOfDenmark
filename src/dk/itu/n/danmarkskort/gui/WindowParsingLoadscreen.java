@@ -27,7 +27,6 @@ import dk.itu.n.danmarkskort.models.ParsedWay;
 
 import java.awt.Component;
 
-import javax.imageio.ImageIO;
 import javax.swing.Box;
 
 public class WindowParsingLoadscreen extends JFrame implements OSMParserListener {

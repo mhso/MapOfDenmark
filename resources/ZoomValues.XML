@@ -1,33 +1,29 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<zoomvalues version="0.1">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<zoomvalues version="0.2">
 	<zoomlevel level="1">
-		<tag k="highway" v="HIGHWAY_MOTORWAY"/>
-		<tag k="highway" v="HIGHWAY_TRUNK"/>
-		<tag k="highway" v="HIGHWAY_PRIMARY"/>
-		<tag k="highway" v="HIGHWAY_SECONDARY"/>
-		<tag k="highway" v="HIGHWAY_TERTIARY"/>
-		<tag k="highway" v="WAY_UNDEFINED"/>
-		<tag k="highway" v="HIGHWAY_RESIDENTAL"/>
-		<tag k="building" v="BUILDING"/>
+		<type name="GRASS"/>
+		<type name="FOREST"/>
+		<type name="HIGHWAY_MOTORWAY"/>
+		<type name="HIGHWAY_TRUNK"/>
+		<type name="HIGHWAY_PRIMARY"/>
+		<type name="HIGHWAY_SECONDARY"/>
+		<type name="HIGHWAY_TERTIARY"/>
+		<type name="BUILDING"/>
 	</zoomlevel>
 	<zoomlevel level="2">
-		<tag k="highway" v="HIGHWAY_MOTORWAY"/>
-		<tag k="highway" v="HIGHWAY_TRUNK"/>
-		<tag k="highway" v="HIGHWAY_PRIMARY"/>
-		<tag k="highway" v="HIGHWAY_SECONDARY"/>
-		<tag k="highway" v="HIGHWAY_TERTIARY"/>
-		<tag k="highway" v="WAY_UNDEFINED"/>
-		<tag k="highway" v="HIGHWAY_RESIDENTAL"/>
-		<tag k="building" v="BUILDING"/>
-	</zoomlevel>
-	<zoomlevel level="3">
+		<type name="SPORT"/>
+		<type name="PARK"/>
 		
 	</zoomlevel>
+	<zoomlevel level="3">
+		<type name="HIGHWAY_RESIDENTAL"/>
+	<type name="WAY_UNDEFINED"/>
+</zoomlevel>
 	<zoomlevel level="4">
 		
 	</zoomlevel>
 	<zoomlevel level="5">
-		<tag k="highway" v="WAY_SERVICE"/>
+		<type name="WAY_SERVICE"/>
 	</zoomlevel>
 	<zoomlevel level="6">
 		
@@ -51,13 +47,13 @@
 		
 	</zoomlevel>
 	<zoomlevel level="13">
-		
+		<type name="HIGHWAY_CYCLEWAY"/>
 	</zoomlevel>
 	<zoomlevel level="14">
 		
 	</zoomlevel>
 	<zoomlevel level="15">
-		<tag k="highway" v="HIGHWAY_FOOTWAY"/>
+		<type name="HIGHWAY_FOOTWAY"/>
 	</zoomlevel>
 	<zoomlevel level="16">
 		

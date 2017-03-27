@@ -7,6 +7,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
@@ -25,9 +26,13 @@ public class OSMNodeHandler implements ContentHandler {
 	private int byteCount;
 	private Locator locator;
 
-	private List<ParsedObject> currentParsedObjects = new ArrayList<ParsedObject>();
 	private HashMap<Long, ParsedWay> pendingWays = new HashMap<Long, ParsedWay>();
-
+	private List<ParsedObject> currentParsedObjects = new ArrayList<>();
+	private Map<Long, ParsedNode> nodeMap = new HashMap<>();
+	private ArrayList<ParsedWay> wayQueueList = new ArrayList<>();
+	private int totalWays = 0;
+	private int completedWays = 0;
+	
 	private InputStream inputStream;
 
 	private long fileSize;
