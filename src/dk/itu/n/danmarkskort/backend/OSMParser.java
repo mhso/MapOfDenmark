@@ -60,7 +60,6 @@ public class OSMParser {
 				inputStream = new FileInputStream(fileName);
 				loadOSM(new InputSource(inputStream), fileName);
 			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			
@@ -84,15 +83,17 @@ public class OSMParser {
 	}
 	
 	private void loadOSM(InputSource source, String fileName) {
-		
 		try {
 			XMLReader reader = XMLReaderFactory.createXMLReader();
-			if(Main.lightweight) reader.setContentHandler(new LightWeightParser());
-			else reader.setContentHandler(new OSMNodeHandler(this, fileName));
-			reader.parse(source);
-		} catch (SAXException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
+			if(Main.lightweight) {
+				reader.setContentHandler(Main.model);
+				reader.parse(source);
+			}
+			else {
+				reader.setContentHandler(new OSMNodeHandler(this, fileName));
+				reader.parse(source);
+			}
+		} catch (SAXException | IOException e) {
 			e.printStackTrace();
 		}
 	}

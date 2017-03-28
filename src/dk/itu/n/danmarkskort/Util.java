@@ -122,16 +122,26 @@ public class Util {
 		
 		double x = coord.getLong() - bounds.minLong;
 		double y = coord.getLat() - bounds.minLat;
-		double latDist = bounds.getWidth();
-		double lonDist = bounds.getHeight();
-		double heightDist = bounds.getPixelHeight();
-		double widthDist = bounds.getPixelWidth();
+
+		y *= -1;
 		
-		double ratioX = widthDist / latDist;
-		double ratioY = heightDist / lonDist;
-		x *= ratioX;
-		y *= -ratioY;
-		y += heightDist;
+		x *= 100;
+		y *= 100;
+		
+		return new Point2D.Double(x, y);
+	}
+	
+	public static Point2D coordinateToScreen(double lat, double lon) {
+		ParsedBounds bounds = Main.tileController.getBounds();
+		
+		double x = lon - bounds.minLong;
+		double y = lat - bounds.minLat;
+
+		y *= -1;
+		
+		x *= 100;
+		y *= 100;
+		
 		return new Point2D.Double(x, y);
 	}
 	
