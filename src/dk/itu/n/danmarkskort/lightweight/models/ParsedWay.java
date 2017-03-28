@@ -1,5 +1,7 @@
 package dk.itu.n.danmarkskort.lightweight.models;
 
+import dk.itu.n.danmarkskort.Main;
+
 import java.awt.*;
 import java.awt.geom.Path2D;
 import java.util.ArrayList;
@@ -22,6 +24,18 @@ public class ParsedWay extends ParsedItem{
 
     public float[] getCoords() { return coords; }
     public long getID() { return id; }
+
+    public ArrayList<Float> getLons() {
+        ArrayList<Float> lons = new ArrayList<>();
+        for(int i = 0; i < coords.length; i = i+2) lons.add(coords[i]);
+        return lons;
+    }
+
+    public ArrayList<Float> getLats() {
+        ArrayList<Float> lats = new ArrayList<>();
+        for(int i = 1; i < coords.length; i = i+2) lats.add(coords[i]);
+        return lats;
+    }
 
     public Path2D getPath() {
         Path2D path = new Path2D.Float();

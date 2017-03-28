@@ -69,7 +69,7 @@ public class WayTypeUtil {
             case "landuse":
                 switch(v) {
                     case "residential":
-                        // residential area
+                        type = WayType.RESIDENTIAL;
                         break;
                     case "forest":
                         type = WayType.FOREST;
