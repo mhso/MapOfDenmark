@@ -41,7 +41,8 @@ public class LightWeightParser extends SAXAdapter {
 
     private WayType waytype;
     private long id;
-
+    private boolean finished = false;
+    
     public void startDocument() throws SAXException {
         nodeMap = new NodeMap();
         wayMap = new HashMap<>();
@@ -50,6 +51,7 @@ public class LightWeightParser extends SAXAdapter {
         enumMap = new EnumMap<>(WayType.class);
         for(WayType waytype : WayType.values()) enumMap.put(waytype, new ArrayList<>());
 
+        finished = false;
         Main.log("Parsing started.");
     }
 
@@ -75,6 +77,7 @@ public class LightWeightParser extends SAXAdapter {
 
         AddressController.getInstance().onLWParsingFinished();
         finalClean();
+        finished = true;
     }
 
     public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
@@ -201,5 +204,9 @@ public class LightWeightParser extends SAXAdapter {
     private void finalClean() {
         nodeMap = null;
         // ideally all objects have been passed on, and this object would delete all references to anything. A really big clean up!
+    }
+    
+    public boolean isFinished() {
+    	return finished;
     }
 }
