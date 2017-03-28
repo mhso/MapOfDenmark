@@ -28,36 +28,7 @@ public class AddressController implements OSMParserListener{
 		addresses =  new HashMap<float[], Address>();
 		addressDatabase = new HashMap<>();
 	}
-	int count = 0;
-
-    public void addressParsed(dk.itu.n.danmarkskort.lightweight.models.ParsedAddress address) {
-        HashMap<String, HashMap> postcode;
-        HashMap<String, Float[]> street;
-
-        if(addressDatabase.containsKey(address.getPostcode())) {
-        	postcode = addressDatabase.get(address.getPostcode());
-		} else {
-            postcode = new HashMap<>();
-            addressDatabase.put(address.getPostcode(), postcode);
-        }
-
-        if(postcode.containsKey(address.getStreet())) {
-        	street = postcode.get(address.getStreet());
-		} else {
-            street = new HashMap<>();
-            postcode.put(address.getStreet(), street);
-        }
-
-        if(!street.containsKey(address.getHousenumber())) {
-        	Float[] coords = new Float[]{address.getFirstLon(), address.getFirstLat()};
-            street.put(address.getHousenumber(), coords);
-            numAddresses++;
-        }
-    }
-
-	public void onLWParsingFinished() {
-		Main.log("Addresses: " + numAddresses);
-	}
+	int count = 0; 
 
 	public static AddressController getInstance(){
         if (instance == null) {
@@ -139,12 +110,41 @@ public class AddressController implements OSMParserListener{
 			if (addr == null) addr = new Address(lonLat);
 			AddressOsmParser aop = new AddressOsmParser(addr);
 			aop.parseKeyAddr(attributes);
-			if(addr.getCity() != null){
+			if(addr.getPostcode() != -1){
 				PostcodeCityCombination.getInstance().add(addr.getPostcode(), addr.getCity());
 			}
 			return addr;
 		}
 		return null;
+	}
+	
+	public void addressParsed(dk.itu.n.danmarkskort.lightweight.models.ParsedAddress address) {
+        HashMap<String, HashMap<String, Float[]>> postcode;
+        HashMap<String, Float[]> street;
+
+        if(addressDatabase.containsKey(address.getPostcode())) {
+        	postcode = addressDatabase.get(address.getPostcode());
+		} else {
+            postcode = new HashMap<>();
+            addressDatabase.put(address.getPostcode(), postcode);
+        }
+
+        if(postcode.containsKey(address.getStreet())) {
+        	street = postcode.get(address.getStreet());
+		} else {
+            street = new HashMap<>();
+            postcode.put(address.getStreet(), street);
+        }
+
+        if(!street.containsKey(address.getHousenumber())) {
+        	Float[] coords = new Float[]{address.getFirstLon(), address.getFirstLat()};
+            street.put(address.getHousenumber(), coords);
+            numAddresses++;
+        }
+    }
+
+	public void onLWParsingFinished() {
+		Main.log("Addresses: " + numAddresses);
 	}
 	
 	@Override
@@ -170,6 +170,7 @@ public class AddressController implements OSMParserListener{
 		// TODO Auto-generated method stub
 		PostcodeCityCombination.getInstance().bestMatches();
 		PostcodeCityCombination.getInstance().clearCombinations();
+		PostcodeCityCombination.getInstance().printBestMaches();
 		Main.log("AdresseController found: "+addresses.size()+" adresses");
 	}
 

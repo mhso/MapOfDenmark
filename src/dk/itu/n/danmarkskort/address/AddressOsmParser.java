@@ -44,8 +44,6 @@ public class AddressOsmParser {
 				buildAddress.setPostcode(postcodeTemp);
 			}
 		break;
-//		case "city":			buildAddress.setCity(null);
-//		break;
 		}
 	}
 }
