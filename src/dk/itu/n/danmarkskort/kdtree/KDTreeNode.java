@@ -1,6 +1,5 @@
-package dk.itu.n.danmarkskort.mapdata;
+package dk.itu.n.danmarkskort.kdtree;
 
-import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.lightweight.models.ParsedItem;
 
 import java.util.ArrayList;
@@ -16,7 +15,7 @@ public class KDTreeNode extends KDTree {
     private KDTree parent; // should this just be deleted? At least now we can move both up and down
 
     public KDTreeNode(ArrayList<ParsedItem> list) {
-        this(KDUtil.listToArray(list), null, true);
+        this(listToArray(list), null, true);
     }
 
     public KDTreeNode(ParsedItem[] array, KDTree parent, boolean sortByLon) {

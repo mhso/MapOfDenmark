@@ -1,4 +1,4 @@
-package dk.itu.n.danmarkskort.mapdata;
+package dk.itu.n.danmarkskort.kdtree;
 
 import dk.itu.n.danmarkskort.lightweight.models.ParsedItem;
 
@@ -14,7 +14,7 @@ public class KDTreeLeaf extends KDTree {
     }
 
     public KDTreeLeaf(ArrayList<ParsedItem> list, KDTree parent) {
-        data = KDUtil.listToArray(list);
+        data = listToArray(list);
     }
 
     public ParsedItem[] getData() { return data; }

@@ -36,6 +36,7 @@ public class Main {
 
 	public static void startup(String[] args) {
 		if(lightweight) {
+			model = LightWeightParser.getInstance();
 			osmParser = new OSMParser();
 			prepareParser(args);
 		} else {
