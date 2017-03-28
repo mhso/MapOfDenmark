@@ -85,8 +85,10 @@ public class OSMParser {
 	private void loadOSM(InputSource source, String fileName) {
 		try {
 			XMLReader reader = XMLReaderFactory.createXMLReader();
-			Main.model = new LightWeightParser();
-			if(Main.lightweight) reader.setContentHandler(Main.model);
+			if(Main.lightweight) {
+				reader.setContentHandler(Main.model);
+				reader.parse(source);
+			}
 			else {
 				reader.setContentHandler(new OSMNodeHandler(this, fileName));
 				reader.parse(source);

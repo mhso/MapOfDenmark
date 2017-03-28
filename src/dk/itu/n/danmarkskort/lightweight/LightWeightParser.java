@@ -2,14 +2,13 @@ package dk.itu.n.danmarkskort.lightweight;
 
 import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.SAXAdapter;
-import dk.itu.n.danmarkskort.TimerUtil;
 import dk.itu.n.danmarkskort.address.AddressController;
 import dk.itu.n.danmarkskort.lightweight.models.*;
 import dk.itu.n.danmarkskort.lightweight.models.ParsedAddress;
 import dk.itu.n.danmarkskort.lightweight.models.ParsedWay;
-import dk.itu.n.danmarkskort.mapdata.KDTree;
-import dk.itu.n.danmarkskort.mapdata.KDTreeLeaf;
-import dk.itu.n.danmarkskort.mapdata.KDTreeNode;
+import dk.itu.n.danmarkskort.kdtree.KDTree;
+import dk.itu.n.danmarkskort.kdtree.KDTreeLeaf;
+import dk.itu.n.danmarkskort.kdtree.KDTreeNode;
 import dk.itu.n.danmarkskort.models.WayType;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -19,6 +18,8 @@ import java.util.EnumMap;
 import java.util.HashMap;
 
 public class LightWeightParser extends SAXAdapter {
+
+    private static LightWeightParser instance;
 
     private float minLatBoundary, minLonBoundary, maxLatBoundary, maxLonBoundary, lonFactor;
 
@@ -42,6 +43,15 @@ public class LightWeightParser extends SAXAdapter {
     private WayType waytype;
     private long id;
     private boolean finished = false;
+
+    private LightWeightParser() {
+
+    }
+
+    public static LightWeightParser getInstance() {
+        if(instance == null) instance = new LightWeightParser();
+        return instance;
+    }
     
     public void startDocument() throws SAXException {
         nodeMap = new NodeMap();
@@ -66,7 +76,6 @@ public class LightWeightParser extends SAXAdapter {
 
         enumMapKD = new EnumMap<>(WayType.class);
         for(WayType wt : WayType.values()) {
-            Main.log(wt);
             ArrayList<ParsedItem> current = enumMap.get(wt);
             KDTree tree;
             if(current.isEmpty()) tree = null;
