@@ -1,11 +1,12 @@
 package dk.itu.n.danmarkskort.lightweight.models;
 
+import java.awt.geom.Path2D;
 import java.util.ArrayList;
 
 public class ParsedRelation extends ParsedItem {
 
     private long id;
-    private float[] coords;
+    private float[] coords; // not sure if these are needed for a relation
     private ParsedWay[] ways;
     private ParsedRelation[] relations;
 
@@ -30,6 +31,13 @@ public class ParsedRelation extends ParsedItem {
     public float[] getCoords() { return coords; }
     public ParsedWay[] getWays() { return ways; }
     public ParsedRelation[] getRelations() { return relations; }
+
+    public Path2D getPath() {
+        Path2D path = new Path2D.Float(Path2D.WIND_EVEN_ODD);
+        for(ParsedItem item : ways) path.append(item.getPath(), false);
+        for(ParsedItem item : relations) path.append(item.getPath(), false);
+        return path;
+    }
 
     public float getFirstLon() {
         if(coords != null && coords.length > 1) return coords[0];
