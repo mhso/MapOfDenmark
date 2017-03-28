@@ -10,6 +10,7 @@ import dk.itu.n.danmarkskort.backend.OSMParser;
 import dk.itu.n.danmarkskort.backend.TileController;
 import dk.itu.n.danmarkskort.gui.WindowParsingLoadscreenNew;
 import dk.itu.n.danmarkskort.gui.map.MapCanvas;
+import dk.itu.n.danmarkskort.lightweight.LightWeightParser;
 
 public class Main {
 
@@ -21,6 +22,7 @@ public class Main {
 	public static OSMParser osmParser;
 	public static TileController tileController;
 	public static JFrame window;
+	public static LightWeightParser model;
 	public static MapCanvas map;
 	public static MainCanvas mainPanel;
 
@@ -48,8 +50,8 @@ public class Main {
 		WindowParsingLoadscreenNew loadScreen = new WindowParsingLoadscreenNew();
 		LoadScreenThread loadScreenThread = new LoadScreenThread(loadScreen);
 		
-		// Add your listeners for the parser here, if you are going to use data. 
-		osmParser.addListener(AddressController.getInstance());
+//		 Add your listeners for the parser here, if you are going to use data. 
+		//osmParser.addListener(AddressController.getInstance());
 		osmParser.addListener(loadScreen);
 		osmParser.addListener(tileController);
 		
@@ -87,7 +89,7 @@ public class Main {
             map.setPreferredSize(new Dimension(WIDTH, HEIGHT));
             overlay.add(mainPanel);
             
-            if(!lightweight) overlay.add(map);
+            overlay.add(map);
 
             window.add(overlay);
             window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
