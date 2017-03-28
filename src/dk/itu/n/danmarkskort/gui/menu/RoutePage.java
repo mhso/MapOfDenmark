@@ -28,7 +28,7 @@ public class RoutePage extends JPanel {
 
     Style style;
     private JTextField txtAddrFrom;
-    private JTextField txtAddreTo;
+    private JTextField txtAddrTo;
     JLabel lblAddrFromConfirmed, lblAddrToConfirmed;
     private DropdownAddressSearch dropSuggestionsAddrFrom;
     private DropdownAddressSearch dropSuggestionsAddrTo;
@@ -158,19 +158,19 @@ public class RoutePage extends JPanel {
         gbc_lblTo.gridy = 2;
         panelCenter.add(lblTo, gbc_lblTo);
         
-        txtAddreTo = new JTextField();
-        txtAddreTo.setText(txtAddreToSetField);
+        txtAddrTo = new JTextField();
+        txtAddrTo.setText(txtAddreToSetField);
         GridBagConstraints gbc_txtAddreto = new GridBagConstraints();
         gbc_txtAddreto.gridwidth = 3;
         gbc_txtAddreto.insets = new Insets(0, 0, 5, 5);
         gbc_txtAddreto.fill = GridBagConstraints.HORIZONTAL;
         gbc_txtAddreto.gridx = 1;
         gbc_txtAddreto.gridy = 2;
-        panelCenter.add(txtAddreTo, gbc_txtAddreto);
-        txtAddreTo.setColumns(15);
-        dropSuggestionsAddrTo = new DropdownAddressSearch(txtAddreTo, style);
-        ((AbstractDocument) txtAddreTo.getDocument()).setDocumentFilter(new SearchFilter(txtAddreTo, dropSuggestionsAddrTo));
-        txtAddreTo.addKeyListener(new KeyAdapter() {
+        panelCenter.add(txtAddrTo, gbc_txtAddreto);
+        txtAddrTo.setColumns(15);
+        dropSuggestionsAddrTo = new DropdownAddressSearch(txtAddrTo, style);
+        ((AbstractDocument) txtAddrTo.getDocument()).setDocumentFilter(new SearchFilter(txtAddrTo, dropSuggestionsAddrTo));
+        txtAddrTo.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				if(!dropSuggestionsAddrTo.isEmpty()) {
@@ -256,14 +256,14 @@ public class RoutePage extends JPanel {
     
     private void swapToFromFields() {
     	String addrFromTemp = txtAddrFrom.getText();
-    	txtAddrFrom.setText(txtAddreTo.getText());
-    	txtAddreTo.setText(addrFromTemp);
+    	txtAddrFrom.setText(txtAddrTo.getText());
+    	txtAddrTo.setText(addrFromTemp);
     	validateToFromFields();
 	}
     
     private void validateToFromFields() {
     	updateValidInputAddrTo(txtAddrFrom, lblAddrFromConfirmed);
-    	updateValidInputAddrTo(txtAddreTo, lblAddrToConfirmed);
+    	updateValidInputAddrTo(txtAddrTo, lblAddrToConfirmed);
 	}
     
     private boolean updateValidInputAddrTo(JTextField field, JLabel labelName){
@@ -281,7 +281,7 @@ public class RoutePage extends JPanel {
     }
     
     private void openFindRoute(){
-    	RoutePlannerMain routePlannerMain =  new RoutePlannerMain();
+    	RoutePlannerMain routePlannerMain =  new RoutePlannerMain(txtAddrFrom.getText(), txtAddrTo.getText());
     }
 
 	private void initContentPanel(JPanel panel){
