@@ -72,7 +72,7 @@ public class AddressParser {
 			
 			//System.out.println("PAT_POSTCODE Match: ["+allMatch.group()+"] Start Index: "+allMatch.start()+" End Index: "+allMatch.end());
 			
-			buildAddr.setPostcode(Integer.parseInt(postcodeMatch));
+			buildAddr.setPostcode(postcodeMatch);
 			buildAddr.setCity(cityMatch);
 		}
 		
@@ -93,13 +93,13 @@ public class AddressParser {
 			
 			//System.out.println("PAT_POSTCODE_CITY Match: ["+allMatch.group()+"] Start Index: "+allMatch.start()+" End Index: "+allMatch.end());
 			
-			buildAddr.setPostcode(Integer.parseInt(postcodeMatch));
+			buildAddr.setPostcode(postcodeMatch);
 			buildAddr.setCity(cityMatch);
 		}
 		
 		if(finalBuildAddr.getStreet() == null){ finalBuildAddr.setStreet(buildAddr.getStreet()); }
 		if(finalBuildAddr.getHousenumber() == null){ finalBuildAddr.setHousenumber(buildAddr.getHousenumber()); }
-		if(finalBuildAddr.getPostcode() == -1){ finalBuildAddr.setPostcode(buildAddr.getPostcode()); }
+		if(finalBuildAddr.getPostcode() == null){ finalBuildAddr.setPostcode(buildAddr.getPostcode()); }
 		if(finalBuildAddr.getCity() == null){ finalBuildAddr.setCity(buildAddr.getCity()); }
 		
 		return finalBuildAddr;

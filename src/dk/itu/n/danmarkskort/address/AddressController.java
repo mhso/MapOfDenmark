@@ -96,9 +96,9 @@ public class AddressController implements OSMParserListener{
 			}
 		}
 		
-		if(result.size() == 0 && addrBuild.getPostcode() != -1){
+		if(result.size() == 0 && addrBuild.getPostcode() != null){
 			result.addAll(AddressSearchPredicates.filterToStringShort(addresses, 
-					AddressSearchPredicates.postcodeEquals(Integer.toString(addrBuild.getPostcode())) , 5l));
+					AddressSearchPredicates.postcodeEquals(addrBuild.getPostcode()) , 5l));
 		}
 		// Remove duplicates and return
 		return result.stream().distinct().collect(Collectors.toList());
@@ -110,7 +110,7 @@ public class AddressController implements OSMParserListener{
 			if (addr == null) addr = new Address(lonLat);
 			AddressOsmParser aop = new AddressOsmParser(addr);
 			aop.parseKeyAddr(attributes);
-			if(addr.getPostcode() != -1){
+			if(addr.getPostcode() != null && addr.getCity() != null){
 				PostcodeCityCombination.getInstance().add(addr.getPostcode(), addr.getCity());
 			}
 			return addr;

@@ -66,8 +66,8 @@ public class AddressSearchPredicates {
 	    }
 	    
 	    public static Predicate<Address> postcodeEquals(String strInput) {
-	        return p -> p.getPostcode() != -1 
-	        		&& Integer.toString(p.getPostcode()).equalsIgnoreCase(strInput);
+	        return p -> p.getPostcode() != null
+	        		&& p.getPostcode().equalsIgnoreCase(strInput);
 	    }
 	    
 	    public static Predicate<Address> toStringShortContains(String strInput) {

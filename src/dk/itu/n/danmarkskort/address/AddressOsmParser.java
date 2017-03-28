@@ -33,16 +33,7 @@ public class AddressOsmParser {
 		case "housenumber":		buildAddress.setHousenumber(value);
 		break;
 		case "postcode":
-			int postcodeTemp = -1;
-			try{
-				postcodeTemp = Integer.parseInt(value);
-			} catch(NumberFormatException e){
-				String str = value.replaceAll("[^0-9]", "");
-				if(str.length() == 4) postcodeTemp = Integer.parseInt(str);
-				//e.printStackTrace();
-			} finally{
-				buildAddress.setPostcode(postcodeTemp);
-			}
+				buildAddress.setPostcode(value.replaceAll("[^0-9]{4}", ""));
 		break;
 		}
 	}
