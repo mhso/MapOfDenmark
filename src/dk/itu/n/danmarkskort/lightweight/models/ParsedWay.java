@@ -23,7 +23,7 @@ public class ParsedWay extends ParsedItem{
     public float[] getCoords() { return coords; }
     public long getID() { return id; }
 
-    public Shape getShape() {
+    public Path2D getPath() {
         Path2D path = new Path2D.Float();
         path.moveTo(coords[0], coords[1]);
         for(int i = 1; i < coords.length;) path.lineTo(coords[i++], coords[i++]);

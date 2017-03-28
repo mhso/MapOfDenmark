@@ -1,13 +1,15 @@
 package dk.itu.n.danmarkskort.address;
 
 public class AddressValidator {
+	private final String allowedCharSet = "a-zA-ZæøåÆØÅáÁéÉèÈöÖ'";
+	
 	public AddressValidator(){
 	}
 
 	public String cleanAddress(String inputStr){
 		inputStr = inputStr.replaceAll("\\s{2,}"," ") //replace spaces etc.
 				.replaceAll("[\\t\\u002C\\u002E]"," ") //replace tabs, Comma, dots
-				.replaceAll("[^0-9a-zA-ZæøåÆØÅáÁéÉèÈöÖ\\u002D\\s]","?")
+				.replaceAll("[^0-9"+allowedCharSet+"\\u002D\\s]","?")
 				.replaceAll("\\s{2,}"," ").trim();
 		inputStr = parseAddressFloor(inputStr);
 		inputStr = cleanAddressFloor(inputStr);
@@ -24,10 +26,10 @@ public class AddressValidator {
 
 	public String insertDotAfterSingleChar(String inputStr){
 		return inputStr.replaceAll("^([0-9]+)\\s", "$1. ") //replace single digit  "* " with "*. "
-				.replaceAll("^([a-zA-ZæøåÆØÅáÁéÉèÈöÖ]{1})\\s", "$1. ") //replace single letter "* " with "*. "
-				.replaceAll("\\s([a-zA-ZæøåÆØÅáÁéÉèÈöÖ]{1})\\s", " $1. ") //replace single letter " * " with " *. "
-				.replaceAll("\\s([a-zA-ZæøåÆØÅáÁéÉèÈöÖ]{1})\\s", " $1. ") //replace single letter " * " with " *. "
-				.replaceAll("\\b([a-zA-ZæøåÆØÅáÁéÉèÈöÖ]{2})\\b", " $1. "); //replace single letter " * " with " *. "
+				.replaceAll("^(allowedCharSet{1})\\s", "$1. ") //replace single letter "* " with "*. "
+				.replaceAll("\\s(["+allowedCharSet+"]{1})\\s", " $1. ") //replace single letter " * " with " *. "
+				//.replaceAll("\\s(["+allowedCharSet+"}{1})\\s", " $1. ") //replace single letter " * " with " *. "
+				.replaceAll("\\b(["+allowedCharSet+"]{2})\\b", " $1. "); //replace single letter " * " with " *. "
 	}
 
 	public String parseAddressSide(String inputStr){

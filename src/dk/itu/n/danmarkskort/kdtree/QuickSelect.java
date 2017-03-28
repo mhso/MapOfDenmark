@@ -1,4 +1,4 @@
-package dk.itu.n.danmarkskort.mapdata;
+package dk.itu.n.danmarkskort.kdtree;
 
 import dk.itu.n.danmarkskort.lightweight.models.ParsedItem;
 

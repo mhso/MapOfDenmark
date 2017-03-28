@@ -2,14 +2,13 @@ package dk.itu.n.danmarkskort.lightweight;
 
 import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.SAXAdapter;
-import dk.itu.n.danmarkskort.TimerUtil;
 import dk.itu.n.danmarkskort.address.AddressController;
 import dk.itu.n.danmarkskort.lightweight.models.*;
 import dk.itu.n.danmarkskort.lightweight.models.ParsedAddress;
 import dk.itu.n.danmarkskort.lightweight.models.ParsedWay;
-import dk.itu.n.danmarkskort.mapdata.KDTree;
-import dk.itu.n.danmarkskort.mapdata.KDTreeLeaf;
-import dk.itu.n.danmarkskort.mapdata.KDTreeNode;
+import dk.itu.n.danmarkskort.kdtree.KDTree;
+import dk.itu.n.danmarkskort.kdtree.KDTreeLeaf;
+import dk.itu.n.danmarkskort.kdtree.KDTreeNode;
 import dk.itu.n.danmarkskort.models.WayType;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -19,6 +18,8 @@ import java.util.EnumMap;
 import java.util.HashMap;
 
 public class LightWeightParser extends SAXAdapter {
+
+    private static LightWeightParser instance;
 
     private float minLatBoundary, minLonBoundary, maxLatBoundary, maxLonBoundary, lonFactor;
 
@@ -41,7 +42,17 @@ public class LightWeightParser extends SAXAdapter {
 
     private WayType waytype;
     private long id;
+    private boolean finished = false;
 
+    private LightWeightParser() {
+
+    }
+
+    public static LightWeightParser getInstance() {
+        if(instance == null) instance = new LightWeightParser();
+        return instance;
+    }
+    
     public void startDocument() throws SAXException {
         nodeMap = new NodeMap();
         wayMap = new HashMap<>();
@@ -50,6 +61,7 @@ public class LightWeightParser extends SAXAdapter {
         enumMap = new EnumMap<>(WayType.class);
         for(WayType waytype : WayType.values()) enumMap.put(waytype, new ArrayList<>());
 
+        finished = false;
         Main.log("Parsing started.");
     }
 
@@ -64,7 +76,6 @@ public class LightWeightParser extends SAXAdapter {
 
         enumMapKD = new EnumMap<>(WayType.class);
         for(WayType wt : WayType.values()) {
-            Main.log(wt);
             ArrayList<ParsedItem> current = enumMap.get(wt);
             KDTree tree;
             if(current.isEmpty()) tree = null;
@@ -76,6 +87,7 @@ public class LightWeightParser extends SAXAdapter {
 
         AddressController.getInstance().onLWParsingFinished();
         finalClean();
+        finished = true;
     }
 
     public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
@@ -202,5 +214,9 @@ public class LightWeightParser extends SAXAdapter {
     private void finalClean() {
         nodeMap = null;
         // ideally all objects have been passed on, and this object would delete all references to anything. A really big clean up!
+    }
+    
+    public boolean isFinished() {
+    	return finished;
     }
 }

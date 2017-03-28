@@ -74,7 +74,6 @@ public class OSMNodeHandler implements ContentHandler {
 			if(linkWay(way)) completedWays++;
 			for(OSMParserListener listener : parser.parserListeners) {
 				if(way.getNodes().length > 1) {
-					way.createShape();
 					listener.onWayLinked(way);
 				}
 			}

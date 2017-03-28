@@ -1,6 +1,7 @@
 package dk.itu.n.danmarkskort;
 
 import java.awt.Dimension;
+import java.awt.Toolkit;
 
 import javax.swing.*;
 
@@ -9,6 +10,7 @@ import dk.itu.n.danmarkskort.backend.OSMParser;
 import dk.itu.n.danmarkskort.backend.TileController;
 import dk.itu.n.danmarkskort.gui.WindowParsingLoadscreenNew;
 import dk.itu.n.danmarkskort.gui.map.MapCanvas;
+import dk.itu.n.danmarkskort.lightweight.LightWeightParser;
 
 public class Main {
 
@@ -20,10 +22,11 @@ public class Main {
 	public static OSMParser osmParser;
 	public static TileController tileController;
 	public static JFrame window;
+	public static LightWeightParser model;
 	public static MapCanvas map;
 	public static MainCanvas mainPanel;
 
-	public final static boolean lightweight = false;
+	public final static boolean lightweight = true;
 	
 	public static void main(String[] args) {
         startup(args);
@@ -33,6 +36,7 @@ public class Main {
 
 	public static void startup(String[] args) {
 		if(lightweight) {
+			model = LightWeightParser.getInstance();
 			osmParser = new OSMParser();
 			prepareParser(args);
 		} else {
@@ -47,8 +51,8 @@ public class Main {
 		WindowParsingLoadscreenNew loadScreen = new WindowParsingLoadscreenNew();
 		LoadScreenThread loadScreenThread = new LoadScreenThread(loadScreen);
 		
-		// Add your listeners for the parser here, if you are going to use data. 
-		osmParser.addListener(AddressController.getInstance());
+//		 Add your listeners for the parser here, if you are going to use data. 
+		//osmParser.addListener(AddressController.getInstance());
 		osmParser.addListener(loadScreen);
 		osmParser.addListener(tileController);
 		
@@ -77,6 +81,7 @@ public class Main {
 
     public static void makeFrame() {
             window = new JFrame(APP_NAME);
+            window.setIconImage(Toolkit.getDefaultToolkit().getImage("resources/icons/map-icon.png"));
             JPanel overlay = new JPanel();
             overlay.setLayout(new OverlayLayout(overlay));
             overlay.setPreferredSize(new Dimension(WIDTH, HEIGHT));
@@ -85,7 +90,7 @@ public class Main {
             map.setPreferredSize(new Dimension(WIDTH, HEIGHT));
             overlay.add(mainPanel);
             
-            if(!lightweight) overlay.add(map);
+            overlay.add(map);
 
             window.add(overlay);
             window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
