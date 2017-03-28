@@ -1,7 +1,7 @@
 package dk.itu.n.danmarkskort.address;
 
 public class AddressValidator {
-	private final String allowedCharSet = "a-zA-ZæøåÆØÅáÁéÉèÈöÖ'";
+	private final String allowedCharSet = "\\u002D\\0027a-zA-ZæøåÆØÅáÁéÉèÈöÖ";
 	
 	public AddressValidator(){
 	}
