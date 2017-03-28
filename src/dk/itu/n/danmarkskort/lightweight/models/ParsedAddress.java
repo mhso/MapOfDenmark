@@ -36,4 +36,8 @@ public class ParsedAddress {
         else if(relation != null) return relation.getFirstLat();
         return -1;
     }
+    
+    public String toString(){
+    	return street +" "+housenumber+" "+postcode+" "+city;
+    }
 }
