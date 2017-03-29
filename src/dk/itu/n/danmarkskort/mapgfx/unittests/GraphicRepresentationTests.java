@@ -35,7 +35,7 @@ public class GraphicRepresentationTests {
 	
 	@Test
 	public void testWaytypeNotNull() {
-		assertNotNull(GraphicRepresentation.getGraphicSpecs(1).get(0).getMapElement());
+		assertNotNull(GraphicRepresentation.getGraphicSpecs(1).get(0).getWayType());
 	}
 	
 	@Test

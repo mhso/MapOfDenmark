@@ -92,6 +92,10 @@ public class ParsedWay extends ParsedObject {
 			type = WayType.GRASS;
 			closedShape = true;
 		}
+		else if("grass".equals(attributes.get("landuse"))) {
+			type = WayType.FARMLAND;
+			closedShape = true;
+		}
 		else if("scrub".equals(attributes.get("natural"))) {
 			type = WayType.SCRUB;
 			closedShape = true;

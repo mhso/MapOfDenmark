@@ -251,7 +251,7 @@ public class ThemeAddElement extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if(e.getClickCount() == 2) {
-					fieldName.setText(list.getSelectedValue().toString());
+					fieldName.setText(unusedWaytypes.get(list.getSelectedIndex()).toString());
 					dialog.dispose();
 				}
 			}			
@@ -260,7 +260,7 @@ public class ThemeAddElement extends JFrame {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				if(e.getKeyCode() == KeyEvent.VK_ENTER && !list.isSelectionEmpty()) {
-					fieldName.setText(list.getSelectedValue().toString());
+					fieldName.setText(unusedWaytypes.get(list.getSelectedIndex()).toString());
 					dialog.dispose();
 				}
 			}
