@@ -2,6 +2,7 @@ package dk.itu.n.danmarkskort.lightweight;
 
 import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.SAXAdapter;
+import dk.itu.n.danmarkskort.Util;
 import dk.itu.n.danmarkskort.address.AddressController;
 import dk.itu.n.danmarkskort.lightweight.models.*;
 import dk.itu.n.danmarkskort.lightweight.models.ParsedAddress;
@@ -9,6 +10,8 @@ import dk.itu.n.danmarkskort.lightweight.models.ParsedWay;
 import dk.itu.n.danmarkskort.kdtree.KDTree;
 import dk.itu.n.danmarkskort.kdtree.KDTreeLeaf;
 import dk.itu.n.danmarkskort.kdtree.KDTreeNode;
+import dk.itu.n.danmarkskort.models.ParsedBounds;
+import dk.itu.n.danmarkskort.models.Region;
 import dk.itu.n.danmarkskort.models.WayType;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -21,11 +24,11 @@ import java.util.List;
 
 public class LightWeightParser extends SAXAdapter {
 
-    private float minLatBoundary, minLonBoundary, maxLatBoundary, maxLonBoundary, lonFactor;
+    public float minLatBoundary, minLonBoundary, maxLatBoundary, maxLonBoundary, lonFactor;
 
-    private NodeMap nodeMap;
-    private HashMap<Long, ParsedWay> wayMap;
-    private HashMap<Long, ParsedRelation> relationMap;
+    public NodeMap nodeMap;
+    public HashMap<Long, ParsedWay> wayMap;
+    public HashMap<Long, ParsedRelation> relationMap;
 
     // bør efter endt OSM indlæsning omdanne alle ArrayLists til KD-træer
     public EnumMap<WayType, ArrayList<ParsedItem>> enumMap;
@@ -112,6 +115,7 @@ public class LightWeightParser extends SAXAdapter {
                 maxLonBoundary *= lonFactor;
                 minLatBoundary = -minLatBoundary;
                 maxLatBoundary = -maxLatBoundary;
+                Main.log("Updated bounds.");
                 break;
             case "node":
                 id = Long.parseLong(atts.getValue("id"));
@@ -227,5 +231,29 @@ public class LightWeightParser extends SAXAdapter {
     
     public boolean isFinished() {
     	return finished;
+    }
+    
+    public float getMinLon() {
+    	return this.minLonBoundary;
+    }
+    
+    public float getMaxLon() {
+    	return this.maxLonBoundary;
+    }
+    
+    public float getMinLat() {
+    	return this.minLatBoundary;
+    }
+    
+    public float getMaxLat() {
+    	return this.maxLatBoundary;
+    }
+    
+    public Region getMapRegion() {
+    	float x1 = getMinLon();
+    	float y1 = getMinLat();
+    	float x2 = getMaxLon();
+    	float y2 = getMaxLat();
+    	return new Region(x1, y1, x2, y2);
     }
 }

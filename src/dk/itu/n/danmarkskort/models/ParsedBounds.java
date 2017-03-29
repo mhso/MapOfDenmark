@@ -22,7 +22,7 @@ public class ParsedBounds extends ParsedObject {
 	}
 
 	public String toString() {
-		return "minLat=" + minLat + ", minLong=" + minLong + ", maxLat=" + maxLat + ", maxLong=" + maxLong;
+		return "x: " + minLong + ", y: " + minLat + ", width: " + getWidth() + ", height: " + getHeight();
 	}
 
 	public double getWidth() {
