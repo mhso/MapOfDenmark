@@ -63,7 +63,7 @@ public class AddressParser {
 		}
 	}
 
-	public static Address parse(String inputAddress) {
+	public static Address parse(String inputAddress, boolean searchMode) {
 		String input = AddressValidator.cleanAddress(inputAddress);
 		Address addrBuild = new Address();
 		for (Pattern pattern : PATTERNS) {
@@ -73,61 +73,13 @@ public class AddressParser {
 				consumeIfMatchGroup(addrBuild::setHousenumber, matcher, "housenumber");
 				consumeIfMatchGroup(addrBuild::setPostcode, matcher, "postcode");
 				consumeIfMatchGroup(addrBuild::setCity, matcher, "city");
-				return addrBuild;
+				if(!searchMode) return addrBuild;
 			}
 		}
 		//throw new IllegalArgumentException("Cannot parse Address: " + input);
 		//System.out.println("Cannot parse Address: " + inputAddress);
 		//System.out.println("Clean parse Address: " + input);
+		if(searchMode) return addrBuild;
 		return null;
-	}
-	
-	private static String combineRegexSearch(String ... args) {
-		StringBuilder sb = new StringBuilder();
-		for (String arg : args) {
-			if (sb.length() > 0) sb.append(" *,? *");
-			sb.append(arg);
-		}
-		return sb.toString();
-	}
-
-	private final static String[] REGEXS_SEARCH = {
-			combineRegexSearch(PAT_FLOOR),
-			combineRegexSearch(PAT_DOORSIDE),
-			combineRegexSearch(PAT_STREET),
-			combineRegexSearch(PAT_HOUSENUMBER),
-			combineRegexSearch(PAT_POSTCODE),
-			combineRegexSearch(PAT_CITY),
-			combineRegexSearch(PAT_STREET_HOUSENUMBER),
-			combineRegexSearch(PAT_POSTCODE_CITY),
-			combineRegexSearch(PAT_STREET, PAT_POSTCODE_CITY),
-			combineRegexSearch(PAT_STREET_HOUSENUMBER, PAT_POSTCODE),
-			combineRegexSearch(PAT_STREET_HOUSENUMBER, PAT_CITY),
-			combineRegexSearch(PAT_STREET_HOUSENUMBER, PAT_POSTCODE_CITY)
-	};
-	
-	private final static Pattern[] PATTERNS_SEARCH =
-			Arrays.stream(REGEXS_SEARCH).map(Pattern::compile).toArray(Pattern[]::new);
-	
-	public static Address parseSearch(String inputAddress){
-		String input = AddressValidator.cleanAddress(inputAddress);
-		Address addrBuild = new Address();
-		for (Pattern pattern : PATTERNS_SEARCH) {
-			Matcher matcher = pattern.matcher(input);
-			if (matcher.matches()) {
-				System.out.println("Pattern: " + pattern.pattern());
-				consumeIfMatchGroup(addrBuild::setStreet, matcher, "street");
-				consumeIfMatchGroup(addrBuild::setHousenumber, matcher, "housenumber");
-				consumeIfMatchGroup(addrBuild::setPostcode, matcher, "postcode");
-				consumeIfMatchGroup(addrBuild::setCity, matcher, "city");
-			}
-		}
-		//throw new IllegalArgumentException("Cannot parse Address: " + input);
-		System.out.println("inputAddress Address: " + inputAddress);
-		System.out.println("Clean Address: " + input);
-		System.out.println("Search parse Address: " + addrBuild.toStringShort());
-		System.out.println("Search parse Address: " + addrBuild.toString());
-		return addrBuild;
-		
 	}
 }

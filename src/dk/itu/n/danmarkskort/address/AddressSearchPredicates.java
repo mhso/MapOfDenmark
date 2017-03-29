@@ -9,7 +9,6 @@ import org.apache.commons.lang3.StringUtils;
 
 public class AddressSearchPredicates {
 	    public static Predicate<Address> streetStartsWith(String strInput) {
-	    	
 	        return p ->  p.getStreet() != null && p.getStreet().toLowerCase().startsWith(strInput.toLowerCase());
 	    }
 	    
@@ -76,21 +75,21 @@ public class AddressSearchPredicates {
 	    }
 	    
 	    public static Predicate<Address> toStringShortEquals(Address addr) {
-	        return p -> p.toStringShort() != null 
+	        return p -> p.toStringShort() != null
 	        		&& p.toStringShort().equalsIgnoreCase((addr.toStringShort()));
 	    }
 	     
 	    public static List<Address> filterAddresses(Map<float[], Address> addresses, 
 	    		Predicate<Address> predicate, long limit) {
 			    	if(addresses != null && predicate != null ) {
-			    		return addresses.values().stream().filter(predicate).limit(limit)
+			    		return addresses.values().parallelStream().filter(predicate).limit(limit)
 			    				.collect(Collectors.<Address>toList());
 			        }
 			    	return null;
 	    }
 	    
 	    public static List<String> toStringShort(List<Address> addresses){
-	    	return addresses.stream().map(Address::toStringShort).collect(Collectors.<String>toList());
+	    	return addresses.parallelStream().map(Address::toStringShort).collect(Collectors.<String>toList());
 	    }
 	    
 	    public static List<String> filterToStringShort(Map<float[], Address> addresses, 
@@ -104,9 +103,10 @@ public class AddressSearchPredicates {
 	    
 	    public static Address addressEquals(Map<float[], Address> addresses, Address addr){
 	    	//System.out.println(addr.toStringShort());
-			List<Address> result = (filterAddresses(addresses, 
-					toStringShortEquals(addr) , 1l));
-			if(result != null && result.size() > 0) return result.get(0);
+	    	if(addresses != null && addr != null){
+				List<Address> result = (filterAddresses(addresses, toStringShortEquals(addr) , 1l));
+				if(result != null && result.size() > 0) return result.get(0);
+	    	}
 			return null;
 	}
 }

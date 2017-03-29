@@ -1,10 +1,6 @@
 package dk.itu.n.danmarkskort.address;
 
 import dk.itu.n.danmarkskort.Main;
-import dk.itu.n.danmarkskort.backend.OSMParserListener;
-import dk.itu.n.danmarkskort.models.ParsedAddress;
-import dk.itu.n.danmarkskort.models.ParsedObject;
-import dk.itu.n.danmarkskort.models.ParsedWay;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,7 +10,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
-public class AddressController implements OSMParserListener{
+public class AddressController{
 	private Map<float[], Address> addresses;
 	private Map<float[], String> addressesNotAccepted;
 
@@ -53,14 +49,14 @@ public class AddressController implements OSMParserListener{
 	public List<String> getSearchSuggestions(String find){ return searchSuggestions(find); }
 	
 	public Address getSearchResult(String find){
-		Address addrBuild = AddressSearchPredicates.addressEquals(addresses, AddressParser.parseSearch(find));
+		Address addrBuild = AddressSearchPredicates.addressEquals(addresses, AddressParser.parse(find, false));
 		return addrBuild;
 	}
 	
 	private List<String> searchSuggestions(String find){
 		//System.out.println("Addr: looking for suggestions ");
 
-		Address addrBuild = AddressParser.parseSearch(find);
+		Address addrBuild = AddressParser.parse(find, true);
 		List<String> result = new ArrayList<String>();
 		//System.out.println("searchSuggestions: "+addrBuild.toString());
 
@@ -102,7 +98,7 @@ public class AddressController implements OSMParserListener{
 					AddressSearchPredicates.postcodeEquals(addrBuild.getPostcode()) , 5l));
 		}
 		// Remove duplicates and return
-		return result.stream().distinct().collect(Collectors.toList());
+		return result.parallelStream().distinct().collect(Collectors.toList());
 	}
 	
 	public Address createOsmAddress(float[] lonLat, Map<String, String> attributes){
@@ -147,9 +143,8 @@ public class AddressController implements OSMParserListener{
 	        float lon = address.getFirstLon();
 			float lat = address.getFirstLat();			
 			float[] lonLat = new float[] {lon,lat};
-			AddressParser ap = new AddressParser();
 			//Address addrParsed = ap.parse(address.getStreet() +" "+address.getHousenumber()+" "+address.getPostcode()+" "+address.getCity());
-			Address addrParsed = AddressParser.parse(address.toStringShort());
+			Address addrParsed = AddressParser.parse(address.toStringShort(), false);
 			if(addrParsed != null) {
 				addrParsed.setLonLat(lonLat);
 				//System.out.println("OSM: "+address.toString());
@@ -184,43 +179,5 @@ public class AddressController implements OSMParserListener{
 //			if(++i > 300) break;
 //		}
 		Main.log("Addresses: " + numAddresses);
-	}
-	
-	@Override
-	public void onParsingStarted() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onParsingGotObject(ParsedObject parsedObject) {
-		if(parsedObject instanceof ParsedAddress) {
-			ParsedAddress omsAddr = (ParsedAddress) parsedObject;
-			float lon = Float.parseFloat(omsAddr.getAttributes().get("lon"));
-			float lat = Float.parseFloat(omsAddr.getAttributes().get("lat"));
-			float[] lonLat = new float[] {lon,lat};
-			Address addr = createOsmAddress(lonLat, omsAddr.attributes);
-			if(addr != null) addresses.put(addr.getLonLat(), addr);
-		}
-	}
-	
-	@Override
-	public void onParsingFinished() {
-		// TODO Auto-generated method stub
-		PostcodeCityCombination.getInstance().bestMatches();
-		PostcodeCityCombination.getInstance().clearCombinations();
-		PostcodeCityCombination.getInstance().printBestMaches();
-		Main.log("AdresseController found: "+addresses.size()+" adresses");
-	}
-
-	@Override
-	public void onLineCountHundred() {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void onWayLinked(ParsedWay way) {
-		// TODO Auto-generated method stub
-		
 	}
 }
