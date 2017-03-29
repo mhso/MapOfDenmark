@@ -138,11 +138,11 @@ public class LoadPage extends JPanel  {
 			File file = fc.getSelectedFile();
 			//model.loadNewModel(file.getAbsolutePath());
 			System.out.println("Load New Map File:"+file);
-			// Parse the new data, replacing all the old. Should loading screen be run again?
-			// If replacing is not an option, delete the old data first using some reset methods.
-			// Reset canvas, perhaps just drawing a square to erase everything.
-			// ??
-			// Profit.
+			/* 1. Parse the new data, replacing all the old. Should loading screen be run again?
+			 * 2. If replacing is not an option, delete the old data first using some reset methods.
+			 * 3. Reset canvas, perhaps just drawing a square to erase everything.
+			 * 4. ??
+			 * 5. Profit. */
         } else {
         }
 
@@ -153,7 +153,7 @@ public class LoadPage extends JPanel  {
 		fc.setDialogTitle(dialogTitle);
 		fc.setApproveButtonText(approveBtnTxt);
 		fc.setAcceptAllFileFilterUsed(false);
-		fc.setFileSelectionMode(JFileChooser.APPROVE_OPTION);
+		fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		fc.setFileFilter(new FileNameExtensionFilter("Map Files", "osm", "zip", "bin"));
 		fc.setCurrentDirectory(new File(System.getProperty("user.home")));
 		return fc;
