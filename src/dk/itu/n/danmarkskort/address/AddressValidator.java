@@ -40,7 +40,7 @@ public class AddressValidator {
 	
 	public String removeEndingDot(String inputStr){
 		inputStr = cleanSpaces(inputStr);
-		if(inputStr.endsWith(".")) return inputStr.substring(0, inputStr.length()-1);
+		if(inputStr.endsWith("\\u002E")) return inputStr.substring(0, inputStr.length()-1);
 		return inputStr;
 	}
 
