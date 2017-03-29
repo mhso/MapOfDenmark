@@ -147,13 +147,15 @@ public class AddressController implements OSMParserListener{
 			float lat = address.getFirstLat();			
 			float[] lonLat = new float[] {lon,lat};
 			AddressParser ap = new AddressParser();
-			Address addrParsed = ap.parse(address.getStreet() +" "+address.getHousenumber()+"_"+address.getPostcode()+"_"+address.getCity());
+			//Address addrParsed = ap.parse(address.getStreet() +" "+address.getHousenumber()+" "+address.getPostcode()+" "+address.getCity());
+			Address addrParsed = ap.parse(address.toStringShort());
 			if(addrParsed != null) {
 				//System.out.println("OSM: "+address.toString());
 				//System.out.println("ADC: "+addrParsed.toStringShort());
-				if(!address.toString().equals(addrParsed.toStringShort())) {
+				if(!address.toStringShort().equals(addrParsed.toStringShort())) {
 					System.out.println("--- ALARM NOT MATCHING ALARM ---\n --> OSM: "+address.toString()
-						+"\n --> ADC: "+addrParsed.toStringShort());
+						+"\n --> ADC: "+addrParsed.toStringShort()
+						+"\n --> ADC: "+addrParsed.toString());
 				}
 				addresses.put(addrParsed.getLonLat(), addrParsed);
 				PostcodeCityCombination.getInstance().add(addrParsed.getPostcode(), addrParsed.getCity());
