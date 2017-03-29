@@ -3,7 +3,9 @@
 	<zoomlevel level="1">
 		<type name="GRASS"/>
 		<type name="FARMLAND"/>
-<type name="FOREST"/>
+		<type name="FOREST"/>
+		<type name="COASTLINE"/>
+		<type name="UNDEFINED"/>
 		<type name="HIGHWAY_MOTORWAY"/>
 		<type name="HIGHWAY_TRUNK"/>
 		<type name="HIGHWAY_PRIMARY"/>

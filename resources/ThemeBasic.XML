@@ -9,6 +9,20 @@
 			<lineproperties linewidth="0.1"/>
 		</line>
 		<line>
+			<type name="COASTLINE"/>
+			<innercolor color="000000"/>
+			<outercolor color="000000"/>
+			<lineproperties linewidth="0.3"/>
+		</line>
+		
+		<line>
+			<type name="UNDEFINED"/>
+			<innercolor color="000000"/>
+			<outercolor color="000000"/>
+			<lineproperties linewidth="0.01"/>
+		</line>
+		
+		<line>
 			<type name="HIGHWAY_TRUNK"/>
 			<innercolor color="CE4A4A"></innercolor>
 			<outercolor color="B52929"/>
