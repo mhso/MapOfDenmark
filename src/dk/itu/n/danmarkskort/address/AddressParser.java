@@ -9,9 +9,11 @@ public class AddressParser {
 	}
 	
 	public Address parse(String inputAddress){
-		final String RGX_ALPHA = "[\\.\\u002Da-zA-ZæøåÆØÅáÁéÉèÈöÖ ]";
+		final String RGX_ALPHA = "[\\.\\u002D\\0027\\'a-zA-ZæøåÆØÅáÁéÉèÈöÖüÜëË ]";
 		final String RGX_POSTCODE = "(?<postcode>[0-9]{4})";
-		final String RGX_HOUSENUMBER = "([0-9]{1,3}[a-zA-Z]{1})|([0-9]{1,3})";
+		//final String RGX_HOUSENUMBER = "([0-9]{1,3}[a-zA-Z]{1})|([0-9]{1,3})";
+		final String RGX_MULTIPLEHOUSENUMBER = "([0-9]{1,3}[a-zA-Z]{1}\\-[0-9]{1,3}[a-zA-Z]{1})|([0-9]{1,3}\\-[0-9]{1,3})";
+		final String RGX_HOUSENUMBER = RGX_MULTIPLEHOUSENUMBER + "|([0-9]{1,3}[a-zA-Z]{1})|([0-9]{1,3})";
 		
 		final Pattern PAT_POSTCODE = Pattern.compile(RGX_POSTCODE);
 		final Pattern PAT_STREET_HOUSE = 
@@ -19,7 +21,7 @@ public class AddressParser {
 		final Pattern PAT_POSTCODE_CITY = Pattern.compile(""+RGX_POSTCODE+"\\s(?<city>"+RGX_ALPHA+"+$)");
 		final Pattern PAT_STREET = Pattern.compile("^(?<street>([0-9]{1,3}\\s"+RGX_ALPHA+"+)|("+RGX_ALPHA+"+))");
 		final Pattern PAT_CITY = Pattern.compile("(?<city>"+RGX_ALPHA+"+$)");
-		final Pattern PAT_FLOOR = Pattern.compile("(?<floor>(kl.|st.|([0-9])+(\\.\\s(sal))))");
+		final Pattern PAT_FLOOR = Pattern.compile("(?<floor>(kld.|st.|([0-9])+(\\.\\s(sal))))");
 		final Pattern PAT_DOORSIDE = Pattern.compile("(?<side>(tv.|mf.|th.))");
 		
 		Address buildAddr = new Address();
@@ -51,7 +53,6 @@ public class AddressParser {
 			buildAddr.setStreet(streetMatch);
 			buildAddr.setHousenumber(housenumberMatch);
 		}
-		
 		
 		Matcher streetPat = PAT_STREET.matcher(inputAddress);
 		if(streetPat.find()){

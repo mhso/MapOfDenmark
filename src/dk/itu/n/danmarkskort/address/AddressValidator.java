@@ -1,21 +1,25 @@
 package dk.itu.n.danmarkskort.address;
 
 public class AddressValidator {
-	private final String allowedCharSet = "\\u002D\\0027a-zA-ZæøåÆØÅáÁéÉèÈöÖ";
+	private final String allowedAlphaSet = "a-zA-ZæøåÆØÅáÁéÉèÈöÖüÜëË";
+	private final String allowedCharSet = "\\u002D\\u0027"+allowedAlphaSet;
 	
 	public AddressValidator(){
 	}
 
 	public String cleanAddress(String inputStr){
-		inputStr = inputStr.replaceAll("\\s{2,}"," ") //replace spaces etc.
-				.replaceAll("[\\t\\u002C\\u002E]"," ") //replace tabs, Comma, dots
-				.replaceAll("[^0-9"+allowedCharSet+"\\u002D\\s]","?")
-				.replaceAll("\\s{2,}"," ").trim();
+		inputStr = cleanSpaces(inputStr);
+		inputStr = inputStr.replaceAll("[\\t\\u002C\\u002E]"," ") //replace tabs, Comma, dots
+				.replaceAll("[^0-9"+allowedCharSet+"\\u002D\\s]","?"); //replace all non allowed char with "?"
+		inputStr = cleanSpaces(inputStr);
+		//if(inputStr.contains("Batteri")) System.out.println(inputStr);
 		inputStr = parseAddressFloor(inputStr);
 		inputStr = cleanAddressFloor(inputStr);
 		inputStr = parseAddressSide(inputStr);
 		inputStr = cleanAddressSide(inputStr);
 		inputStr = insertDotAfterSingleChar(inputStr);
+		inputStr = insertDotAfterDoubleChar(inputStr);
+		inputStr = removeEndingDot(inputStr);
 		inputStr = cleanSpaces(inputStr);
 		return inputStr;
 	}
@@ -26,10 +30,18 @@ public class AddressValidator {
 
 	public String insertDotAfterSingleChar(String inputStr){
 		return inputStr.replaceAll("^([0-9]+)\\s", "$1. ") //replace single digit  "* " with "*. "
-				.replaceAll("^(allowedCharSet{1})\\s", "$1. ") //replace single letter "* " with "*. "
-				.replaceAll("\\s(["+allowedCharSet+"]{1})\\s", " $1. ") //replace single letter " * " with " *. "
-				//.replaceAll("\\s(["+allowedCharSet+"}{1})\\s", " $1. ") //replace single letter " * " with " *. "
-				.replaceAll("\\b(["+allowedCharSet+"]{2})\\b", " $1. "); //replace single letter " * " with " *. "
+				.replaceAll("\\b(["+allowedAlphaSet+"]{1})\\s", " $1. "); //replace single letter " * " with " *. "
+	}
+	
+	public String insertDotAfterDoubleChar(String inputStr){
+		return inputStr
+				.replaceAll("\\b(["+allowedAlphaSet+"]{2})\\s", " $1. "); //replace double letter " * " with " *. "
+	}
+	
+	public String removeEndingDot(String inputStr){
+		inputStr = cleanSpaces(inputStr);
+		if(inputStr.endsWith(".")) return inputStr.substring(0, inputStr.length()-1);
+		return inputStr;
 	}
 
 	public String parseAddressSide(String inputStr){
@@ -45,15 +57,15 @@ public class AddressValidator {
 	}
 
 	public String parseAddressFloor(String inputStr){
-		return inputStr.replaceAll("(?i)\\b(kl|kælder|kælderen)\\b", "kl. ")
+		return inputStr.replaceAll("(?i)\\b(kl|kld|kælder|kælderen)\\b", "kld. ")
 				.replaceAll("(?i)\\b(st|stue|stuen)\\b", "st. ")
 				.replaceAll("([0-9])+(\\s{0,})(?i)(sal)\\b", "$1\\. sal ")
 				.replaceAll("([0-9]+\\s[0-9]+)(\\s{0,})([a-zA-Z]{2})\\b", "$1\\. sal $3");
 	}
 
 	public String cleanAddressFloor(String inputStr){
-		return inputStr.replaceAll("kl.", "")
-				.replaceAll("st. ","")
+		return inputStr.replaceAll("kld\\.", "")
+				.replaceAll("st\\. ","")
 				.replaceAll("([0-9])+(\\. sal) ","");
 	}
 }
