@@ -150,10 +150,11 @@ public class AddressController implements OSMParserListener{
 			//Address addrParsed = ap.parse(address.getStreet() +" "+address.getHousenumber()+" "+address.getPostcode()+" "+address.getCity());
 			Address addrParsed = ap.parse(address.toStringShort());
 			if(addrParsed != null) {
+				addrParsed.setLonLat(lonLat);
 				//System.out.println("OSM: "+address.toString());
 				//System.out.println("ADC: "+addrParsed.toStringShort());
 				if(!address.toStringShort().equals(addrParsed.toStringShort())) {
-					System.out.println("--- ALARM NOT MATCHING ALARM ---\n --> OSM: "+address.toString()
+					System.out.println("--- ALARM NOT MATCHING ALARM ---\n --> OSM: "+address.toStringShort()
 						+"\n --> ADC: "+addrParsed.toStringShort()
 						+"\n --> ADC: "+addrParsed.toString());
 				}

@@ -10,9 +10,9 @@ public class AddressValidator {
 	public String cleanAddress(String inputStr){
 		inputStr = cleanSpaces(inputStr);
 		inputStr = inputStr.replaceAll("[\\t\\u002C\\u002E]"," ") //replace tabs, Comma, dots
-				.replaceAll("[^0-9"+allowedCharSet+"\\u002D\\s]","?"); //replace all non allowed char with "?"
+				.replaceAll("[^0-9"+allowedCharSet+"\\s]","?")
+				.replaceAll(" - ","-"); //replace all non allowed char with "?"
 		inputStr = cleanSpaces(inputStr);
-		//if(inputStr.contains("Batteri")) System.out.println(inputStr);
 		inputStr = parseAddressFloor(inputStr);
 		inputStr = cleanAddressFloor(inputStr);
 		inputStr = parseAddressSide(inputStr);
