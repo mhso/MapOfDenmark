@@ -36,25 +36,24 @@ public class ParsedRelation extends ParsedItem {
 
     public ArrayList<Float> getLons() {
         ArrayList<Float> lons = new ArrayList<>();
-        Main.log(id);
-        for(int i = 0; i < coords.length; i = i+2) lons.add(coords[i]);
-        for(ParsedWay way : ways) lons.addAll(way.getLons());
-        for(ParsedRelation rel : relations) lons.addAll(rel.getLons());
+        if(coords != null) for(int i = 0; i < coords.length; i = i+2) lons.add(coords[i]);
+        if(ways != null) for(ParsedWay way : ways) lons.addAll(way.getLons());
+        if(relations != null) for(ParsedRelation rel : relations) lons.addAll(rel.getLons());
         return lons;
     }
 
     public ArrayList<Float> getLats() {
         ArrayList<Float> lats = new ArrayList<>();
-        for(int i = 1; i < coords.length; i = i+2) lats.add(coords[i]);
-        for(ParsedWay way : ways) lats.addAll(way.getLons());
-        for(ParsedRelation rel : relations) lats.addAll(rel.getLons());
+        if(coords != null) for(int i = 1; i < coords.length; i = i+2) lats.add(coords[i]);
+        if(ways != null) for(ParsedWay way : ways) lats.addAll(way.getLats());
+        if(relations != null) for(ParsedRelation rel : relations) lats.addAll(rel.getLats());
         return lats;
     }
 
     public Path2D getPath() {
         Path2D path = new Path2D.Float(Path2D.WIND_EVEN_ODD);
-        for(ParsedItem item : ways) path.append(item.getPath(), false);
-        for(ParsedItem item : relations) path.append(item.getPath(), false);
+        if(ways != null) for(ParsedItem item : ways) path.append(item.getPath(), false);
+        if(relations != null) for(ParsedItem item : relations) path.append(item.getPath(), false);
         return path;
     }
 

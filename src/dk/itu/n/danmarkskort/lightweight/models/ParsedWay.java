@@ -1,8 +1,5 @@
 package dk.itu.n.danmarkskort.lightweight.models;
 
-import dk.itu.n.danmarkskort.Main;
-
-import java.awt.*;
 import java.awt.geom.Path2D;
 import java.util.ArrayList;
 

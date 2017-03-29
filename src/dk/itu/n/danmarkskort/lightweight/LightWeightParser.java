@@ -19,8 +19,6 @@ import java.util.HashMap;
 
 public class LightWeightParser extends SAXAdapter {
 
-    private static LightWeightParser instance;
-
     private float minLatBoundary, minLonBoundary, maxLatBoundary, maxLonBoundary, lonFactor;
 
     private NodeMap nodeMap;
@@ -43,15 +41,6 @@ public class LightWeightParser extends SAXAdapter {
     private WayType waytype;
     private long id;
     private boolean finished = false;
-
-    private LightWeightParser() {
-
-    }
-
-    public static LightWeightParser getInstance() {
-        if(instance == null) instance = new LightWeightParser();
-        return instance;
-    }
     
     public void startDocument() throws SAXException {
         nodeMap = new NodeMap();

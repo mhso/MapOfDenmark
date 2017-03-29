@@ -13,9 +13,8 @@ public abstract class KDTree {
         return array;
     }
 
-    public ArrayList<Shape> getShapes() {
-        return new ArrayList<>();
-    }
+    public abstract ArrayList<Shape> getShapes(float lon, float lat, float w, float h);
+    public abstract ArrayList<Shape> getShapes(float lon, float lat, float w, float h, boolean sortByLon);
 
     public abstract KDTree getParent();
     public abstract int size();
