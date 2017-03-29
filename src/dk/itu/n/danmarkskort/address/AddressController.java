@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 
 public class AddressController implements OSMParserListener{
 	private Map<float[], Address> addresses;
+	private Map<float[], String> addressesNotAccepted;
 
 	private static AddressController instance;
 	private HashMap<String, HashMap> addressDatabase;
@@ -26,6 +27,7 @@ public class AddressController implements OSMParserListener{
 	
 	private AddressController(){
 		addresses =  new HashMap<float[], Address>();
+		addressesNotAccepted =  new HashMap<float[], String>();
 		addressDatabase = new HashMap<>();
 	}
 	int count = 0; 
@@ -51,15 +53,14 @@ public class AddressController implements OSMParserListener{
 	public List<String> getSearchSuggestions(String find){ return searchSuggestions(find); }
 	
 	public Address getSearchResult(String find){
-		AddressParser ap = new AddressParser();
-		Address addrBuild = AddressSearchPredicates.addressEquals(addresses, ap.parse(find));
+		Address addrBuild = AddressSearchPredicates.addressEquals(addresses, AddressParser.parseSearch(find));
 		return addrBuild;
 	}
 	
 	private List<String> searchSuggestions(String find){
 		//System.out.println("Addr: looking for suggestions ");
-		AddressParser ap = new AddressParser();
-		Address addrBuild = ap.parse(find);
+
+		Address addrBuild = AddressParser.parseSearch(find);
 		List<String> result = new ArrayList<String>();
 		//System.out.println("searchSuggestions: "+addrBuild.toString());
 
@@ -148,24 +149,40 @@ public class AddressController implements OSMParserListener{
 			float[] lonLat = new float[] {lon,lat};
 			AddressParser ap = new AddressParser();
 			//Address addrParsed = ap.parse(address.getStreet() +" "+address.getHousenumber()+" "+address.getPostcode()+" "+address.getCity());
-			Address addrParsed = ap.parse(address.toStringShort());
+			Address addrParsed = AddressParser.parse(address.toStringShort());
 			if(addrParsed != null) {
 				addrParsed.setLonLat(lonLat);
 				//System.out.println("OSM: "+address.toString());
 				//System.out.println("ADC: "+addrParsed.toStringShort());
-				if(!address.toStringShort().equals(addrParsed.toStringShort())) {
-					System.out.println("--- ALARM NOT MATCHING ALARM ---\n --> OSM: "+address.toStringShort()
-						+"\n --> ADC: "+addrParsed.toStringShort()
-						+"\n --> ADC: "+addrParsed.toString());
-				}
-				addresses.put(addrParsed.getLonLat(), addrParsed);
+//				if(!address.toStringShort().equals(addrParsed.toStringShort())) {
+//					System.out.println("--- ALARM NOT MATCHING ALARM ---\n --> OSM: "+address.toStringShort()
+//						+"\n --> ADC: "+addrParsed.toStringShort()
+//						+"\n --> ADC: "+addrParsed.toString());
+//				}
+				addresses.put(lonLat, addrParsed);
 				PostcodeCityCombination.getInstance().add(addrParsed.getPostcode(), addrParsed.getCity());
+			} else {
+				addressesNotAccepted.put(lonLat, address.toStringShort());
 			}
         }	
     }
 
 	public void onLWParsingFinished() {
 		PostcodeCityCombination.getInstance().printBestMaches();
+		System.out.println("Accepted Addresses:"+addresses.size());
+		System.out.println("Not Accepted Addresses:"+addressesNotAccepted.size());
+//		int i=0;
+//		for(Address addr : addresses.values()){
+//			if(addr.toStringShort().contains("'")) System.out.println(i+": "+addr.toString());
+//			if(++i > 250) break;
+//		}
+//		System.out.println("Not Accepted Addresses:");
+//		i=0;
+//		for(String addr : addressesNotAccepted.values()){
+//			//if(addr.contains("'")) 
+//				System.out.println(i+": "+addr);
+//			if(++i > 300) break;
+//		}
 		Main.log("Addresses: " + numAddresses);
 	}
 	

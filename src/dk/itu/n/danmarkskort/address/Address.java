@@ -12,6 +12,20 @@ public class Address{
 		this.lonLat = lonlat;
 	}
 	
+	public Address(float[] lonLat, String street, String housenumber, String city, String postcode) {
+		this.lonLat = lonLat;
+		this.street = street;
+		this.housenumber = housenumber;
+		this.city = city;
+		this.postcode = postcode;
+	}
+	
+	public Address(String street, String housenumber, String city, String postcode) {
+		this.housenumber = housenumber;
+		this.city = city;
+		this.postcode = postcode;
+	}
+
 	public float[] getLonLat() { return lonLat; }
 	public void setLonLat(float[] latLon) { this.lonLat = latLon; }
 
