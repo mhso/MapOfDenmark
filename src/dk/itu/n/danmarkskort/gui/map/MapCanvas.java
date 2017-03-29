@@ -7,9 +7,12 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Line2D;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.awt.geom.Point2D.Double;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 
@@ -33,7 +36,7 @@ public class MapCanvas extends JPanel {
 	private AffineTransform transform = new AffineTransform();
 	private boolean antiAlias = true;
 	private int tileCount = 0;
-	private final int MAX_ZOOM = 200000;
+	private final int MAX_ZOOM = 20;
 
 	public MapCanvas() {
 		new MapMouseController(this);
@@ -48,68 +51,56 @@ public class MapCanvas extends JPanel {
 	}
 	
 	public void drawMap(Graphics2D g2d) {
+		if(!Main.lightweight) {
+			drawMapLegacy(g2d);
+			return;
+		}
 		
-//		RenderingHints hints    = new RenderingHints(RenderingHints.KEY_ANTIALIASING,
-//                RenderingHints.VALUE_ANTIALIAS_ON);    
-//
-//		hints.put(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-//		hints.put(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
-//		hints.put(RenderingHints.KEY_DITHERING, RenderingHints.VALUE_DITHER_ENABLE);
-//		hints.put(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
-//		hints.put(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-//		hints.put(RenderingHints.KEY_COLOR_RENDERING, RenderingHints.VALUE_COLOR_RENDER_QUALITY);
-//
-//		g2d.setRenderingHints(hints);
-//		
-		if(!Main.lightweight && !Main.tileController.hasBounds()) return;
+		g2d.setTransform(transform);
+		g2d.draw(new Line2D.Double(0, 0, Util.BOUNDS_DENMARK.minLong, Util.BOUNDS_DENMARK.minLat));
+		drawMapRegion(g2d);
+		
+	}
+
+	public List<Shape> getShapesInsideScreen() {
+		List<WaytypeGraphicSpec> wayTypeSpecs = GraphicRepresentation.getGraphicSpecs(Math.min(20, (int)getZoom()));
+		if(wayTypeSpecs == null) return new ArrayList<Shape>();
+		return null;
+	}
+	
+	public void drawMapLegacy(Graphics2D g2d) {
 		g2d.setTransform(transform);
 		
-		if(!Main.lightweight) {
-			ParsedBounds bounds = Main.tileController.getBounds();
-			
-			g2d.setColor(Color.RED);
-			g2d.setStroke(new BasicStroke(Float.MIN_VALUE));
-			
-			Point2D minPoint = Util.coordinateToScreen(bounds.minLong, bounds.minLat);
-			Point2D maxPoint = Util.coordinateToScreen(bounds.maxLong, bounds.maxLat);
-			double width = maxPoint.getX() - minPoint.getX();
-			double height = Math.abs(maxPoint.getY() - minPoint.getY());
-			
-			Main.log(minPoint);
-			Main.log(maxPoint);
-			Main.log(width + ", " + height);
-			
-			g2d.draw(new Rectangle2D.Double(minPoint.getX(), minPoint.getY(), width, height));
-			
-			List<WaytypeGraphicSpec> graphicSpecs =
-					GraphicRepresentation.getGraphicSpecs(20);
+		List<WaytypeGraphicSpec> graphicSpecs = GraphicRepresentation.getGraphicSpecs(20);
+		for(WaytypeGraphicSpec wgs : graphicSpecs) {
 	
-			for(WaytypeGraphicSpec wgs : graphicSpecs) {
-				
-				List<ParsedWay> ways = Main.tileController.getWaysOfType(wgs.getWayType());
-
-				if(wgs.getWayType() == null) continue;
-				
-				for(ParsedWay way : ways) {
-					Shape shape = way.getShape();
-	
-					wgs.transformOutline(g2d);
-					if(wgs instanceof GraphicSpecLine) g2d.draw(shape);
-					else if(wgs instanceof GraphicSpecArea) g2d.fill(shape);
-				}
-				
-				for(ParsedWay way : ways) {
-					Shape shape = way.getShape();
-					
-					wgs.transformPrimary(g2d);
-					if(wgs instanceof GraphicSpecLine) g2d.draw(shape);
-					else if(wgs instanceof GraphicSpecArea) g2d.fill(shape);
-				}
-	
+			List<ParsedWay> ways = Main.tileController.getWaysOfType(wgs.getWayType());
+			if(wgs.getWayType() == null) continue;
+			
+			for(ParsedWay way : ways) {
+				Shape shape = way.getShape();
+				wgs.transformOutline(g2d);
+				if(wgs instanceof GraphicSpecLine) g2d.draw(shape);
+				else if(wgs instanceof GraphicSpecArea) g2d.fill(shape);
+			}
+			
+			for(ParsedWay way : ways) {
+				Shape shape = way.getShape();	
+				wgs.transformPrimary(g2d);
+				if(wgs instanceof GraphicSpecLine) g2d.draw(shape);
+				else if(wgs instanceof GraphicSpecArea) g2d.fill(shape);
 			}
 		}
 	}
-
+	
+	public void drawMapRegion(Graphics2D g2d) {
+		g2d.setColor(Color.RED);
+		g2d.setStroke(new BasicStroke(Float.MIN_VALUE));
+		Main.log(Util.BOUNDS_DENMARK);
+		Shape mapRegion = new Rectangle2D.Double(Util.BOUNDS_DENMARK.minLong, Util.BOUNDS_DENMARK.minLat, Util.BOUNDS_DENMARK.getWidth(), -Util.BOUNDS_DENMARK.getHeight());
+		g2d.draw(mapRegion);
+	}
+	
 	public void pan(double dx, double dy) {
 		transform.preConcatenate(AffineTransform.getTranslateInstance(dx, dy));
 		repaint();
@@ -120,34 +111,39 @@ public class MapCanvas extends JPanel {
 	}
 
 	public Region getGeographicalRegion() {
-		
-		ParsedBounds denmark = Util.BOUNDS_DENMARK;
-		
-		double x1 = denmark.minLong + (-transform.getTranslateX()/getZoomRaw() / (640) * denmark.getWidth());
-		double y1 = denmark.minLat +  (transform.getTranslateY()/getZoomRaw() / (480) * denmark.getHeight());
-		double x2 = x1 +  (getWidth()/getZoomRaw() / (640) * denmark.getWidth());
-		double y2 = y1 +  (-getHeight()/getZoomRaw() / (480) * denmark.getHeight());
-		
-		
-		return new Region(x1, y1, x2, y2);
-		
+		if(!Main.lightweight) {
+			ParsedBounds denmark = Util.BOUNDS_DENMARK;
+			double x1 = denmark.minLong + (-transform.getTranslateX()/getZoomRaw() / (640) * denmark.getWidth());
+			double y1 = denmark.minLat +  (transform.getTranslateY()/getZoomRaw() / (480) * denmark.getHeight());
+			double x2 = x1 +  (getWidth()/getZoomRaw() / (640) * denmark.getWidth());
+			double y2 = y1 +  (-getHeight()/getZoomRaw() / (480) * denmark.getHeight());
+			return new Region(x1, y1, x2, y2);
+		} else {
+			Point2D topLeft = toModelCoords(new Point2D.Double(-transform.getTranslateX(), -transform.getTranslateY()));
+			Point2D bottomRight = toModelCoords(new Point2D.Double(-transform.getTranslateX() + getWidth(), -transform.getTranslateY() - getHeight()));
+			return new Region(topLeft.getX(), -topLeft.getY(), bottomRight.getX(), -bottomRight.getY());
+		}
 	}
 	
 	public void zoom(double factor) {
 		transform.preConcatenate(AffineTransform.getScaleInstance(factor, factor));
-		if(transform.getScaleX() > MAX_ZOOM) {
-			factor = (20 / getZoom());
-			transform.preConcatenate(AffineTransform.getScaleInstance(factor, factor));
-		} else if(transform.getScaleX() < 1) {
-			factor = (1 / getZoom());
-			transform.preConcatenate(AffineTransform.getScaleInstance(factor, factor));
-		}
+		//lockZoom();
 		repaint();
 	}
 
-	public Point2D toModelCoords(Point2D lastMousePosition) {
+	public void lockZoom() {
+		if(transform.getScaleX() > MAX_ZOOM) {
+			double factor = (20 / getZoom());
+			transform.preConcatenate(AffineTransform.getScaleInstance(factor, factor));
+		} else if(transform.getScaleX() < 1) {
+			double factor = (1 / getZoom());
+			transform.preConcatenate(AffineTransform.getScaleInstance(factor, factor));
+		}
+	}
+	
+	public Point2D toModelCoords(Point2D screenPosition) {
 		try {
-			return transform.inverseTransform(lastMousePosition, null);
+			return transform.inverseTransform(screenPosition, null);
 		} catch (NoninvertibleTransformException e) {
 			throw new RuntimeException(e);
 		}
@@ -178,8 +174,9 @@ public class MapCanvas extends JPanel {
 		return tileCount;
 	}
 
-	public void zoomToBounds(ParsedBounds bounds) {
-		
+	public void zoomToBounds() {
+		pan(-Main.model.getMinLon(), -Main.model.getMaxLat());
+		zoom(getWidth() / (Main.model.getMaxLon() - Main.model.getMinLon()));
 	}
 	
 	public Region getDisplayedRegion() {

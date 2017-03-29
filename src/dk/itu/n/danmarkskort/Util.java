@@ -20,7 +20,7 @@ import dk.itu.n.danmarkskort.models.ParsedBounds;
 
 public class Util {
 
-	public static final ParsedBounds BOUNDS_DENMARK = new ParsedBounds(54.44065D, 7.7011D, 58.06239D, 15.65449D);
+	public static ParsedBounds BOUNDS_DENMARK = new ParsedBounds(54.44065D, 7.7011D, 58.06239D, 15.65449D);
 	public static final float FACTOR_LON = (float)(Math.cos((BOUNDS_DENMARK.minLat + (BOUNDS_DENMARK.maxLat - BOUNDS_DENMARK.minLat) / 2)) / 180 * Math.PI); 
 	
 	public static float getRAMUsageInMB() {

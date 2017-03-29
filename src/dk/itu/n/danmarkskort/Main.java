@@ -11,6 +11,7 @@ import dk.itu.n.danmarkskort.backend.TileController;
 import dk.itu.n.danmarkskort.gui.WindowParsingLoadscreenNew;
 import dk.itu.n.danmarkskort.gui.map.MapCanvas;
 import dk.itu.n.danmarkskort.lightweight.LightWeightParser;
+import dk.itu.n.danmarkskort.mapgfx.GraphicRepresentation;
 
 public class Main {
 
@@ -26,7 +27,7 @@ public class Main {
 	public static MapCanvas map;
 	public static MainCanvas mainPanel;
 
-	public final static boolean lightweight = false;
+	public final static boolean lightweight = true;
 	
 	public static void main(String[] args) {
         startup(args);
@@ -38,6 +39,7 @@ public class Main {
 		if(lightweight) {
 			model = new LightWeightParser();
 			osmParser = new OSMParser();
+			GraphicRepresentation.main(new String[]{"resources/ThemeBasic.XML"});
 			prepareParser(args);
 		} else {
 			osmParser = new OSMParser();
@@ -48,16 +50,14 @@ public class Main {
 	}
 
 	public static void prepareParser(String[] args) {
-		WindowParsingLoadscreenNew loadScreen = new WindowParsingLoadscreenNew();
-		LoadScreenThread loadScreenThread = new LoadScreenThread(loadScreen);
-		
-//		 Add your listeners for the parser here, if you are going to use data. 
-		//osmParser.addListener(AddressController.getInstance());
-		osmParser.addListener(loadScreen);
-		osmParser.addListener(tileController);
-		
-		if(args.length == 1) {
+		if(!lightweight) {
+			WindowParsingLoadscreenNew loadScreen = new WindowParsingLoadscreenNew();
+			LoadScreenThread loadScreenThread = new LoadScreenThread(loadScreen);
+			//osmParser.addListener(AddressController.getInstance());
+			osmParser.addListener(loadScreen);
+			osmParser.addListener(tileController);
 			loadScreenThread.setFilenameAndRun(args[0]);
+		} else {
 			osmParser.parseFile(args[0]);
 		}
 	}
@@ -88,8 +88,8 @@ public class Main {
             mainPanel = new MainCanvas();
             map = new MapCanvas();
             map.setPreferredSize(new Dimension(WIDTH, HEIGHT));
-            overlay.add(mainPanel);
             
+            overlay.add(mainPanel);
             overlay.add(map);
 
             window.add(overlay);
@@ -97,6 +97,7 @@ public class Main {
             window.pack();
             window.setLocationRelativeTo(null);
             window.setVisible(true);
+            map.zoomToBounds();
     }
     
     private static class LoadScreenThread implements Runnable {

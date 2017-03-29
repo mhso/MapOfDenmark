@@ -2,6 +2,7 @@ package dk.itu.n.danmarkskort.lightweight;
 
 import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.SAXAdapter;
+import dk.itu.n.danmarkskort.Util;
 import dk.itu.n.danmarkskort.address.AddressController;
 import dk.itu.n.danmarkskort.lightweight.models.*;
 import dk.itu.n.danmarkskort.lightweight.models.ParsedAddress;
@@ -9,6 +10,8 @@ import dk.itu.n.danmarkskort.lightweight.models.ParsedWay;
 import dk.itu.n.danmarkskort.kdtree.KDTree;
 import dk.itu.n.danmarkskort.kdtree.KDTreeLeaf;
 import dk.itu.n.danmarkskort.kdtree.KDTreeNode;
+import dk.itu.n.danmarkskort.models.ParsedBounds;
+import dk.itu.n.danmarkskort.models.Region;
 import dk.itu.n.danmarkskort.models.WayType;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -112,6 +115,8 @@ public class LightWeightParser extends SAXAdapter {
                 maxLonBoundary *= lonFactor;
                 minLatBoundary = -minLatBoundary;
                 maxLatBoundary = -maxLatBoundary;
+                Util.BOUNDS_DENMARK = new ParsedBounds(minLatBoundary, minLonBoundary, maxLatBoundary, maxLonBoundary);
+                Main.log("Updated bounds.");
                 break;
             case "node":
                 id = Long.parseLong(atts.getValue("id"));
@@ -227,5 +232,21 @@ public class LightWeightParser extends SAXAdapter {
     
     public boolean isFinished() {
     	return finished;
+    }
+    
+    public float getMinLon() {
+    	return this.minLonBoundary;
+    }
+    
+    public float getMaxLon() {
+    	return this.maxLonBoundary;
+    }
+    
+    public float getMinLat() {
+    	return this.minLatBoundary;
+    }
+    
+    public float getMaxLat() {
+    	return this.maxLatBoundary;
     }
 }
