@@ -21,8 +21,6 @@ import java.util.List;
 
 public class LightWeightParser extends SAXAdapter {
 
-    private static LightWeightParser instance;
-
     private float minLatBoundary, minLonBoundary, maxLatBoundary, maxLonBoundary, lonFactor;
 
     private NodeMap nodeMap;
@@ -45,15 +43,6 @@ public class LightWeightParser extends SAXAdapter {
     private WayType waytype;
     private long id;
     private boolean finished = false;
-
-    private LightWeightParser() {
-
-    }
-
-    public static LightWeightParser getInstance() {
-        if(instance == null) instance = new LightWeightParser();
-        return instance;
-    }
     
     public List<ParsedItem> getDataInBounds(WayType wayType, Point2D minBound, Point2D maxBound) {
     	List<ParsedItem> data = new ArrayList<>();

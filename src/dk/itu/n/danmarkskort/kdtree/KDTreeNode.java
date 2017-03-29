@@ -1,7 +1,9 @@
 package dk.itu.n.danmarkskort.kdtree;
 
+import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.lightweight.models.ParsedItem;
 
+import java.awt.*;
 import java.util.ArrayList;
 
 public class KDTreeNode extends KDTree {
@@ -36,20 +38,29 @@ public class KDTreeNode extends KDTree {
         for(int i = 0; i < rightArray.length; i ++) {
             rightArray[i] = array[i + leftArray.length];
         }
-
-        // We need to know by what either lat or lon value the data set has been split
         if(sortByLon) {
             leftSplit = median.getFirstLon();
-            rightSplit = leftSplit;
+            for(ParsedItem item : leftArray) {
+                ArrayList<Float> lons = item.getLons();
+                for(Float coord : lons) leftSplit = coord > leftSplit ? coord : leftSplit; // til højre er værdierne størst
+            }
+            rightSplit = median.getFirstLon();
+            for(ParsedItem item : rightArray) {
+                ArrayList<Float> lons = item.getLons();
+                for(Float coord : lons) rightSplit = coord < rightSplit ? coord : rightSplit; // til højre er værdierne størst
+            }
         } else {
             leftSplit = median.getFirstLat();
-            rightSplit = leftSplit;
+            for(ParsedItem item : leftArray) {
+                ArrayList<Float> lats = item.getLats();
+                for(Float coord : lats) leftSplit = coord > leftSplit ? coord : leftSplit; // nederst er værdierne størst
+            }
+            rightSplit = median.getFirstLat();
+            for(ParsedItem item : rightArray) {
+                ArrayList<Float> lats = item.getLats();
+                for(Float coord : lats) rightSplit = coord < rightSplit ? coord : rightSplit; // nederst er værdierne størst
+            }
         }
-        // ^^^ Here we should loop through both lists' ways' coordinates, and check whether they are "outside" of split point
-        // and then save the max_value of the one farthest away
-        // this will, however, slow down the creation of KDTree
-        // but, it will ensure that we get all the elements we want to paint when we are drawing!
-
         if(leftArray.length > 1000) leftChild = new KDTreeNode(leftArray, this, !sortByLon);
         else leftChild = new KDTreeLeaf(leftArray, this);
 
@@ -62,6 +73,23 @@ public class KDTreeNode extends KDTree {
     public float getLeftSplit() { return leftSplit; }
     public float getRightSplit() { return rightSplit; }
 
+    @Override
+    public ArrayList<Shape> getShapes(float lon, float lat, float w, float h) {
+        return getShapes(lon, lat, w, h, true);
+    }
+    @Override
+    public ArrayList<Shape> getShapes(float lon, float lat, float w, float h, boolean sortByLon) {
+        ArrayList<Shape> shapes = new ArrayList<>();
+        if(sortByLon) {
+            if((lon + w) < leftSplit) shapes.addAll(leftChild.getShapes(lon, lat, w, h, !sortByLon));
+            if((lon + w) > rightSplit) shapes.addAll(rightChild.getShapes(lon, lat, w, h, !sortByLon));
+        }
+        else {
+            if((lat + h) < leftSplit) shapes.addAll(leftChild.getShapes(lon, lat, w, h, !sortByLon));
+            if((lat + h) > rightSplit) shapes.addAll(rightChild.getShapes(lon, lat, w, h, !sortByLon));
+        }
+        return shapes;
+    }
     @Override
     public KDTree getParent() { return parent; }
     @Override
