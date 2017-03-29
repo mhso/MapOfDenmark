@@ -36,4 +36,17 @@ public class ParsedAddress {
         else if(relation != null) return relation.getFirstLat();
         return -1;
     }
+    
+    public String toStringShort(){
+ 		StringBuilder sb = new StringBuilder();
+ 			if(street != null) sb.append(street +" ");
+ 			if(housenumber != null) sb.append(housenumber + " ");
+ 			if(postcode != null) sb.append(postcode + " ");
+ 			if(city != null) sb.append(city + " ");
+ 		return sb.toString().trim();
+ 	}
+    
+    public String toString(){
+    	return street +" "+housenumber+" "+postcode+" "+city;
+    }
 }

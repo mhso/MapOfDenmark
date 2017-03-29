@@ -11,11 +11,11 @@ public class PostcodeCityCombination {
 	private static PostcodeCityCombination instance;
 	private final static Lock lock = new ReentrantLock();
 	private Map<String, Integer> combinations;
-	private Map<Integer, String> bestMatches;
+	private Map<String, String> bestMatches;
 	
 	private PostcodeCityCombination(){
 		combinations = new HashMap<String, Integer>();
-		bestMatches = new TreeMap<Integer, String>();
+		bestMatches = new TreeMap<String, String>();
 	}
 	
 	public static PostcodeCityCombination getInstance(){
@@ -34,7 +34,7 @@ public class PostcodeCityCombination {
         return instance;
     }
 	
-	public void add(Integer postcode, String city){
+	public void add(String postcode, String city){
 		String key = postcode+"%"+city;
 		
 		if(combinations.get(key) != null){
@@ -49,12 +49,12 @@ public class PostcodeCityCombination {
 	public void bestMatches(){
 		for(String entry1 : combinations.keySet()){
 			String[] entrys1 = entry1.split("%");
-			Integer postcode1 = Integer.parseInt(entrys1[0]);
+			String postcode1 = entrys1[0];
 			String city1 = entrys1[1];
 			int count1 = combinations.get(entry1);
 				for(String entry2 : combinations.keySet()){	
 					String[] entrys2 = entry2.split("%");
-					Integer postcode2 = Integer.parseInt(entrys2[0]);
+					String postcode2 = entrys2[0];
 					String city2 = entrys2[1];
 					int count2 = combinations.get(entry2);
 						if(postcode1 == postcode2 && city1.equalsIgnoreCase(city2) && count1 >= count2){
@@ -70,7 +70,8 @@ public class PostcodeCityCombination {
 		if(bestMatches.size() > 0) combinations = null;
 	}
 	
-	public String getCity(Integer postcode){
+	public String getCity(String postcode){
+		if(postcode == null) return null;
 		return bestMatches.get(postcode);
 	}
 	
@@ -82,7 +83,7 @@ public class PostcodeCityCombination {
 	}
 	
 	public void printBestMaches(){
-		for(Entry<Integer, String> entry : bestMatches.entrySet()){
+		for(Entry<String, String> entry : bestMatches.entrySet()){
 			System.out.println("Post nr.: "+entry.getKey()+" City: "+entry.getValue());
 		}
 	}

@@ -1,5 +1,7 @@
 package dk.itu.n.danmarkskort.address;
 
+import java.util.Arrays;
+import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -8,100 +10,76 @@ public class AddressParser {
 		
 	}
 	
-	public Address parse(String inputAddress){
-		final String RGX_ALPHA = "[\\.\\u002Da-zA-ZæøåÆØÅáÁéÉèÈöÖ ]";
-		final String RGX_POSTCODE = "(?<postcode>[0-9]{4})";
-		final String RGX_HOUSENUMBER = "([0-9]{1,3}[a-zA-Z]{1})|([0-9]{1,3})";
-		
-		final Pattern PAT_POSTCODE = Pattern.compile(RGX_POSTCODE);
-		final Pattern PAT_STREET_HOUSE = 
-				Pattern.compile("^(?<street>([0-9]{1,3}+\\s"+RGX_ALPHA+"+)|("+RGX_ALPHA+"+))\\s(?<housenumber>"+RGX_HOUSENUMBER+")");
-		final Pattern PAT_POSTCODE_CITY = Pattern.compile(""+RGX_POSTCODE+"\\s(?<city>"+RGX_ALPHA+"+$)");
-		final Pattern PAT_STREET = Pattern.compile("^(?<street>([0-9]{1,3}\\s"+RGX_ALPHA+"+)|("+RGX_ALPHA+"+))");
-		final Pattern PAT_CITY = Pattern.compile("(?<city>"+RGX_ALPHA+"+$)");
-		final Pattern PAT_FLOOR = Pattern.compile("(?<floor>(kl.|st.|([0-9])+(\\.\\s(sal))))");
-		final Pattern PAT_DOORSIDE = Pattern.compile("(?<side>(tv.|mf.|th.))");
-		
-		Address buildAddr = new Address();
-		Address finalBuildAddr = new Address();
-		AddressValidator addrVal = new AddressValidator();
-		inputAddress = addrVal.cleanAddress(inputAddress);
-		Matcher doorSidePat = PAT_DOORSIDE.matcher(inputAddress);
-		if(doorSidePat.find()){
-			inputAddress = addrVal.cleanAddressSide(inputAddress);
-			//System.out.println("Clean side: "+inputAddress);
+	private final static String RGX_ALPHA = "[\\.\\u002D\\u0027a-zA-ZæøåÆØÅáÁéÉèÈöÖüÜëË ]";
+	private final static String RGX_POSTCODE = "(?<postcode>[0-9]{4})";
+	private final static String RGX_MULTIPLEHOUSENUMBER = "([0-9]{1,3}[a-zA-Z]{1}\\-[0-9]{1,3}[a-zA-Z]{1})|([0-9]{1,3}\\-[0-9]{1,3})";
+	private final static String RGX_HOUSENUMBER = RGX_MULTIPLEHOUSENUMBER + "|([0-9]{1,3}[a-zA-Z]{1})|([0-9]{1,3})";
+	
+	private final static String PAT_POSTCODE = RGX_POSTCODE;
+	private final static String PAT_HOUSENUMBER = "\\s(?<housenumber>("+RGX_HOUSENUMBER+"\\s)|("+RGX_HOUSENUMBER+"$))";
+	private final static String PAT_STREET_HOUSENUMBER = "^(?<street>([0-9]{1,3}+\\s"+RGX_ALPHA+"+)|("+RGX_ALPHA+"+))"
+			+ "\\s(?<housenumber>("+RGX_HOUSENUMBER+"\\s)|("+RGX_HOUSENUMBER+"$))";
+	private final static String PAT_POSTCODE_CITY =""+RGX_POSTCODE+"\\s(?<city>"+RGX_ALPHA+"+$)";
+	private final static String PAT_STREET = "^(?<street>([0-9]{1,3}\\s"+RGX_ALPHA+"+)|("+RGX_ALPHA+"+))";
+	private final static String PAT_CITY = "(?<city>"+RGX_ALPHA+"+$)";
+	private final static String PAT_FLOOR = "(?<floor>(kld.|st.|([0-9])+(\\.\\s(sal))))";
+	private final static String PAT_DOORSIDE = "(?<side>(tv.|mf.|th.))";
+	
+	private static String combineRegex(String ... args) {
+		StringBuilder sb = new StringBuilder();
+		for (String arg : args) {
+			if (sb.length() > 0) sb.append(" *,? *");
+			sb.append(arg);
 		}
-		
-		Matcher floorPat = PAT_FLOOR.matcher(inputAddress);
-		if(floorPat.find()){			
-			inputAddress = addrVal.cleanAddressFloor(inputAddress);
-			//System.out.println("Clean floor: "+inputAddress);
-		}
-		
-		Matcher streetHousePat = PAT_STREET_HOUSE.matcher(inputAddress);
-		if(streetHousePat.find()){
-			Matcher allMatch = streetHousePat;
-			String streetMatch = allMatch.group("street").trim();
-			String housenumberMatch = allMatch.group("housenumber").trim();
-			
-			//System.out.println("PAT_STREET_HOUSE Match: ["+allMatch.group()+"] Start Index: "+allMatch.start()+" End Index: "+allMatch.end());
-			
-			streetMatch = addrVal.insertDotAfterSingleChar(streetMatch);
-			
-			buildAddr.setStreet(streetMatch);
-			buildAddr.setHousenumber(housenumberMatch);
-		}
-		
-		
-		Matcher streetPat = PAT_STREET.matcher(inputAddress);
-		if(streetPat.find()){
-			Matcher allMatch = streetPat;
-			String streetMatch = allMatch.group("street").trim();
-			
-			//System.out.println("PAT_STREET Match: ["+allMatch.group()+"] Start Index: "+allMatch.start()+" End Index: "+allMatch.end());
+		return sb.toString();
+	}
 
-			streetMatch = addrVal.insertDotAfterSingleChar(streetMatch);
-			buildAddr.setStreet(streetMatch);
+	private final static String[] REGEXS = {
+			combineRegex(PAT_FLOOR),
+			combineRegex(PAT_DOORSIDE),
+			combineRegex(PAT_STREET),
+			combineRegex(PAT_HOUSENUMBER),
+			combineRegex(PAT_POSTCODE),
+			combineRegex(PAT_CITY),
+			combineRegex(PAT_STREET_HOUSENUMBER),
+			combineRegex(PAT_POSTCODE_CITY),
+			combineRegex(PAT_STREET, PAT_POSTCODE_CITY),
+			combineRegex(PAT_STREET_HOUSENUMBER, PAT_POSTCODE),
+			combineRegex(PAT_STREET_HOUSENUMBER, PAT_CITY),
+			combineRegex(PAT_STREET_HOUSENUMBER, PAT_POSTCODE_CITY)
+	};
+
+	private final static Pattern[] PATTERNS =
+			Arrays.stream(REGEXS).map(Pattern::compile).toArray(Pattern[]::new);
+
+	private static void consumeIfMatchGroup(Consumer<String> consumer, Matcher matcher, String group) {
+		try {
+			String match = matcher.group(group);
+			if (match != null) {
+				consumer.accept(matcher.group(group).trim());
+			}
+		} catch (IllegalArgumentException e) {
+			// do nothing
 		}
-		
-		Matcher postcodePat = PAT_POSTCODE.matcher(inputAddress);
-		if(postcodePat.find()){
-			Matcher allMatch = postcodePat;
-			String postcodeMatch = allMatch.group("postcode").trim();
-			String cityMatch = null;
-			
-			//System.out.println("PAT_POSTCODE Match: ["+allMatch.group()+"] Start Index: "+allMatch.start()+" End Index: "+allMatch.end());
-			
-			buildAddr.setPostcode(Integer.parseInt(postcodeMatch));
-			buildAddr.setCity(cityMatch);
+	}
+
+	public static Address parse(String inputAddress, boolean searchMode) {
+		String input = AddressValidator.cleanAddress(inputAddress);
+		Address addrBuild = new Address();
+		for (Pattern pattern : PATTERNS) {
+			Matcher matcher = pattern.matcher(input);
+			if (matcher.matches()) {
+				consumeIfMatchGroup(addrBuild::setStreet, matcher, "street");
+				consumeIfMatchGroup(addrBuild::setHousenumber, matcher, "housenumber");
+				consumeIfMatchGroup(addrBuild::setPostcode, matcher, "postcode");
+				consumeIfMatchGroup(addrBuild::setCity, matcher, "city");
+				if(!searchMode) return addrBuild;
+			}
 		}
-		
-		Matcher cityPat = PAT_CITY.matcher(inputAddress);
-		if(cityPat.find()){
-			Matcher allMatch = cityPat;
-			String cityMatch = allMatch.group("city").trim();
-			
-			//System.out.println("PAT_CITY Match: ["+allMatch.group()+"] Start Index: "+allMatch.start()+" End Index: "+allMatch.end());		
-			buildAddr.setCity(cityMatch);
-		}
-		
-		Matcher postcodeCityPat = PAT_POSTCODE_CITY.matcher(inputAddress);
-		if(postcodeCityPat.find()){
-			Matcher allMatch = postcodeCityPat;
-			String postcodeMatch = allMatch.group("postcode").trim();
-			String cityMatch = allMatch.group("city").trim();
-			
-			//System.out.println("PAT_POSTCODE_CITY Match: ["+allMatch.group()+"] Start Index: "+allMatch.start()+" End Index: "+allMatch.end());
-			
-			buildAddr.setPostcode(Integer.parseInt(postcodeMatch));
-			buildAddr.setCity(cityMatch);
-		}
-		
-		if(finalBuildAddr.getStreet() == null){ finalBuildAddr.setStreet(buildAddr.getStreet()); }
-		if(finalBuildAddr.getHousenumber() == null){ finalBuildAddr.setHousenumber(buildAddr.getHousenumber()); }
-		if(finalBuildAddr.getPostcode() == -1){ finalBuildAddr.setPostcode(buildAddr.getPostcode()); }
-		if(finalBuildAddr.getCity() == null){ finalBuildAddr.setCity(buildAddr.getCity()); }
-		
-		return finalBuildAddr;
+		//throw new IllegalArgumentException("Cannot parse Address: " + input);
+		//System.out.println("Cannot parse Address: " + inputAddress);
+		//System.out.println("Clean parse Address: " + input);
+		if(searchMode) return addrBuild;
+		return null;
 	}
 }

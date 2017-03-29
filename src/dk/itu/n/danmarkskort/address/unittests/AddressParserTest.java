@@ -23,7 +23,7 @@ public class AddressParserTest {
 	
 	@Test
 	public void testAddrCase1_EvilA() {
-		Address addr = ap.parse(" Rued     Langgaards Vej 7. 2300	 København S. ");
+		Address addr = AddressParser.parse(" Rued     Langgaards Vej 7. 2300	 København S. ", false);
 		//Not used in parsing
 		
 		//Might be parsed
@@ -35,7 +35,7 @@ public class AddressParserTest {
 	
 	@Test
 	public void testAddrCase1_EvilB() {
-		Address addr = ap.parse(" Rued     Langgaards Vej #7./ 2300	 København S. ");
+		Address addr = AddressParser.parse(" Rued     Langgaards Vej #7./ 2300	 København S. ", false);
 		//Not used in parsing
 		
 		//Might be parsed
@@ -47,7 +47,7 @@ public class AddressParserTest {
 
 	@Test
 	public void testAddrCase1_A() {
-		Address addr = ap.parse("Rued Langgaards Vej 7, 2300 København S");
+		Address addr = AddressParser.parse("Rued Langgaards Vej 7, 2300 København S", false);
 		//Might be parsed
 		assertEquals("Rued Langgaards Vej", addr.getStreet());
 		assertEquals("7", addr.getHousenumber());
@@ -57,7 +57,7 @@ public class AddressParserTest {
 	
 	@Test
 	public void testAddrCase1_B() {
-		Address addr = ap.parse("rued langgaards vej 7, 2300 københavn s");	
+		Address addr = AddressParser.parse("rued langgaards vej 7, 2300 københavn s", false);	
 		//Might be parsed
 		assertEquals("rued langgaards vej", addr.getStreet());
 		assertEquals("7", addr.getHousenumber());
@@ -67,7 +67,7 @@ public class AddressParserTest {
 	
 	@Test
 	public void testAddrCase1_C() {
-		Address addr = ap.parse("rued langgaards vej 7 2300 københavn s");
+		Address addr = AddressParser.parse("rued langgaards vej 7 2300 københavn s", false);
 		//Not used in parsing
 		
 		//Might be parsed
@@ -79,7 +79,7 @@ public class AddressParserTest {
 	
 	@Test
 	public void testAddrCase1_D() {
-		Address addr = ap.parse("rued langgaards vej 7, 2300");
+		Address addr = AddressParser.parse("rued langgaards vej 7, 2300", false);
 		//Not used in parsing
 		
 		//Might be parsed
@@ -91,7 +91,7 @@ public class AddressParserTest {
 	
 	@Test
 	public void testAddrCase1_E() {
-		Address addr = ap.parse("rued langgaards vej 7, københavn s");
+		Address addr = AddressParser.parse("rued langgaards vej 7, københavn s", false);
 		//Not used in parsing);
 		
 		//Might be parsed
@@ -103,7 +103,7 @@ public class AddressParserTest {
 	
 	@Test
 	public void testAddrCase1_F() {
-		Address addr = ap.parse("rued langgaards vej, københavn s");
+		Address addr = AddressParser.parse("rued langgaards vej, københavn s", false);
 		//Not used in parsing
 		
 		//Might be parsed
@@ -116,7 +116,7 @@ public class AddressParserTest {
 	
 	@Test
 	public void testAddrCase1_G() {
-		Address addr = ap.parse("rued langgaards vej 2300");
+		Address addr = AddressParser.parse("rued langgaards vej 2300", false);
 		//Not used in parsing
 		
 		//Might be parsed
