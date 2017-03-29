@@ -20,6 +20,7 @@ import javax.swing.JPanel;
 
 import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.Util;
+import dk.itu.n.danmarkskort.kdtree.KDTree;
 import dk.itu.n.danmarkskort.mapgfx.GraphicRepresentation;
 import dk.itu.n.danmarkskort.mapgfx.GraphicSpecArea;
 import dk.itu.n.danmarkskort.mapgfx.GraphicSpecLine;
@@ -35,7 +36,7 @@ public class MapCanvas extends JPanel {
 
 	private AffineTransform transform = new AffineTransform();
 	private boolean antiAlias = true;
-	private int tileCount = 0;
+	public int shapesDrawn = 0;
 	private final int MAX_ZOOM = 20;
 
 	public MapCanvas() {
@@ -57,15 +58,30 @@ public class MapCanvas extends JPanel {
 		}
 		
 		g2d.setTransform(transform);
-		g2d.draw(new Line2D.Double(0, 0, Util.BOUNDS_DENMARK.minLong, Util.BOUNDS_DENMARK.minLat));
+		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		drawMapRegion(g2d);
-		
+		List<WaytypeGraphicSpec> wayTypesVisible = getOnScreenGraphicsForCurrentZoom();
+		shapesDrawn = 0;
+		for(WaytypeGraphicSpec wayTypeGraphic : wayTypesVisible) {
+			KDTree kdTree = Main.model.enumMapKD.get(wayTypeGraphic.getWayType());
+			if(kdTree == null) continue;
+			Region region = getGeographicalRegion();
+			Main.log(region);
+			List<Shape> shapes = kdTree.getShapes(-100000, 101010010, 0, 0);
+			shapesDrawn += shapes.size();
+			for(Shape shape : shapes) {
+				wayTypeGraphic.transformOutline(g2d);
+				if(wayTypeGraphic instanceof GraphicSpecLine) g2d.draw(shape);
+				else if(wayTypeGraphic instanceof GraphicSpecArea) g2d.fill(shape);
+			}
+			
+		}
 	}
 
-	public List<Shape> getShapesInsideScreen() {
-		List<WaytypeGraphicSpec> wayTypeSpecs = GraphicRepresentation.getGraphicSpecs(Math.min(20, (int)getZoom()));
-		if(wayTypeSpecs == null) return new ArrayList<Shape>();
-		return null;
+	public List<WaytypeGraphicSpec> getOnScreenGraphicsForCurrentZoom() {
+		List<WaytypeGraphicSpec> wayTypeSpecs = GraphicRepresentation.getGraphicSpecs(20);
+		if(wayTypeSpecs == null) return new ArrayList<WaytypeGraphicSpec>();
+		return wayTypeSpecs;
 	}
 	
 	public void drawMapLegacy(Graphics2D g2d) {
@@ -96,9 +112,9 @@ public class MapCanvas extends JPanel {
 	public void drawMapRegion(Graphics2D g2d) {
 		g2d.setColor(Color.RED);
 		g2d.setStroke(new BasicStroke(Float.MIN_VALUE));
-		Main.log(Util.BOUNDS_DENMARK);
-		Shape mapRegion = new Rectangle2D.Double(Util.BOUNDS_DENMARK.minLong, Util.BOUNDS_DENMARK.minLat, Util.BOUNDS_DENMARK.getWidth(), -Util.BOUNDS_DENMARK.getHeight());
-		g2d.draw(mapRegion);
+		Region mapRegion = Main.model.getMapRegion();
+		g2d.draw(new Line2D.Double(0, 0, mapRegion.x1, mapRegion.y1));
+		g2d.draw(new Rectangle2D.Double(mapRegion.x1, mapRegion.y1, mapRegion.getWidth(), mapRegion.getHeight()));
 	}
 	
 	public void pan(double dx, double dy) {
@@ -119,9 +135,9 @@ public class MapCanvas extends JPanel {
 			double y2 = y1 +  (-getHeight()/getZoomRaw() / (480) * denmark.getHeight());
 			return new Region(x1, y1, x2, y2);
 		} else {
-			Point2D topLeft = toModelCoords(new Point2D.Double(-transform.getTranslateX(), -transform.getTranslateY()));
-			Point2D bottomRight = toModelCoords(new Point2D.Double(-transform.getTranslateX() + getWidth(), -transform.getTranslateY() - getHeight()));
-			return new Region(topLeft.getX(), -topLeft.getY(), bottomRight.getX(), -bottomRight.getY());
+			Point2D topLeft = toModelCoords(new Point2D.Double(0, 0));
+			Point2D bottomRight = toModelCoords(new Point2D.Double(getWidth(), getHeight()));
+			return new Region(topLeft.getX(), topLeft.getY(), bottomRight.getX(), bottomRight.getY());
 		}
 	}
 	
@@ -133,10 +149,10 @@ public class MapCanvas extends JPanel {
 
 	public void lockZoom() {
 		if(transform.getScaleX() > MAX_ZOOM) {
-			double factor = (20 / getZoom());
+			double factor = (20 / getZoomRaw());
 			transform.preConcatenate(AffineTransform.getScaleInstance(factor, factor));
 		} else if(transform.getScaleX() < 1) {
-			double factor = (1 / getZoom());
+			double factor = (1 / getZoomRaw());
 			transform.preConcatenate(AffineTransform.getScaleInstance(factor, factor));
 		}
 	}
@@ -155,32 +171,17 @@ public class MapCanvas extends JPanel {
 	}
 
 	public double getZoom() {
-		return transform.getScaleX();
+		return ((Math.sqrt(getZoomRaw()) - 80) / 500) * MAX_ZOOM;
 	}
 	
 	public double getZoomRaw() {
 		return transform.getScaleX();
 	}
 
-	public double getMapX() {
-		return (transform.getTranslateX() / getZoom()) * -1;
-	}
-
-	public double getMapY() {
-		return (transform.getTranslateY() / getZoom()) * -1;
-	}
-
-	public int getTileDrawnCount() {
-		return tileCount;
-	}
-
 	public void zoomToBounds() {
-		pan(-Main.model.getMinLon(), -Main.model.getMaxLat());
-		zoom(getWidth() / (Main.model.getMaxLon() - Main.model.getMinLon()));
-	}
-	
-	public Region getDisplayedRegion() {
-		return getGeographicalRegion();
+		Region mapRegion = Main.model.getMapRegion();
+		pan(-mapRegion.x1, -mapRegion.y2);
+		zoom(getWidth() / (mapRegion.x2 - mapRegion.x1));
 	}
 
 }

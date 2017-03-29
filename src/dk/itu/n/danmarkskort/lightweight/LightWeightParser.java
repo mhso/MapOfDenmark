@@ -115,7 +115,6 @@ public class LightWeightParser extends SAXAdapter {
                 maxLonBoundary *= lonFactor;
                 minLatBoundary = -minLatBoundary;
                 maxLatBoundary = -maxLatBoundary;
-                Util.BOUNDS_DENMARK = new ParsedBounds(minLatBoundary, minLonBoundary, maxLatBoundary, maxLonBoundary);
                 Main.log("Updated bounds.");
                 break;
             case "node":
@@ -248,5 +247,13 @@ public class LightWeightParser extends SAXAdapter {
     
     public float getMaxLat() {
     	return this.maxLatBoundary;
+    }
+    
+    public Region getMapRegion() {
+    	float x1 = getMinLon();
+    	float y1 = getMinLat();
+    	float x2 = getMaxLon();
+    	float y2 = getMaxLat();
+    	return new Region(x1, y1, x2, y2);
     }
 }
