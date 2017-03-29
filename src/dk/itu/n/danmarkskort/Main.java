@@ -16,7 +16,7 @@ import dk.itu.n.danmarkskort.mapgfx.GraphicRepresentation;
 public class Main {
 
 	public final static String APP_NAME = "Map";
-	public final static String APP_VERSION = "0.2";
+	public final static String APP_VERSION = "0.4";
 	public final static boolean debug = true;
 	public final static boolean production = false;
 	public final static int WIDTH = 1000, HEIGHT = 800;
