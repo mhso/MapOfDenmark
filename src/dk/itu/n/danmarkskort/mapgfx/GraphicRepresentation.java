@@ -4,9 +4,7 @@ import java.awt.Color;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
@@ -24,10 +22,11 @@ public class GraphicRepresentation {
 	private static EnumMap<WayType, Integer> zoomMap = new EnumMap<>(WayType.class);
 	
 	/**
-	 * Get the Graphic Specification matching the inputed Map Element.
+	 * Get a list of Graphic Specification objects matching the inputed zoom level.
 	 * 
-	 * @param mapElement The Map Element (a WayType or Node f.x.) to get the graphics for.
-	 * @return A Graphic Specification object representing how a Map Element should be drawn.
+	 * @param zoomLevel The current zoom level for which to draw elements.
+	 * @return A list of WaytypeGraphicSpec objects, specifying what should be drawn at the specific
+	 * zoom level and how they should be drawn.
 	 */
 	public static List<WaytypeGraphicSpec> getGraphicSpecs(int zoomLevel) {
 		zoomLevel -= 1;
@@ -49,7 +48,8 @@ public class GraphicRepresentation {
 	/**
 	 * Get the size of the Graphic Representation Map contained in this GraphicRepresentation class.
 	 * 
-	 * @return The Graphic Representation Map contained in this GraphicRepresentation class.
+	 * @return The Graphic Representation Map contained in this GraphicRepresentation class, IE: The amount of
+	 * WayTypes, that have Graphic Specifications associated with them.
 	 */
 	public static int size() {
 		return zoomMap.size();
@@ -92,10 +92,6 @@ public class GraphicRepresentation {
 		return new Color(r, g, b);
 	}
 	
-	private static WayType stringToEnum(String waytype) {
-		return WayType.valueOf(waytype);
-	}
-	
 	private static class ZoomHandler extends SAXAdapter {
 		private int currentZoomValue;
 		
@@ -106,7 +102,7 @@ public class GraphicRepresentation {
 					currentZoomValue = Integer.parseInt(atts.getValue("level"));
 				break;
 				case "type":
-					zoomMap.put(stringToEnum(atts.getValue("name")), currentZoomValue-1);
+					zoomMap.put(WayType.valueOf(atts.getValue("name")), currentZoomValue-1);
 				break;
 			}
 		}
@@ -143,7 +139,7 @@ public class GraphicRepresentation {
 				throws SAXException {
 			switch(qName) {
 				case "type":
-					mapElement = stringToEnum(atts.getValue("name"));
+					mapElement = WayType.valueOf(atts.getValue("name"));
 					gs.setMapElement(mapElement);
 				break;
 				case "defaultfont": 

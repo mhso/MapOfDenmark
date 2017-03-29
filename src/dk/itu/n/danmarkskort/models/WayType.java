@@ -7,6 +7,7 @@ public enum WayType {
 	COASTLINE, 			// Kystlinje.
 	FOREST, 			// Skov.
 	GRASS,				// Græs.
+	FARMLAND,			// Landbrug.
 	PARK,				// Park.
 	ORCHARD,			// Plantage.
 	INDUSTRIAL,			// Industriområde.

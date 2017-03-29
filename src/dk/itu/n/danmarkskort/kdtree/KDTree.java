@@ -13,5 +13,12 @@ public abstract class KDTree {
     }
 
     public abstract KDTree getParent();
+    
+    public KDTree getRoot() {
+    	KDTree parent = getParent();
+    	while(parent != null) parent = parent.getParent();
+    	return parent;
+    }
+    
     public abstract int size();
 }
