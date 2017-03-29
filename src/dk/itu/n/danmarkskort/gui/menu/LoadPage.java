@@ -14,8 +14,8 @@ import java.io.File;
 import java.awt.event.ActionEvent;
 
 public class LoadPage extends JPanel  {
-	Style style;
-	JLabel lblCurrentmapfilename, lblCurrentmapfilesize, lblCurrentmapaddressesfound, lblCurrentmapbounds;
+	private Style style;
+	private JLabel lblCurrentmapfilename, lblCurrentmapfilesize, lblCurrentmapaddressesfound, lblCurrentmapbounds;
 	
     public LoadPage() {
     	style = new Style();
@@ -138,6 +138,11 @@ public class LoadPage extends JPanel  {
 			File file = fc.getSelectedFile();
 			//model.loadNewModel(file.getAbsolutePath());
 			System.out.println("Load New Map File:"+file);
+			// Parse the new data, replacing all the old. Should loading screen be run again?
+			// If replacing is not an option, delete the old data first using some reset methods.
+			// Reset canvas, perhaps just drawing a square to erase everything.
+			// ??
+			// Profit.
         } else {
         }
 
@@ -149,8 +154,7 @@ public class LoadPage extends JPanel  {
 		fc.setApproveButtonText(approveBtnTxt);
 		fc.setAcceptAllFileFilterUsed(false);
 		fc.setFileSelectionMode(JFileChooser.APPROVE_OPTION);
-		fc.addChoosableFileFilter(new FileNameExtensionFilter("*.osm", "osm"));
-		fc.addChoosableFileFilter(new FileNameExtensionFilter("*.zip", "zip"));
+		fc.setFileFilter(new FileNameExtensionFilter("Map Files", "osm", "zip", "bin"));
 		fc.setCurrentDirectory(new File(System.getProperty("user.home")));
 		return fc;
 	}
