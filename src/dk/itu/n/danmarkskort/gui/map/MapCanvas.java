@@ -86,9 +86,9 @@ public class MapCanvas extends JPanel {
 	
 			for(WaytypeGraphicSpec wgs : graphicSpecs) {
 				
-				List<ParsedWay> ways = Main.tileController.getWaysOfType(wgs.getMapElement());
-				
-				if(wgs.getMapElement() == null) continue;
+				List<ParsedWay> ways = Main.tileController.getWaysOfType(wgs.getWayType());
+
+				if(wgs.getWayType() == null) continue;
 				
 				for(ParsedWay way : ways) {
 					Shape shape = way.getShape();

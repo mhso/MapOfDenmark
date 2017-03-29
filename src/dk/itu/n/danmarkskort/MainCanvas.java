@@ -16,7 +16,7 @@ public class MainCanvas extends JPanel {
 	boolean antiAlias;
 	
     public MainCanvas() {
-        setLayout(new BorderLayout());
+        setLayout(new BorderLayout());        
         setOpaque(false);
         addGUI();
     }

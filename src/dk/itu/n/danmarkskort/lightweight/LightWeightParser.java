@@ -13,13 +13,13 @@ import dk.itu.n.danmarkskort.models.WayType;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.HashMap;
+import java.util.List;
 
 public class LightWeightParser extends SAXAdapter {
-
-    private static LightWeightParser instance;
 
     public float minLatBoundary, minLonBoundary, maxLatBoundary, maxLonBoundary, lonFactor;
 
@@ -43,14 +43,22 @@ public class LightWeightParser extends SAXAdapter {
     private WayType waytype;
     private long id;
     private boolean finished = false;
-
-    private LightWeightParser() {
-
-    }
-
-    public static LightWeightParser getInstance() {
-        if(instance == null) instance = new LightWeightParser();
-        return instance;
+    
+    public List<ParsedItem> getDataInBounds(WayType wayType, Point2D minBound, Point2D maxBound) {
+    	List<ParsedItem> data = new ArrayList<>();
+    	KDTree tree = enumMapKD.get(wayType);
+    	boolean sortByLon = true;
+    	while(true) {
+    		if(tree instanceof KDTreeLeaf) {
+    			ParsedItem[] treeData = ((KDTreeLeaf) tree).getData();
+    			List<ParsedItem> tempList = new ArrayList<>();
+    			for(ParsedItem item : treeData) tempList.add(item);
+    			data.addAll(tempList);
+    		}
+    		sortByLon = !sortByLon;
+    		break;
+    	}
+    	return null;
     }
     
     public void startDocument() throws SAXException {
@@ -67,6 +75,7 @@ public class LightWeightParser extends SAXAdapter {
 
     public void endDocument() throws SAXException {
         Main.log("Parsing finished.");
+        Main.log("Max lon: " + maxLonBoundary + ", " + "Min lon: " + minLonBoundary);
 
         int count = 0;
         for(WayType wt : WayType.values()) count += enumMap.get(wt).size();

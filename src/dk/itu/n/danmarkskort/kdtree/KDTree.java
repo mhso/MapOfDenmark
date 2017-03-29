@@ -2,6 +2,7 @@ package dk.itu.n.danmarkskort.kdtree;
 
 import dk.itu.n.danmarkskort.lightweight.models.ParsedItem;
 
+import java.awt.*;
 import java.util.ArrayList;
 
 public abstract class KDTree {
@@ -12,6 +13,16 @@ public abstract class KDTree {
         return array;
     }
 
+    public abstract ArrayList<Shape> getShapes(float lon, float lat, float w, float h);
+    public abstract ArrayList<Shape> getShapes(float lon, float lat, float w, float h, boolean sortByLon);
+
     public abstract KDTree getParent();
+    
+    public KDTree getRoot() {
+    	KDTree parent = getParent();
+    	while(parent != null) parent = parent.getParent();
+    	return parent;
+    }
+    
     public abstract int size();
 }

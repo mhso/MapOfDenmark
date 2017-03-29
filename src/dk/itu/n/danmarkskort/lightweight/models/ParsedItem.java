@@ -1,6 +1,7 @@
 package dk.itu.n.danmarkskort.lightweight.models;
 
 import java.awt.geom.Path2D;
+import java.util.ArrayList;
 
 public abstract class ParsedItem {
 
@@ -20,6 +21,8 @@ public abstract class ParsedItem {
         return 0;
     }
 
+    public abstract ArrayList<Float> getLats();
+    public abstract ArrayList<Float> getLons();
     public abstract Path2D getPath();
     public abstract float getFirstLon();
     public abstract float getFirstLat();
