@@ -32,8 +32,8 @@ public class MainCanvas extends JPanel {
     	g2d.fillRect(5, 10, 110, 128);
     	g2d.setColor(Color.BLACK);
     	g2d.drawRect(5, 10, 110, 128);
-    	g2d.drawString("x1: " + (int)Main.map.getMapX() + ", y1: " + (int)Main.map.getMapY(), 10, 30);
-    	g2d.drawString("x2: " + (int)Main.map.getDisplayedRegion().x2 + ", y2: " + (int)Main.map.getDisplayedRegion().y2, 10, 45);
+    	g2d.drawString("x1: " + Main.map.getDisplayedRegion().x1 + ", y1: " + Main.map.getDisplayedRegion().y1, 10, 30);
+    	g2d.drawString("x2: " + Main.map.getDisplayedRegion().x2 + ", y2: " + Main.map.getDisplayedRegion().y2, 10, 45);
     	g2d.drawString("Zoom: " + String.format("%.01f", Main.map.getZoom()).replace(",", "."), 10, 60);
     	g2d.drawString("Tiles drawn: " + Main.map.getTileDrawnCount(), 10, 75);
     }

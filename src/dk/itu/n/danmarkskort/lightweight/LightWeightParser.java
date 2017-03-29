@@ -21,11 +21,11 @@ public class LightWeightParser extends SAXAdapter {
 
     private static LightWeightParser instance;
 
-    private float minLatBoundary, minLonBoundary, maxLatBoundary, maxLonBoundary, lonFactor;
+    public float minLatBoundary, minLonBoundary, maxLatBoundary, maxLonBoundary, lonFactor;
 
-    private NodeMap nodeMap;
-    private HashMap<Long, ParsedWay> wayMap;
-    private HashMap<Long, ParsedRelation> relationMap;
+    public NodeMap nodeMap;
+    public HashMap<Long, ParsedWay> wayMap;
+    public HashMap<Long, ParsedRelation> relationMap;
 
     // bør efter endt OSM indlæsning omdanne alle ArrayLists til KD-træer
     public EnumMap<WayType, ArrayList<ParsedItem>> enumMap;

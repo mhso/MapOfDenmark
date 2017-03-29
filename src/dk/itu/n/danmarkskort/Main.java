@@ -26,7 +26,7 @@ public class Main {
 	public static MapCanvas map;
 	public static MainCanvas mainPanel;
 
-	public final static boolean lightweight = true;
+	public final static boolean lightweight = false;
 	
 	public static void main(String[] args) {
         startup(args);
