@@ -9,16 +9,15 @@ public class AddressParser {
 	}
 	
 	public Address parse(String inputAddress){
-		final String RGX_ALPHA = "[\\.\\u002D\\0027\\'a-zA-ZæøåÆØÅáÁéÉèÈöÖüÜëË ]";
+		final String RGX_ALPHA = "[\\.\\u002D\\u0027a-zA-ZæøåÆØÅáÁéÉèÈöÖüÜëË ]";
 		final String RGX_POSTCODE = "(?<postcode>[0-9]{4})";
-		//final String RGX_HOUSENUMBER = "([0-9]{1,3}[a-zA-Z]{1})|([0-9]{1,3})";
 		final String RGX_MULTIPLEHOUSENUMBER = "([0-9]{1,3}[a-zA-Z]{1}\\-[0-9]{1,3}[a-zA-Z]{1})|([0-9]{1,3}\\-[0-9]{1,3})";
 		final String RGX_HOUSENUMBER = RGX_MULTIPLEHOUSENUMBER + "|([0-9]{1,3}[a-zA-Z]{1})|([0-9]{1,3})";
 		
 		final Pattern PAT_POSTCODE = Pattern.compile(RGX_POSTCODE);
 		final Pattern PAT_STREET_HOUSE = 
 				Pattern.compile("^(?<street>([0-9]{1,3}+\\s"+RGX_ALPHA+"+)|("+RGX_ALPHA+"+))"
-						+ "\\s(?<housenumber>"+RGX_HOUSENUMBER+"\\s{0,1})");
+						+ "\\s(?<housenumber>("+RGX_HOUSENUMBER+"\\s)|("+RGX_HOUSENUMBER+"$))");
 		final Pattern PAT_POSTCODE_CITY = Pattern.compile(""+RGX_POSTCODE+"\\s(?<city>"+RGX_ALPHA+"+$)");
 		final Pattern PAT_STREET = Pattern.compile("^(?<street>([0-9]{1,3}\\s"+RGX_ALPHA+"+)|("+RGX_ALPHA+"+))");
 		final Pattern PAT_CITY = Pattern.compile("(?<city>"+RGX_ALPHA+"+$)");
@@ -26,7 +25,6 @@ public class AddressParser {
 		final Pattern PAT_DOORSIDE = Pattern.compile("(?<side>(tv.|mf.|th.))");
 		
 		Address buildAddr = new Address();
-		Address finalBuildAddr = new Address();
 		AddressValidator addrVal = new AddressValidator();
 		inputAddress = addrVal.cleanAddress(inputAddress);
 		Matcher doorSidePat = PAT_DOORSIDE.matcher(inputAddress);
@@ -99,11 +97,6 @@ public class AddressParser {
 			buildAddr.setCity(cityMatch);
 		}
 		
-		if(finalBuildAddr.getStreet() == null){ finalBuildAddr.setStreet(buildAddr.getStreet()); }
-		if(finalBuildAddr.getHousenumber() == null){ finalBuildAddr.setHousenumber(buildAddr.getHousenumber()); }
-		if(finalBuildAddr.getPostcode() == null){ finalBuildAddr.setPostcode(buildAddr.getPostcode()); }
-		if(finalBuildAddr.getCity() == null){ finalBuildAddr.setCity(buildAddr.getCity()); }
-		
-		return finalBuildAddr;
+		return buildAddr;
 	}
 }
