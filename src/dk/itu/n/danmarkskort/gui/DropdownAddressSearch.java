@@ -30,7 +30,7 @@ public class DropdownAddressSearch extends CustomDropdown {
      */
 	public void addElement(JTextField inputField, String text) {
 		JMenuItem menuItem = new JMenuItem(text);
-		menuItem.setPreferredSize(new Dimension(widthComponent.getPreferredSize().width - 2, 
+		menuItem.setPreferredSize(new Dimension(widthComponent.getSize().width - 2, 
 				menuItem.getPreferredSize().height));
 		menuItem.addActionListener(e -> {
 			inputField.setText(menuItem.getText());
@@ -78,8 +78,6 @@ public class DropdownAddressSearch extends CustomDropdown {
 	 * @param source The component under which this menu should be shown.
 	 */
 	public void showDropdown(Component source) {
-		Point loc = source.getLocation();
-		System.out.println(source.getPreferredSize());
-		show(source, loc.x, loc.y+source.getHeight());
+		show(source, 0, source.getHeight());
 	}
 }
