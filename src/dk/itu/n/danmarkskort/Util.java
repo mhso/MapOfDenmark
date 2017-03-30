@@ -20,6 +20,9 @@ import dk.itu.n.danmarkskort.models.ParsedBounds;
 
 public class Util {
 
+	public static ParsedBounds BOUNDS_DENMARK = new ParsedBounds(54.44065D, 7.7011D, 58.06239D, 15.65449D);
+	public static final float FACTOR_LON = (float)(Math.cos((BOUNDS_DENMARK.minLat + (BOUNDS_DENMARK.maxLat - BOUNDS_DENMARK.minLat) / 2)) / 180 * Math.PI); 
+	
 	public static float getRAMUsageInMB() {
 		return (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1000000F;
 	}
@@ -118,36 +121,21 @@ public class Util {
 	
 	public static Point2D coordinateToScreen(Coordinate coord) {
 		
-		ParsedBounds bounds = Main.tileController.getBounds();
+		double lat = coord.getLat()  - BOUNDS_DENMARK.minLat;
+		double lon = coord.getLong() - BOUNDS_DENMARK.minLong;
 		
-		double x = coord.getLong() - bounds.minLong;
-		double y = coord.getLat() - bounds.minLat;
-
-		y *= -1;
-		
-		x *= 100;
-		y *= 100;
-		
-		return new Point2D.Double(x, y);
+		return coordinateToScreen(lat, lon);
 	}
 	
 	public static Point2D coordinateToScreen(double lat, double lon) {
-		ParsedBounds bounds = Main.tileController.getBounds();
-		
-		double x = lon - bounds.minLong;
-		double y = lat - bounds.minLat;
-
-		y *= -1;
-		
-		x *= 100;
-		y *= 100;
+		int window_width  = Main.map.getWidth();
+		int window_height = Main.map.getHeight();
+		double denmark_width  = BOUNDS_DENMARK.getWidth();
+		double denmark_height = BOUNDS_DENMARK.getHeight();
+		double x = (lon / denmark_width)  * 640;
+		double y = (lat / denmark_height) * -480;
 		
 		return new Point2D.Double(x, y);
-	}
-	
-	public static Point2D coordinateToScreen(Coordinate coord, double scale) {
-		Point2D p = coordinateToScreen(coord);
-		return new Point2D.Double(p.getX() * scale, p.getY() * scale);
 	}
 	
 }

@@ -67,11 +67,14 @@ public class MapMouseController extends MouseAdapter {
 	}
 
 	public void mouseWheelMoved(MouseWheelEvent e) {
+		
+		double factor = Math.pow(0.9, e.getWheelRotation());
+		
 		Point2D currentMousePosition = e.getPoint();
 		double dx = currentMousePosition.getX();
 		double dy = currentMousePosition.getY();
 		canvas.pan(-dx, -dy);
-		canvas.zoom(e.getWheelRotation());
+		canvas.zoom(factor);
 		canvas.pan(dx, dy);
 		Main.window.repaint();
 	}
