@@ -61,10 +61,10 @@ public class KDTreeNode extends KDTree {
                 for(Float coord : lats) rightSplit = coord < rightSplit ? coord : rightSplit; // nederst er værdierne størst
             }
         }
-        if(leftArray.length > 1000) leftChild = new KDTreeNode(leftArray, this, !sortByLon);
+        if(leftArray.length > Main.KD_SIZE) leftChild = new KDTreeNode(leftArray, this, !sortByLon);
         else leftChild = new KDTreeLeaf(leftArray, this);
 
-        if(rightArray.length > 1000) rightChild = new KDTreeNode(rightArray, this, !sortByLon);
+        if(rightArray.length > Main.KD_SIZE) rightChild = new KDTreeNode(rightArray, this, !sortByLon);
         else rightChild = new KDTreeLeaf(rightArray, this);
     }
 
@@ -81,12 +81,12 @@ public class KDTreeNode extends KDTree {
     public ArrayList<Shape> getShapes(float lon, float lat, float w, float h, boolean sortByLon) {
         ArrayList<Shape> shapes = new ArrayList<>();
         if(sortByLon) {
-            if((lon + w) < leftSplit) shapes.addAll(leftChild.getShapes(lon, lat, w, h, !sortByLon));
-            if((lon + w) > rightSplit) shapes.addAll(rightChild.getShapes(lon, lat, w, h, !sortByLon));
+            if(lon < leftSplit) shapes.addAll(leftChild.getShapes(lon, lat, w, h, !sortByLon));
+            if(lon + w > rightSplit) shapes.addAll(rightChild.getShapes(lon, lat, w, h, !sortByLon));
         }
         else {
-            if((lat + h) < leftSplit) shapes.addAll(leftChild.getShapes(lon, lat, w, h, !sortByLon));
-            if((lat + h) > rightSplit) shapes.addAll(rightChild.getShapes(lon, lat, w, h, !sortByLon));
+            if(lat < leftSplit) shapes.addAll(leftChild.getShapes(lon, lat, w, h, !sortByLon));
+            if(lat + h > rightSplit) shapes.addAll(rightChild.getShapes(lon, lat, w, h, !sortByLon));
         }
         return shapes;
     }
