@@ -66,7 +66,6 @@ public class MapCanvas extends JPanel {
 			KDTree kdTree = Main.model.enumMapKD.get(wayTypeGraphic.getWayType());
 			if(kdTree == null) continue;
 			Region region = getGeographicalRegion();
-			Main.log(region);
 			List<Shape> shapes = kdTree.getShapes(-100000, 101010010, 0, 0);
 			shapesDrawn += shapes.size();
 			for(Shape shape : shapes) {
@@ -74,7 +73,11 @@ public class MapCanvas extends JPanel {
 				if(wayTypeGraphic instanceof GraphicSpecLine) g2d.draw(shape);
 				else if(wayTypeGraphic instanceof GraphicSpecArea) g2d.fill(shape);
 			}
-			
+			for(Shape shape : shapes) {
+				wayTypeGraphic.transformPrimary(g2d);
+				if(wayTypeGraphic instanceof GraphicSpecLine) g2d.draw(shape);
+				else if(wayTypeGraphic instanceof GraphicSpecArea) g2d.fill(shape);
+			}
 		}
 	}
 

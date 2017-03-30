@@ -4,6 +4,8 @@ import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.SAXAdapter;
 import dk.itu.n.danmarkskort.Util;
 import dk.itu.n.danmarkskort.address.AddressController;
+import dk.itu.n.danmarkskort.backend.OSMParser;
+import dk.itu.n.danmarkskort.backend.OSMParserListener;
 import dk.itu.n.danmarkskort.lightweight.models.*;
 import dk.itu.n.danmarkskort.lightweight.models.ParsedAddress;
 import dk.itu.n.danmarkskort.lightweight.models.ParsedWay;
@@ -14,9 +16,13 @@ import dk.itu.n.danmarkskort.models.ParsedBounds;
 import dk.itu.n.danmarkskort.models.Region;
 import dk.itu.n.danmarkskort.models.WayType;
 import org.xml.sax.Attributes;
+import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 
 import java.awt.geom.Point2D;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.HashMap;
@@ -46,6 +52,15 @@ public class LightWeightParser extends SAXAdapter {
     private WayType waytype;
     private long id;
     private boolean finished = false;
+    private long fileSize;
+    private int byteCount;
+    private OSMParser parser;
+    private InputStream inputStream;
+    private Locator locator;
+    
+    public LightWeightParser(OSMParser parser) {
+    	this.parser = parser;
+    }
     
     public List<ParsedItem> getDataInBounds(WayType wayType, Point2D minBound, Point2D maxBound) {
     	List<ParsedItem> data = new ArrayList<>();
@@ -64,7 +79,28 @@ public class LightWeightParser extends SAXAdapter {
     	return null;
     }
     
+    private void incrementLineCount() {
+		if(locator.getLineNumber() % 1000 != 0) return;
+		int currentCount = 0;
+		try {
+			currentCount = (int)((((double)fileSize-(double)inputStream.available())/(double)fileSize)*100);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		if(currentCount == byteCount) return;
+		byteCount = currentCount;
+		
+		for(OSMParserListener listener : parser.parserListeners) listener.onLineCountHundred();
+	}
+	
+	public void setDocumentLocator(Locator locator) {
+		this.locator = locator;
+	}
+    
     public void startDocument() throws SAXException {
+    	fileSize = Util.getFileSize(new File(parser.getFileName()));
+    	inputStream = parser.getInputStream();
         nodeMap = new NodeMap();
         wayMap = new HashMap<>();
         relationMap = new HashMap<>();
@@ -103,7 +139,8 @@ public class LightWeightParser extends SAXAdapter {
     }
 
     public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
-        switch(qName) {
+        incrementLineCount();
+    	switch(qName) {
             case "bounds":
                 minLatBoundary = Float.parseFloat(atts.getValue("minlat"));
                 minLonBoundary = Float.parseFloat(atts.getValue("minlon"));
@@ -181,7 +218,8 @@ public class LightWeightParser extends SAXAdapter {
     }
 
     public void endElement(String uri, String localName, String qName) throws SAXException {
-        switch(qName) {
+        incrementLineCount();
+    	switch(qName) {
             case "relation":
                 if(!currentRelations.isEmpty()) relation.addRelations(currentRelations);
                 if(!currentWays.isEmpty()) relation.addWays(currentWays);
