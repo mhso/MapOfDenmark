@@ -119,25 +119,25 @@ public class AddressController{
         HashMap<String, HashMap<String, Float[]>> postcode;
         HashMap<String, Float[]> street;
 
-        if(addressDatabase.containsKey(address.getPostcode())) {
-        	postcode = addressDatabase.get(address.getPostcode());
-		} else {
-            postcode = new HashMap<>();
-            addressDatabase.put(address.getPostcode(), postcode);
-        }
-
-        if(postcode.containsKey(address.getStreet())) {
-        	street = postcode.get(address.getStreet());
-		} else {
-            street = new HashMap<>();
-            postcode.put(address.getStreet(), street);
-        }
-
-        if(!street.containsKey(address.getHousenumber())) {
-        	Float[] coords = new Float[]{address.getFirstLon(), address.getFirstLat()};
-            street.put(address.getHousenumber(), coords);
-            numAddresses++;
-        }
+//        if(addressDatabase.containsKey(address.getPostcode())) {
+//        	postcode = addressDatabase.get(address.getPostcode());
+//		} else {
+//            postcode = new HashMap<>();
+//            addressDatabase.put(address.getPostcode(), postcode);
+//        }
+//
+//        if(postcode.containsKey(address.getStreet())) {
+//        	street = postcode.get(address.getStreet());
+//		} else {
+//            street = new HashMap<>();
+//            postcode.put(address.getStreet(), street);
+//        }
+//
+//        if(!street.containsKey(address.getHousenumber())) {
+//        	Float[] coords = new Float[]{address.getFirstLon(), address.getFirstLat()};
+//            street.put(address.getHousenumber(), coords);
+//            numAddresses++;
+//        }
         
         if(address != null) {
 	        float lon = address.getFirstLon();
@@ -163,7 +163,10 @@ public class AddressController{
     }
 
 	public void onLWParsingFinished() {
-		PostcodeCityCombination.getInstance().printBestMaches();
+		PostcodeCityCombination.getInstance().compileBestMatches();
+		//PostcodeCityCombination.getInstance().printBestMaches();
+		PostcodeCityCombination.getInstance().clearCombinations();
+		//System.out.println("PostcodeCityCombination:"+PostcodeCityCombination.getInstance().sizeBestMatches());
 		System.out.println("Accepted Addresses:"+addresses.size());
 		System.out.println("Not Accepted Addresses:"+addressesNotAccepted.size());
 //		int i=0;

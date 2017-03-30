@@ -16,7 +16,7 @@ import dk.itu.n.danmarkskort.mapgfx.GraphicRepresentation;
 public class Main {
 
 	public final static String APP_NAME = "Map";
-	public final static String APP_VERSION = "0.2";
+	public final static String APP_VERSION = "0.4";
 	public final static boolean debug = true;
 	public final static boolean production = false;
 	public final static int WIDTH = 1000, HEIGHT = 800;
@@ -38,8 +38,8 @@ public class Main {
 
 	public static void startup(String[] args) {
 		if(lightweight) {
-			model = new LightWeightParser();
 			osmParser = new OSMParser();
+			model = new LightWeightParser(osmParser);
 			GraphicRepresentation.main(new String[]{"resources/ThemeBasic.XML"});
 			prepareParser(args);
 		} else {
@@ -51,16 +51,15 @@ public class Main {
 	}
 
 	public static void prepareParser(String[] args) {
+		WindowParsingLoadscreenNew loadScreen = new WindowParsingLoadscreenNew();
+		LoadScreenThread loadScreenThread = new LoadScreenThread(loadScreen);
+		//osmParser.addListener(AddressController.getInstance());
+		osmParser.addListener(loadScreen);
 		if(!lightweight) {
-			WindowParsingLoadscreenNew loadScreen = new WindowParsingLoadscreenNew();
-			LoadScreenThread loadScreenThread = new LoadScreenThread(loadScreen);
-			//osmParser.addListener(AddressController.getInstance());
-			osmParser.addListener(loadScreen);
 			osmParser.addListener(tileController);
-			loadScreenThread.setFilenameAndRun(args[0]);
-		} else {
-			osmParser.parseFile(args[0]);
 		}
+		loadScreenThread.setFilenameAndRun(args[0]);
+		osmParser.parseFile(args[0]);
 	}
 	
 	public static void main() {

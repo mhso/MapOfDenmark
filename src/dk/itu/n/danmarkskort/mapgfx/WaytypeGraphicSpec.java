@@ -10,7 +10,7 @@ import dk.itu.n.danmarkskort.models.WayType;
  * (A.K.A: A WayType).
  */
 public abstract class WaytypeGraphicSpec {
-	protected static final float OUTLINE_WIDTH = 0.00001f;
+	protected static final float OUTLINE_WIDTH = 0.000005f;
 	
 	private WayType mapElement;
 	private Color innerColor;

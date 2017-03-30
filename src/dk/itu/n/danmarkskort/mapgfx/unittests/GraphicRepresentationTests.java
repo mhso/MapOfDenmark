@@ -18,7 +18,7 @@ public class GraphicRepresentationTests {
 	@Before
 	public void parseGraphicData() {
 		if(!setupDone) {
-			GraphicRepresentation.main(new String[]{"resources/ThemeBasic.XML"});
+			GraphicRepresentation.main(new String[]{"resources/ThemeTest.XML"});
 			setupDone = true;
 		}
 	}
@@ -72,11 +72,11 @@ public class GraphicRepresentationTests {
 	
 	@Test
 	public void testGraphicAreaNotNull() {
-		assertNotNull(GraphicRepresentation.getGraphicSpecs(1).get(0));
+		assertNotNull(GraphicRepresentation.getGraphicSpecs(1).get(1));
 	}
 	
 	@Test
 	public void testGraphicAreaInstance() {
-		assertTrue(GraphicRepresentation.getGraphicSpecs(1).get(6) instanceof GraphicSpecArea);
+		assertTrue(GraphicRepresentation.getGraphicSpecs(1).get(1) instanceof GraphicSpecArea);
 	}
 }

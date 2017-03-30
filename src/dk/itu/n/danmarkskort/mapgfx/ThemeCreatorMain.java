@@ -25,6 +25,7 @@ import javax.swing.border.EmptyBorder;
 
 public class ThemeCreatorMain extends JFrame {
 	private JPanel contentPane;
+	private int themeCount;
 	
 	/**
 	 * Launch the application.
@@ -91,6 +92,7 @@ public class ThemeCreatorMain extends JFrame {
 	        	   themePanel.add(button);
 	        	   i++;
 	           }
+	           themeCount = i;
 	       } catch (IOException | DirectoryIteratorException ex) {
 	           ex.printStackTrace();
 	       }
@@ -100,6 +102,10 @@ public class ThemeCreatorMain extends JFrame {
 		String selectedFile = "resources/"+fileName+".XML";
 		dispose();
 		new ThemeCreator(selectedFile);
+	}
+	
+	public int getThemeCount() {
+		return themeCount;
 	}
 	
 	private class ButtonListener implements ActionListener {
