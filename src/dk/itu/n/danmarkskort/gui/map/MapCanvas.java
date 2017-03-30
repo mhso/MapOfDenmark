@@ -120,6 +120,14 @@ public class MapCanvas extends JPanel {
 		g2d.draw(new Rectangle2D.Double(mapRegion.x1, mapRegion.y1, mapRegion.getWidth(), mapRegion.getHeight()));
 	}
 	
+	public void eraseMap() {
+		Graphics g = getGraphics();
+		Color oldColor = g.getColor();
+		g.setColor(getBackground());
+		g.drawRect(0, 0, getWidth(), getHeight());
+		g.setColor(oldColor);
+	}
+	
 	public void pan(double dx, double dy) {
 		transform.preConcatenate(AffineTransform.getTranslateInstance(dx, dy));
 		repaint();
