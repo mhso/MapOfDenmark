@@ -23,6 +23,14 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.awt.event.ActionEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.ItemEvent;
+import javax.swing.event.PopupMenuListener;
+import javax.swing.event.PopupMenuEvent;
+import java.awt.event.InputMethodListener;
+import java.awt.event.InputMethodEvent;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 
 public class RoutePage extends JPanel {
 
@@ -73,7 +81,7 @@ public class RoutePage extends JPanel {
         GridBagLayout gbl_panelCenter = new GridBagLayout();
         gbl_panelCenter.columnWidths = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
         gbl_panelCenter.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0};
-        gbl_panelCenter.columnWeights = new double[]{0.0, 1.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+        gbl_panelCenter.columnWeights = new double[]{0.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
         gbl_panelCenter.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
         panelCenter.setLayout(gbl_panelCenter);
         
@@ -94,7 +102,6 @@ public class RoutePage extends JPanel {
         gbc_txtAddrfrom.gridx = 1;
         gbc_txtAddrfrom.gridy = 1;
         panelCenter.add(txtAddrFrom, gbc_txtAddrfrom);
-        txtAddrFrom.setColumns(10);
         dropSuggestionsAddrFrom = new DropdownAddressSearch(txtAddrFrom, style);
         ((AbstractDocument) txtAddrFrom.getDocument()).setDocumentFilter(new SearchFilter(txtAddrFrom, dropSuggestionsAddrFrom));
         txtAddrFrom.addKeyListener(new KeyAdapter() {
@@ -167,7 +174,6 @@ public class RoutePage extends JPanel {
         gbc_txtAddreto.gridx = 1;
         gbc_txtAddreto.gridy = 2;
         panelCenter.add(txtAddrTo, gbc_txtAddreto);
-        txtAddrTo.setColumns(15);
         dropSuggestionsAddrTo = new DropdownAddressSearch(txtAddrTo, style);
         ((AbstractDocument) txtAddrTo.getDocument()).setDocumentFilter(new SearchFilter(txtAddrTo, dropSuggestionsAddrTo));
         txtAddrTo.addKeyListener(new KeyAdapter() {
@@ -249,8 +255,7 @@ public class RoutePage extends JPanel {
         gbc_btnFind.gridx = 3;
         gbc_btnFind.gridy = 6;
         panelCenter.add(btnFind, gbc_btnFind);
-        
-        
+
         validateToFromFields();
     }
     
@@ -261,9 +266,11 @@ public class RoutePage extends JPanel {
     	validateToFromFields();
 	}
     
-    private void validateToFromFields() {
-    	updateValidInputAddrTo(txtAddrFrom, lblAddrFromConfirmed);
-    	updateValidInputAddrTo(txtAddrTo, lblAddrToConfirmed);
+    private boolean validateToFromFields() {
+    	boolean from = updateValidInputAddrTo(txtAddrFrom, lblAddrFromConfirmed);
+    	boolean to = updateValidInputAddrTo(txtAddrTo, lblAddrToConfirmed);
+    	if(from == true && to == true) return true;
+    	return false;
 	}
     
     private boolean updateValidInputAddrTo(JTextField field, JLabel labelName){
@@ -271,7 +278,7 @@ public class RoutePage extends JPanel {
     	Address addr = SearchController.getInstance().getSearchFieldAddressObj(field.getText());
     	if(addr != null) valid = true;
     	changeValidAddrIcon(labelName, valid);
-    	return false;
+    	return valid;
     }
     
     private void changeValidAddrIcon(JLabel labelName, boolean valid){
@@ -281,7 +288,9 @@ public class RoutePage extends JPanel {
     }
     
     private void openFindRoute(){
-    	RoutePlannerMain routePlannerMain =  new RoutePlannerMain(txtAddrFrom.getText(), txtAddrTo.getText());
+    	if(validateToFromFields()){
+    		RoutePlannerMain routePlannerMain =  new RoutePlannerMain(txtAddrFrom.getText(), txtAddrTo.getText());
+    	}
     }
 
 	private void initContentPanel(JPanel panel){
@@ -327,6 +336,7 @@ public class RoutePage extends JPanel {
         public void remove(FilterBypass fb, int offset, int length) throws BadLocationException {
             super.remove(fb, offset, length);
             dropdownSuggestions(offset - 1, input.getText());
+            validateToFromFields();
         }
 
         @Override
@@ -335,6 +345,7 @@ public class RoutePage extends JPanel {
 
             super.replace(fb, offset, length, newText, attr);
             dropdownSuggestions(offset, input.getText());
+            validateToFromFields();
         }
         
         public void dropdownSuggestions(int offset, String text) {
@@ -344,6 +355,7 @@ public class RoutePage extends JPanel {
                 repaint();
             } else {
             	das.setVisible(false);
+            	validateToFromFields();
             }
         }
     }
