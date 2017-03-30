@@ -1,10 +1,6 @@
 package dk.itu.n.danmarkskort.address;
 
 import dk.itu.n.danmarkskort.Main;
-import dk.itu.n.danmarkskort.backend.OSMParserListener;
-import dk.itu.n.danmarkskort.models.ParsedAddress;
-import dk.itu.n.danmarkskort.models.ParsedObject;
-import dk.itu.n.danmarkskort.models.ParsedWay;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,8 +10,9 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
-public class AddressController implements OSMParserListener{
+public class AddressController{
 	private Map<float[], Address> addresses;
+	private Map<float[], String> addressesNotAccepted;
 
 	private static AddressController instance;
 	private HashMap<String, HashMap> addressDatabase;
@@ -26,38 +23,10 @@ public class AddressController implements OSMParserListener{
 	
 	private AddressController(){
 		addresses =  new HashMap<float[], Address>();
+		addressesNotAccepted =  new HashMap<float[], String>();
 		addressDatabase = new HashMap<>();
 	}
-	int count = 0;
-
-    public void addressParsed(dk.itu.n.danmarkskort.lightweight.models.ParsedAddress address) {
-        HashMap<String, HashMap> postcode;
-        HashMap<String, Float[]> street;
-
-        if(addressDatabase.containsKey(address.getPostcode())) {
-        	postcode = addressDatabase.get(address.getPostcode());
-		} else {
-            postcode = new HashMap<>();
-            addressDatabase.put(address.getPostcode(), postcode);
-        }
-
-        if(postcode.containsKey(address.getStreet())) {
-        	street = postcode.get(address.getStreet());
-		} else {
-            street = new HashMap<>();
-            postcode.put(address.getStreet(), street);
-        }
-
-        if(!street.containsKey(address.getHousenumber())) {
-        	Float[] coords = new Float[]{address.getFirstLon(), address.getFirstLat()};
-            street.put(address.getHousenumber(), coords);
-            numAddresses++;
-        }
-    }
-
-	public void onLWParsingFinished() {
-		Main.log("Addresses: " + numAddresses);
-	}
+	int count = 0; 
 
 	public static AddressController getInstance(){
         if (instance == null) {
@@ -80,15 +49,14 @@ public class AddressController implements OSMParserListener{
 	public List<String> getSearchSuggestions(String find){ return searchSuggestions(find); }
 	
 	public Address getSearchResult(String find){
-		AddressParser ap = new AddressParser();
-		Address addrBuild = AddressSearchPredicates.addressEquals(addresses, ap.parse(find));
+		Address addrBuild = AddressSearchPredicates.addressEquals(addresses, AddressParser.parse(find, false));
 		return addrBuild;
 	}
 	
 	private List<String> searchSuggestions(String find){
 		//System.out.println("Addr: looking for suggestions ");
-		AddressParser ap = new AddressParser();
-		Address addrBuild = ap.parse(find);
+
+		Address addrBuild = AddressParser.parse(find, true);
 		List<String> result = new ArrayList<String>();
 		//System.out.println("searchSuggestions: "+addrBuild.toString());
 
@@ -125,12 +93,12 @@ public class AddressController implements OSMParserListener{
 			}
 		}
 		
-		if(result.size() == 0 && addrBuild.getPostcode() != -1){
+		if(result.size() == 0 && addrBuild.getPostcode() != null){
 			result.addAll(AddressSearchPredicates.filterToStringShort(addresses, 
-					AddressSearchPredicates.postcodeEquals(Integer.toString(addrBuild.getPostcode())) , 5l));
+					AddressSearchPredicates.postcodeEquals(addrBuild.getPostcode()) , 5l));
 		}
 		// Remove duplicates and return
-		return result.stream().distinct().collect(Collectors.toList());
+		return result.parallelStream().distinct().collect(Collectors.toList());
 	}
 	
 	public Address createOsmAddress(float[] lonLat, Map<String, String> attributes){
@@ -139,7 +107,7 @@ public class AddressController implements OSMParserListener{
 			if (addr == null) addr = new Address(lonLat);
 			AddressOsmParser aop = new AddressOsmParser(addr);
 			aop.parseKeyAddr(attributes);
-			if(addr.getCity() != null){
+			if(addr.getPostcode() != null && addr.getCity() != null){
 				PostcodeCityCombination.getInstance().add(addr.getPostcode(), addr.getCity());
 			}
 			return addr;
@@ -147,40 +115,72 @@ public class AddressController implements OSMParserListener{
 		return null;
 	}
 	
-	@Override
-	public void onParsingStarted() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void addressParsed(dk.itu.n.danmarkskort.lightweight.models.ParsedAddress address) {
+        HashMap<String, HashMap<String, Float[]>> postcode;
+        HashMap<String, Float[]> street;
 
-	@Override
-	public void onParsingGotObject(ParsedObject parsedObject) {
-		if(parsedObject instanceof ParsedAddress) {
-			ParsedAddress omsAddr = (ParsedAddress) parsedObject;
-			float lon = Float.parseFloat(omsAddr.getAttributes().get("lon"));
-			float lat = Float.parseFloat(omsAddr.getAttributes().get("lat"));
+//        if(addressDatabase.containsKey(address.getPostcode())) {
+//        	postcode = addressDatabase.get(address.getPostcode());
+//		} else {
+//            postcode = new HashMap<>();
+//            addressDatabase.put(address.getPostcode(), postcode);
+//        }
+//
+//        if(postcode.containsKey(address.getStreet())) {
+//        	street = postcode.get(address.getStreet());
+//		} else {
+//            street = new HashMap<>();
+//            postcode.put(address.getStreet(), street);
+//        }
+//
+//        if(!street.containsKey(address.getHousenumber())) {
+//        	Float[] coords = new Float[]{address.getFirstLon(), address.getFirstLat()};
+//            street.put(address.getHousenumber(), coords);
+//            numAddresses++;
+//        }
+        
+        if(address != null) {
+	        float lon = address.getFirstLon();
+			float lat = address.getFirstLat();			
 			float[] lonLat = new float[] {lon,lat};
-			Address addr = createOsmAddress(lonLat, omsAddr.attributes);
-			if(addr != null) addresses.put(addr.getLonLat(), addr);
-		}
-	}
-	
-	@Override
-	public void onParsingFinished() {
-		// TODO Auto-generated method stub
-		PostcodeCityCombination.getInstance().bestMatches();
+			//Address addrParsed = ap.parse(address.getStreet() +" "+address.getHousenumber()+" "+address.getPostcode()+" "+address.getCity());
+			Address addrParsed = AddressParser.parse(address.toStringShort(), false);
+			if(addrParsed != null) {
+				addrParsed.setLonLat(lonLat);
+				//System.out.println("OSM: "+address.toString());
+				//System.out.println("ADC: "+addrParsed.toStringShort());
+//				if(!address.toStringShort().equals(addrParsed.toStringShort())) {
+//					System.out.println("--- ALARM NOT MATCHING ALARM ---\n --> OSM: "+address.toStringShort()
+//						+"\n --> ADC: "+addrParsed.toStringShort()
+//						+"\n --> ADC: "+addrParsed.toString());
+//				}
+				addresses.put(lonLat, addrParsed);
+				PostcodeCityCombination.getInstance().add(addrParsed.getPostcode(), addrParsed.getCity());
+			} else {
+				addressesNotAccepted.put(lonLat, address.toStringShort());
+			}
+        }	
+    }
+
+	public void onLWParsingFinished() {
+		PostcodeCityCombination.getInstance().compileBestMatches();
+		//PostcodeCityCombination.getInstance().printBestMaches();
 		PostcodeCityCombination.getInstance().clearCombinations();
-		Main.log("AdresseController found: "+addresses.size()+" adresses");
-	}
-
-	@Override
-	public void onLineCountHundred() {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void onWayLinked(ParsedWay way) {
-		// TODO Auto-generated method stub
-		
+		//System.out.println("PostcodeCityCombination:"+PostcodeCityCombination.getInstance().sizeBestMatches());
+		System.out.println("Accepted Addresses:"+addresses.size());
+		System.out.println("Not Accepted Addresses:"+addressesNotAccepted.size());
+//		int i=0;
+//		for(Address addr : addresses.values()){
+//			if(addr.toStringShort().contains("'")) System.out.println(i+": "+addr.toString());
+//			if(++i > 250) break;
+//		}
+//		System.out.println("Not Accepted Addresses:");
+//		i=0;
+//		for(String addr : addressesNotAccepted.values()){
+//			//if(addr.contains("'")) 
+//				System.out.println(i+": "+addr);
+//			if(++i > 300) break;
+//		}
+		Main.log("Addresses: " + numAddresses);
 	}
 }

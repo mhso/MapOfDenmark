@@ -2,19 +2,30 @@ package dk.itu.n.danmarkskort.address;
 
 public class Address{
 	private float[] lonLat;
-	private String street, housenumber, city;
-	private int postcode;
+	private String street, housenumber, city, postcode;
 
 	public Address(){
 		this.lonLat = new float[]{-1f,-1f};
-		this.postcode = -1;
 	}
 	
 	public Address(float[] lonlat){
 		this.lonLat = lonlat;
-		this.postcode = -1;
 	}
 	
+	public Address(float[] lonLat, String street, String housenumber, String city, String postcode) {
+		this.lonLat = lonLat;
+		this.street = street;
+		this.housenumber = housenumber;
+		this.city = city;
+		this.postcode = postcode;
+	}
+	
+	public Address(String street, String housenumber, String city, String postcode) {
+		this.housenumber = housenumber;
+		this.city = city;
+		this.postcode = postcode;
+	}
+
 	public float[] getLonLat() { return lonLat; }
 	public void setLonLat(float[] latLon) { this.lonLat = latLon; }
 
@@ -24,8 +35,8 @@ public class Address{
 	public String getHousenumber() { return housenumber; }
 	public void setHousenumber(String housenumber) { this.housenumber = housenumber; }
 	
- 	public int getPostcode() { return postcode; }
- 	public void setPostcode(int postcode) { this.postcode = postcode; }
+ 	public String getPostcode() { return postcode; }
+ 	public void setPostcode(String postcode) { this.postcode = postcode; }
 
  	public void setCity(String city) { this.city = city; }
  	public String getCity() {
@@ -39,7 +50,7 @@ public class Address{
  		StringBuilder sb = new StringBuilder();
  			if(street != null) sb.append(street +" ");
  			if(housenumber != null) sb.append(housenumber + " ");
- 			if(postcode != -1) sb.append(postcode + " ");
+ 			if(postcode != null) sb.append(postcode + " ");
  			if(getCity() != null) sb.append(getCity());
  		return sb.toString().trim();
  	}

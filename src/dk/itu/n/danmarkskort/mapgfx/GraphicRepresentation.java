@@ -109,7 +109,7 @@ public class GraphicRepresentation {
 	}
 	
 	private static class GraphicsHandler extends SAXAdapter {
-		private static final float LINE_MAGNIFYING_VALUE = 0.001f;
+		private static final float LINE_MAGNIFYING_VALUE = 0.000001f;
 		
 		private static WayType mapElement;
 		private static WaytypeGraphicSpec gs;

@@ -4,19 +4,24 @@ import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.SAXAdapter;
 import dk.itu.n.danmarkskort.Util;
 import dk.itu.n.danmarkskort.address.AddressController;
+import dk.itu.n.danmarkskort.backend.OSMParser;
+import dk.itu.n.danmarkskort.backend.OSMParserListener;
 import dk.itu.n.danmarkskort.lightweight.models.*;
 import dk.itu.n.danmarkskort.lightweight.models.ParsedAddress;
 import dk.itu.n.danmarkskort.lightweight.models.ParsedWay;
 import dk.itu.n.danmarkskort.kdtree.KDTree;
 import dk.itu.n.danmarkskort.kdtree.KDTreeLeaf;
 import dk.itu.n.danmarkskort.kdtree.KDTreeNode;
-import dk.itu.n.danmarkskort.models.ParsedBounds;
 import dk.itu.n.danmarkskort.models.Region;
 import dk.itu.n.danmarkskort.models.WayType;
 import org.xml.sax.Attributes;
+import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 
 import java.awt.geom.Point2D;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.HashMap;
@@ -46,11 +51,19 @@ public class LightWeightParser extends SAXAdapter {
     private WayType waytype;
     private long id;
     private boolean finished = false;
+    private long fileSize;
+    private int byteCount;
+    private OSMParser parser;
+    private InputStream inputStream;
+    private Locator locator;
+    
+    public LightWeightParser(OSMParser parser) {
+    	this.parser = parser;
+    }
     
     public List<ParsedItem> getDataInBounds(WayType wayType, Point2D minBound, Point2D maxBound) {
     	List<ParsedItem> data = new ArrayList<>();
     	KDTree tree = enumMapKD.get(wayType);
-    	boolean sortByLon = true;
     	while(true) {
     		if(tree instanceof KDTreeLeaf) {
     			ParsedItem[] treeData = ((KDTreeLeaf) tree).getData();
@@ -58,13 +71,33 @@ public class LightWeightParser extends SAXAdapter {
     			for(ParsedItem item : treeData) tempList.add(item);
     			data.addAll(tempList);
     		}
-    		sortByLon = !sortByLon;
     		break;
     	}
     	return null;
     }
     
+    private void incrementLineCount() {
+		if(locator.getLineNumber() % 1000 != 0) return;
+		int currentCount = 0;
+		try {
+			currentCount = (int)((((double)fileSize-(double)inputStream.available())/(double)fileSize)*100);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		if(currentCount == byteCount) return;
+		byteCount = currentCount;
+		
+		for(OSMParserListener listener : parser.parserListeners) listener.onLineCountHundred();
+	}
+	
+	public void setDocumentLocator(Locator locator) {
+		this.locator = locator;
+	}
+    
     public void startDocument() throws SAXException {
+    	fileSize = Util.getFileSize(new File(parser.getFileName()));
+    	inputStream = parser.getInputStream();
         nodeMap = new NodeMap();
         wayMap = new HashMap<>();
         relationMap = new HashMap<>();
@@ -91,7 +124,7 @@ public class LightWeightParser extends SAXAdapter {
             ArrayList<ParsedItem> current = enumMap.get(wt);
             KDTree tree;
             if(current.isEmpty()) tree = null;
-            else if(current.size() < 1000) tree = new KDTreeLeaf(current, null);
+            else if(current.size() < Main.KD_SIZE) tree = new KDTreeLeaf(current, null);
             else tree = new KDTreeNode(current);
             enumMap.remove(wt);
             enumMapKD.put(wt, tree);
@@ -103,7 +136,8 @@ public class LightWeightParser extends SAXAdapter {
     }
 
     public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
-        switch(qName) {
+        incrementLineCount();
+    	switch(qName) {
             case "bounds":
                 minLatBoundary = Float.parseFloat(atts.getValue("minlat"));
                 minLonBoundary = Float.parseFloat(atts.getValue("minlon"));
@@ -181,7 +215,8 @@ public class LightWeightParser extends SAXAdapter {
     }
 
     public void endElement(String uri, String localName, String qName) throws SAXException {
-        switch(qName) {
+        incrementLineCount();
+    	switch(qName) {
             case "relation":
                 if(!currentRelations.isEmpty()) relation.addRelations(currentRelations);
                 if(!currentWays.isEmpty()) relation.addWays(currentWays);
@@ -226,6 +261,7 @@ public class LightWeightParser extends SAXAdapter {
 
     private void finalClean() {
         nodeMap = null;
+        System.gc();
         // ideally all objects have been passed on, and this object would delete all references to anything. A really big clean up!
     }
     
@@ -254,6 +290,7 @@ public class LightWeightParser extends SAXAdapter {
     	float y1 = getMinLat();
     	float x2 = getMaxLon();
     	float y2 = getMaxLat();
-    	return new Region(x1, y1, x2, y2);
+    	Region reg = new Region(x1, y1, x2, y2);
+    	return reg;
     }
 }

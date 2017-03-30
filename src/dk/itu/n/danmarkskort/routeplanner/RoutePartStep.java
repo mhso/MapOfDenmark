@@ -6,11 +6,11 @@ import javax.swing.JLabel;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 
-public class RoutePart extends JPanel {
+public class RoutePartStep extends JPanel {
 
 	private final String ROUTE_DESCRIPTION, ROUTE_DISTANCE, ROUTE_POSITION;
 	
-	public RoutePart(int routePosition, String routeDescription, String routeDistance) {
+	public RoutePartStep(int routePosition, String routeDescription, String routeDistance) {
 		
 		ROUTE_POSITION = routePosition+"";
 		ROUTE_DESCRIPTION = routeDescription;
