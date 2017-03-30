@@ -91,7 +91,7 @@ public class LightWeightParser extends SAXAdapter {
             ArrayList<ParsedItem> current = enumMap.get(wt);
             KDTree tree;
             if(current.isEmpty()) tree = null;
-            else if(current.size() < 1000) tree = new KDTreeLeaf(current, null);
+            else if(current.size() < Main.KD_SIZE) tree = new KDTreeLeaf(current, null);
             else tree = new KDTreeNode(current);
             enumMap.remove(wt);
             enumMapKD.put(wt, tree);
@@ -226,6 +226,7 @@ public class LightWeightParser extends SAXAdapter {
 
     private void finalClean() {
         nodeMap = null;
+        System.gc();
         // ideally all objects have been passed on, and this object would delete all references to anything. A really big clean up!
     }
     
@@ -254,6 +255,8 @@ public class LightWeightParser extends SAXAdapter {
     	float y1 = getMinLat();
     	float x2 = getMaxLon();
     	float y2 = getMaxLat();
-    	return new Region(x1, y1, x2, y2);
+    	Region reg = new Region(x1, y1, x2, y2);
+    	Main.log(reg);
+    	return reg;
     }
 }

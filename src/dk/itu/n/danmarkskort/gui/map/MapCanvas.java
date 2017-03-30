@@ -11,7 +11,6 @@ import java.awt.geom.Line2D;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import java.awt.geom.Point2D.Double;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
@@ -25,7 +24,6 @@ import dk.itu.n.danmarkskort.mapgfx.GraphicRepresentation;
 import dk.itu.n.danmarkskort.mapgfx.GraphicSpecArea;
 import dk.itu.n.danmarkskort.mapgfx.GraphicSpecLine;
 import dk.itu.n.danmarkskort.mapgfx.WaytypeGraphicSpec;
-import dk.itu.n.danmarkskort.models.Coordinate;
 import dk.itu.n.danmarkskort.models.ParsedBounds;
 import dk.itu.n.danmarkskort.models.ParsedWay;
 import dk.itu.n.danmarkskort.models.Region;
@@ -64,10 +62,12 @@ public class MapCanvas extends JPanel {
 		shapesDrawn = 0;
 		for(WaytypeGraphicSpec wayTypeGraphic : wayTypesVisible) {
 			KDTree kdTree = Main.model.enumMapKD.get(wayTypeGraphic.getWayType());
-			if(kdTree == null) continue;
+			if(kdTree == null) {
+				//Main.log(wayTypeGraphic.getWayType());
+				continue;
+			}
 			Region region = getGeographicalRegion();
-			Main.log(region);
-			List<Shape> shapes = kdTree.getShapes(-100000, 101010010, 0, 0);
+			List<Shape> shapes = kdTree.getShapes((float)region.x1, (float)region.y1, (float)region.getWidth(), (float)region.getHeight());
 			shapesDrawn += shapes.size();
 			for(Shape shape : shapes) {
 				wayTypeGraphic.transformOutline(g2d);

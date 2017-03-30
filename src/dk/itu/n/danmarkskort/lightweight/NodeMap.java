@@ -46,7 +46,7 @@ public class NodeMap {
         private float lon, lat;
 
         // Total memory usage of a Node is 32 bytes.
-        public Node(long key, Node next, float lat, float lon) {
+        public Node(long key, Node next, float lon, float lat) {
             this.key = key;
             this.next = next;
             this.lon = lon;

@@ -12,10 +12,10 @@ public class GraphicSpecLine extends WaytypeGraphicSpec {
 		super.transformPrimary(graphics);
 		BasicStroke stroke = null;
 		if(dashArr == null) {
-			stroke = new BasicStroke(lineWidth);
+			stroke = new BasicStroke(lineWidth, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
 		}
 		else {
-			stroke = new BasicStroke(lineWidth, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 
+			stroke = new BasicStroke(lineWidth, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND,
 					0.00008f, dashArr, 0.0f);
 		}
 		graphics.setStroke(stroke);
@@ -26,10 +26,10 @@ public class GraphicSpecLine extends WaytypeGraphicSpec {
 		super.transformOutline(graphics);
 		BasicStroke stroke = null;
 		if(dashArr == null) {
-			stroke = new BasicStroke(lineWidth+OUTLINE_WIDTH);
+			stroke = new BasicStroke(lineWidth+OUTLINE_WIDTH, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
 		}
 		else {
-			stroke = new BasicStroke(lineWidth, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 
+			stroke = new BasicStroke(lineWidth, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND,
 					0.00008f, dashArr, 0.0f);
 		}
 		graphics.setStroke(stroke);
