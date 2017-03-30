@@ -66,7 +66,6 @@ public class MapCanvas extends JPanel {
 			KDTree kdTree = Main.model.enumMapKD.get(wayTypeGraphic.getWayType());
 			if(kdTree == null) continue;
 			Region region = getGeographicalRegion();
-			Main.log(region);
 			List<Shape> shapes = kdTree.getShapes(-100000, 101010010, 0, 0);
 			shapesDrawn += shapes.size();
 			for(Shape shape : shapes) {
@@ -74,7 +73,11 @@ public class MapCanvas extends JPanel {
 				if(wayTypeGraphic instanceof GraphicSpecLine) g2d.draw(shape);
 				else if(wayTypeGraphic instanceof GraphicSpecArea) g2d.fill(shape);
 			}
-			
+			for(Shape shape : shapes) {
+				wayTypeGraphic.transformPrimary(g2d);
+				if(wayTypeGraphic instanceof GraphicSpecLine) g2d.draw(shape);
+				else if(wayTypeGraphic instanceof GraphicSpecArea) g2d.fill(shape);
+			}
 		}
 	}
 
@@ -115,6 +118,14 @@ public class MapCanvas extends JPanel {
 		Region mapRegion = Main.model.getMapRegion();
 		g2d.draw(new Line2D.Double(0, 0, mapRegion.x1, mapRegion.y1));
 		g2d.draw(new Rectangle2D.Double(mapRegion.x1, mapRegion.y1, mapRegion.getWidth(), mapRegion.getHeight()));
+	}
+	
+	public void eraseMap() {
+		Graphics g = getGraphics();
+		Color oldColor = g.getColor();
+		g.setColor(getBackground());
+		g.drawRect(0, 0, getWidth(), getHeight());
+		g.setColor(oldColor);
 	}
 	
 	public void pan(double dx, double dy) {

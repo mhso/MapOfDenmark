@@ -27,6 +27,7 @@ public class OSMParser {
 	public List<OSMParserListener> parserListeners = new ArrayList<OSMParserListener>();
 	private String currentChecksum;
 	private InputStream inputStream;
+	private String fileName;
 	
 	public OSMParser() {
 		initialize();
@@ -49,7 +50,12 @@ public class OSMParser {
 		return inputStream;
 	}
 	
+	public String getFileName() {
+		return fileName;
+	}
+	
 	public void parseFile(String fileName) {
+		this.fileName = fileName;
 		TimerUtil parseTimer = new TimerUtil();
 		MemoryUtil parseMemory = new MemoryUtil();
 		parseTimer.on();
