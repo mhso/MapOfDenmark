@@ -36,13 +36,14 @@ public class MapCanvas extends JPanel {
 	private boolean antiAlias = true;
 	public int shapesDrawn = 0;
 	private final int MAX_ZOOM = 20;
+	private boolean resetDrawing;
 
 	public MapCanvas() {
 		new MapMouseController(this);
 	}
 
 	protected void paintComponent(Graphics _g) {
-		drawMap((Graphics2D)_g);
+		if(!resetDrawing) drawMap((Graphics2D)_g);
 	}
 
 	public AffineTransform getTransform() {
@@ -122,16 +123,18 @@ public class MapCanvas extends JPanel {
 	}
 	
 	public void eraseMap() {
+		resetDrawing = true;
 		Graphics g = getGraphics();
 		Color oldColor = g.getColor();
 		g.setColor(getBackground());
-		g.drawRect(0, 0, getWidth(), getHeight());
+		g.fillRect(0, 0, getWidth(), getHeight());
 		g.setColor(oldColor);
 	}
 	
 	public void pan(double dx, double dy) {
 		transform.preConcatenate(AffineTransform.getTranslateInstance(dx, dy));
 		repaint();
+		eraseMap();
 	}
 
 	public void update(Observable o, Object arg) {

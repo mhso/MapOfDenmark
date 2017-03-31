@@ -18,14 +18,12 @@ import org.xml.sax.Attributes;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 
-import java.awt.geom.Point2D;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.HashMap;
-import java.util.List;
 
 public class LightWeightParser extends SAXAdapter {
 
@@ -59,21 +57,6 @@ public class LightWeightParser extends SAXAdapter {
     
     public LightWeightParser(OSMParser parser) {
     	this.parser = parser;
-    }
-    
-    public List<ParsedItem> getDataInBounds(WayType wayType, Point2D minBound, Point2D maxBound) {
-    	List<ParsedItem> data = new ArrayList<>();
-    	KDTree tree = enumMapKD.get(wayType);
-    	while(true) {
-    		if(tree instanceof KDTreeLeaf) {
-    			ParsedItem[] treeData = ((KDTreeLeaf) tree).getData();
-    			List<ParsedItem> tempList = new ArrayList<>();
-    			for(ParsedItem item : treeData) tempList.add(item);
-    			data.addAll(tempList);
-    		}
-    		break;
-    	}
-    	return null;
     }
     
     private void incrementLineCount() {
@@ -129,7 +112,8 @@ public class LightWeightParser extends SAXAdapter {
             enumMap.remove(wt);
             enumMapKD.put(wt, tree);
         }
-
+        
+        for(OSMParserListener listener : parser.parserListeners) listener.onParsingFinished();
         AddressController.getInstance().onLWParsingFinished();
         finalClean();
         finished = true;
