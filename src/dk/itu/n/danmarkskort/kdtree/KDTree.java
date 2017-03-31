@@ -1,8 +1,9 @@
 package dk.itu.n.danmarkskort.kdtree;
 
+import dk.itu.n.danmarkskort.gui.map.MapCanvas;
 import dk.itu.n.danmarkskort.lightweight.models.ParsedItem;
+import dk.itu.n.danmarkskort.models.Region;
 
-import java.awt.*;
 import java.util.ArrayList;
 
 public abstract class KDTree {
@@ -13,10 +14,12 @@ public abstract class KDTree {
         return array;
     }
 
-    public abstract ArrayList<Shape> getShapes(float lon, float lat, float w, float h);
-    public abstract ArrayList<Shape> getShapes(float lon, float lat, float w, float h, boolean sortByLon);
+    public abstract void getShapes(Region reg, MapCanvas map);
+    public abstract void getShapes(Region reg, MapCanvas map, boolean sortByLon);
 
     public abstract KDTree getParent();
+
+    public abstract void makeShapes();
     
     public KDTree getRoot() {
     	KDTree parent = getParent();
