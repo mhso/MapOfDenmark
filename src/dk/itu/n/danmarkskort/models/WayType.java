@@ -39,7 +39,7 @@ public enum WayType {
 	HIGHWAY_SECONDARY,	// Vej. ??
 	HIGHWAY_TERTIARY,	// Vej. ??
 	HIGHWAY_DRIVEWAY,	// Indkørsel.
-	HIGHWAY_RESIDENTAL, // Vej i beboerområde.
+	HIGHWAY_RESIDENTIAL, // Vej i beboerområde.
 	HIGHWAY_TRUNK, 		// Motor-trafikvej.
 	HIGHWAY_MOTORWAY,	// Motorvej
 	HIGHWAY_CYCLEWAY,	// Cykelsti.
@@ -52,6 +52,10 @@ public enum WayType {
 	WATER_DITCH,		// Grøft.
 	WATER_DITCH_TUNNEL, // Grøft-tunnel.
 	WATER_RIVER,		// Flod.
-    LIGHT_RAIL, PITCH, RAILWAY, RESIDENTIAL, WATER				// Almindeligt vand.
+    LIGHT_RAIL,
+	PITCH,
+	RAILWAY,
+	RESIDENTIAL,
+	BUILDING_SCHOOL, WATER				// Almindeligt vand.
 	
 }

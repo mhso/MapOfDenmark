@@ -1,9 +1,10 @@
 package dk.itu.n.danmarkskort.kdtree;
 
-import dk.itu.n.danmarkskort.Main;
+import dk.itu.n.danmarkskort.DKConstants;
+import dk.itu.n.danmarkskort.gui.map.MapCanvas;
 import dk.itu.n.danmarkskort.lightweight.models.ParsedItem;
+import dk.itu.n.danmarkskort.models.Region;
 
-import java.awt.*;
 import java.util.ArrayList;
 
 public class KDTreeNode extends KDTree {
@@ -61,10 +62,10 @@ public class KDTreeNode extends KDTree {
                 for(Float coord : lats) rightSplit = coord < rightSplit ? coord : rightSplit; // nederst er værdierne størst
             }
         }
-        if(leftArray.length > Main.KD_SIZE) leftChild = new KDTreeNode(leftArray, this, !sortByLon);
+        if(leftArray.length > DKConstants.KD_SIZE) leftChild = new KDTreeNode(leftArray, this, !sortByLon);
         else leftChild = new KDTreeLeaf(leftArray, this);
 
-        if(rightArray.length > Main.KD_SIZE) rightChild = new KDTreeNode(rightArray, this, !sortByLon);
+        if(rightArray.length > DKConstants.KD_SIZE) rightChild = new KDTreeNode(rightArray, this, !sortByLon);
         else rightChild = new KDTreeLeaf(rightArray, this);
     }
 
@@ -74,21 +75,22 @@ public class KDTreeNode extends KDTree {
     public float getRightSplit() { return rightSplit; }
 
     @Override
-    public ArrayList<Shape> getShapes(float lon, float lat, float w, float h) {
-        return getShapes(lon, lat, w, h, true);
-    }
+    public void getShapes(Region reg, MapCanvas map) { getShapes(reg, map, true); }
     @Override
-    public ArrayList<Shape> getShapes(float lon, float lat, float w, float h, boolean sortByLon) {
-        ArrayList<Shape> shapes = new ArrayList<>();
+    public void getShapes(Region reg, MapCanvas map,  boolean sortByLon) {
         if(sortByLon) {
-            if(lon < leftSplit) shapes.addAll(leftChild.getShapes(lon, lat, w, h, !sortByLon));
-            if(lon + w > rightSplit) shapes.addAll(rightChild.getShapes(lon, lat, w, h, !sortByLon));
+            if(reg.x1 < leftSplit) leftChild.getShapes(reg, map, !sortByLon);
+            if(reg.x2 > rightSplit) rightChild.getShapes(reg, map, !sortByLon);
         }
         else {
-            if(lat < leftSplit) shapes.addAll(leftChild.getShapes(lon, lat, w, h, !sortByLon));
-            if(lat + h > rightSplit) shapes.addAll(rightChild.getShapes(lon, lat, w, h, !sortByLon));
+            if(reg.y1 < leftSplit) leftChild.getShapes(reg, map, !sortByLon);
+            if(reg.y2 > rightSplit) rightChild.getShapes(reg, map, !sortByLon);
         }
-        return shapes;
+    }
+    @Override
+    public void makeShapes() {
+        leftChild.makeShapes();
+        rightChild.makeShapes();
     }
     @Override
     public KDTree getParent() { return parent; }

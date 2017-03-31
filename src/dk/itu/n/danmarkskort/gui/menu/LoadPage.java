@@ -136,8 +136,13 @@ public class LoadPage extends JPanel  {
 		
 		if (fcVal == JFileChooser.APPROVE_OPTION) {
 			File file = fc.getSelectedFile();
-			//model.loadNewModel(file.getAbsolutePath());
 			System.out.println("Load New Map File:"+file);
+			Main.map.eraseMap(true);
+			Main.startup(new String[]{file.getAbsolutePath()});
+			Main.map.eraseMap(false);
+			Main.window.revalidate();
+			Main.window.repaint();
+			Main.map.zoomToBounds();
 			/* 1. Parse the new data, replacing all the old. Should loading screen be run again?
 			 * 2. If replacing is not an option, delete the old data first using some reset methods.
 			 * 3. Reset canvas, perhaps just drawing a square to erase everything.

@@ -40,11 +40,9 @@ public class ParsedWay extends ParsedItem{
         Path2D path = new Path2D.Float();
         path.moveTo(coords[0], coords[1]);
         for(int i = 2; i < coords.length;) {
-        	float lon = coords[i++];
-        	float lat = coords[i++];
-        	path.lineTo(lon, lat);
+        	path.lineTo(coords[i++], coords[i++]);
         }
-        if(coords[0] == coords[coords.length - 2] && coords[1] == coords[coords.length - 1]) path.closePath();
+        //if(coords[0] == coords[coords.length - 2] && coords[1] == coords[coords.length - 1]) path.closePath();
 
         return path;
     }
