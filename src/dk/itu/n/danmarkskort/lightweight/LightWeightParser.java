@@ -7,6 +7,7 @@ import dk.itu.n.danmarkskort.Util;
 import dk.itu.n.danmarkskort.address.AddressController;
 import dk.itu.n.danmarkskort.backend.OSMParser;
 import dk.itu.n.danmarkskort.backend.OSMParserListener;
+import dk.itu.n.danmarkskort.extras.brewj.BrewJ;
 import dk.itu.n.danmarkskort.lightweight.models.*;
 import dk.itu.n.danmarkskort.lightweight.models.ParsedAddress;
 import dk.itu.n.danmarkskort.lightweight.models.ParsedWay;
@@ -112,13 +113,12 @@ public class LightWeightParser extends SAXAdapter {
             if(current.isEmpty()) tree = null;
             else if(current.size() < DKConstants.KD_SIZE) tree = new KDTreeLeaf(current, null);
             else tree = new KDTreeNode(current);
+            if(tree != null) tree.makeShapes();
             enumMap.remove(wt);
             enumMapKD.put(wt, tree);
         }
 
-        for(Map.Entry<WayType, KDTree> entry : enumMapKD.entrySet()) {
-            //Main.log(entry);
-        }
+        if(Main.debug) new BrewJ().add(enumMapKD, enumMapKD);
         
         for(OSMParserListener listener : parser.parserListeners) listener.onParsingFinished();
         AddressController.getInstance().onLWParsingFinished();

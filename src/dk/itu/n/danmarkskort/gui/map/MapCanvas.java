@@ -27,6 +27,7 @@ import dk.itu.n.danmarkskort.mapgfx.WaytypeGraphicSpec;
 import dk.itu.n.danmarkskort.models.ParsedBounds;
 import dk.itu.n.danmarkskort.models.ParsedWay;
 import dk.itu.n.danmarkskort.models.Region;
+import dk.itu.n.danmarkskort.models.WayType;
 
 public class MapCanvas extends JPanel {
 
@@ -37,6 +38,11 @@ public class MapCanvas extends JPanel {
 	public int shapesDrawn = 0;
 	private final int MAX_ZOOM = 20;
 	private boolean resetDrawing;
+
+	private WayType currentType;
+	private WaytypeGraphicSpec currentWTGSpec;
+	private boolean outline;
+	private Graphics2D currentGraphics;
 
 	public MapCanvas() {
 		new MapMouseController(this);
@@ -61,23 +67,41 @@ public class MapCanvas extends JPanel {
 		drawMapRegion(g2d);
 		List<WaytypeGraphicSpec> wayTypesVisible = getOnScreenGraphicsForCurrentZoom();
 		shapesDrawn = 0;
+		currentGraphics = g2d;
 		for(WaytypeGraphicSpec wayTypeGraphic : wayTypesVisible) {
+			currentWTGSpec = wayTypeGraphic;
 			KDTree kdTree = Main.model.enumMapKD.get(wayTypeGraphic.getWayType());
 			if(kdTree == null) {
 				continue;
 			}
-			Region region = getGeographicalRegion();
-			List<Shape> shapes = kdTree.getShapes((float)region.x1, (float)region.y1, (float)region.getWidth(), (float)region.getHeight());
-			shapesDrawn += shapes.size();
-			for(Shape shape : shapes) {
-				wayTypeGraphic.transformOutline(g2d);
-				if(wayTypeGraphic instanceof GraphicSpecLine) g2d.draw(shape);
-				else if(wayTypeGraphic instanceof GraphicSpecArea) g2d.fill(shape);
+			outline = true;
+			kdTree.getShapes(getGeographicalRegion(), this);
+		}
+		for(WaytypeGraphicSpec wayTypeGraphic : wayTypesVisible) {
+			currentWTGSpec = wayTypeGraphic;
+			KDTree kdTree = Main.model.enumMapKD.get(wayTypeGraphic.getWayType());
+			if(kdTree == null) {
+				continue;
 			}
+			outline = false;
+			kdTree.getShapes(getGeographicalRegion(), this);
+		}
+	}
+
+	public void drawShapes(Shape[] shapes) {
+		if(outline) {
 			for(Shape shape : shapes) {
-				wayTypeGraphic.transformPrimary(g2d);
-				if(wayTypeGraphic instanceof GraphicSpecLine) g2d.draw(shape);
-				else if(wayTypeGraphic instanceof GraphicSpecArea) g2d.fill(shape);
+				currentWTGSpec.transformOutline(currentGraphics);
+				if (currentWTGSpec instanceof GraphicSpecLine) currentGraphics.draw(shape);
+				else if (currentWTGSpec instanceof GraphicSpecArea) currentGraphics.fill(shape);
+				shapesDrawn++;
+			}
+		} else {
+			for(Shape shape : shapes) {
+				currentWTGSpec.transformPrimary(currentGraphics);
+				if (currentWTGSpec instanceof GraphicSpecLine) currentGraphics.draw(shape);
+				else if (currentWTGSpec instanceof GraphicSpecArea) currentGraphics.fill(shape);
+				shapesDrawn++;
 			}
 		}
 	}
