@@ -65,9 +65,16 @@ public class AddressSearchPredicates {
 	        		&& p.getHousenumber().equalsIgnoreCase(addr.getHousenumber().toLowerCase());
 	    }
 	    
-	    public static Predicate<Address> postcodeEquals(String strInput) {
+	    public static Predicate<Address> postcodeStartsWith(Address addr) {
 	        return p -> p.getPostcode() != null
-	        		&& p.getPostcode().equalsIgnoreCase(strInput);
+	        		&& addr.getPostcode() != null
+	        		&& p.getPostcode().toLowerCase().startsWith(addr.getPostcode());
+	    }
+	    
+	    public static Predicate<Address> postcodeEquals(Address addr) {
+	        return p -> p.getPostcode() != null
+	        		&& addr.getPostcode() != null
+	        		&& p.getPostcode().equalsIgnoreCase(addr.getPostcode());
 	    }
 	    
 	    public static Predicate<Address> toStringShortContains(String strInput) {

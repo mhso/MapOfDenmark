@@ -3,24 +3,31 @@ package dk.itu.n.danmarkskort.address;
 import dk.itu.n.danmarkskort.Main;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.Set;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
+
 public class AddressController{
 	private Map<float[], Address> addresses;
 	private Map<float[], String> addressesNotAccepted;
 	private int addressesNotAcceptedCount;
+	private List<Address> searchList = new ArrayList<Address>();
 
 	private static AddressController instance;
 	private HashMap<String, HashMap> addressDatabase;
 
 	private final static Lock lock = new ReentrantLock();
+	private static final int TreeMap = 0;
 
 	private int numAddresses;
 	
@@ -58,17 +65,15 @@ public class AddressController{
 	
 	private List<String> searchSuggestions(String find, long limitAmountOfResults){
 		//System.out.println("Addr: looking for suggestions ");
-		long LIMIT_RESULTS = 5l;
 		Address addrBuild = AddressParser.parse(find, true);
 		List<String> result = new ArrayList<String>();
 		List<String> resultLast = new ArrayList<String>();
 		//System.out.println("searchSuggestions: "+addrBuild.toString());
 		
 		//Rebuild search list
-		List<Address> searchList = new ArrayList<Address>();
 		if(addrBuild != null){
-			searchList.addAll(AddressSearchPredicates.filterToAddress(addresses, 
-							AddressSearchPredicates.toStringShortContainsAddrParts(addrBuild) , Long.MAX_VALUE));
+			searchList = AddressSearchPredicates.filterToAddress(addresses, 
+							AddressSearchPredicates.toStringShortContainsAddrParts(addrBuild) , Long.MAX_VALUE);
 			System.out.println("addresses: " + addresses.size());
 			System.out.println("searchList: " + searchList.size());
 		}
@@ -77,16 +82,7 @@ public class AddressController{
 		if(addrBuild.getStreet() != null){
 			result.addAll(AddressSearchPredicates.filterToStringShort(searchList, 
 							AddressSearchPredicates.streetStartsWith(addrBuild.getStreet()) , limitAmountOfResults));
-			// Find suggestion from street, accept 0-1 mistakes in street input
-			if (result.size() == 0) {
-				result.addAll(AddressSearchPredicates.filterToStringShort(addresses, 
-						AddressSearchPredicates.streetLevenshteinDistance(addrBuild.getStreet(),-1,2) , limitAmountOfResults));
-				// Find suggestion from street, accept 0-3  mistakes in street input
-				if (result.size() == 0) {
-					result.addAll(AddressSearchPredicates.filterToStringShort(addresses, 
-							AddressSearchPredicates.streetLevenshteinDistance(addrBuild.getStreet(),1,4) , LIMIT_RESULTS));
-				}
-			}
+		}
 
 		
 			// Find suggestion from street and housenumber
@@ -94,33 +90,54 @@ public class AddressController{
 				result = (AddressSearchPredicates.filterToStringShort(searchList, 
 						AddressSearchPredicates.streetEqualsHousenumberStartsWith(addrBuild) , limitAmountOfResults));
 				
-					resultLast = result;
-					result = (AddressSearchPredicates.filterToStringShort(searchList, 
+				resultLast = result;
+				result = (AddressSearchPredicates.filterToStringShort(searchList, 
 							AddressSearchPredicates.streetHousenumberEquals(addrBuild) , limitAmountOfResults));
-					result.addAll(resultLast);
+				result.addAll(resultLast);
+			}
+			
+			// Find suggestion from postcode
+			if(result.size() == 0 && addrBuild.getPostcode() != null){
+				result.addAll(AddressSearchPredicates.filterToStringShort(searchList, 
+						AddressSearchPredicates.postcodeStartsWith(addrBuild) , limitAmountOfResults));
 				
-					// Find suggestion from street and housenumber, accept 0-1 mistakes in street and housenumber input
-					if (result.size() == 0) {
-						result.addAll(AddressSearchPredicates.filterToStringShort(addresses, 
-								AddressSearchPredicates.streetHousenumberLevenshteinDistance(addrBuild,-1,2,-1,2) , limitAmountOfResults));
-						// Find suggestion from street and housenumber, accept 0-3 mistakes in street
-						// and 0-1 mistakes in housenumber input
-						if (result.size() == 0) {
-							result.addAll(AddressSearchPredicates.filterToStringShort(addresses, 
-									AddressSearchPredicates.streetHousenumberLevenshteinDistance(addrBuild,1,4,-1,2) , limitAmountOfResults));
-						}
-					}
-			}	
+				result.addAll(AddressSearchPredicates.filterToStringShort(searchList, 
+						AddressSearchPredicates.postcodeEquals(addrBuild) , limitAmountOfResults));
+			}
+			
+			// If nothing was found, look for misspelling
+			// Find suggestion from street and housenumber, accept 0-1 mistakes in street and housenumber input
+		if (result.size() == 0) {
+			
+			// Find suggestion from street, accept 0-1 mistakes in street input
+			if (result.size() == 0 && addrBuild != null && addrBuild.getStreet() != null) {
+				result.addAll(AddressSearchPredicates.filterToStringShort(addresses, 
+						AddressSearchPredicates.streetLevenshteinDistance(addrBuild.getStreet(),-1,2) , limitAmountOfResults));
+				
+				// Find suggestion from street, accept 0-3  mistakes in street input
+				if (result.size() == 0) {
+					result.addAll(AddressSearchPredicates.filterToStringShort(addresses, 
+							AddressSearchPredicates.streetLevenshteinDistance(addrBuild.getStreet(),1,4) , limitAmountOfResults));
+				}
+			
+				if (result.size() == 0) {
+				result.addAll(AddressSearchPredicates.filterToStringShort(addresses, 
+						AddressSearchPredicates.streetHousenumberLevenshteinDistance(addrBuild,-1,2,-1,2) , limitAmountOfResults));
+				}
+				
+				// Find suggestion from street and housenumber, accept 0-3 mistakes in street and 0-1 mistakes in housenumber input
+				if (result.size() == 0) {
+					result.addAll(AddressSearchPredicates.filterToStringShort(addresses, 
+							AddressSearchPredicates.streetHousenumberLevenshteinDistance(addrBuild,1,4,-1,2) , limitAmountOfResults));
+				}
+			}
+			
 		}
 		
-		if(result.size() == 0 && addrBuild.getPostcode() != null){
-			result.addAll(AddressSearchPredicates.filterToStringShort(searchList, 
-					AddressSearchPredicates.postcodeEquals(addrBuild.getPostcode()) , limitAmountOfResults));
-		}
+		Collections.sort(result, String.CASE_INSENSITIVE_ORDER);
 		// Remove duplicates and return
 		return result.parallelStream().distinct().collect(Collectors.toList());
 	}
-	
 	public Address createOsmAddress(float[] lonLat, Map<String, String> attributes){
 		if(lonLat != null){
 			Address addr = addresses.get(lonLat);
