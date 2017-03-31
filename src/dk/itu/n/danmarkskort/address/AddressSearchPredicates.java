@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 
 public class AddressSearchPredicates {
+	
 	    public static Predicate<Address> streetStartsWith(String strInput) {
 	        return p ->  p.getStreet() != null && p.getStreet().toLowerCase().startsWith(strInput.toLowerCase());
 	    }
@@ -88,6 +89,15 @@ public class AddressSearchPredicates {
 			    	return null;
 	    }
 	    
+	    public static List<Address> filterAddresses(List<Address> addresses, 
+	    		Predicate<Address> predicate, long limit) {
+			    	if(addresses != null && predicate != null ) {
+			    		return addresses.parallelStream().filter(predicate).limit(limit)
+			    				.collect(Collectors.<Address>toList());
+			        }
+			    	return null;
+	    }
+	    
 	    public static List<String> toStringShort(List<Address> addresses){
 	    	return addresses.parallelStream().map(Address::toStringShort).collect(Collectors.<String>toList());
 	    }
@@ -97,9 +107,37 @@ public class AddressSearchPredicates {
 	    			return toStringShort(filterAddresses(addresses, predicate, limit));
 	    }
 	    
+	    public static List<String> filterToStringShort(List<Address> addresses, 
+	    		Predicate<Address> predicate, long limit){
+	    			return toStringShort(filterAddresses(addresses, predicate, limit));
+	    }
+	    
+	    public static List<Address> filterToAddress(Map<float[], Address> addresses, 
+	    		Predicate<Address> predicate, long limit){
+	    			return filterAddresses(addresses, predicate, limit);
+	    }
+	    
 	    public static boolean confirmStreetExist(Map<float[], Address> addresses, String find){
 			return (filterAddresses(addresses, streetEquals(find), 1) != null);
 		}
+	    
+	    public static Predicate<Address> toStringShortContainsAddrParts(Address addr) {
+	        return p -> p.toStringShort() != null && (
+		        			(p.getStreet() != null
+		        				&& addr.getStreet() != null
+		        				&& p.toStringShort().toLowerCase().contains(addr.getStreet().toLowerCase())
+		        		|| (p.getHousenumber() != null 
+		        				&& addr.getHousenumber() != null
+		        				&& p.toStringShort().toLowerCase().contains(addr.getHousenumber().toLowerCase()))
+		        		|| (p.getPostcode() != null
+		        				&& addr.getPostcode() != null
+		        				&& p.toStringShort().toLowerCase().contains(addr.getPostcode().toLowerCase()))
+		        		|| (p.getCity() != null
+		        				&& addr.getCity() != null
+		        				&& p.toStringShort().toLowerCase().contains(addr.getCity().toLowerCase())))
+	        		)
+	        		;
+	    }
 	    
 	    public static Address addressEquals(Map<float[], Address> addresses, Address addr){
 	    	//System.out.println(addr.toStringShort());
