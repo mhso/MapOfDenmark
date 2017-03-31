@@ -39,7 +39,7 @@
 			<lineproperties linewidth="60"/>
 		</line>
 		<line>
-			<type name="HIGHWAY_RESIDENTAL"/>
+			<type name="HIGHWAY_RESIDENTIAL"/>
 			<innercolor color="E8DDC0"/>
 			<outercolor color="A19B8D"/>
 			<lineproperties linewidth="40"/>
