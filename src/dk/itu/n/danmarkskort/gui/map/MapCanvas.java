@@ -84,7 +84,7 @@ public class MapCanvas extends JPanel {
 	}
 
 	public List<WaytypeGraphicSpec> getOnScreenGraphicsForCurrentZoom() {
-		List<WaytypeGraphicSpec> wayTypeSpecs = GraphicRepresentation.getGraphicSpecs(20);
+		List<WaytypeGraphicSpec> wayTypeSpecs = GraphicRepresentation.getGraphicSpecs((int)getZoom());
 		if(wayTypeSpecs == null) return new ArrayList<WaytypeGraphicSpec>();
 		return wayTypeSpecs;
 	}
@@ -155,20 +155,17 @@ public class MapCanvas extends JPanel {
 		}
 	}
 	
-	public void zoom(double factor) {
+	public void zoom(double factor) {	
+		double scaleBefore = getZoomRaw();
 		transform.preConcatenate(AffineTransform.getScaleInstance(factor, factor));
-		//lockZoom();
-		repaint();
-	}
-
-	public void lockZoom() {
-		if(transform.getScaleX() > MAX_ZOOM) {
-			double factor = (20 / getZoomRaw());
-			transform.preConcatenate(AffineTransform.getScaleInstance(factor, factor));
-		} else if(transform.getScaleX() < 1) {
-			double factor = (1 / getZoomRaw());
-			transform.preConcatenate(AffineTransform.getScaleInstance(factor, factor));
+		double scaleAfter = getZoomRaw();
+		if(getZoom() > MAX_ZOOM) {
+			transform.preConcatenate(AffineTransform.getScaleInstance(scaleBefore/scaleAfter, scaleBefore/scaleAfter));
 		}
+		else if(getZoom() < 1) {
+			transform.preConcatenate(AffineTransform.getScaleInstance(scaleBefore/scaleAfter, scaleBefore/scaleAfter));
+		}
+		repaint();
 	}
 	
 	public Point2D toModelCoords(Point2D screenPosition) {
@@ -185,7 +182,12 @@ public class MapCanvas extends JPanel {
 	}
 
 	public double getZoom() {
-		return ((Math.sqrt(getZoomRaw()) - 80) / 500) * MAX_ZOOM;
+		ParsedBounds denmark = Util.BOUNDS_DENMARK;
+		double denmarkWidth = denmark.maxLong - denmark.minLong;
+		Region view = getGeographicalRegion();
+		double zoom = Math.floor(Math.log(denmarkWidth/view.getWidth())*2.5);
+		return zoom;
+//		return ((Math.sqrt(getZoomRaw()) - 80) / 500) * MAX_ZOOM + 3.4;
 	}
 	
 	public double getZoomRaw() {
