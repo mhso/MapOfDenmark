@@ -20,7 +20,7 @@ public class Main {
 	public final static boolean debug = true;
 	public final static boolean production = false;
 	public final static int WIDTH = 1000, HEIGHT = 800;
-	public static final int KD_SIZE = 300;
+	public static final int KD_SIZE = 200;
 	public static OSMParser osmParser;
 	public static TileController tileController;
 	public static JFrame window;

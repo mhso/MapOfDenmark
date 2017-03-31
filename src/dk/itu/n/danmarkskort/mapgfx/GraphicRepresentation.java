@@ -107,7 +107,9 @@ public class GraphicRepresentation {
 			}
 		}
 	}
-	
+
+	float f = Float.MIN_VALUE;
+
 	private static class GraphicsHandler extends SAXAdapter {
 		private static final float LINE_MAGNIFYING_VALUE = 0.000001f;
 		

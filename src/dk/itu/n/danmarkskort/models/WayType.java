@@ -52,6 +52,10 @@ public enum WayType {
 	WATER_DITCH,		// Grøft.
 	WATER_DITCH_TUNNEL, // Grøft-tunnel.
 	WATER_RIVER,		// Flod.
-    LIGHT_RAIL, PITCH, RAILWAY, RESIDENTIAL, WATER				// Almindeligt vand.
+    LIGHT_RAIL,
+	PITCH,
+	RAILWAY,
+	RESIDENTIAL,
+	BUILDING_SCHOOL, WATER				// Almindeligt vand.
 	
 }

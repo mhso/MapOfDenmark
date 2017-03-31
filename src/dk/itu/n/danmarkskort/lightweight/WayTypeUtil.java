@@ -1,176 +1,134 @@
 package dk.itu.n.danmarkskort.lightweight;
 
+import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.models.WayType;
 
 public class WayTypeUtil {
 
-    public static WayType tagToType(String k, String v) {
-        WayType type = null;
+    public static WayType tagToType(String k, String v, WayType oldtype) {
         switch (k) {
             case "highway":
                 switch(v) {
                     case "motorway_link":
                     case "motorway":
-                        type = WayType.HIGHWAY_MOTORWAY;
-                        break;
+                        return WayType.HIGHWAY_MOTORWAY;
                     case "trunk_link":
                     case "trunk":
-                        type = WayType.HIGHWAY_TRUNK;
-                        break;
+                        return WayType.HIGHWAY_TRUNK;
                     case "primary_link":
                     case "primary":
-                        type = WayType.HIGHWAY_PRIMARY;
-                        break;
+                        return WayType.HIGHWAY_PRIMARY;
                     case "secondary_link":
                     case "secondary":
-                        type = WayType.HIGHWAY_SECONDARY;
-                        break;
+                        return WayType.HIGHWAY_SECONDARY;
                     case "tertiary_link":
                     case "tertiary":
-                        type = WayType.HIGHWAY_TERTIARY;
-                        break;
+                        return WayType.HIGHWAY_TERTIARY;
                     case "residential":
-                        type = WayType.HIGHWAY_RESIDENTAL;
-                        break;
+                        return WayType.HIGHWAY_RESIDENTAL;
                     case "unclassified":
-                        type = WayType.HIGHWAY_ROAD;
-                        break;
+                        return WayType.HIGHWAY_ROAD;
                     case "service":
-                        type = WayType.HIGHWAY_SERVICE;
-                        break;
+                        return WayType.HIGHWAY_SERVICE;
                     case "driveway":
-                        type = WayType.HIGHWAY_DRIVEWAY;
-                        break;
+                        return WayType.HIGHWAY_DRIVEWAY;
                     case "cycleway":
-                        type = WayType.HIGHWAY_CYCLEWAY;
-                        break;
+                        return WayType.HIGHWAY_CYCLEWAY;
                     case "bridleway":
                     case "footway":
-                        type = WayType.HIGHWAY_FOOTWAY;
-                        break;
+                        return WayType.HIGHWAY_FOOTWAY;
                     case "steps":
-                        type = WayType.HIGHWAY_STEPS;
-                        break;
+                        return WayType.HIGHWAY_STEPS;
                     default:
-                        type = WayType.WAY_UNDEFINED;
-                        break;
+                        return WayType.WAY_UNDEFINED;
                 }
-                break;
             case "building":
-                type = WayType.BUILDING;
                 switch (v) {
                     case "school":
-                        break;
+                        return WayType.BUILDING_SCHOOL;
                     case "train_station":
-                        type = WayType.TRAIN_STATION;
-                        break;
+                        return WayType.TRAIN_STATION;
+                    default:
+                        return WayType.BUILDING;
                 }
-                break;
             case "landuse":
                 switch(v) {
                     case "residential":
-                        type = WayType.RESIDENTIAL;
-                        break;
+                        return WayType.RESIDENTIAL;
                     case "forest":
-                        type = WayType.FOREST;
-                        break;
+                        return WayType.FOREST;
                     case "industrial":
-                        type = WayType.INDUSTRIAL;
-                        break;
+                        return WayType.INDUSTRIAL;
                     case "grass":
-                        type = WayType.GRASS;
-                        break;
+                        return WayType.GRASS;
                     case "retail":
-                        type = WayType.RETAIL;
-                        break;
+                        return WayType.RETAIL;
                     case "military":
-                        type = WayType.MILITARY;
-                        break;
+                        return WayType.MILITARY;
                     case "cemetery":
-                        type = WayType.CEMETERY;
-                        break;
+                        return WayType.CEMETERY;
                     case "orchard":
-                        type = WayType.ORCHARD;
-                        break;
+                        return WayType.ORCHARD;
                     case "allotments":
-                        type = WayType.ALLOTMENTS;
-                        break;
+                        return WayType.ALLOTMENTS;
                     case "construction":
-                        type = WayType.CONSTRUCTION;
-                        break;
+                        return WayType.CONSTRUCTION;
                     case "railway":
-                        type = WayType.RAILWAY;
-                        break;
+                        return WayType.RAILWAY;
                 }
-                break;
+                return oldtype;
             case "natural":
                 switch(v) {
                     case "water":
-                        type = WayType.WATER;
-                        break;
+                        return WayType.WATER;
                     case "coastline":
-                        type = WayType.COASTLINE;
-                        break;
+                        return WayType.COASTLINE;
                     case "scrub":
-                        type = WayType.SCRUB;
-                        break;
+                        return WayType.SCRUB;
                     case "wetland":
-                        type = WayType.WETLAND;
-                        break;
+                        return WayType.WETLAND;
                     case "sand":
-                        type = WayType.SAND;
-                        break;
+                        return WayType.SAND;
                 }
                 break;
             case "railway":
                 switch(v) {
                     case "light_rail":
-                        type = WayType.LIGHT_RAIL;
-                        break;
+                        return WayType.LIGHT_RAIL;
                 }
-                break;
+                return oldtype;
             case "man_made":
                 switch(v) {
                     case "breakwater":
-                        type = WayType.WAY_BREAKWATER;
-                        break;
+                        return WayType.WAY_BREAKWATER;
                     case "pier":
-                        type = WayType.WAY_PIER;
-                        break;
+                        return WayType.WAY_PIER;
                     case "embankment":
-                        type = WayType.WAY_EMBANKMENT;
-                        break;
+                        return WayType.WAY_EMBANKMENT;
                 }
-                break;
+                return oldtype;
             case "waterway":
                 switch(v) {
                     case "stream":
-                        type = WayType.WATER_STREAM;
-                        break;
+                        return WayType.WATER_STREAM;
                     case "river":
-                        type = WayType.WATER_RIVER;
-                        break;
+                        return WayType.WATER_RIVER;
                 }
-                break;
+                return oldtype;
             case "leisure":
                 switch(v) {
                     case "stadium":
-                        type = WayType.STADIUM;
-                        break;
+                        return WayType.STADIUM;
                     case "park":
-                        type = WayType.PARK;
-                        break;
+                        return WayType.PARK;
                     case "playground":
-                        type = WayType.PLAYGROUND;
-                        break;
+                        return WayType.PLAYGROUND;
                     case "pitch":
-                        type = WayType.PITCH;
-                        break;
+                        return WayType.PITCH;
                 }
-                break;
+                return oldtype;
         }
-
-        return type;
+        return oldtype;
     }
 
 }

@@ -24,6 +24,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.HashMap;
+import java.util.Map;
 
 public class LightWeightParser extends SAXAdapter {
 
@@ -105,12 +106,17 @@ public class LightWeightParser extends SAXAdapter {
         enumMapKD = new EnumMap<>(WayType.class);
         for(WayType wt : WayType.values()) {
             ArrayList<ParsedItem> current = enumMap.get(wt);
+            //Main.log(wt + " : " + current.size());
             KDTree tree;
             if(current.isEmpty()) tree = null;
             else if(current.size() < Main.KD_SIZE) tree = new KDTreeLeaf(current, null);
             else tree = new KDTreeNode(current);
             enumMap.remove(wt);
             enumMapKD.put(wt, tree);
+        }
+
+        for(Map.Entry<WayType, KDTree> entry : enumMapKD.entrySet()) {
+            //Main.log(entry);
         }
         
         for(OSMParserListener listener : parser.parserListeners) listener.onParsingFinished();
@@ -194,7 +200,8 @@ public class LightWeightParser extends SAXAdapter {
                         address.setStreet(v);
                         break;
                 }
-                waytype = WayTypeUtil.tagToType(k, v);
+                waytype = WayTypeUtil.tagToType(k, v, waytype);
+                break;
         }
     }
 
@@ -208,6 +215,7 @@ public class LightWeightParser extends SAXAdapter {
                 addCurrent();
                 break;
             case "way":
+                if(waytype == WayType.HIGHWAY_RESIDENTAL) Main.log("RESIDENTAL!!");
                 if(!currentNodes.isEmpty()) way.addNodes(currentNodes);
                 addCurrent();
                 break;
@@ -218,10 +226,10 @@ public class LightWeightParser extends SAXAdapter {
     }
 
     private void addCurrent() {
-        if (waytype != null) {
-            if(relation != null) enumMap.get(waytype).add(relation);
+        if(waytype != null) {
             if(way != null) enumMap.get(waytype).add(way);
-            if(node != null) ;// do something eventually;
+            else if(relation != null) enumMap.get(waytype).add(relation);
+            else if(node != null) ;// do something eventually;
         }
         if(address != null) {
             if(node != null) address.setCoords(node.getPoint());

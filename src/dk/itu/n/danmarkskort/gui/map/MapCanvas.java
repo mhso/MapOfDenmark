@@ -64,7 +64,6 @@ public class MapCanvas extends JPanel {
 		for(WaytypeGraphicSpec wayTypeGraphic : wayTypesVisible) {
 			KDTree kdTree = Main.model.enumMapKD.get(wayTypeGraphic.getWayType());
 			if(kdTree == null) {
-				//Main.log(wayTypeGraphic.getWayType());
 				continue;
 			}
 			Region region = getGeographicalRegion();
