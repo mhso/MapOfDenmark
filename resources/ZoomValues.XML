@@ -28,7 +28,7 @@
 </zoomlevel>
 	<zoomlevel level="4">
 		
-	<type name="HIGHWAY_RESIDENTAL"/>
+	<type name="HIGHWAY_RESIDENTIAL"/>
 </zoomlevel>
 	<zoomlevel level="5">
 		<type name="WAY_SERVICE"/>

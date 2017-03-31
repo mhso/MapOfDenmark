@@ -69,7 +69,7 @@ public class ParsedWay extends ParsedObject {
 			else if(attributes.get("highway").equals("secondary"))	type = WayType.HIGHWAY_SECONDARY;
 			else if(attributes.get("highway").equals("primary"))	type = WayType.HIGHWAY_PRIMARY;
 			else if(attributes.get("highway").equals("driveway"))	type = WayType.HIGHWAY_DRIVEWAY;
-			else if(attributes.get("highway").equals("residental"))	type = WayType.HIGHWAY_RESIDENTAL;
+			else if(attributes.get("highway").equals("residential"))	type = WayType.HIGHWAY_RESIDENTIAL;
 			else if(attributes.get("highway").equals("cycleway"))	type = WayType.HIGHWAY_CYCLEWAY;
 			else if(attributes.get("highway").equals("footway"))	type = WayType.HIGHWAY_FOOTWAY;
 			else if(attributes.get("highway").equals("steps"))		type = WayType.HIGHWAY_STEPS;

@@ -10,6 +10,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
+import dk.itu.n.danmarkskort.DKConstants;
 import dk.itu.n.danmarkskort.SAXAdapter;
 import dk.itu.n.danmarkskort.models.WayType;
 
@@ -111,8 +112,6 @@ public class GraphicRepresentation {
 	float f = Float.MIN_VALUE;
 
 	private static class GraphicsHandler extends SAXAdapter {
-		private static final float LINE_MAGNIFYING_VALUE = 0.000001f;
-		
 		private static WayType mapElement;
 		private static WaytypeGraphicSpec gs;
 		private static int defaultFontSize;
@@ -167,7 +166,7 @@ public class GraphicRepresentation {
 					gs.setOuterColor(parseColor(atts.getValue("color")));
 				break;
 				case "lineproperties":
-					float lineWidth = (float)(Double.parseDouble(atts.getValue("linewidth")) * LINE_MAGNIFYING_VALUE);
+					float lineWidth = (float)(Double.parseDouble(atts.getValue("linewidth")) * DKConstants.LINE_MAGNIFYING_VALUE);
 					float[] dashArr = null;
 					if(atts.getValue("linedash") != null) {
 						String[] splitArr = atts.getValue("linedash").split(",");

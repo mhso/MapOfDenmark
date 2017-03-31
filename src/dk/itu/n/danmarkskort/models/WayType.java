@@ -39,7 +39,7 @@ public enum WayType {
 	HIGHWAY_SECONDARY,	// Vej. ??
 	HIGHWAY_TERTIARY,	// Vej. ??
 	HIGHWAY_DRIVEWAY,	// Indkørsel.
-	HIGHWAY_RESIDENTAL, // Vej i beboerområde.
+	HIGHWAY_RESIDENTIAL, // Vej i beboerområde.
 	HIGHWAY_TRUNK, 		// Motor-trafikvej.
 	HIGHWAY_MOTORWAY,	// Motorvej
 	HIGHWAY_CYCLEWAY,	// Cykelsti.

@@ -1,5 +1,6 @@
 package dk.itu.n.danmarkskort.lightweight;
 
+import dk.itu.n.danmarkskort.DKConstants;
 import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.SAXAdapter;
 import dk.itu.n.danmarkskort.Util;
@@ -109,7 +110,7 @@ public class LightWeightParser extends SAXAdapter {
             //Main.log(wt + " : " + current.size());
             KDTree tree;
             if(current.isEmpty()) tree = null;
-            else if(current.size() < Main.KD_SIZE) tree = new KDTreeLeaf(current, null);
+            else if(current.size() < DKConstants.KD_SIZE) tree = new KDTreeLeaf(current, null);
             else tree = new KDTreeNode(current);
             enumMap.remove(wt);
             enumMapKD.put(wt, tree);
@@ -215,7 +216,6 @@ public class LightWeightParser extends SAXAdapter {
                 addCurrent();
                 break;
             case "way":
-                if(waytype == WayType.HIGHWAY_RESIDENTAL) Main.log("RESIDENTAL!!");
                 if(!currentNodes.isEmpty()) way.addNodes(currentNodes);
                 addCurrent();
                 break;

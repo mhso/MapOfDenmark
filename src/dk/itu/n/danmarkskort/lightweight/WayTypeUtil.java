@@ -1,6 +1,5 @@
 package dk.itu.n.danmarkskort.lightweight;
 
-import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.models.WayType;
 
 public class WayTypeUtil {
@@ -25,7 +24,7 @@ public class WayTypeUtil {
                     case "tertiary":
                         return WayType.HIGHWAY_TERTIARY;
                     case "residential":
-                        return WayType.HIGHWAY_RESIDENTAL;
+                        return WayType.HIGHWAY_RESIDENTIAL;
                     case "unclassified":
                         return WayType.HIGHWAY_ROAD;
                     case "service":
