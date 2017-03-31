@@ -5,7 +5,6 @@ import java.awt.Toolkit;
 
 import javax.swing.*;
 
-import dk.itu.n.danmarkskort.address.AddressController;
 import dk.itu.n.danmarkskort.backend.OSMParser;
 import dk.itu.n.danmarkskort.backend.TileController;
 import dk.itu.n.danmarkskort.gui.WindowParsingLoadscreenNew;
@@ -19,8 +18,7 @@ public class Main {
 	public final static String APP_VERSION = "0.4";
 	public final static boolean debug = true;
 	public final static boolean production = false;
-	public final static int WIDTH = 1000, HEIGHT = 800;
-	public static final int KD_SIZE = 300;
+
 	public static OSMParser osmParser;
 	public static TileController tileController;
 	public static JFrame window;
@@ -84,10 +82,10 @@ public class Main {
             window.setIconImage(Toolkit.getDefaultToolkit().getImage("resources/icons/map-icon.png"));
             JPanel overlay = new JPanel();
             overlay.setLayout(new OverlayLayout(overlay));
-            overlay.setPreferredSize(new Dimension(WIDTH, HEIGHT));
+            overlay.setPreferredSize(new Dimension(DKConstants.WINDOW_WIDTH, DKConstants.WINDOW_HEIGHT));
             mainPanel = new MainCanvas();
             map = new MapCanvas();
-            map.setPreferredSize(new Dimension(WIDTH, HEIGHT));
+            map.setPreferredSize(new Dimension(DKConstants.WINDOW_WIDTH, DKConstants.WINDOW_HEIGHT));
             
             overlay.add(mainPanel);
             overlay.add(map);

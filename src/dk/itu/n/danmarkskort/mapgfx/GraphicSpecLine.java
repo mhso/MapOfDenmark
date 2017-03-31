@@ -4,6 +4,8 @@ import java.awt.BasicStroke;
 import java.awt.Graphics2D;
 import java.util.Arrays;
 
+import dk.itu.n.danmarkskort.DKConstants;
+
 public class GraphicSpecLine extends WaytypeGraphicSpec {
 	private float lineWidth;
 	private float[] dashArr;
@@ -26,7 +28,7 @@ public class GraphicSpecLine extends WaytypeGraphicSpec {
 		super.transformOutline(graphics);
 		BasicStroke stroke = null;
 		if(dashArr == null) {
-			stroke = new BasicStroke(lineWidth+OUTLINE_WIDTH, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+			stroke = new BasicStroke(lineWidth+DKConstants.LINE_OUTLINE_WIDTH, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
 		}
 		else {
 			stroke = new BasicStroke(lineWidth, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND,

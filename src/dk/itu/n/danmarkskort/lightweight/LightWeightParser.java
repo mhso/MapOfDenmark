@@ -1,11 +1,13 @@
 package dk.itu.n.danmarkskort.lightweight;
 
+import dk.itu.n.danmarkskort.DKConstants;
 import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.SAXAdapter;
 import dk.itu.n.danmarkskort.Util;
 import dk.itu.n.danmarkskort.address.AddressController;
 import dk.itu.n.danmarkskort.backend.OSMParser;
 import dk.itu.n.danmarkskort.backend.OSMParserListener;
+import dk.itu.n.danmarkskort.extras.brewj.BrewJ;
 import dk.itu.n.danmarkskort.lightweight.models.*;
 import dk.itu.n.danmarkskort.lightweight.models.ParsedAddress;
 import dk.itu.n.danmarkskort.lightweight.models.ParsedWay;
@@ -18,14 +20,13 @@ import org.xml.sax.Attributes;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 
-import java.awt.geom.Point2D;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.HashMap;
-import java.util.List;
+import java.util.Map;
 
 public class LightWeightParser extends SAXAdapter {
 
@@ -59,21 +60,6 @@ public class LightWeightParser extends SAXAdapter {
     
     public LightWeightParser(OSMParser parser) {
     	this.parser = parser;
-    }
-    
-    public List<ParsedItem> getDataInBounds(WayType wayType, Point2D minBound, Point2D maxBound) {
-    	List<ParsedItem> data = new ArrayList<>();
-    	KDTree tree = enumMapKD.get(wayType);
-    	while(true) {
-    		if(tree instanceof KDTreeLeaf) {
-    			ParsedItem[] treeData = ((KDTreeLeaf) tree).getData();
-    			List<ParsedItem> tempList = new ArrayList<>();
-    			for(ParsedItem item : treeData) tempList.add(item);
-    			data.addAll(tempList);
-    		}
-    		break;
-    	}
-    	return null;
     }
     
     private void incrementLineCount() {
@@ -122,14 +108,19 @@ public class LightWeightParser extends SAXAdapter {
         enumMapKD = new EnumMap<>(WayType.class);
         for(WayType wt : WayType.values()) {
             ArrayList<ParsedItem> current = enumMap.get(wt);
+            //Main.log(wt + " : " + current.size());
             KDTree tree;
             if(current.isEmpty()) tree = null;
-            else if(current.size() < Main.KD_SIZE) tree = new KDTreeLeaf(current, null);
+            else if(current.size() < DKConstants.KD_SIZE) tree = new KDTreeLeaf(current, null);
             else tree = new KDTreeNode(current);
+            if(tree != null) tree.makeShapes();
             enumMap.remove(wt);
             enumMapKD.put(wt, tree);
         }
 
+        if(Main.debug) new BrewJ().add(enumMapKD, enumMapKD);
+        
+        for(OSMParserListener listener : parser.parserListeners) listener.onParsingFinished();
         AddressController.getInstance().onLWParsingFinished();
         finalClean();
         finished = true;
@@ -210,7 +201,8 @@ public class LightWeightParser extends SAXAdapter {
                         address.setStreet(v);
                         break;
                 }
-                waytype = WayTypeUtil.tagToType(k, v);
+                waytype = WayTypeUtil.tagToType(k, v, waytype);
+                break;
         }
     }
 
@@ -234,16 +226,16 @@ public class LightWeightParser extends SAXAdapter {
     }
 
     private void addCurrent() {
-        if (waytype != null) {
-            if(relation != null) enumMap.get(waytype).add(relation);
+        if(waytype != null) {
             if(way != null) enumMap.get(waytype).add(way);
-            if(node != null) ;// do something eventually;
+            else if(relation != null) enumMap.get(waytype).add(relation);
+            else if(node != null) ;// do something eventually;
         }
         if(address != null) {
             if(node != null) address.setCoords(node.getPoint());
             else if (way != null) address.setWay(way);
             else if (relation != null) address.setRelation(relation);
-            AddressController.getInstance().addressParsed(address);
+            //AddressController.getInstance().addressParsed(address);
         }
         cleanUp();
     }

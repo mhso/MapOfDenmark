@@ -9,20 +9,6 @@
 			<lineproperties linewidth="90"/>
 		</line>
 		<line>
-			<type name="COASTLINE"/>
-			<innercolor color="000000"/>
-			<outercolor color="000000"/>
-			<lineproperties linewidth="0.3"/>
-		</line>
-		
-		<line>
-			<type name="UNDEFINED"/>
-			<innercolor color="000000"/>
-			<outercolor color="000000"/>
-			<lineproperties linewidth="0.01"/>
-		</line>
-		
-		<line>
 			<type name="HIGHWAY_TRUNK"/>
 			<innercolor color="CE4A4A"/>
 			<outercolor color="B52929"/>
@@ -42,18 +28,20 @@
 		</line>
 		<line>
 			<type name="HIGHWAY_TERTIARY"/>
-			<innercolor color="FFFFFF"/>
-			<outercolor color="B4B4B4"/>
+			<innercolor color="E8DDC0"/>
+			<outercolor color="A19B8D"/>
 			<lineproperties linewidth="90"/>
 		</line>
 		<line>
 			<type name="WAY_UNDEFINED"/>
-			<innercolor color="FFFFFF"/>
+			<innercolor color="E8DDC0"/>
+			<outercolor color="A19B8D"/>
 			<lineproperties linewidth="60"/>
 		</line>
 		<line>
 			<type name="HIGHWAY_RESIDENTIAL"/>
-			<innercolor color="FFFFFF"/>
+			<innercolor color="E8DDC0"/>
+			<outercolor color="A19B8D"/>
 			<lineproperties linewidth="40"/>
 		</line>
 		<line>
@@ -78,12 +66,12 @@
 	<areas>
 		<area>
 			<type name="RESIDENTIAL"/>
-			<innercolor color="EAEAEA"/>
+			<innercolor color="eaeaea"/>
 		</area>
 		<area>
 			<type name="BUILDING"/>
-			<innercolor color="D9D0C9"/>
-			<outercolor color="C4B6AA"/>
+			<innercolor color="C0C0C0"/>
+			<outercolor color="606060"/>
 		</area>
 		<area>
 			<type name="GRASS"/>
@@ -102,11 +90,13 @@
 		</area>
 		<area>
 			<type name="PARK"/>
-			<innercolor color="CDEBB0"/>
+			<innercolor color="33FF33"/>
+			<outercolor color="003333"/>
 		</area>
 		<area>
 			<type name="FOREST"/>
-			<innercolor color="ADD19E"/>
+			<innercolor color="006600"/>
+			<outercolor color="003300"/>
 		</area>
 	</areas>
 	<labels>

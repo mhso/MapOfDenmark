@@ -52,8 +52,16 @@ public class ParsedRelation extends ParsedItem {
 
     public Path2D getPath() {
         Path2D path = new Path2D.Float(Path2D.WIND_EVEN_ODD);
-        if(ways != null) for(ParsedItem item : ways) path.append(item.getPath(), false);
-        if(relations != null) for(ParsedItem item : relations) path.append(item.getPath(), false);
+        if(ways != null) {
+            for(ParsedItem item : ways) {
+                path.append(item.getPath(), false);
+            }
+        }
+        if(relations != null) {
+            for(ParsedItem item2 : relations) {
+                path.append(item2.getPath(), false);
+            }
+        }
         return path;
     }
 
