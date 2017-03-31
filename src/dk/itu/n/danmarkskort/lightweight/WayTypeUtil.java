@@ -30,7 +30,7 @@ public class WayTypeUtil {
                         type = WayType.HIGHWAY_TERTIARY;
                         break;
                     case "residential":
-                        type = WayType.HIGHWAY_RESIDENTAL;
+                        type = WayType.HIGHWAY_RESIDENTIAL;
                         break;
                     case "unclassified":
                         type = WayType.HIGHWAY_ROAD;

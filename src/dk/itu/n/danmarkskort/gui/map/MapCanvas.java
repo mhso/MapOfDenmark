@@ -122,13 +122,15 @@ public class MapCanvas extends JPanel {
 		g2d.draw(new Rectangle2D.Double(mapRegion.x1, mapRegion.y1, mapRegion.getWidth(), mapRegion.getHeight()));
 	}
 	
-	public void eraseMap() {
-		resetDrawing = true;
-		Graphics g = getGraphics();
-		Color oldColor = g.getColor();
-		g.setColor(getBackground());
-		g.fillRect(0, 0, getWidth(), getHeight());
-		g.setColor(oldColor);
+	public void eraseMap(boolean erase) {
+		resetDrawing = erase;
+		if(resetDrawing) {
+			Graphics g = getGraphics();
+			Color oldColor = g.getColor();
+			g.setColor(getBackground());
+			g.fillRect(0, 0, getWidth(), getHeight());
+			g.setColor(oldColor);
+		}
 	}
 	
 	public void pan(double dx, double dy) {

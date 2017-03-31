@@ -1,5 +1,6 @@
 package dk.itu.n.danmarkskort.kdtree;
 
+import dk.itu.n.danmarkskort.DKConstants;
 import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.lightweight.models.ParsedItem;
 
@@ -61,10 +62,10 @@ public class KDTreeNode extends KDTree {
                 for(Float coord : lats) rightSplit = coord < rightSplit ? coord : rightSplit; // nederst er værdierne størst
             }
         }
-        if(leftArray.length > Main.KD_SIZE) leftChild = new KDTreeNode(leftArray, this, !sortByLon);
+        if(leftArray.length > DKConstants.KD_SIZE) leftChild = new KDTreeNode(leftArray, this, !sortByLon);
         else leftChild = new KDTreeLeaf(leftArray, this);
 
-        if(rightArray.length > Main.KD_SIZE) rightChild = new KDTreeNode(rightArray, this, !sortByLon);
+        if(rightArray.length > DKConstants.KD_SIZE) rightChild = new KDTreeNode(rightArray, this, !sortByLon);
         else rightChild = new KDTreeLeaf(rightArray, this);
     }
 
