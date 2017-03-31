@@ -25,6 +25,8 @@ public class WayTypeUtil {
                         return WayType.HIGHWAY_TERTIARY;
                     case "residential":
                         return WayType.HIGHWAY_RESIDENTIAL;
+                    case "pedestrian":
+                        return WayType.PEDESTRIAN;
                     case "unclassified":
                         return WayType.HIGHWAY_ROAD;
                     case "service":
@@ -33,11 +35,12 @@ public class WayTypeUtil {
                         return WayType.HIGHWAY_DRIVEWAY;
                     case "cycleway":
                         return WayType.HIGHWAY_CYCLEWAY;
-                    case "bridleway":
+                    case "path":
                     case "footway":
-                        return WayType.HIGHWAY_FOOTWAY;
+                    case "bridleway":
+                    case "track":
                     case "steps":
-                        return WayType.HIGHWAY_STEPS;
+                        return WayType.HIGHWAY_FOOTWAY;
                     default:
                         return WayType.WAY_UNDEFINED;
                 }

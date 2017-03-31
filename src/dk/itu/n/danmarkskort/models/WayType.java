@@ -56,6 +56,6 @@ public enum WayType {
 	PITCH,
 	RAILWAY,
 	RESIDENTIAL,
-	BUILDING_SCHOOL, WATER				// Almindeligt vand.
+	BUILDING_SCHOOL, PEDESTRIAN, WATER				// Almindeligt vand.
 	
 }
