@@ -134,7 +134,6 @@ public class MapCanvas extends JPanel {
 	public void pan(double dx, double dy) {
 		transform.preConcatenate(AffineTransform.getTranslateInstance(dx, dy));
 		repaint();
-		eraseMap();
 	}
 
 	public void update(Observable o, Object arg) {
