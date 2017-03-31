@@ -5,24 +5,31 @@
 		<type name="FARMLAND"/>
 <type name="FOREST"/>
 		<type name="HIGHWAY_MOTORWAY"/>
-		<type name="HIGHWAY_TRUNK"/>
-		<type name="HIGHWAY_PRIMARY"/>
-		<type name="HIGHWAY_SECONDARY"/>
-		<type name="HIGHWAY_TERTIARY"/>
-		<type name="BUILDING"/>
-	</zoomlevel>
-	<zoomlevel level="2">
-		<type name="SPORT"/>
-		<type name="PARK"/>
+		
+		
+		
+		
 		
 	</zoomlevel>
+	<zoomlevel level="2">
+		
+		<type name="PARK"/>
+		
+	<type name="HIGHWAY_TRUNK"/>
+</zoomlevel>
 	<zoomlevel level="3">
-		<type name="HIGHWAY_RESIDENTAL"/>
+		
 	<type name="WAY_UNDEFINED"/>
+<type name="HIGHWAY_PRIMARY"/>
+<type name="HIGHWAY_SECONDARY"/>
+<type name="HIGHWAY_TERTIARY"/>
+<type name="BUILDING"/>
+<type name="SPORT"/>
 </zoomlevel>
 	<zoomlevel level="4">
 		
-	</zoomlevel>
+	<type name="HIGHWAY_RESIDENTAL"/>
+</zoomlevel>
 	<zoomlevel level="5">
 		<type name="WAY_SERVICE"/>
 	</zoomlevel>
