@@ -108,7 +108,9 @@ public class GraphicRepresentation {
 			}
 		}
 	}
-	
+
+	float f = Float.MIN_VALUE;
+
 	private static class GraphicsHandler extends SAXAdapter {
 		private static WayType mapElement;
 		private static WaytypeGraphicSpec gs;

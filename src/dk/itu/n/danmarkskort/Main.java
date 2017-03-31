@@ -5,7 +5,6 @@ import java.awt.Toolkit;
 
 import javax.swing.*;
 
-import dk.itu.n.danmarkskort.address.AddressController;
 import dk.itu.n.danmarkskort.backend.OSMParser;
 import dk.itu.n.danmarkskort.backend.TileController;
 import dk.itu.n.danmarkskort.gui.WindowParsingLoadscreenNew;
@@ -19,6 +18,7 @@ public class Main {
 	public final static String APP_VERSION = "0.4";
 	public final static boolean debug = true;
 	public final static boolean production = false;
+
 	public static OSMParser osmParser;
 	public static TileController tileController;
 	public static JFrame window;
