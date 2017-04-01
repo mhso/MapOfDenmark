@@ -50,19 +50,24 @@
 		</line>
 		<line>
 			<type name="HIGHWAY_FOOTWAY"/>
-			<innercolor color="0066CC"/>
+			<innercolor color="C83C38"/>
 			<lineproperties linedash="5, 5" linewidth="10"/>
 		</line>
 		<line>
 			<type name="HIGHWAY_CYCLEWAY"/>
-			<innercolor color="000000"/>
+			<innercolor color="4E76C8"/>
 			<lineproperties linedash="5, 5" linewidth="10"/>
+		</line>
+		<line>
+			<type name="COASTLINE"/>
+			<innercolor color="000000"/>
+			<lineproporties linewidth="60"/>
 		</line>
 	</lines>
 	<areas>
 		<area>
 			<type name="WATER"/>
-			<innercolor color="6EC0FF"/>		
+			<innercolor color="6EC0FF"/>
 		</area>
 		<area>
 			<type name="RESIDENTIAL"/>
@@ -71,7 +76,6 @@
 		<area>
 			<type name="BUILDING"/>
 			<innercolor color="D9D0C9"/>
-			<outercolor color="C4B6AA"/>
 		</area>
 		<area>
 			<type name="GRASS"/>

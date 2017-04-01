@@ -69,6 +69,7 @@ public class MapCanvas extends JPanel {
 		shapesDrawn = 0;
 		currentGraphics = g2d;
 
+		// drawing all the outlines, if the current WayTypeGraphicSpec has one
 		for (WaytypeGraphicSpec wayTypeGraphic : wayTypesVisible) {
 			currentWTGSpec = wayTypeGraphic;
 			if(currentWTGSpec.getOuterColor() != null) {
@@ -81,6 +82,7 @@ public class MapCanvas extends JPanel {
 			}
 		}
 
+		// draw or fill for all the different WaytypeGraphicsSpecs
 		for(WaytypeGraphicSpec wayTypeGraphic : wayTypesVisible) {
 			currentWTGSpec = wayTypeGraphic;
 			KDTree kdTree = Main.model.enumMapKD.get(wayTypeGraphic.getWayType());
@@ -144,7 +146,7 @@ public class MapCanvas extends JPanel {
 		g2d.setColor(Color.RED);
 		g2d.setStroke(new BasicStroke(Float.MIN_VALUE));
 		Region mapRegion = Main.model.getMapRegion();
-		g2d.draw(new Line2D.Double(20, 20, mapRegion.x1 - 20, mapRegion.y1 - 20));
+		g2d.draw(new Line2D.Double(0, 0, mapRegion.x1, mapRegion.y1));
 		g2d.draw(new Rectangle2D.Double(mapRegion.x1, mapRegion.y1, mapRegion.getWidth(), mapRegion.getHeight()));
 	}
 	
