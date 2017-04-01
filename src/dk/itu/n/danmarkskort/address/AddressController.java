@@ -183,4 +183,8 @@ public class AddressController{
 //		}
 		Main.log("Addresses: " + numAddresses);
 	}
+	
+	public int getAddressSize() {
+		return addresses.size();
+	}
 }
