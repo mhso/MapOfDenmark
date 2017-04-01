@@ -1,14 +1,14 @@
 package dk.itu.n.danmarkskort.lightweight.models;
 
+import java.awt.*;
 import java.awt.geom.Path2D;
 import java.util.ArrayList;
-
-import dk.itu.n.danmarkskort.Main;
 
 public class ParsedWay extends ParsedItem{
 
     private long id;
-    private float[] coords;
+    private ArrayList<ParsedNode> nodes;
+    private Shape shape;
 
     public ParsedWay() {}
 
@@ -16,45 +16,43 @@ public class ParsedWay extends ParsedItem{
         this.id = id;
     }
 
-    public void addNodes(ArrayList<Float> nodes) {
-        coords = new float[nodes.size()];
-        for(int i = 0; i < nodes.size(); i++) coords[i] = nodes.get(i);
+    public void addNodes(ArrayList<ParsedNode> nodes) {
+        this.nodes = nodes;
     }
 
-    public float[] getCoords() { return coords; }
+    public ArrayList<ParsedNode> getNodes() {
+        return nodes;
+    }
+
     public long getID() { return id; }
-
-    public ArrayList<Float> getLons() {
-        ArrayList<Float> lons = new ArrayList<>();
-        for(int i = 0; i < coords.length; i = i+2) lons.add(coords[i]);
-        return lons;
-    }
-
-    public ArrayList<Float> getLats() {
-        ArrayList<Float> lats = new ArrayList<>();
-        for(int i = 1; i < coords.length; i = i+2) lats.add(coords[i]);
-        return lats;
-    }
 
     public Path2D getPath() {
         Path2D path = new Path2D.Float();
-        path.moveTo(coords[0], coords[1]);
-        for(int i = 2; i < coords.length;) {
-        	path.lineTo(coords[i++], coords[i++]);
+        path.moveTo(nodes.get(0).getLon(), nodes.get(0).getLat());
+        for(int i = 1; i < nodes.size(); i++) {
+        	path.lineTo(nodes.get(i).getLon(), nodes.get(i).getLat());
         }
-        //if(coords[0] == coords[coords.length - 2] && coords[1] == coords[coords.length - 1]) path.closePath();
-
         return path;
     }
 
     @Override
+    public ParsedNode getFirstNode() {
+        return nodes.get(0);
+    }
+
+    @Override
+    public ParsedNode getLastNode() {
+        return nodes.get(nodes.size() - 1);
+    }
+
+    @Override
     public float getFirstLon() {
-        if(coords != null && coords.length > 1) return coords[0];
+        if(nodes != null && nodes.size() > 0) return nodes.get(0).getLon();
         return -1;
     }
     @Override
     public float getFirstLat() {
-        if(coords != null && coords.length > 1) return coords[1];
+        if(nodes != null && nodes.size() > 0) return nodes.get(0).getLat();
         return -1;
     }
 }
