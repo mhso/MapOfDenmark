@@ -35,8 +35,10 @@ public class Main {
 	}
 
 	public static void startup(String[] args) {
+		if(window != null) window.getContentPane().removeAll();
 		if(lightweight) {
 			osmParser = new OSMParser();
+			System.out.println(osmParser.hashCode());
 			model = new LightWeightParser(osmParser);
 			GraphicRepresentation.main(new String[]{"resources/ThemeBasic.XML"});
 			prepareParser(args);
@@ -78,24 +80,29 @@ public class Main {
 	}
 
     public static void makeFrame() {
-            window = new JFrame(APP_NAME);
-            window.setIconImage(Toolkit.getDefaultToolkit().getImage("resources/icons/map-icon.png"));
-            JPanel overlay = new JPanel();
-            overlay.setLayout(new OverlayLayout(overlay));
-            overlay.setPreferredSize(new Dimension(DKConstants.WINDOW_WIDTH, DKConstants.WINDOW_HEIGHT));
-            mainPanel = new MainCanvas();
-            map = new MapCanvas();
-            map.setPreferredSize(new Dimension(DKConstants.WINDOW_WIDTH, DKConstants.WINDOW_HEIGHT));
-            
-            overlay.add(mainPanel);
-            overlay.add(map);
-
-            window.add(overlay);
-            window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            window.pack();
-            window.setLocationRelativeTo(null);
-            window.setVisible(true);
-            map.zoomToBounds();
+        window = new JFrame(APP_NAME);
+        window.setIconImage(Toolkit.getDefaultToolkit().getImage("resources/icons/map-icon.png"));
+        
+        window.add(createFrameComponents());
+        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        window.pack();
+        window.setLocationRelativeTo(null);
+        window.setVisible(true);
+        map.zoomToBounds();
+    }
+    
+    public static JPanel createFrameComponents() {
+    	JPanel overlay = new JPanel();
+        overlay.setLayout(new OverlayLayout(overlay));
+        overlay.setPreferredSize(new Dimension(DKConstants.WINDOW_WIDTH, DKConstants.WINDOW_HEIGHT));
+        mainPanel = new MainCanvas();
+        
+    	map = new MapCanvas();
+        map.setPreferredSize(new Dimension(DKConstants.WINDOW_WIDTH, DKConstants.WINDOW_HEIGHT));
+        
+        overlay.add(mainPanel);
+    	overlay.add(map);
+    	return overlay;
     }
     
     private static class LoadScreenThread implements Runnable {
