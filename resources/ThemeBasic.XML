@@ -4,32 +4,32 @@
 	<lines>
 		<line>
 			<type name="HIGHWAY_MOTORWAY"/>
-			<innercolor color="FF0000"/>
-			<outercolor color="660000"/>
+			<innercolor color="EC8E9F"/>
+			<outercolor color="E32F6B"/>
 			<lineproperties linewidth="90"/>
 		</line>
 		<line>
 			<type name="HIGHWAY_TRUNK"/>
-			<innercolor color="CE4A4A"/>
-			<outercolor color="B52929"/>
+			<innercolor color="FEB19B"/>
+			<outercolor color="CF5638"/>
 			<lineproperties linewidth="90"/>
 		</line>
 		<line>
 			<type name="HIGHWAY_PRIMARY"/>
-			<innercolor color="E89747"/>
-			<outercolor color="905F2E"/>
+			<innercolor color="FFd7A4"/>
+			<outercolor color="AB7D26"/>
 			<lineproperties linewidth="90"/>
 		</line>
 		<line>
 			<type name="HIGHWAY_SECONDARY"/>
-			<innercolor color="EBBE42"/>
-			<outercolor color="796530"/>
+			<innercolor color="F5FCBE"/>
+			<outercolor color="798B25"/>
 			<lineproperties linewidth="90"/>
 		</line>
 		<line>
 			<type name="HIGHWAY_TERTIARY"/>
 			<innercolor color="FFFFFF"/>
-			<outercolor color="B4B4B4"/>
+			<outercolor color="ABABAB"/>
 			<lineproperties linewidth="90"/>
 		</line>
 		<line>
@@ -40,28 +40,30 @@
 		<line>
 			<type name="HIGHWAY_RESIDENTIAL"/>
 			<innercolor color="FFFFFF"/>
+			<outercolor color="C3C3C3"/>
 			<lineproperties linewidth="40"/>
 		</line>
 		<line>
 			<type name="WAY_SERVICE"/>
-			<innercolor color="E8DDC0"/>
-			<outercolor color="A19B8D"/>
+			<innercolor color="FFFFFF"/>
 			<lineproperties linewidth="20"/>
 		</line>
 		<line>
 			<type name="HIGHWAY_FOOTWAY"/>
 			<innercolor color="0066CC"/>
-			<outercolor color="001933"/>
 			<lineproperties linedash="5, 5" linewidth="10"/>
 		</line>
 		<line>
 			<type name="HIGHWAY_CYCLEWAY"/>
-			<innercolor color="0000FF"/>
-			<outercolor color="000000"/>
+			<innercolor color="000000"/>
 			<lineproperties linedash="5, 5" linewidth="10"/>
 		</line>
 	</lines>
 	<areas>
+		<area>
+			<type name="WATER"/>
+			<innercolor color="6EC0FF"/>		
+		</area>
 		<area>
 			<type name="RESIDENTIAL"/>
 			<innercolor color="EAEAEA"/>
@@ -73,18 +75,15 @@
 		</area>
 		<area>
 			<type name="GRASS"/>
-			<innercolor color="00CC00"/>
-			<outercolor color="003300"/>
+			<innercolor color="CBEFA8"/>
 		</area>
 		<area>
 			<type name="FARMLAND"/>
-			<innercolor color="FFCC99"/>
-			<outercolor color="CCCCCC"/>
+			<innercolor color="FFECAA"/>
 		</area>
 		<area>
 			<type name="SPORT"/>
 			<innercolor color="00FF99"/>
-			<outercolor color="003300"/>
 		</area>
 		<area>
 			<type name="PARK"/>
