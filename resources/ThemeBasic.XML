@@ -10,20 +10,6 @@
 			<layer layer="5"/>
 		</line>
 		<line>
-			<type name="COASTLINE"/>
-			<innercolor color="000000"/>
-			<outercolor color="000000"/>
-			<lineproperties linewidth="0.3"/>
-		</line>
-		
-		<line>
-			<type name="UNDEFINED"/>
-			<innercolor color="000000"/>
-			<outercolor color="000000"/>
-			<lineproperties linewidth="0.01"/>
-		</line>
-		
-		<line>
 			<type name="HIGHWAY_TRUNK"/>
 			<innercolor color="FEB19B"/>
 			<outercolor color="CF5638"/>
