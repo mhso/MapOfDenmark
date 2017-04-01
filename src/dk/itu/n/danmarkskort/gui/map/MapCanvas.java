@@ -50,6 +50,7 @@ public class MapCanvas extends JPanel {
 	
 	public MapCanvas() {
 		new MapMouseController(this);
+		setDoubleBuffered(true);
 	}
 
 	protected void paintComponent(Graphics _g) {
