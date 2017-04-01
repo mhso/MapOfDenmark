@@ -18,8 +18,7 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 public class GraphicRepresentation {
-	private static ArrayList<WaytypeGraphicSpec>[] zoomLevelArr 
-		= new ArrayList[20];
+	private static ArrayList<WaytypeGraphicSpec>[] zoomLevelArr = new ArrayList[20];
 	private static EnumMap<WayType, Integer> zoomMap = new EnumMap<>(WayType.class);
 	
 	/**
@@ -108,8 +107,6 @@ public class GraphicRepresentation {
 			}
 		}
 	}
-
-	float f = Float.MIN_VALUE;
 
 	private static class GraphicsHandler extends SAXAdapter {
 		private static WayType mapElement;

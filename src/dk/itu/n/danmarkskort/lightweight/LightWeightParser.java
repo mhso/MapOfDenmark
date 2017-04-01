@@ -7,7 +7,6 @@ import dk.itu.n.danmarkskort.Util;
 import dk.itu.n.danmarkskort.address.AddressController;
 import dk.itu.n.danmarkskort.backend.OSMParser;
 import dk.itu.n.danmarkskort.backend.OSMParserListener;
-import dk.itu.n.danmarkskort.extras.brewj.BrewJ;
 import dk.itu.n.danmarkskort.lightweight.models.*;
 import dk.itu.n.danmarkskort.lightweight.models.ParsedAddress;
 import dk.itu.n.danmarkskort.lightweight.models.ParsedWay;
@@ -26,7 +25,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.HashMap;
-import java.util.Map;
 
 public class LightWeightParser extends SAXAdapter {
 
@@ -35,6 +33,8 @@ public class LightWeightParser extends SAXAdapter {
     public NodeMap nodeMap;
     public HashMap<Long, ParsedWay> wayMap;
     public HashMap<Long, ParsedRelation> relationMap;
+    public HashMap<Long, ParsedItem> temporaryWayReferences;
+    public HashMap<Long, ParsedItem> temporaryRelationReferences;
 
     // bør efter endt OSM indlæsning omdanne alle ArrayLists til KD-træer
     public EnumMap<WayType, ArrayList<ParsedItem>> enumMap;
@@ -46,8 +46,7 @@ public class LightWeightParser extends SAXAdapter {
     private ParsedAddress address;
 
     private ArrayList<Float> currentNodes;
-    private ArrayList<ParsedWay> currentWays;
-    private ArrayList<ParsedRelation> currentRelations;
+    private ArrayList<ParsedItem> currentItems;
 
     private WayType waytype;
     private long id;
@@ -87,6 +86,8 @@ public class LightWeightParser extends SAXAdapter {
         nodeMap = new NodeMap();
         wayMap = new HashMap<>();
         relationMap = new HashMap<>();
+        temporaryWayReferences = new HashMap<>();
+        temporaryRelationReferences = new HashMap<>();
 
         enumMap = new EnumMap<>(WayType.class);
         for(WayType waytype : WayType.values()) enumMap.put(waytype, new ArrayList<>());
@@ -108,7 +109,6 @@ public class LightWeightParser extends SAXAdapter {
         enumMapKD = new EnumMap<>(WayType.class);
         for(WayType wt : WayType.values()) {
             ArrayList<ParsedItem> current = enumMap.get(wt);
-            //Main.log(wt + " : " + current.size());
             KDTree tree;
             if(current.isEmpty()) tree = null;
             else if(current.size() < DKConstants.KD_SIZE) tree = new KDTreeLeaf(current, null);
@@ -118,8 +118,6 @@ public class LightWeightParser extends SAXAdapter {
             enumMapKD.put(wt, tree);
         }
 
-        if(Main.debug) new BrewJ().add(enumMapKD, enumMapKD);
-        
         for(OSMParserListener listener : parser.parserListeners) listener.onParsingFinished();
         AddressController.getInstance().onLWParsingFinished();
         finalClean();
@@ -173,10 +171,10 @@ public class LightWeightParser extends SAXAdapter {
                         }
                         break;
                     case "way":
-                        if(wayMap.containsKey(ref)) currentWays.add(wayMap.get(ref));
+                        if(temporaryWayReferences.containsKey(ref)) currentItems.add(temporaryWayReferences.get(ref));
                         break;
                     case "relation":
-                        if(relationMap.containsKey(ref)) currentRelations.add(relationMap.get(ref));
+                        if(temporaryRelationReferences.containsKey(ref)) currentItems.add(temporaryRelationReferences.get(ref));
                         break;
                 }
                 break;
@@ -210,8 +208,7 @@ public class LightWeightParser extends SAXAdapter {
         incrementLineCount();
     	switch(qName) {
             case "relation":
-                if(!currentRelations.isEmpty()) relation.addRelations(currentRelations);
-                if(!currentWays.isEmpty()) relation.addWays(currentWays);
+                if(!currentItems.isEmpty()) relation.addItems(currentItems);
                 if(!currentNodes.isEmpty()) relation.addNodes(currentNodes);
                 addCurrent();
                 break;
@@ -231,6 +228,10 @@ public class LightWeightParser extends SAXAdapter {
             else if(relation != null) enumMap.get(waytype).add(relation);
             else if(node != null) ;// do something eventually;
         }
+
+        if(way != null) temporaryWayReferences.put(way.getID(), way);
+        else if(relation != null) temporaryRelationReferences.put(relation.getID(), relation);
+
         if(address != null) {
             if(node != null) address.setCoords(node.getPoint());
             else if (way != null) address.setWay(way);
@@ -247,12 +248,13 @@ public class LightWeightParser extends SAXAdapter {
         node = null;
         waytype = null;
         currentNodes = new ArrayList<>();
-        currentWays = new ArrayList<>();
-        currentRelations = new ArrayList<>();
+        currentItems = new ArrayList<>();
     }
 
     private void finalClean() {
         nodeMap = null;
+        temporaryWayReferences = null;
+        temporaryRelationReferences = null;
         System.gc();
         // ideally all objects have been passed on, and this object would delete all references to anything. A really big clean up!
     }
