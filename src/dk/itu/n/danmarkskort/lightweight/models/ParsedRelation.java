@@ -7,7 +7,7 @@ public class ParsedRelation extends ParsedItem {
 
     private long id;
     private float[] coords;
-    private ParsedItem[] items;
+    public ParsedItem[] items;
 
     public ParsedRelation(long id) { this.id = id; }
 
@@ -58,7 +58,7 @@ public class ParsedRelation extends ParsedItem {
         Path2D path = new Path2D.Float(Path2D.WIND_EVEN_ODD);
         if(items != null) {
             for(ParsedItem item : items) {
-                path.append(item.getPath(), false);
+                path.append(item.getPath(), true);
             }
         }
         return path;

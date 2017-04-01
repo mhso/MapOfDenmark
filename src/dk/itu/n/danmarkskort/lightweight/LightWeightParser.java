@@ -225,8 +225,16 @@ public class LightWeightParser extends SAXAdapter {
     private void addCurrent() {
         if(waytype != null) {
             if(way != null) enumMap.get(waytype).add(way);
-            else if(relation != null) enumMap.get(waytype).add(relation);
-            else if(node != null) ;// do something eventually;
+            else if(relation != null) {
+                if(waytype == WayType.COASTLINE) {
+                    ParsedCoastline coastline = (ParsedCoastline) relation;
+                    enumMap.get(waytype).add(coastline);
+                }
+                else {
+                    enumMap.get(waytype).add(relation);
+                }
+            }
+            else if(node != null) ;// do something eventually
         }
 
         if(way != null) temporaryWayReferences.put(way.getID(), way);

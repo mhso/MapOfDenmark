@@ -58,11 +58,16 @@
 			<innercolor color="4E76C8"/>
 			<lineproperties linedash="5, 5" linewidth="10"/>
 		</line>
+		<line>
+			<type name="COASTLINE"/>
+			<innercolor color="000000"/>
+			<lineproporties linewidth="60"/>
+		</line>
 	</lines>
 	<areas>
 		<area>
 			<type name="WATER"/>
-			<innercolor color="6EC0FF"/>		
+			<innercolor color="6EC0FF"/>
 		</area>
 		<area>
 			<type name="RESIDENTIAL"/>
