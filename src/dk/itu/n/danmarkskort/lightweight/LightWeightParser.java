@@ -213,7 +213,10 @@ public class LightWeightParser extends SAXAdapter {
 
     private void addCurrent() {
         if(waytype != null) {
-            if(way != null) enumMap.get(waytype).add(way);
+            if(way != null) {
+            	enumMap.get(waytype).add(way);
+            	for(OSMParserListener listener : parser.parserListeners) listener.onParsingGotItem(way);
+            }
             else if(relation != null) {
                 /*if(waytype == WayType.COASTLINE) {
                     ParsedCoastline coastline = (ParsedCoastline) relation;
@@ -221,19 +224,27 @@ public class LightWeightParser extends SAXAdapter {
                 }
                 else {*/
                     enumMap.get(waytype).add(relation);
+                    for(OSMParserListener listener : parser.parserListeners) listener.onParsingGotItem(relation);
                 /*}*/
             }
             else if(node != null) ;// do something eventually
         }
 
-        if(way != null) temporaryWayReferences.put(way.getID(), way);
-        else if(relation != null) temporaryRelationReferences.put(relation.getID(), relation);
+        if(way != null) {
+        	temporaryWayReferences.put(way.getID(), way);
+        	for(OSMParserListener listener : parser.parserListeners) listener.onParsingGotItem(way);
+        }
+        else if(relation != null) {
+        	temporaryRelationReferences.put(relation.getID(), relation);
+        	for(OSMParserListener listener : parser.parserListeners) listener.onParsingGotItem(relation);
+        }
 
         if(address != null) {
             if(node != null) address.setCoords(node.getPoint());
             else if (way != null) address.setWay(way);
             else if (relation != null) address.setRelation(relation);
-            //AddressController.getInstance().addressParsed(address);
+            AddressController.getInstance().addressParsed(address);
+            for(OSMParserListener listener : parser.parserListeners) listener.onParsingGotItem(address);
         }
         cleanUp();
     }

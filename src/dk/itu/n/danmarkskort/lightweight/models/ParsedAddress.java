@@ -47,6 +47,6 @@ public class ParsedAddress {
  	}
     
     public String toString(){
-    	return street +" "+housenumber+" "+postcode+" "+city;
+    	return street +", "+housenumber+", "+postcode+", "+city;
     }
 }
