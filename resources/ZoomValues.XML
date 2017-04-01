@@ -42,7 +42,8 @@
 		<type name="BUILDING"/>
 	</zoomlevel>
 	<zoomlevel level="13">
-	</zoomlevel>
+		<type name="WAY_PATH"/>
+</zoomlevel>
 	<zoomlevel level="14">
 	</zoomlevel>
 	<zoomlevel level="15">

@@ -9,10 +9,11 @@ import dk.itu.n.danmarkskort.models.WayType;
  * This class is used for storing information about the visual representation of a map element 
  * (A.K.A: A WayType).
  */
-public abstract class WaytypeGraphicSpec {
-	private WayType mapElement;
+public abstract class WaytypeGraphicSpec implements Comparable<WaytypeGraphicSpec> {
+	private WayType wayType;
 	private Color innerColor;
 	private Color outerColor;
+	private int layer;
 	
 	/**
 	 * Apply the inner line/area attributes of this WaytypeGraphicSpec to a given Graphics2D object.
@@ -36,7 +37,7 @@ public abstract class WaytypeGraphicSpec {
 	 * Return the WayType that this GraphicSpec object refers to.
 	 */
 	public WayType getWayType() {
-		return mapElement;
+		return wayType;
 	}
 	
 	public Color getInnerColor() {
@@ -47,8 +48,16 @@ public abstract class WaytypeGraphicSpec {
 		return outerColor;
 	}
 	
-	public void setMapElement(WayType mapElement) {
-		this.mapElement = mapElement;
+	public void setLayer(int layer) {
+		this.layer = layer;
+	}
+	
+	public int getLayer() {
+		return layer;
+	}
+	
+	public void setWayType(WayType wayType) {
+		this.wayType = wayType;
 	}
 	
 	public void setInnerColor(Color innerColor) {
@@ -59,8 +68,14 @@ public abstract class WaytypeGraphicSpec {
 		this.outerColor = outerColor;
 	}
 	
+	public int compareTo(WaytypeGraphicSpec otherSpec) {
+		if(layer < otherSpec.getLayer()) return -1;
+		else if(layer > otherSpec.getLayer()) return 1;
+		return 0;
+	}
+	
 	public String toString() {
-		return "Graphic Specification [" + "mapElement=" + mapElement + ", innerColor="+innerColor
-				+", outerColor="+outerColor;
+		return "Graphic Specification [" + "wayType=" + wayType + ", innerColor="+innerColor
+				+", outerColor="+outerColor+", layer=" + layer;
 	}
 }

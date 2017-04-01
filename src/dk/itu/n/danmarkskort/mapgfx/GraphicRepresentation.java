@@ -22,7 +22,11 @@ public class GraphicRepresentation {
 	private static EnumMap<WayType, Integer> zoomMap = new EnumMap<>(WayType.class);
 	
 	/**
-	 * Get a list of Graphic Specification objects matching the inputed zoom level.
+	 * Get a list of Graphic Specification objects matching the inputed zoom level. 
+	 * The Graphic Specs returned are for all zoom levels equal to and less than the specified zoom level.
+	 * Fx. input zoom level 10 return all Graphic Specs for level 10, level 9, level 8 etc.
+	 * 
+	 * Furthermore, the Graphic Specs are sorted by their layer values, meaning lower layer objects appear first in the list and are thereby drawn first.
 	 * 
 	 * @param zoomLevel The current zoom level for which to draw elements.
 	 * @return A list of WaytypeGraphicSpec objects, specifying what should be drawn at the specific
@@ -34,6 +38,7 @@ public class GraphicRepresentation {
 		for(int i = zoomLevel; i >= 0; i--) {
 			cummulativeList.addAll(zoomLevelArr[i]);
 		}
+		cummulativeList.sort(null);
 		return cummulativeList;
 	}
 	
@@ -138,7 +143,7 @@ public class GraphicRepresentation {
 			switch(qName) {
 				case "type":
 					mapElement = WayType.valueOf(atts.getValue("name"));
-					gs.setMapElement(mapElement);
+					gs.setWayType(mapElement);
 				break;
 				case "defaultfont": 
 					defaultFontSize = Integer.parseInt(atts.getValue("fontsize"));
@@ -161,6 +166,9 @@ public class GraphicRepresentation {
 				break;
 				case "outercolor":
 					gs.setOuterColor(parseColor(atts.getValue("color")));
+				break;
+				case "layer":
+					gs.setLayer(Integer.parseInt(atts.getValue("layer")));
 				break;
 				case "lineproperties":
 					float lineWidth = (float)(Double.parseDouble(atts.getValue("linewidth")) * DKConstants.LINE_MAGNIFYING_VALUE);
