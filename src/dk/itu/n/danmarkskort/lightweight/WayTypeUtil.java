@@ -39,7 +39,7 @@ public class WayTypeUtil {
                     case "footway":
                     case "bridleway":
                     case "track":
-                    case "steps":
+                    //case "steps":
                         return WayType.HIGHWAY_FOOTWAY;
                     default:
                         return WayType.WAY_UNDEFINED;

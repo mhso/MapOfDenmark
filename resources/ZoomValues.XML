@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <zoomvalues version="0.2">
 	<zoomlevel level="1">
+		<type name="COASTLINE"/>
 		<type name="RESIDENTIAL"/>
 		<type name="FARMLAND"/>
 		<type name="FOREST"/>
@@ -39,14 +40,14 @@
 	</zoomlevel>
 	<zoomlevel level="12">
 		<type name="BUILDING"/>
-		<type name="HIGHWAY_CYCLEWAY"/>
-		<type name="HIGHWAY_FOOTWAY"/>
 	</zoomlevel>
 	<zoomlevel level="13">
 	</zoomlevel>
 	<zoomlevel level="14">
 	</zoomlevel>
 	<zoomlevel level="15">
+		<type name="HIGHWAY_CYCLEWAY"/>
+		<type name="HIGHWAY_FOOTWAY"/>
 	</zoomlevel>
 	<zoomlevel level="16">
 	</zoomlevel>

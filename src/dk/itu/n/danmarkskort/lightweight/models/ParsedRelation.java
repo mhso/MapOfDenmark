@@ -1,16 +1,13 @@
 package dk.itu.n.danmarkskort.lightweight.models;
 
-import dk.itu.n.danmarkskort.Main;
-
 import java.awt.geom.Path2D;
 import java.util.ArrayList;
 
 public class ParsedRelation extends ParsedItem {
 
     private long id;
-    private float[] coords; // not sure if these are needed for a relation
-    private ParsedWay[] ways;
-    private ParsedRelation[] relations;
+    private float[] coords;
+    public ParsedItem[] items;
 
     public ParsedRelation(long id) { this.id = id; }
 
@@ -19,47 +16,49 @@ public class ParsedRelation extends ParsedItem {
         for(int i = 0; i < nodes.size(); i++) coords[i] = nodes.get(i);
     }
 
-    public void addWays(ArrayList<ParsedWay> ways) {
-        this.ways = new ParsedWay[ways.size()];
-        for(int i = 0; i < ways.size(); i++) this.ways[i] = ways.get(i);
-    }
-
-    public void addRelations(ArrayList<ParsedRelation> relations) {
-        this.relations = new ParsedRelation[relations.size()];
-        for(int i = 0; i < relations.size(); i++) this.relations[i] = relations.get(i);
+    public void addItems(ArrayList<ParsedItem> items) {
+        this.items = new ParsedItem[items.size()];
+        for(int i = 0; i < items.size(); i++) this.items[i] = items.get(i);
     }
 
     public long getID() { return id; }
     public float[] getCoords() { return coords; }
-    public ParsedWay[] getWays() { return ways; }
-    public ParsedRelation[] getRelations() { return relations; }
 
     public ArrayList<Float> getLons() {
         ArrayList<Float> lons = new ArrayList<>();
-        if(coords != null) for(int i = 0; i < coords.length; i = i+2) lons.add(coords[i]);
-        if(ways != null) for(ParsedWay way : ways) lons.addAll(way.getLons());
-        if(relations != null) for(ParsedRelation rel : relations) lons.addAll(rel.getLons());
+        if(coords != null) {
+            for(int i = 0; i < coords.length; i = i+2) {
+                lons.add(coords[i]);
+            }
+        }
+        if(items != null) {
+            for(ParsedItem item : items) {
+                lons.addAll(item.getLons());
+            }
+        }
         return lons;
     }
 
     public ArrayList<Float> getLats() {
         ArrayList<Float> lats = new ArrayList<>();
-        if(coords != null) for(int i = 1; i < coords.length; i = i+2) lats.add(coords[i]);
-        if(ways != null) for(ParsedWay way : ways) lats.addAll(way.getLats());
-        if(relations != null) for(ParsedRelation rel : relations) lats.addAll(rel.getLats());
+        if(coords != null) {
+            for(int i = 1; i < coords.length; i = i+2) {
+                lats.add(coords[i]);
+            }
+        }
+        if(items != null) {
+            for(ParsedItem item : items) {
+                lats.addAll(item.getLats());
+            }
+        }
         return lats;
     }
 
     public Path2D getPath() {
         Path2D path = new Path2D.Float(Path2D.WIND_EVEN_ODD);
-        if(ways != null) {
-            for(ParsedItem item : ways) {
-                path.append(item.getPath(), false);
-            }
-        }
-        if(relations != null) {
-            for(ParsedItem item2 : relations) {
-                path.append(item2.getPath(), false);
+        if(items != null) {
+            for(ParsedItem item : items) {
+                path.append(item.getPath(), true);
             }
         }
         return path;
@@ -67,15 +66,13 @@ public class ParsedRelation extends ParsedItem {
 
     public float getFirstLon() {
         if(coords != null && coords.length > 1) return coords[0];
-        else if (ways != null) return ways[0].getFirstLon();
-        else if(relations != null) return relations[0].getFirstLon();
+        else if(items != null) return items[0].getFirstLon();
         return -1;
     }
 
     public float getFirstLat() {
         if(coords != null && coords.length > 1) return coords[1];
-        else if (ways != null) return ways[0].getFirstLat();
-        else if(relations != null) return relations[0].getFirstLat();
+        else if(items != null) return items[0].getFirstLat();
         return -1;
     }
 }
