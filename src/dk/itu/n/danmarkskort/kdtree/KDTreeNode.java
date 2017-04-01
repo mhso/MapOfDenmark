@@ -3,6 +3,7 @@ package dk.itu.n.danmarkskort.kdtree;
 import dk.itu.n.danmarkskort.DKConstants;
 import dk.itu.n.danmarkskort.gui.map.MapCanvas;
 import dk.itu.n.danmarkskort.lightweight.models.ParsedItem;
+import dk.itu.n.danmarkskort.lightweight.models.ParsedNode;
 import dk.itu.n.danmarkskort.models.Region;
 
 import java.util.ArrayList;
@@ -42,24 +43,24 @@ public class KDTreeNode extends KDTree {
         if(sortByLon) {
             leftSplit = median.getFirstLon();
             for(ParsedItem item : leftArray) {
-                ArrayList<Float> lons = item.getLons();
-                for(Float coord : lons) leftSplit = coord > leftSplit ? coord : leftSplit; // til højre er værdierne størst
+                ArrayList<ParsedNode> nodes = item.getNodes();
+                for(ParsedNode node : nodes) leftSplit = node.getLon() > leftSplit ? node.getLon() : leftSplit; // til højre er værdierne størst
             }
             rightSplit = median.getFirstLon();
             for(ParsedItem item : rightArray) {
-                ArrayList<Float> lons = item.getLons();
-                for(Float coord : lons) rightSplit = coord < rightSplit ? coord : rightSplit; // til højre er værdierne størst
+                ArrayList<ParsedNode> nodes = item.getNodes();
+                for(ParsedNode node : nodes) rightSplit = node.getLon() < rightSplit ? node.getLon(): rightSplit; // til højre er værdierne størst
             }
         } else {
             leftSplit = median.getFirstLat();
             for(ParsedItem item : leftArray) {
-                ArrayList<Float> lats = item.getLats();
-                for(Float coord : lats) leftSplit = coord > leftSplit ? coord : leftSplit; // nederst er værdierne størst
+                ArrayList<ParsedNode> nodes = item.getNodes();
+                for(ParsedNode node : nodes) leftSplit = node.getLat() > leftSplit ? node.getLat() : leftSplit; // nederst er værdierne størst
             }
             rightSplit = median.getFirstLat();
             for(ParsedItem item : rightArray) {
-                ArrayList<Float> lats = item.getLats();
-                for(Float coord : lats) rightSplit = coord < rightSplit ? coord : rightSplit; // nederst er værdierne størst
+                ArrayList<ParsedNode> nodes = item.getNodes();
+                for(ParsedNode node : nodes) rightSplit = node.getLat() < rightSplit ? node.getLat() : rightSplit; // nederst er værdierne størst
             }
         }
         if(leftArray.length > DKConstants.KD_SIZE) leftChild = new KDTreeNode(leftArray, this, !sortByLon);

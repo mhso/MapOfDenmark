@@ -123,6 +123,8 @@ public class WayTypeUtil {
                         return WayType.STADIUM;
                     case "park":
                         return WayType.PARK;
+                    case "garden":
+                        return WayType.PARK;
                     case "playground":
                         return WayType.PLAYGROUND;
                     case "pitch":

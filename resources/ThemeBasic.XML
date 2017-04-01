@@ -58,14 +58,14 @@
 		</line>
 		<line>
 			<type name="HIGHWAY_FOOTWAY"/>
-			<innercolor color="C83C38"/>
-			<lineproperties linedash="5, 5" linewidth="10"/>
+			<innercolor color="B7B393"/>
+			<lineproperties linedash="5, 5" linewidth="8"/>
 			<layer layer="3"/>
 		</line>
 		<line>
 			<type name="HIGHWAY_CYCLEWAY"/>
-			<innercolor color="4E76C8"/>
-			<lineproperties linedash="5, 5" linewidth="10"/>
+			<innercolor color="939FB7"/>
+			<lineproperties linedash="5, 5" linewidth="8"/>
 			<layer layer="3"/>
 		</line>
 		<line>
@@ -90,23 +90,23 @@
 		</area>
 		<area>
 			<type name="RESIDENTIAL"/>
-			<innercolor color="EAEAEA"/>
-			<layer layer="1"/>
+			<innercolor color="E0E0E0"/>
+			<layer layer="2"/>
 		</area>
 		<area>
 			<type name="BUILDING"/>
-			<innercolor color="D9D0C9"/>
+			<innercolor color="CACACA"/>
 			<layer layer="5"/>
 		</area>
 		<area>
 			<type name="GRASS"/>
 			<innercolor color="CBEFA8"/>
-			<layer layer="3"/>
+			<layer layer="2"/>
 		</area>
 		<area>
 			<type name="FARMLAND"/>
 			<innercolor color="FFECAA"/>
-			<layer layer="3"/>
+			<layer layer="2"/>
 		</area>
 		<area>
 			<type name="SPORT"/>
@@ -116,12 +116,12 @@
 		<area>
 			<type name="PARK"/>
 			<innercolor color="CDEBB0"/>
-			<layer layer="3"/>
+			<layer layer="2"/>
 		</area>
 		<area>
 			<type name="FOREST"/>
 			<innercolor color="ADD19E"/>
-			<layer layer="3"/>
+			<layer layer="2"/>
 		</area>
 	</areas>
 	<labels>
