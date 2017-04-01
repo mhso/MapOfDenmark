@@ -7,12 +7,14 @@
 			<innercolor color="CE4A4A"/>
 			<outercolor color="B52929"/>
 			<lineproperties linewidth="90"/>
+			<layer layer="5"/>
 		</line>
 		<line>
 			<type name="HIGHWAY_FOOTWAY"/>
 			<innercolor color="0066CC"/>
 			<outercolor color="001933"/>
 			<lineproperties linewidth="3" linedash="10, 10"/>
+			<layer layer="3"/>
 		</line>
 	</lines>
 	<areas>
@@ -20,6 +22,7 @@
 			<type name="BUILDING"/>
 			<innercolor color="C0C0C0"/>
 			<outercolor color="606060"/>
+			<layer layer="5"/>
 		</area>
 	</areas>
 	<labels>

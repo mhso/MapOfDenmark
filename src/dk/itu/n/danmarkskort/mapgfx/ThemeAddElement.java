@@ -38,7 +38,7 @@ public class ThemeAddElement extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField fieldName;
-	private JTextField fieldInsertAfter;
+	private JTextField fieldLayer;
 	private JPanel panelProperties;
 	private JTextField textFieldLineDash;
 	private JTextField textFieldLineWidth;
@@ -115,25 +115,19 @@ public class ThemeAddElement extends JFrame {
 		buttonSeeWaytypes.addActionListener(e -> showWaytypesDialog());
 		panelWaytype.add(buttonSeeWaytypes, BorderLayout.EAST);
 		
-		JPanel panelInsertAfter = new JPanel();
-		panelInsertAfter.setBorder(new EmptyBorder(35, 10, 40, 10));
-		wayTypePanel.add(panelInsertAfter);
-		panelInsertAfter.setLayout(new BorderLayout(25, 15));
+		JPanel panelLayer = new JPanel();
+		panelLayer.setBorder(new EmptyBorder(35, 10, 40, 10));
+		wayTypePanel.add(panelLayer);
+		panelLayer.setLayout(new BorderLayout(25, 15));
 		
-		JLabel labelInserAfter = new JLabel("Insert After");
-		labelInserAfter.setHorizontalAlignment(SwingConstants.CENTER);
-		panelInsertAfter.add(labelInserAfter, BorderLayout.NORTH);
+		JLabel labelLayer = new JLabel("Layer");
+		labelLayer.setHorizontalAlignment(SwingConstants.CENTER);
+		panelLayer.add(labelLayer, BorderLayout.NORTH);
 		
-		fieldInsertAfter = new JTextField();
-		fieldInsertAfter.setPreferredSize(new Dimension(50, 20));
-		fieldInsertAfter.setEditable(false);
-		fieldInsertAfter.setHorizontalAlignment(SwingConstants.CENTER);
-		panelInsertAfter.add(fieldInsertAfter);
-		
-		JButton buttonSeeElements = new CustomButton("resources/icons/menu.png", 0.5f, 0.8f, Color.BLACK);
-		buttonSeeElements.setPreferredSize(new Dimension(30, 25));
-		buttonSeeElements.addActionListener(e -> showElementsDialog());
-		panelInsertAfter.add(buttonSeeElements, BorderLayout.EAST);
+		fieldLayer = new JTextField();
+		fieldLayer.setPreferredSize(new Dimension(50, 20));
+		fieldLayer.setHorizontalAlignment(SwingConstants.CENTER);
+		panelLayer.add(fieldLayer);
 		
 		JPanel panelZoom = new JPanel();
 		panelZoom.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
@@ -206,31 +200,34 @@ public class ThemeAddElement extends JFrame {
 	}
 	
 	private void addLine() {
-		String earlierElement = fieldInsertAfter.getText();
+		String layer = fieldLayer.getText();
 		String lineWidth = textFieldLineWidth.getText();
 		String lineDash = textFieldLineDash.getText();
 		int zoomValue = zoomSlider.getValue();
 		if(zoomValue == 0) zoomValue = 1;
 		if(lineDash != null && lineDash.isEmpty()) lineDash = null;
-		if(earlierElement == null || earlierElement.isEmpty() || lineWidth == null || lineWidth.isEmpty() || !tc.isNumerical(lineWidth) || 
-				innerColor == null || outerColor == null) {
-			showError();
-		}
+		if(isMissingInfo(layer, innerColor, outerColor) || !tc.isNumerical(layer) || lineWidth == null || lineWidth.isEmpty() 
+				|| !tc.isNumerical(lineWidth)) showError();
 		else {
-			tc.addLineElement(wayType, earlierElement, innerColor, outerColor, lineWidth, lineDash, zoomValue);
+			tc.addLineElement(wayType, layer, innerColor, outerColor, lineWidth, lineDash, zoomValue);
 			dispose();
 		}
 	}
 	
 	private void addArea() {
-		String earlierElement = fieldInsertAfter.getText();
+		String layer = fieldLayer.getText();
 		int zoomValue = zoomSlider.getValue();
 		if(zoomValue == 0) zoomValue = 1;
-		if(earlierElement == null || earlierElement.isEmpty() || innerColor == null || outerColor == null) showError();
+		if(isMissingInfo(layer, innerColor, outerColor)) showError();
 		else {
-			tc.addAreaElement(wayType, earlierElement, innerColor, outerColor, zoomValue);
+			tc.addAreaElement(wayType, layer, innerColor, outerColor, zoomValue);
 			dispose();
 		}
+	}
+	
+	private boolean isMissingInfo(String layer, Color innerColor, Color outerColor) {
+		if(layer == null || layer.isEmpty() || innerColor == null || outerColor == null) return true;
+		return false;
 	}
 
 	private void showWaytypesDialog() {
@@ -291,7 +288,7 @@ public class ThemeAddElement extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if(e.getClickCount() == 2) {
-					fieldInsertAfter.setText(list.getSelectedValue());
+					fieldLayer.setText(list.getSelectedValue());
 					dialog.dispose();
 				}
 			}			
@@ -300,7 +297,7 @@ public class ThemeAddElement extends JFrame {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				if(e.getKeyCode() == KeyEvent.VK_ENTER && !list.isSelectionEmpty()) {
-					fieldInsertAfter.setText(list.getSelectedValue());
+					fieldLayer.setText(list.getSelectedValue());
 					dialog.dispose();
 				}
 			}
