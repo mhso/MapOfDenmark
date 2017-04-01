@@ -114,7 +114,7 @@ public class LoadPage extends JPanel  {
         double latKm = -bounds.getHeight()*110.574;
         double lonKm = bounds.getWidth()*111.320*Math.cos(Math.toRadians(-bounds.y2));
         double squareKm = latKm*lonKm;
-        lblCurrentmapbounds = new JLabel("<html><body>Longtitude: " + String.format(format, bounds.x1) + " - " + String.format(format, bounds.x2) + 
+        lblCurrentmapbounds = new JLabel("<html><body>Lontitude: " + String.format(format, bounds.x1) + " - " + String.format(format, bounds.x2) + 
         		"<br>Latitude: " + String.format(format, -bounds.y1) + " - " + String.format(format, -bounds.y2) + 
         		"<br>Square Kilometres: " + String.format(format, squareKm) + " km²</body></html>");
         GridBagConstraints gbc_lblCurrentmapbounds = new GridBagConstraints();
