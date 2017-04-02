@@ -4,14 +4,13 @@ import java.awt.Color;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
+import dk.itu.n.danmarkskort.DKConstants;
 import dk.itu.n.danmarkskort.SAXAdapter;
 import dk.itu.n.danmarkskort.models.WayType;
 
@@ -19,22 +18,31 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 public class GraphicRepresentation {
-	private static ArrayList<WaytypeGraphicSpec>[] zoomLevelArr 
-		= new ArrayList[20];
+	private static ArrayList<WaytypeGraphicSpec>[] zoomLevelArr = new ArrayList[20];
+	private static List<WaytypeGraphicSpec> overriddenSpecs = new ArrayList<>();
 	private static EnumMap<WayType, Integer> zoomMap = new EnumMap<>(WayType.class);
 	
 	/**
-	 * Get the Graphic Specification matching the inputed Map Element.
+	 * Get a list of Graphic Specification objects matching the inputed zoom level. 
+	 * The Graphic Specs returned are for all zoom levels equal to and less than the specified zoom level.
+	 * Fx. input zoom level 10 return all Graphic Specs for level 10, level 9, level 8 etc.
 	 * 
-	 * @param mapElement The Map Element (a WayType or Node f.x.) to get the graphics for.
-	 * @return A Graphic Specification object representing how a Map Element should be drawn.
+	 * Furthermore, the Graphic Specs are sorted by their layer values, meaning lower layer objects appear first in the list and are thereby drawn first.
+	 * 
+	 * @param zoomLevel The current zoom level for which to draw elements.
+	 * @return A list of WaytypeGraphicSpec objects, specifying what should be drawn at the specific
+	 * zoom level and how they should be drawn.
 	 */
 	public static List<WaytypeGraphicSpec> getGraphicSpecs(int zoomLevel) {
 		zoomLevel -= 1;
 		List<WaytypeGraphicSpec> cummulativeList = new ArrayList<>();
+		cummulativeList.addAll(overriddenSpecs);
 		for(int i = zoomLevel; i >= 0; i--) {
-			cummulativeList.addAll(zoomLevelArr[i]);
+			for(WaytypeGraphicSpec wgs : zoomLevelArr[i]) {
+				if(!wgs.isFiltered() && !overriddenSpecs.contains(wgs)) cummulativeList.add(wgs);
+			}
 		}
+		cummulativeList.sort(null);
 		return cummulativeList;
 	}
 	
@@ -47,9 +55,93 @@ public class GraphicRepresentation {
 	}
 	
 	/**
+	 * Add a WayType to Overridden Graphic Specifications, meaning the Graphic Specification for this WayType will be drawn at any zoom level.
+	 * 
+	 * @param wayType The WayType that should always be drawn.
+	 */
+	public static void addToOverriddenSpecs(WayType wayType) {
+		for(int i = 0; i < zoomLevelArr.length; i++) {
+			for(int j = 0; j < zoomLevelArr[i].size(); j++) {
+				if(zoomLevelArr[i].get(j).getWayType() == wayType) overriddenSpecs.add(zoomLevelArr[i].get(j));
+			}
+		}
+	}
+	
+	/**
+	 * Set the Graphic Specification, associated with the specified WayType, back to its default zoom level.
+	 * 
+	 * @param wayType The WayType that should be reset to its default zoom level.
+	 */
+	public static void setDefault(WayType wayType) {
+		for(int i = 0; i < zoomLevelArr.length; i++) {
+			for(int j = 0; j < zoomLevelArr[i].size(); j++) {
+				if(zoomLevelArr[i].get(j).getWayType() == wayType) {
+					overriddenSpecs.remove(zoomLevelArr[i].get(j));
+					zoomLevelArr[i].get(j).setFiltered(false);
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Set all Graphic Specification back to their default zoom levels.
+	 */
+	public static void setAllDefault() {
+		overriddenSpecs.removeAll(overriddenSpecs);
+		for(int i = 0; i < zoomLevelArr.length; i++) {
+			for(int j = 0; j < zoomLevelArr[i].size(); j++) {
+				if(zoomLevelArr[i].get(j).isFiltered()) zoomLevelArr[i].get(j).setFiltered(false);
+			}
+		}
+	}
+	
+	/**
+	 * Set whether a WayType should be filtered from the drawing process.
+	 * 
+	 * @param wayType The WayType to set filtering for.
+	 * @param filtered Whether the WayType should be filtered.
+	 */
+	public static void setFilteredElement(WayType wayType, boolean filtered) {
+		for(int i = 0; i < zoomLevelArr.length; i++) {
+			for(int j = 0; j < zoomLevelArr[i].size(); j++) {
+				if(zoomLevelArr[i].get(j).getWayType() == wayType) zoomLevelArr[i].get(j).setFiltered(filtered);
+			}
+		}
+	}
+	
+	/**
+	 * Check whether the specified WayType is being filtered in the drawing process.
+	 * 
+	 * @param wayType The WayType to check for.
+	 * @return Whether the WayType is being drawn.
+	 */
+	public static boolean isFiltered(WayType wayType) {
+		for(int i = 0; i < zoomLevelArr.length; i++) {
+			for(int j = 0; j < zoomLevelArr[i].size(); j++) {
+				if(zoomLevelArr[i].get(j).getWayType() == wayType) return zoomLevelArr[i].get(j).isFiltered();
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * Check whether the specified WayType is overriding the zoom hierarchy, I.E: always being drawn.
+	 * 
+	 * @param wayType The WayType to check for.
+	 * @return Whether the WayType is always being drawn.
+	 */
+	public static boolean isOverridden(WayType wayType) {
+		for(WaytypeGraphicSpec wgs : overriddenSpecs) {
+			if(wgs.getWayType() == wayType) return true;
+		}
+		return false;
+	}
+	
+	/**
 	 * Get the size of the Graphic Representation Map contained in this GraphicRepresentation class.
 	 * 
-	 * @return The Graphic Representation Map contained in this GraphicRepresentation class.
+	 * @return The Graphic Representation Map contained in this GraphicRepresentation class, IE: The amount of
+	 * WayTypes, that have Graphic Specifications associated with them.
 	 */
 	public static int size() {
 		return zoomMap.size();
@@ -92,10 +184,6 @@ public class GraphicRepresentation {
 		return new Color(r, g, b);
 	}
 	
-	private static WayType stringToEnum(String waytype) {
-		return WayType.valueOf(waytype);
-	}
-	
 	private static class ZoomHandler extends SAXAdapter {
 		private int currentZoomValue;
 		
@@ -106,15 +194,13 @@ public class GraphicRepresentation {
 					currentZoomValue = Integer.parseInt(atts.getValue("level"));
 				break;
 				case "type":
-					zoomMap.put(stringToEnum(atts.getValue("name")), currentZoomValue-1);
+					zoomMap.put(WayType.valueOf(atts.getValue("name")), currentZoomValue-1);
 				break;
 			}
 		}
 	}
-	
+
 	private static class GraphicsHandler extends SAXAdapter {
-		private static final float LINE_MAGNIFYING_VALUE = 0.001f;
-		
 		private static WayType mapElement;
 		private static WaytypeGraphicSpec gs;
 		private static int defaultFontSize;
@@ -143,8 +229,8 @@ public class GraphicRepresentation {
 				throws SAXException {
 			switch(qName) {
 				case "type":
-					mapElement = stringToEnum(atts.getValue("name"));
-					gs.setMapElement(mapElement);
+					mapElement = WayType.valueOf(atts.getValue("name"));
+					gs.setWayType(mapElement);
 				break;
 				case "defaultfont": 
 					defaultFontSize = Integer.parseInt(atts.getValue("fontsize"));
@@ -168,8 +254,11 @@ public class GraphicRepresentation {
 				case "outercolor":
 					gs.setOuterColor(parseColor(atts.getValue("color")));
 				break;
+				case "layer":
+					gs.setLayer(Integer.parseInt(atts.getValue("layer")));
+				break;
 				case "lineproperties":
-					float lineWidth = (float)(Double.parseDouble(atts.getValue("linewidth")) * LINE_MAGNIFYING_VALUE);
+					float lineWidth = (float)(Double.parseDouble(atts.getValue("linewidth")) * DKConstants.LINE_MAGNIFYING_VALUE);
 					float[] dashArr = null;
 					if(atts.getValue("linedash") != null) {
 						String[] splitArr = atts.getValue("linedash").split(",");

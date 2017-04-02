@@ -1,29 +1,33 @@
 package dk.itu.n.danmarkskort;
 
 import java.awt.Dimension;
+import java.awt.Toolkit;
 
 import javax.swing.*;
 
-import dk.itu.n.danmarkskort.address.AddressController;
 import dk.itu.n.danmarkskort.backend.OSMParser;
 import dk.itu.n.danmarkskort.backend.TileController;
 import dk.itu.n.danmarkskort.gui.WindowParsingLoadscreenNew;
 import dk.itu.n.danmarkskort.gui.map.MapCanvas;
+import dk.itu.n.danmarkskort.lightweight.LightWeightParser;
+import dk.itu.n.danmarkskort.mapgfx.GraphicRepresentation;
 
 public class Main {
 
 	public final static String APP_NAME = "Map";
-	public final static String APP_VERSION = "0.2";
+	public final static String APP_VERSION = "0.4";
 	public final static boolean debug = true;
 	public final static boolean production = false;
-	public final static int WIDTH = 1000, HEIGHT = 800;
+	
 	public static OSMParser osmParser;
 	public static TileController tileController;
 	public static JFrame window;
+	public static LightWeightParser model;
 	public static MapCanvas map;
 	public static MainCanvas mainPanel;
 
-	public final static boolean lightweight = false;
+	public final static boolean lightweight = true;
+	public final static boolean buffered = false;
 	
 	public static void main(String[] args) {
         startup(args);
@@ -32,8 +36,11 @@ public class Main {
 	}
 
 	public static void startup(String[] args) {
+		if(window != null) window.getContentPane().removeAll();
 		if(lightweight) {
 			osmParser = new OSMParser();
+			model = new LightWeightParser(osmParser);
+			GraphicRepresentation.main(new String[]{"resources/ThemeBasic.XML"});
 			prepareParser(args);
 		} else {
 			osmParser = new OSMParser();
@@ -46,16 +53,13 @@ public class Main {
 	public static void prepareParser(String[] args) {
 		WindowParsingLoadscreenNew loadScreen = new WindowParsingLoadscreenNew();
 		LoadScreenThread loadScreenThread = new LoadScreenThread(loadScreen);
-		
-		// Add your listeners for the parser here, if you are going to use data. 
-		osmParser.addListener(AddressController.getInstance());
+		//osmParser.addListener(AddressController.getInstance());
 		osmParser.addListener(loadScreen);
-		osmParser.addListener(tileController);
-		
-		if(args.length == 1) {
-			loadScreenThread.setFilenameAndRun(args[0]);
-			osmParser.parseFile(args[0]);
+		if(!lightweight) {
+			osmParser.addListener(tileController);
 		}
+		loadScreenThread.setFilenameAndRun(args[0]);
+		osmParser.parseFile(args[0]);
 	}
 	
 	public static void main() {
@@ -76,22 +80,29 @@ public class Main {
 	}
 
     public static void makeFrame() {
-            window = new JFrame(APP_NAME);
-            JPanel overlay = new JPanel();
-            overlay.setLayout(new OverlayLayout(overlay));
-            overlay.setPreferredSize(new Dimension(WIDTH, HEIGHT));
-            mainPanel = new MainCanvas();
-            map = new MapCanvas();
-            map.setPreferredSize(new Dimension(WIDTH, HEIGHT));
-            overlay.add(mainPanel);
-            
-            if(!lightweight) overlay.add(map);
-
-            window.add(overlay);
-            window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            window.pack();
-            window.setLocationRelativeTo(null);
-            window.setVisible(true);
+        window = new JFrame(APP_NAME);
+        window.setIconImage(Toolkit.getDefaultToolkit().getImage("resources/icons/map-icon.png"));
+        
+        window.add(createFrameComponents());
+        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        window.pack();
+        window.setLocationRelativeTo(null);
+        window.setVisible(true);
+        map.zoomToBounds();
+    }
+    
+    public static JPanel createFrameComponents() {
+    	JPanel overlay = new JPanel();
+        overlay.setLayout(new OverlayLayout(overlay));
+        overlay.setPreferredSize(new Dimension(DKConstants.WINDOW_WIDTH, DKConstants.WINDOW_HEIGHT));
+        mainPanel = new MainCanvas();
+        
+    	map = new MapCanvas();
+        map.setPreferredSize(new Dimension(DKConstants.WINDOW_WIDTH, DKConstants.WINDOW_HEIGHT));
+        
+        overlay.add(mainPanel);
+    	overlay.add(map);
+    	return overlay;
     }
     
     private static class LoadScreenThread implements Runnable {

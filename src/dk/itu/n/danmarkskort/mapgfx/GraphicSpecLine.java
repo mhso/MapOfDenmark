@@ -4,6 +4,9 @@ import java.awt.BasicStroke;
 import java.awt.Graphics2D;
 import java.util.Arrays;
 
+import dk.itu.n.danmarkskort.DKConstants;
+import dk.itu.n.danmarkskort.Main;
+
 public class GraphicSpecLine extends WaytypeGraphicSpec {
 	private float lineWidth;
 	private float[] dashArr;
@@ -12,11 +15,10 @@ public class GraphicSpecLine extends WaytypeGraphicSpec {
 		super.transformPrimary(graphics);
 		BasicStroke stroke = null;
 		if(dashArr == null) {
-			stroke = new BasicStroke(lineWidth);
+			stroke = new BasicStroke(lineWidth, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
 		}
 		else {
-			stroke = new BasicStroke(lineWidth, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 
-					0.00008f, dashArr, 0.0f);
+			stroke = new BasicStroke(lineWidth, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 0.00008f, dashArr, 0.0f);
 		}
 		graphics.setStroke(stroke);
 		
@@ -26,11 +28,10 @@ public class GraphicSpecLine extends WaytypeGraphicSpec {
 		super.transformOutline(graphics);
 		BasicStroke stroke = null;
 		if(dashArr == null) {
-			stroke = new BasicStroke(lineWidth+OUTLINE_WIDTH);
+			stroke = new BasicStroke(lineWidth+DKConstants.LINE_OUTLINE_WIDTH, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
 		}
 		else {
-			stroke = new BasicStroke(lineWidth, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 
-					0.00008f, dashArr, 0.0f);
+			stroke = new BasicStroke(lineWidth, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 0.00008f, dashArr, 0.0f);
 		}
 		graphics.setStroke(stroke);
 	}
@@ -49,6 +50,11 @@ public class GraphicSpecLine extends WaytypeGraphicSpec {
 	
 	public void setDashArr(float[] dashArr) {
 		this.dashArr = dashArr;
+		if(this.dashArr != null) {
+		    for(int i = 0; i < this.dashArr.length; i++) {
+                this.dashArr[i] *= 0.000006f;
+            }
+        }
 	}
 	
 	public String toString() {

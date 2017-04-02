@@ -4,14 +4,14 @@ import java.awt.Shape;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.List;
 
 import dk.itu.n.danmarkskort.Util;
 
 public class ParsedWay extends ParsedObject {
 
-	private ArrayList<ParsedNode> nodes = new ArrayList<ParsedNode>();
-	private ArrayList<Long> nodeIds = new ArrayList<Long>();
-	private Shape shape = null;
+	private List<ParsedNode> nodes = new ArrayList<ParsedNode>();
+	private List<Long> nodeIds = new ArrayList<Long>();
 	private boolean closedShape = false;
 	public WayType type = WayType.UNDEFINED;
 	
@@ -19,7 +19,7 @@ public class ParsedWay extends ParsedObject {
 		return nodes.toArray(new ParsedNode[nodes.size()]);
 	}
 	
-	public ArrayList<Long> getNodeIds() {
+	public List<Long> getNodeIds() {
 		return nodeIds;
 	}
 	
@@ -32,11 +32,11 @@ public class ParsedWay extends ParsedObject {
 		long id = node.getId();
 		if(nodeIds.contains(id)) {
 			nodeIds.remove(id);
-			if(isCompletelyLinked() && shape == null) createShape();
+			isCompletelyLinked();
 		}
 	}
 	
-	public void createShape() {
+	public Shape getShape() {
 		Path2D path = new Path2D.Float();
 		ParsedNode first = get(0);
 		Point2D firstPost = Util.coordinateToScreen(first.getPosition());
@@ -48,13 +48,12 @@ public class ParsedWay extends ParsedObject {
 			path.lineTo(post.getX(), post.getY());
 		}
 		
-		determineType();
 		if(closedShape) path.closePath();
-		shape = path;
+		return path;
 	}
 	
 	public void determineType() {
-		if(attributes.containsKey("building") || "residential".equals(attributes.get("landuse"))) {
+		if(attributes.containsKey("building")) {//|| "residential".equals(attributes.get("landuse"))) {
 			type = WayType.BUILDING;
 			if("train_station".equals(attributes.get("buidling"))) {
 				type = WayType.TRAIN_STATION;
@@ -63,20 +62,20 @@ public class ParsedWay extends ParsedObject {
 		} else if("coastline".equals(attributes.get("natural"))) {
 			type = WayType.COASTLINE;
 		} else if(attributes.containsKey("highway")) {
-			if(attributes.get("highway").equals("track")) 			type = WayType.WAY_TRACK;
-			else if(attributes.get("highway").equals("path")) 		type = WayType.WAY_PATH;
-			else if(attributes.get("highway").equals("service")) 	type = WayType.WAY_SERVICE;
+			if(attributes.get("highway").equals("track")) 			type = WayType.HIGHWAY_TRACK;
+			else if(attributes.get("highway").equals("path")) 		type = WayType.HIGHWAY_PATH;
+			else if(attributes.get("highway").equals("service")) 	type = WayType.HIGHWAY_SERVICE;
 			else if(attributes.get("highway").equals("tertiary"))	type = WayType.HIGHWAY_TERTIARY;
 			else if(attributes.get("highway").equals("secondary"))	type = WayType.HIGHWAY_SECONDARY;
 			else if(attributes.get("highway").equals("primary"))	type = WayType.HIGHWAY_PRIMARY;
 			else if(attributes.get("highway").equals("driveway"))	type = WayType.HIGHWAY_DRIVEWAY;
-			else if(attributes.get("highway").equals("residental"))	type = WayType.HIGHWAY_RESIDENTAL;
+			else if(attributes.get("highway").equals("residential"))	type = WayType.HIGHWAY_RESIDENTIAL;
 			else if(attributes.get("highway").equals("cycleway"))	type = WayType.HIGHWAY_CYCLEWAY;
 			else if(attributes.get("highway").equals("footway"))	type = WayType.HIGHWAY_FOOTWAY;
 			else if(attributes.get("highway").equals("steps"))		type = WayType.HIGHWAY_STEPS;
 			else if(attributes.get("highway").equals("motorway"))	type = WayType.HIGHWAY_MOTORWAY;
 			else if(attributes.get("highway").equals("trunk"))		type = WayType.HIGHWAY_TRUNK;
-			else type = WayType.WAY_UNDEFINED;
+			else type = WayType.HIGHWAY_UNDEFINED;
 		}
 		else if("ferry".equals(attributes.get("route"))) {
 			type = WayType.ROUTE_FERRY;
@@ -91,6 +90,10 @@ public class ParsedWay extends ParsedObject {
 		}
 		else if("grass".equals(attributes.get("landuse"))) {
 			type = WayType.GRASS;
+			closedShape = true;
+		}
+		else if("grass".equals(attributes.get("landuse"))) {
+			type = WayType.FARMLAND;
 			closedShape = true;
 		}
 		else if("scrub".equals(attributes.get("natural"))) {
@@ -186,10 +189,9 @@ public class ParsedWay extends ParsedObject {
 		return nodes.get(index);
 	}
 	
-	public Shape getShape() {
-		return shape;
+	public void parseAttributes() {
+		determineType();
+		attributes.clear();
 	}
-	
-	public void parseAttributes() {}
 	
 }

@@ -3,7 +3,10 @@ package dk.itu.n.danmarkskort.gui.menu;
 import javax.swing.*;
 
 import dk.itu.n.danmarkskort.Main;
+import dk.itu.n.danmarkskort.Util;
+import dk.itu.n.danmarkskort.address.AddressController;
 import dk.itu.n.danmarkskort.gui.Style;
+import dk.itu.n.danmarkskort.models.Region;
 
 import java.awt.*;
 import javax.swing.border.TitledBorder;
@@ -11,10 +14,14 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.nio.file.Files;
+import java.text.DecimalFormat;
 import java.awt.event.ActionEvent;
 
 public class LoadPage extends JPanel  {
-	Style style;
+	private Style style;
+	private JLabel lblCurrentmapfilename, lblCurrentmapfilesize, lblCurrentmapaddressesfound, lblCurrentmapbounds;
+	
     public LoadPage() {
     	style = new Style();
         setOpaque(false);
@@ -28,7 +35,7 @@ public class LoadPage extends JPanel  {
         panelHeadline.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
         panelHeadline.setBackground(style.menuContentBG());
         panelPage.add(panelHeadline, BorderLayout.NORTH);
-        JLabel lblPageHeadline = new JLabel("Load");
+        JLabel lblPageHeadline = new JLabel("Load New Map");
         lblPageHeadline.setFont(new Font("Tahoma", Font.BOLD, 18));
         panelHeadline.add(lblPageHeadline);
         
@@ -57,13 +64,15 @@ public class LoadPage extends JPanel  {
         
         JLabel lblCurrentMap = new JLabel("Current Map:");
         GridBagConstraints gbc_lblCurrentMap = new GridBagConstraints();
+        gbc_lblCurrentMap.anchor = GridBagConstraints.WEST;
         gbc_lblCurrentMap.insets = new Insets(0, 0, 5, 5);
         gbc_lblCurrentMap.gridx = 0;
         gbc_lblCurrentMap.gridy = 1;
         panelCenter.add(lblCurrentMap, gbc_lblCurrentMap);
-        
-        JLabel lblCurrentmapfilename = new JLabel("CurrentMapFileName");
+
+        lblCurrentmapfilename = new JLabel(Main.osmParser.getFileName());
         GridBagConstraints gbc_lblCurrentmapfilename = new GridBagConstraints();
+        gbc_lblCurrentmapfilename.anchor = GridBagConstraints.WEST;
         gbc_lblCurrentmapfilename.insets = new Insets(0, 0, 5, 0);
         gbc_lblCurrentmapfilename.gridx = 1;
         gbc_lblCurrentmapfilename.gridy = 1;
@@ -71,42 +80,68 @@ public class LoadPage extends JPanel  {
         
         JLabel lblFilesize = new JLabel("Filesize:");
         GridBagConstraints gbc_lblFilesize = new GridBagConstraints();
+        gbc_lblFilesize.anchor = GridBagConstraints.WEST;
         gbc_lblFilesize.insets = new Insets(0, 0, 5, 5);
         gbc_lblFilesize.gridx = 0;
         gbc_lblFilesize.gridy = 2;
         panelCenter.add(lblFilesize, gbc_lblFilesize);
         
-        JLabel lblCurrentmapfilesize = new JLabel("CurrentMapFileSize");
+        long fileSize = Util.getFileSize(new File(Main.osmParser.getFileName()));
+        long kb = fileSize/1024;
+		long mb = kb/1024;
+        
+        lblCurrentmapfilesize = new JLabel(mb + " MB");
         GridBagConstraints gbc_lblCurrentmapfilesize = new GridBagConstraints();
+        gbc_lblCurrentmapfilesize.anchor = GridBagConstraints.WEST;
         gbc_lblCurrentmapfilesize.insets = new Insets(0, 0, 5, 0);
         gbc_lblCurrentmapfilesize.gridx = 1;
         gbc_lblCurrentmapfilesize.gridy = 2;
         panelCenter.add(lblCurrentmapfilesize, gbc_lblCurrentmapfilesize);
         
-        JLabel lblAddressesFound = new JLabel("Addresses found:");
-        GridBagConstraints gbc_lblAddressesFound = new GridBagConstraints();
-        gbc_lblAddressesFound.insets = new Insets(0, 0, 5, 5);
-        gbc_lblAddressesFound.gridx = 0;
-        gbc_lblAddressesFound.gridy = 3;
-        panelCenter.add(lblAddressesFound, gbc_lblAddressesFound);
-        
-        JLabel lblCurrentmapaddressesfound = new JLabel("CurrentMapAddressesFound");
-        GridBagConstraints gbc_lblCurrentmapaddressesfound = new GridBagConstraints();
-        gbc_lblCurrentmapaddressesfound.insets = new Insets(0, 0, 5, 0);
-        gbc_lblCurrentmapaddressesfound.gridx = 1;
-        gbc_lblCurrentmapaddressesfound.gridy = 3;
-        panelCenter.add(lblCurrentmapaddressesfound, gbc_lblCurrentmapaddressesfound);
+        JButton btnLoadNewMapFile = new JButton("Load new map file");
+        btnLoadNewMapFile.addActionListener(e -> loadNewMapFile());
         
         JLabel lblMapBounds = new JLabel("Map bounds:");
         GridBagConstraints gbc_lblMapBounds = new GridBagConstraints();
+        gbc_lblMapBounds.anchor = GridBagConstraints.WEST;
         gbc_lblMapBounds.insets = new Insets(0, 0, 5, 5);
         gbc_lblMapBounds.gridx = 0;
-        gbc_lblMapBounds.gridy = 4;
+        gbc_lblMapBounds.gridy = 3;
         panelCenter.add(lblMapBounds, gbc_lblMapBounds);
         
-        JButton btnLoadNewMapFile = new JButton("Load new map file");
-        btnLoadNewMapFile.addActionListener(e -> loadNewMapFile());
+        Region bounds = Main.model.getMapRegion();
+        
+        DecimalFormat format = new DecimalFormat("###,###.##");
+        double latKm = -bounds.getHeight()*110.574;
+        double lonKm = bounds.getWidth()*111.320*Math.cos(Math.toRadians(-bounds.y2));
+        double squareKm = latKm*lonKm;
+        lblCurrentmapbounds = new JLabel("<html><body>Lontitude: " + format.format(bounds.x1) + " - " + format.format(bounds.x2) + 
+        		"<br>Latitude: " + format.format(-bounds.y1) + " - " + format.format(-bounds.y2) + 
+        		"<br>Square Kilometres: " + format.format(squareKm) + " km²</body></html>");
+        GridBagConstraints gbc_lblCurrentmapbounds = new GridBagConstraints();
+        gbc_lblCurrentmapbounds.anchor = GridBagConstraints.WEST;
+        gbc_lblCurrentmapbounds.insets = new Insets(0, 0, 5, 0);
+        gbc_lblCurrentmapbounds.gridx = 1;
+        gbc_lblCurrentmapbounds.gridy = 3;
+        panelCenter.add(lblCurrentmapbounds, gbc_lblCurrentmapbounds);
+        
+        JLabel lblAddressesFound = new JLabel("Addresses found:");
+        GridBagConstraints gbc_lblAddressesFound = new GridBagConstraints();
+        gbc_lblAddressesFound.anchor = GridBagConstraints.WEST;
+        gbc_lblAddressesFound.insets = new Insets(0, 0, 5, 5);
+        gbc_lblAddressesFound.gridx = 0;
+        gbc_lblAddressesFound.gridy = 4;
+        panelCenter.add(lblAddressesFound, gbc_lblAddressesFound);
+        
+        lblCurrentmapaddressesfound = new JLabel("" + format.format(AddressController.getInstance().getAddressSize()));
+        GridBagConstraints gbc_lblCurrentmapaddressesfound = new GridBagConstraints();
+        gbc_lblCurrentmapaddressesfound.anchor = GridBagConstraints.WEST;
+        gbc_lblCurrentmapaddressesfound.insets = new Insets(0, 0, 5, 0);
+        gbc_lblCurrentmapaddressesfound.gridx = 1;
+        gbc_lblCurrentmapaddressesfound.gridy = 4;
+        panelCenter.add(lblCurrentmapaddressesfound, gbc_lblCurrentmapaddressesfound);
         GridBagConstraints gbc_btnLoadNewMapFile = new GridBagConstraints();
+        gbc_btnLoadNewMapFile.anchor = GridBagConstraints.EAST;
         gbc_btnLoadNewMapFile.gridx = 1;
         gbc_btnLoadNewMapFile.gridy = 7;
         panelCenter.add(btnLoadNewMapFile, gbc_btnLoadNewMapFile);
@@ -118,10 +153,11 @@ public class LoadPage extends JPanel  {
 		
 		if (fcVal == JFileChooser.APPROVE_OPTION) {
 			File file = fc.getSelectedFile();
-			if(!file.getAbsolutePath().endsWith(".osm")){
-				file = new File(file + ".osm");
-			}
-			//model.loadNewModel(file.getAbsolutePath());
+			Main.startup(new String[]{file.getAbsolutePath()});
+			Main.window.add(Main.createFrameComponents());
+			Main.window.revalidate();
+			Main.window.repaint();
+			Main.map.zoomToBounds();
         } else {
         }
 
@@ -132,15 +168,21 @@ public class LoadPage extends JPanel  {
 		fc.setDialogTitle(dialogTitle);
 		fc.setApproveButtonText(approveBtnTxt);
 		fc.setAcceptAllFileFilterUsed(false);
-		fc.setFileSelectionMode(JFileChooser.APPROVE_OPTION);
-		fc.addChoosableFileFilter(new FileNameExtensionFilter("*.osm", "osm"));
-		fc.addChoosableFileFilter(new FileNameExtensionFilter("*.zip", "zip"));
+		fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		fc.setFileFilter(new FileNameExtensionFilter("Map Files", "osm", "zip", "bin"));
 		fc.setCurrentDirectory(new File(System.getProperty("user.home")));
 		return fc;
 	}
 
 	private void initContentPanel(JPanel panel){
-    	GridBagLayout gbl_panelCenter = new GridBagLayout();
-        
+    	
     }
+	
+	public void updateCurrentMapInfo(String mapfilename, String mapfilesize, String mapbounds, String mapaddressesfound){
+		lblCurrentmapfilename.setText(mapfilename);
+		lblCurrentmapfilesize.setText(mapfilesize);
+		lblCurrentmapbounds.setText(mapbounds);
+		lblCurrentmapaddressesfound.setText(mapaddressesfound);
+	}
+	
 }

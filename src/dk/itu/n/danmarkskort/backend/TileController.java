@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.EnumMap;
 
 import dk.itu.n.danmarkskort.Main;
+import dk.itu.n.danmarkskort.lightweight.models.ParsedItem;
 import dk.itu.n.danmarkskort.mapgfx.GraphicRepresentation;
 import dk.itu.n.danmarkskort.models.ParsedBounds;
 import dk.itu.n.danmarkskort.models.ParsedObject;
@@ -29,41 +30,17 @@ public class TileController implements OSMParserListener {
 	public void onParsingStarted() {
 		prepareWays();
 	}
+	
 	public void onLineCountHundred() {}
 
 	public void onParsingFinished() {
 		GraphicRepresentation.main(new String[]{"resources/ThemeBasic.XML"});
+		Main.log(ways.keySet().size() + " WayTypes found.");
 	}
 
 	public void onParsingGotObject(ParsedObject parsedObject) {
 		if(parsedObject instanceof ParsedBounds) {
 			mapBounds = (ParsedBounds) parsedObject;
-			Main.log("Horizontal tiles: " + mapBounds.getHorizontalTileCount() + ", vertical tiles: " + mapBounds.getVerticalTileCount());
-		}
-	}
-	
-	public void prepareTileFiles() {
-		int hor = getBounds().getHorizontalTileCount();
-		int ver = getBounds().getVerticalTileCount();
-		
-		for(int x=0; x<hor; x++) {
-			for(int y=0; y<ver; y++) {
-				Tile tile = new Tile(new TileCoordinate(x, y), staticZoomLevel);
-				tile.write();
-			}
-		}
-	}
-	
-	public void renderTiles() {
-		int hor = getBounds().getHorizontalTileCount();
-		int ver = getBounds().getVerticalTileCount();
-		for(int zoom=1; zoom<MAX_ZOOM_LEVEL; zoom++) {
-			int w = hor * zoom;
-			int h = ver * zoom;
-			for(int x=0; x<w; x++) {for(int y=0; y<h; y++) {
-				
-			}}
-			
 		}
 	}
 	
@@ -85,5 +62,10 @@ public class TileController implements OSMParserListener {
 	
 	public ArrayList<ParsedWay> getWaysOfType(WayType type) {
 		return ways.get(type);
+	}
+
+	@Override
+	public void onParsingGotItem(Object parsedItem) {
+		
 	}
 }

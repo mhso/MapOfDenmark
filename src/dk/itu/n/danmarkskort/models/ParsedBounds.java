@@ -6,6 +6,14 @@ public class ParsedBounds extends ParsedObject {
 	public final double CONST_X = 0.01;
 	public final double CONST_Y = 0.0055;
 	
+	public ParsedBounds() {}
+	public ParsedBounds(double minLat, double minLong, double maxLat, double maxLong) {
+		this.minLat = minLat;
+		this.minLong = minLong;
+		this.maxLat = maxLat;
+		this.maxLong = maxLong;
+	}
+	
 	public void parseAttributes() {
 		minLat = Double.parseDouble(attributes.get("minlat"));
 		minLong = Double.parseDouble(attributes.get("minlon"));
@@ -14,7 +22,7 @@ public class ParsedBounds extends ParsedObject {
 	}
 
 	public String toString() {
-		return "minLat=" + minLat + ", minLong=" + minLong + ", maxLat=" + maxLat + ", maxLong=" + maxLong;
+		return "x: " + minLong + ", y: " + minLat + ", width: " + getWidth() + ", height: " + getHeight();
 	}
 
 	public double getWidth() {
@@ -23,22 +31,6 @@ public class ParsedBounds extends ParsedObject {
 	
 	public double getHeight() {
 		return maxLat - minLat;
-	}
-	
-	public int getHorizontalTileCount() {
-		return (int)(getWidth() / CONST_X);
-	}
-	
-	public int getVerticalTileCount() {
-		return (int)(getHeight() / CONST_Y);
-	}
-	
-	public int getPixelWidth() {
-		return getHorizontalTileCount() * 16;
-	}
-	
-	public int getPixelHeight() {
-		return getVerticalTileCount() * 16;
 	}
 	
 }

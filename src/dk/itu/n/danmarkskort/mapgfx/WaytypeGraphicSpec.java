@@ -6,25 +6,39 @@ import java.awt.Graphics2D;
 import dk.itu.n.danmarkskort.models.WayType;
 
 /**
- * This class is used for storing information about the visual representation of a map element (a WayType f.x.).
+ * This class is used for storing information about the visual representation of a map element 
+ * (A.K.A: A WayType).
  */
-public abstract class WaytypeGraphicSpec {
-	protected static final float OUTLINE_WIDTH = 0.00001f;
-	
-	private WayType mapElement;
+public abstract class WaytypeGraphicSpec implements Comparable<WaytypeGraphicSpec> {
+	private WayType wayType;
 	private Color innerColor;
 	private Color outerColor;
+	private int layer;
+	private boolean isFiltered;
 	
+	/**
+	 * Apply the inner line/area attributes of this WaytypeGraphicSpec to a given Graphics2D object.
+	 * 
+	 * @param graphics The Graphics2D object that should have its values updated.
+	 */
 	public void transformPrimary(Graphics2D graphics) {
 		graphics.setColor(innerColor);
 	}
 	
+	/**
+	 * Apply the outer line/area attributes of this WaytypeGraphicSpec to a given Graphics2D object.
+	 * 
+	 * @param graphics The Graphics2D object that should have its values updated.
+	 */
 	public void transformOutline(Graphics2D graphics) {
 		graphics.setColor(outerColor);
 	}
 	
-	public WayType getMapElement() {
-		return mapElement;
+	/*
+	 * Return the WayType that this GraphicSpec object refers to.
+	 */
+	public WayType getWayType() {
+		return wayType;
 	}
 	
 	public Color getInnerColor() {
@@ -35,8 +49,16 @@ public abstract class WaytypeGraphicSpec {
 		return outerColor;
 	}
 	
-	public void setMapElement(WayType mapElement) {
-		this.mapElement = mapElement;
+	public void setLayer(int layer) {
+		this.layer = layer;
+	}
+	
+	public int getLayer() {
+		return layer;
+	}
+	
+	public void setWayType(WayType wayType) {
+		this.wayType = wayType;
 	}
 	
 	public void setInnerColor(Color innerColor) {
@@ -47,8 +69,22 @@ public abstract class WaytypeGraphicSpec {
 		this.outerColor = outerColor;
 	}
 	
+	public boolean isFiltered() {
+		return isFiltered;
+	}
+	
+	public void setFiltered(boolean filtered) {
+		isFiltered = filtered;
+	}
+	
+	public int compareTo(WaytypeGraphicSpec otherSpec) {
+		if(layer < otherSpec.getLayer()) return -1;
+		else if(layer > otherSpec.getLayer()) return 1;
+		return 0;
+	}
+	
 	public String toString() {
-		return "Graphic Specification [" + "mapElement=" + mapElement + ", innerColor="+innerColor
-				+", outerColor="+outerColor;
+		return "Graphic Specification [" + "wayType=" + wayType + ", innerColor="+innerColor
+				+", outerColor="+outerColor+", layer=" + layer;
 	}
 }

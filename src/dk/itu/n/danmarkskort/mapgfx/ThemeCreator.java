@@ -116,97 +116,79 @@ public class ThemeCreator extends JFrame {
 		setVisible(true);
 	}
 	
-	public void addLineElement(String wayType, String earlierElement, Color innerColor, Color outerColor, String lineWidth, String lineDash, 
+	public void addLineElement(String wayType, String layer, Color innerColor, Color outerColor, String lineWidth, String lineDash, 
 			int zoomValue) {
 		Document doc = getDocument(selectedFile);
 		
-		NodeList lineNodes = doc.getElementsByTagName("line");
-		for(int i = 0; i < lineNodes.getLength(); i++) {
-			Element lineNode = (Element)lineNodes.item(i);
-			if(lineNode.getElementsByTagName("type").item(0).getAttributes().getNamedItem("name").getNodeValue().equals(earlierElement)) {
-				Element newElement = doc.createElement("line");
-				Node nextNode = lineNodes.item(i+1);
-				if(nextNode == null) lineNode.getParentNode().appendChild(newElement);
-				else nextNode.insertBefore(newElement, nextNode);
-				
-				Element type = doc.createElement("type");
-				type.setAttribute("name", wayType);
-				newElement.appendChild(type);
-				
-				Element eInnerColor = doc.createElement("innercolor");
-				eInnerColor.setAttribute("color", parseHex(innerColor));
-				newElement.appendChild(eInnerColor);
-				
-				Element eOuterColor = doc.createElement("outercolor");
-				eOuterColor.setAttribute("color", parseHex(outerColor));
-				newElement.appendChild(eOuterColor);
-				
-				Element lineProperties = doc.createElement("lineproperties");
-				lineProperties.setAttribute("linewidth", lineWidth);
-				if(lineDash != null) lineProperties.setAttribute("linedash", lineDash);
-				newElement.appendChild(lineProperties);
-				break;
-			}
-		}
+		NodeList lineNodes = doc.getElementsByTagName("lines");
+		Element newElement = doc.createElement("line");
+		lineNodes.item(0).appendChild(newElement);
+		
+		Element type = doc.createElement("type");
+		type.setAttribute("name", wayType);
+		newElement.appendChild(type);
+		
+		Element eInnerColor = doc.createElement("innercolor");
+		eInnerColor.setAttribute("color", parseHex(innerColor));
+		newElement.appendChild(eInnerColor);
+		
+		Element eOuterColor = doc.createElement("outercolor");
+		eOuterColor.setAttribute("color", parseHex(outerColor));
+		newElement.appendChild(eOuterColor);
+		
+		Element lineProperties = doc.createElement("lineproperties");
+		lineProperties.setAttribute("linewidth", lineWidth);
+		if(lineDash != null) lineProperties.setAttribute("linedash", lineDash);
+		newElement.appendChild(lineProperties);
+		
+		Element layerValue = doc.createElement("layer");
+		layerValue.setAttribute("layer", layer);
+		newElement.appendChild(layerValue);
+		
 		saveDocument(doc, selectedFile);
 		
-		addToZoomDocument(wayType, earlierElement, zoomValue);
+		addToZoomDocument(wayType, zoomValue);
 	}
 
-	public void addAreaElement(String wayType, String earlierElement, Color innerColor, Color outerColor, int zoomValue) {
+	public void addAreaElement(String wayType, String layer, Color innerColor, Color outerColor, int zoomValue) {
 		Document doc = getDocument(selectedFile);
 		
-		NodeList lineNodes = doc.getElementsByTagName("area");
-		for(int i = 0; i < lineNodes.getLength(); i++) {
-			Element lineNode = (Element)lineNodes.item(i);
-			if(lineNode.getElementsByTagName("type").item(0).getAttributes().getNamedItem("name").getNodeValue().equals(earlierElement)) {
-				Element newElement = doc.createElement("area");
-				Node nextNode = lineNodes.item(i+1);
-				if(nextNode == null) lineNode.getParentNode().appendChild(newElement);
-				else nextNode.getParentNode().insertBefore(newElement, nextNode);
-				
-				Element type = doc.createElement("type");
-				type.setAttribute("name", wayType);
-				newElement.appendChild(type);
-				
-				Element eInnerColor = doc.createElement("innercolor");
-				eInnerColor.setAttribute("color", parseHex(innerColor));
-				newElement.appendChild(eInnerColor);
-				
-				Element eOuterColor = doc.createElement("outercolor");
-				eOuterColor.setAttribute("color", parseHex(outerColor));
-				newElement.appendChild(eOuterColor);
-				break;
-			}
-		}
+		NodeList lineNodes = doc.getElementsByTagName("areas");
+		Element newElement = doc.createElement("area");
+		lineNodes.item(0).appendChild(newElement);
+		
+		Element type = doc.createElement("type");
+		type.setAttribute("name", wayType);
+		newElement.appendChild(type);
+		
+		Element eInnerColor = doc.createElement("innercolor");
+		eInnerColor.setAttribute("color", parseHex(innerColor));
+		newElement.appendChild(eInnerColor);
+		
+		Element eOuterColor = doc.createElement("outercolor");
+		eOuterColor.setAttribute("color", parseHex(outerColor));
+		newElement.appendChild(eOuterColor);
+
+		
+		Element layerValue = doc.createElement("layer");
+		layerValue.setAttribute("layer", layer);
+		newElement.appendChild(layerValue);
+		
 		saveDocument(doc, selectedFile);
-		addToZoomDocument(wayType, earlierElement, zoomValue);
+		addToZoomDocument(wayType, zoomValue);
 	}
 
-	private void addToZoomDocument(String wayType, String earlierElement, int zoomValue) {
+	private void addToZoomDocument(String wayType, int zoomValue) {
 		String zoomFile = "resources/ZoomValues.XML";
 		Document doc = getDocument(zoomFile);
 		
 		NodeList zoomNodes = doc.getElementsByTagName("zoomlevel");
 		Element zoomElement = (Element)zoomNodes.item(zoomValue-1);
-		if(earlierElement == null) {
-			Element newElement = doc.createElement("type");
-			newElement.setAttribute("name", wayType);
-			zoomElement.appendChild(newElement);
-		}
-		NodeList typeNodes = zoomElement.getElementsByTagName("type");
-		for(int i = 0; i < typeNodes.getLength(); i++) {
-			Element typeNode = (Element)typeNodes.item(i);
-			if(typeNode.getAttributes().getNamedItem("name").getNodeValue().equals(earlierElement)) {
-				Element newElement = doc.createElement("type");
-				Node nextNode = typeNodes.item(i+1);
-				
-				newElement.setAttribute("name", wayType);
-				if(nextNode == null) typeNode.getParentNode().appendChild(newElement);
-				else nextNode.getParentNode().insertBefore(newElement, nextNode);
-				break;
-			}
-		}
+		
+		Element newElement = doc.createElement("type");
+		newElement.setAttribute("name", wayType);
+		zoomElement.appendChild(newElement);
+		
 		saveDocument(doc, zoomFile);
 	}
 	
@@ -229,6 +211,24 @@ public class ThemeCreator extends JFrame {
 		return null;
 	}
 	
+	private void changeLayer(String wayType, String elementType, int newLayer) {
+		Document doc = getDocument(selectedFile);
+		elementType = elementType.toLowerCase();
+		
+		NodeList lineNodes = doc.getElementsByTagName(elementType);
+		for(int i = 0; i < lineNodes.getLength(); i++) {
+			Element lineNode = (Element)lineNodes.item(i);
+			if(lineNode.getElementsByTagName("type").item(0).getAttributes().getNamedItem("name").getNodeValue().equals(wayType)) {	
+				Element finalNode = (Element)lineNode.getElementsByTagName("layer").item(0);
+				NamedNodeMap nnm = finalNode.getAttributes();
+				Node nodeAttr = nnm.getNamedItem("layer");
+				nodeAttr.setTextContent(""+newLayer);
+				break;
+			}
+		}
+		saveDocument(doc, selectedFile);
+	}
+	
 	private void changeZoomLevel(String wayType, int oldZoom, int newZoom) {
 		String zoomFile = "resources/ZoomValues.XML";
 		Document doc = getDocument(zoomFile);
@@ -243,7 +243,7 @@ public class ThemeCreator extends JFrame {
 			}
 		}
 		saveDocument(doc, zoomFile);
-		addToZoomDocument(wayType, null, newZoom);
+		addToZoomDocument(wayType, newZoom);
 	}
 	
 	private void changeWidth(String wayType, String newWidth) {
@@ -462,6 +462,22 @@ public class ThemeCreator extends JFrame {
 				
 				elementPanel.add(outerColorPanel);
 			break;
+			case "layer":
+				JPanel layerPanel = new JPanel();
+				layerPanel.setBackground(Color.WHITE);
+				layerPanel.setLayout(new BorderLayout(BUTTON_SIZE, 5));
+				
+				JLabel layerLabel = new JLabel("Layer:");
+				layerLabel.setFont(new Font("Tahoma", Font.PLAIN, 18));
+				layerPanel.add(layerLabel, BorderLayout.WEST);
+				
+				JButton layerPicker = new JButton(atts.getValue("layer"));
+				layerPicker.addActionListener(new LayerChanger(layerPicker, elementType, wayType));
+				layerPicker.setPreferredSize(new Dimension(BUTTON_SIZE, layerPicker.getHeight()));
+				layerPanel.add(layerPicker, BorderLayout.EAST);
+				
+				elementPanel.add(layerPanel);
+			break;
 			case "lineproperties":
 				JPanel lineWidthPanel = new JPanel();
 				lineWidthPanel.setBackground(Color.WHITE);
@@ -600,6 +616,26 @@ public class ThemeCreator extends JFrame {
 		}
 	}
 	
+	private class LayerChanger implements ActionListener {
+		private JButton sourceButton;
+		private String elementName;
+		private String elementType;
+
+		public LayerChanger(JButton sourceButton, String elementType, String elementName) {
+			this.sourceButton = sourceButton;
+			this.elementName = elementName;
+			this.elementType = elementType;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			String layer = JOptionPane.showInputDialog(ThemeCreator.this, "Input New Layer Value", sourceButton.getText());
+			if(layer == null || !isNumerical(layer)) return;
+			changeLayer(elementName, elementType, Integer.parseInt(layer));
+			sourceButton.setText(layer);
+		}
+	}
+	
 	private class WidthChanger implements ActionListener {
 		private JButton sourceButton;
 		private String elementName;
@@ -612,12 +648,10 @@ public class ThemeCreator extends JFrame {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			String width = JOptionPane.showInputDialog(ThemeCreator.this, "Input New Line Width", sourceButton.getText());
-			if(width == null || !isNumerical(width.trim())) return;
+			if(width == null || !isNumerical(width)) return;
 			changeWidth(elementName, width);
 			sourceButton.setText(width);
 		}
-		
-		
 	}
 	
 	private class ZoomChanger implements ActionListener {
@@ -633,7 +667,7 @@ public class ThemeCreator extends JFrame {
 		public void actionPerformed(ActionEvent e) {
 			int oldZoom = zoomMap.get(elementName);
 			String newZoom = JOptionPane.showInputDialog(ThemeCreator.this, "Input New Zoom Value", sourceButton.getText());
-			if(newZoom == null || !isNumerical(newZoom.trim())) return;
+			if(newZoom == null || !isNumerical(newZoom)) return;
 			changeZoomLevel(elementName, oldZoom, Integer.parseInt(newZoom));
 			sourceButton.setText(newZoom);
 		}

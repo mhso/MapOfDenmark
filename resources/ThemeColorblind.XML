@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><theme version="0.3">
+	<defaultfont fontcolor="000000" fontsize="60"/>
+	<lines>
+		<line>
+			<type name="HIGHWAY_MOTORWAY"/>
+			<innercolor color="FF0000"/>
+			<outercolor color="660000"/>
+			<lineproperties linewidth="90"/>
+			<layer layer="5"/>
+		</line>
+		<line>
+			<type name="HIGHWAY_TRUNK"/>
+			<innercolor color="CE4A4A"/>
+			<outercolor color="B52929"/>
+			<lineproperties linewidth="90"/>
+			<layer layer="5"/>
+		</line>
+		<line>
+			<type name="HIGHWAY_PRIMARY"/>
+			<innercolor color="E89747"/>
+			<outercolor color="905F2E"/>
+			<lineproperties linewidth="90"/>
+			<layer layer="4"/>
+		</line>
+		<line>
+			<type name="HIGHWAY_SECONDARY"/>
+			<innercolor color="EBBE42"/>
+			<outercolor color="796530"/>
+			<lineproperties linewidth="90"/>
+			<layer layer="3"/>
+		</line>
+		<line>
+			<type name="HIGHWAY_TERTIARY"/>
+			<innercolor color="E8DDC0"/>
+			<outercolor color="A19B8D"/>
+			<lineproperties linewidth="90"/>
+			<layer layer="3"/>
+		</line>
+		<line>
+			<type name="WAY_UNDEFINED"/>
+			<innercolor color="E8DDC0"/>
+			<outercolor color="A19B8D"/>
+			<lineproperties linewidth="60"/>
+			<layer layer="3"/>
+		</line>
+		<line>
+			<type name="HIGHWAY_RESIDENTAL"/>
+			<innercolor color="E8DDC0"/>
+			<outercolor color="A19B8D"/>
+			<lineproperties linewidth="40"/>
+			<layer layer="3"/>
+		</line>
+		<line>
+			<type name="WAY_SERVICE"/>
+			<innercolor color="E8DDC0"/>
+			<outercolor color="A19B8D"/>
+			<lineproperties linewidth="20"/>
+			<layer layer="3"/>
+		</line>
+		<line>
+			<type name="HIGHWAY_FOOTWAY"/>
+			<innercolor color="0066CC"/>
+			<outercolor color="001933"/>
+			<lineproperties linedash="5, 5" linewidth="10"/>
+			<layer layer="3"/>
+		</line>
+		<line>
+			<type name="HIGHWAY_CYCLEWAY"/>
+			<innercolor color="0000FF"/>
+			<outercolor color="000000"/>
+			<lineproperties linedash="5, 5" linewidth="10"/>
+			<layer layer="3"/>
+		</line>
+	</lines>
+	<areas>
+		<area>
+			<type name="BUILDING"/>
+			<innercolor color="C0C0C0"/>
+			<outercolor color="606060"/>
+			<layer layer="5"/>
+		</area>
+		<area>
+			<type name="GRASS"/>
+			<innercolor color="00CC00"/>
+			<outercolor color="003300"/>
+			<layer layer="3"/>
+		</area>
+		<area>
+			<type name="SPORT"/>
+			<innercolor color="00FF99"/>
+			<outercolor color="003300"/>
+			<layer layer="3"/>
+		</area>
+		<area>
+			<type name="PARK"/>
+			<innercolor color="33FF33"/>
+			<outercolor color="003333"/>
+			<layer layer="3"/>
+		</area>
+		<area>
+			<type name="FOREST"/>
+			<innercolor color="006600"/>
+			<outercolor color="003300"/>
+			<layer layer="3"/>
+		</area>
+	</areas>
+	<labels>
+		<label>
+		</label>
+	</labels>
+	<icons>
+		<icon>
+		</icon>
+	</icons>
+</theme>

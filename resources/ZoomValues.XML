@@ -1,73 +1,73 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <zoomvalues version="0.2">
 	<zoomlevel level="1">
-		<type name="GRASS"/>
+		<type name="COASTLINE"/>
+		<type name="RESIDENTIAL"/>
+		<type name="INDUSTRIAL"/>
+		<type name="FARMLAND"/>
 		<type name="FOREST"/>
 		<type name="HIGHWAY_MOTORWAY"/>
-		<type name="HIGHWAY_TRUNK"/>
-		<type name="HIGHWAY_PRIMARY"/>
-		<type name="HIGHWAY_SECONDARY"/>
-		<type name="HIGHWAY_TERTIARY"/>
-		<type name="BUILDING"/>
+		<type name="WATER"/>
 	</zoomlevel>
 	<zoomlevel level="2">
-		<type name="SPORT"/>
-		<type name="PARK"/>
-		
+		<type name="HIGHWAY_PRIMARY"/>
+		<type name="HIGHWAY_TRUNK"/>
 	</zoomlevel>
-	<zoomlevel level="3">
-		<type name="HIGHWAY_RESIDENTAL"/>
-	<type name="WAY_UNDEFINED"/>
-</zoomlevel>
+	<zoomlevel level="3">	
+	</zoomlevel>
 	<zoomlevel level="4">
-		
 	</zoomlevel>
 	<zoomlevel level="5">
-		<type name="WAY_SERVICE"/>
 	</zoomlevel>
 	<zoomlevel level="6">
-		
 	</zoomlevel>
 	<zoomlevel level="7">
-		
+		<type name="GRASS"/>
+		<type name="WOOD"/>
 	</zoomlevel>
 	<zoomlevel level="8">
-		
 	</zoomlevel>
 	<zoomlevel level="9">
-		
+		<type name="PARK"/>
+		<type name="CEMETERY"/>
+		<type name="CONSTRUCTION"/>
+		<type name="HIGHWAY_UNDEFINED"/>
+		<type name="HIGHWAY_SECONDARY"/>
+		<type name="HIGHWAY_TERTIARY"/>
+		<type name="LIGHT_RAIL"/>
+		<type name="RAILWAY"/>
+		<type name="PLATFORM"/>
+		<type name="SCRUB"/>
 	</zoomlevel>
 	<zoomlevel level="10">
-		
 	</zoomlevel>
 	<zoomlevel level="11">
-		
+		<type name="SPORT"/>
+		<type name="HIGHWAY_RESIDENTIAL"/>
+		<type name="HIGHWAY_UNCLASSIFIED"/>
 	</zoomlevel>
 	<zoomlevel level="12">
-		
+		<type name="BUILDING"/>
 	</zoomlevel>
 	<zoomlevel level="13">
-		<type name="HIGHWAY_CYCLEWAY"/>
+		<type name="HIGHWAY_PATH"/>
+		<type name="PARKING"/>
 	</zoomlevel>
 	<zoomlevel level="14">
-		
 	</zoomlevel>
 	<zoomlevel level="15">
+		<type name="HIGHWAY_SERVICE"/>
+		<type name="HIGHWAY_CYCLEWAY"/>
 		<type name="HIGHWAY_FOOTWAY"/>
 	</zoomlevel>
 	<zoomlevel level="16">
-		
 	</zoomlevel>
 	<zoomlevel level="17">
-		
 	</zoomlevel>
 	<zoomlevel level="18">
-		
 	</zoomlevel>
 	<zoomlevel level="19">
-		
 	</zoomlevel>
 	<zoomlevel level="20">
-		
 	</zoomlevel>
 </zoomvalues>

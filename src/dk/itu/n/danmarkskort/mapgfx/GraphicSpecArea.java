@@ -3,6 +3,8 @@ package dk.itu.n.danmarkskort.mapgfx;
 import java.awt.BasicStroke;
 import java.awt.Graphics2D;
 
+import dk.itu.n.danmarkskort.DKConstants;
+
 public class GraphicSpecArea extends WaytypeGraphicSpec {
 	
 	public String toString() {
@@ -11,7 +13,7 @@ public class GraphicSpecArea extends WaytypeGraphicSpec {
 	
 	public void transformOutline(Graphics2D graphics) {
 		super.transformOutline(graphics);
-		BasicStroke stroke = new BasicStroke(OUTLINE_WIDTH);
+		BasicStroke stroke = new BasicStroke(DKConstants.LINE_OUTLINE_WIDTH);
 		graphics.setStroke(stroke);
 	}
 }
