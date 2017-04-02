@@ -3,7 +3,10 @@ package dk.itu.n.danmarkskort.gui.menu;
 import javax.swing.*;
 
 import dk.itu.n.danmarkskort.Main;
+import dk.itu.n.danmarkskort.Util;
+import dk.itu.n.danmarkskort.address.AddressController;
 import dk.itu.n.danmarkskort.gui.Style;
+import dk.itu.n.danmarkskort.models.Region;
 
 import java.awt.*;
 import javax.swing.border.TitledBorder;
@@ -11,6 +14,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.nio.file.Files;
 import java.awt.event.ActionEvent;
 
 public class LoadPage extends JPanel  {
@@ -64,8 +68,8 @@ public class LoadPage extends JPanel  {
         gbc_lblCurrentMap.gridx = 0;
         gbc_lblCurrentMap.gridy = 1;
         panelCenter.add(lblCurrentMap, gbc_lblCurrentMap);
-        
-        lblCurrentmapfilename = new JLabel("CurrentMapFileName");
+
+        lblCurrentmapfilename = new JLabel(Main.osmParser.getFileName());
         GridBagConstraints gbc_lblCurrentmapfilename = new GridBagConstraints();
         gbc_lblCurrentmapfilename.anchor = GridBagConstraints.WEST;
         gbc_lblCurrentmapfilename.insets = new Insets(0, 0, 5, 0);
@@ -81,7 +85,11 @@ public class LoadPage extends JPanel  {
         gbc_lblFilesize.gridy = 2;
         panelCenter.add(lblFilesize, gbc_lblFilesize);
         
-        lblCurrentmapfilesize = new JLabel("CurrentMapFileSize");
+        long fileSize = Util.getFileSize(new File(Main.osmParser.getFileName()));
+        long kb = fileSize/1024;
+		long mb = kb/1024;
+        
+        lblCurrentmapfilesize = new JLabel(mb + " MB");
         GridBagConstraints gbc_lblCurrentmapfilesize = new GridBagConstraints();
         gbc_lblCurrentmapfilesize.anchor = GridBagConstraints.WEST;
         gbc_lblCurrentmapfilesize.insets = new Insets(0, 0, 5, 0);
@@ -100,7 +108,15 @@ public class LoadPage extends JPanel  {
         gbc_lblMapBounds.gridy = 3;
         panelCenter.add(lblMapBounds, gbc_lblMapBounds);
         
-        lblCurrentmapbounds = new JLabel("CurrentMapBounds");
+        Region bounds = Main.model.getMapRegion();
+        
+        String format = "%.2f";
+        double latKm = -bounds.getHeight()*110.574;
+        double lonKm = bounds.getWidth()*111.320*Math.cos(Math.toRadians(-bounds.y2));
+        double squareKm = latKm*lonKm;
+        lblCurrentmapbounds = new JLabel("<html><body>Lontitude: " + String.format(format, bounds.x1) + " - " + String.format(format, bounds.x2) + 
+        		"<br>Latitude: " + String.format(format, -bounds.y1) + " - " + String.format(format, -bounds.y2) + 
+        		"<br>Square Kilometres: " + String.format(format, squareKm) + " km²</body></html>");
         GridBagConstraints gbc_lblCurrentmapbounds = new GridBagConstraints();
         gbc_lblCurrentmapbounds.anchor = GridBagConstraints.WEST;
         gbc_lblCurrentmapbounds.insets = new Insets(0, 0, 5, 0);
@@ -116,7 +132,7 @@ public class LoadPage extends JPanel  {
         gbc_lblAddressesFound.gridy = 4;
         panelCenter.add(lblAddressesFound, gbc_lblAddressesFound);
         
-        lblCurrentmapaddressesfound = new JLabel("CurrentMapAddressesFound");
+        lblCurrentmapaddressesfound = new JLabel("" + AddressController.getInstance().getAddressSize());
         GridBagConstraints gbc_lblCurrentmapaddressesfound = new GridBagConstraints();
         gbc_lblCurrentmapaddressesfound.anchor = GridBagConstraints.WEST;
         gbc_lblCurrentmapaddressesfound.insets = new Insets(0, 0, 5, 0);
@@ -136,18 +152,11 @@ public class LoadPage extends JPanel  {
 		
 		if (fcVal == JFileChooser.APPROVE_OPTION) {
 			File file = fc.getSelectedFile();
-			System.out.println("Load New Map File:"+file);
-			Main.map.eraseMap(true);
 			Main.startup(new String[]{file.getAbsolutePath()});
-			Main.map.eraseMap(false);
+			Main.window.add(Main.createFrameComponents());
 			Main.window.revalidate();
 			Main.window.repaint();
 			Main.map.zoomToBounds();
-			/* 1. Parse the new data, replacing all the old. Should loading screen be run again?
-			 * 2. If replacing is not an option, delete the old data first using some reset methods.
-			 * 3. Reset canvas, perhaps just drawing a square to erase everything.
-			 * 4. ??
-			 * 5. Profit. */
         } else {
         }
 

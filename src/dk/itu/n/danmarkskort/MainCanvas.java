@@ -32,8 +32,8 @@ public class MainCanvas extends JPanel {
     	g2d.fillRect(5, 10, 110, 128);
     	g2d.setColor(Color.BLACK);
     	g2d.drawRect(5, 10, 110, 128);
-    	g2d.drawString("x1: " + Main.map.getGeographicalRegion().x1 + ", y1: " + Main.map.getGeographicalRegion().y1, 10, 30);
-    	g2d.drawString("x2: " + Main.map.getGeographicalRegion().x2 + ", y2: " + Main.map.getGeographicalRegion().y2, 10, 45);
+    	g2d.drawString("x1: " + String.format("%.4f", Main.map.getGeographicalRegion().x1) + ", y1: " + String.format("%.4f", Main.map.getGeographicalRegion().y1), 10, 30);
+    	g2d.drawString("x2: " + String.format("%.4f", Main.map.getGeographicalRegion().x2) + ", y2: " + String.format("%.4f", Main.map.getGeographicalRegion().y2), 10, 45);
     	g2d.drawString("Zoom: " + String.format("%.01f", Main.map.getZoom()).replace(",", "."), 10, 60);
     	g2d.drawString("Shapes drawn: " + Main.map.shapesDrawn, 10, 75);
     }

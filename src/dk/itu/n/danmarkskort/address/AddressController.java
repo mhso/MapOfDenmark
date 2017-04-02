@@ -219,4 +219,8 @@ public class AddressController{
 		Main.log("Addresses (accepted): " + addresses.size());
 		Main.log("Addresses (not accepted): " + addressesNotAccepted.size());
 	}
+	
+	public int getAddressSize() {
+		return addresses.size();
+	}
 }

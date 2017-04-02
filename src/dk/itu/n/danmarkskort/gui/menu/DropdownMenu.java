@@ -28,7 +28,7 @@ public class DropdownMenu extends CustomDropdown {
         loadPage = new LoadPage();
         savePage = new SavePage();
         settingsPage = new SettingsPage();
-        mapLayersPage = new MapLayersPage();
+        mapLayersPage = new MapLayersPage(this);
         aboutUsPage = new AboutUsPage();
 
         wrapper = new JPanel(new GridBagLayout());

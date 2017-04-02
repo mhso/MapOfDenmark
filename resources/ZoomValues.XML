@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <zoomvalues version="0.2">
 	<zoomlevel level="1">
+		<type name="COASTLINE"/>
 		<type name="RESIDENTIAL"/>
-		<type name="GRASS"/>
 		<type name="FARMLAND"/>
 		<type name="FOREST"/>
 		<type name="HIGHWAY_MOTORWAY"/>
+		<type name="WATER"/>
 	</zoomlevel>
 	<zoomlevel level="2">
+		<type name="HIGHWAY_PRIMARY"/>
 		<type name="HIGHWAY_TRUNK"/>
 	</zoomlevel>
 	<zoomlevel level="3">	
@@ -19,13 +21,13 @@
 	<zoomlevel level="6">
 	</zoomlevel>
 	<zoomlevel level="7">
+		<type name="GRASS"/>
 	</zoomlevel>
 	<zoomlevel level="8">
 	</zoomlevel>
 	<zoomlevel level="9">
 		<type name="PARK"/>
 		<type name="WAY_UNDEFINED"/>
-		<type name="HIGHWAY_PRIMARY"/>
 		<type name="HIGHWAY_SECONDARY"/>
 		<type name="HIGHWAY_TERTIARY"/>
 	</zoomlevel>
@@ -37,13 +39,14 @@
 		<type name="WAY_SERVICE"/>
 	</zoomlevel>
 	<zoomlevel level="12">
+		<type name="BUILDING"/>
 	</zoomlevel>
 	<zoomlevel level="13">
-	</zoomlevel>
+		<type name="WAY_PATH"/>
+</zoomlevel>
 	<zoomlevel level="14">
 	</zoomlevel>
 	<zoomlevel level="15">
-		<type name="BUILDING"/>
 		<type name="HIGHWAY_CYCLEWAY"/>
 		<type name="HIGHWAY_FOOTWAY"/>
 	</zoomlevel>

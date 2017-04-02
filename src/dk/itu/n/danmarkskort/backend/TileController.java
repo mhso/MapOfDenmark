@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.EnumMap;
 
 import dk.itu.n.danmarkskort.Main;
+import dk.itu.n.danmarkskort.lightweight.models.ParsedItem;
 import dk.itu.n.danmarkskort.mapgfx.GraphicRepresentation;
 import dk.itu.n.danmarkskort.models.ParsedBounds;
 import dk.itu.n.danmarkskort.models.ParsedObject;
@@ -61,5 +62,10 @@ public class TileController implements OSMParserListener {
 	
 	public ArrayList<ParsedWay> getWaysOfType(WayType type) {
 		return ways.get(type);
+	}
+
+	@Override
+	public void onParsingGotItem(Object parsedItem) {
+		
 	}
 }

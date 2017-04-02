@@ -49,6 +49,11 @@ public class GraphicRepresentationTests {
 	}
 	
 	@Test
+	public void testGraphicLayer() {
+		assertTrue(GraphicRepresentation.getGraphicSpecs(1).get(0).getLayer() > 0);
+	}
+	
+	@Test
 	public void testGraphicLineNotNull() {
 		assertNotNull(GraphicRepresentation.getGraphicSpecs(3).get(0));
 	}

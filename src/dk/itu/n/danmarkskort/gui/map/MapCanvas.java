@@ -68,15 +68,21 @@ public class MapCanvas extends JPanel {
 		List<WaytypeGraphicSpec> wayTypesVisible = getOnScreenGraphicsForCurrentZoom();
 		shapesDrawn = 0;
 		currentGraphics = g2d;
-		for(WaytypeGraphicSpec wayTypeGraphic : wayTypesVisible) {
+
+		// drawing all the outlines, if the current WayTypeGraphicSpec has one
+		for (WaytypeGraphicSpec wayTypeGraphic : wayTypesVisible) {
 			currentWTGSpec = wayTypeGraphic;
-			KDTree kdTree = Main.model.enumMapKD.get(wayTypeGraphic.getWayType());
-			if(kdTree == null) {
-				continue;
+			if(currentWTGSpec.getOuterColor() != null) {
+				KDTree kdTree = Main.model.enumMapKD.get(wayTypeGraphic.getWayType());
+				if (kdTree == null) {
+					continue;
+				}
+				outline = true;
+				kdTree.getShapes(getGeographicalRegion(), this);
 			}
-			outline = true;
-			kdTree.getShapes(getGeographicalRegion(), this);
 		}
+
+		// draw or fill for all the different WaytypeGraphicsSpecs
 		for(WaytypeGraphicSpec wayTypeGraphic : wayTypesVisible) {
 			currentWTGSpec = wayTypeGraphic;
 			KDTree kdTree = Main.model.enumMapKD.get(wayTypeGraphic.getWayType());
@@ -94,7 +100,6 @@ public class MapCanvas extends JPanel {
 				currentWTGSpec.transformOutline(currentGraphics);
 				if (currentWTGSpec instanceof GraphicSpecLine) currentGraphics.draw(shape);
 				else if (currentWTGSpec instanceof GraphicSpecArea) currentGraphics.fill(shape);
-				shapesDrawn++;
 			}
 		} else {
 			for(Shape shape : shapes) {
