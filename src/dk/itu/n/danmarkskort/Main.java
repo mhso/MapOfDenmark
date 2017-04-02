@@ -18,7 +18,7 @@ public class Main {
 	public final static String APP_VERSION = "0.4";
 	public final static boolean debug = true;
 	public final static boolean production = false;
-
+	
 	public static OSMParser osmParser;
 	public static TileController tileController;
 	public static JFrame window;
@@ -27,6 +27,7 @@ public class Main {
 	public static MainCanvas mainPanel;
 
 	public final static boolean lightweight = true;
+	public final static boolean buffered = false;
 	
 	public static void main(String[] args) {
         startup(args);
@@ -38,7 +39,6 @@ public class Main {
 		if(window != null) window.getContentPane().removeAll();
 		if(lightweight) {
 			osmParser = new OSMParser();
-			System.out.println(osmParser.hashCode());
 			model = new LightWeightParser(osmParser);
 			GraphicRepresentation.main(new String[]{"resources/ThemeBasic.XML"});
 			prepareParser(args);
