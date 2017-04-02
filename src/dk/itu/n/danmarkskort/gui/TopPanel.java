@@ -227,12 +227,12 @@ public class TopPanel extends JPanel {
             	char charAtEnd = text.charAt(text.length()-1);
             	int countSameCharAtPos = 0;
             	for(String str : dropSuggestionsList) {
-            		//if(str.charAt(text.length()-1) == charAtEnd) countSameCharAtPos++;
+            		if(str.charAt(text.length()-1) == charAtEnd) countSameCharAtPos++;
 //            		System.out.println("Char compare: " + str.charAt(text.length()-1) + " = " + charAtEnd);
             	}
             	
             	
-//            	if(countSameCharAtPos == 0) 
+            	if(countSameCharAtPos == 0) 
             		dropSuggestionsList = SearchController.getInstance().getSearchFieldSuggestions(text);
             	if(countSameCharAtPos == 0) System.out.println("refresh list");
             	//System.out.println("countSameCharAtPos: " + countSameCharAtPos);

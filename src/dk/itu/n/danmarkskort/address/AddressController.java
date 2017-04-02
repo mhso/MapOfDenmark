@@ -69,6 +69,11 @@ public class AddressController{
 		List<String> result = new ArrayList<String>();
 		List<String> resultLast = new ArrayList<String>();
 		//System.out.println("searchSuggestions: "+addrBuild.toString());
+		Address addr = AddressSearchPredicates.addressEquals(addresses, addrBuild);
+		if(addr != null) {
+			result.add(addr.toStringShort());
+			return result;
+		}
 		
 		//Rebuild search list
 		if(addrBuild != null){
@@ -84,20 +89,18 @@ public class AddressController{
 							AddressSearchPredicates.streetStartsWith(addrBuild.getStreet()) , limitAmountOfResults));
 		}
 
-		
 			// Find suggestion from street and housenumber
 			if(addrBuild.getHousenumber() != null){
-				result = (AddressSearchPredicates.filterToStringShort(searchList, 
-						AddressSearchPredicates.streetEqualsHousenumberStartsWith(addrBuild) , limitAmountOfResults));
+				result = AddressSearchPredicates.filterToStringShort(searchList, 
+						AddressSearchPredicates.streetEqualsHousenumberStartsWith(addrBuild) , limitAmountOfResults);
 				
-				resultLast = result;
-				result = (AddressSearchPredicates.filterToStringShort(searchList, 
-							AddressSearchPredicates.streetHousenumberEquals(addrBuild) , limitAmountOfResults));
+				result = AddressSearchPredicates.filterToStringShort(searchList, 
+							AddressSearchPredicates.streetHousenumberEquals(addrBuild) , limitAmountOfResults);
 				result.addAll(resultLast);
 			}
 			
 			// Find suggestion from postcode
-			if(result.size() == 0 && addrBuild.getPostcode() != null){
+			if(addrBuild.getPostcode() != null){
 				result.addAll(AddressSearchPredicates.filterToStringShort(searchList, 
 						AddressSearchPredicates.postcodeStartsWith(addrBuild) , limitAmountOfResults));
 				
@@ -106,9 +109,7 @@ public class AddressController{
 			}
 			
 			// If nothing was found, look for misspelling
-			// Find suggestion from street and housenumber, accept 0-1 mistakes in street and housenumber input
-		if (result.size() == 0) {
-			
+			// Find suggestion from street and housenumber, accept 0-1 mistakes in street and housenumber input	
 			// Find suggestion from street, accept 0-1 mistakes in street input
 			if (result.size() == 0 && addrBuild != null && addrBuild.getStreet() != null) {
 				result.addAll(AddressSearchPredicates.filterToStringShort(addresses, 
@@ -131,8 +132,6 @@ public class AddressController{
 							AddressSearchPredicates.streetHousenumberLevenshteinDistance(addrBuild,1,4,-1,2) , limitAmountOfResults));
 				}
 			}
-			
-		}
 		
 		Collections.sort(result, String.CASE_INSENSITIVE_ORDER);
 		// Remove duplicates and return
