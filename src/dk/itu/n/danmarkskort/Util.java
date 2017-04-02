@@ -3,9 +3,12 @@ package dk.itu.n.danmarkskort;
 import java.awt.Dimension;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.LineNumberReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Map;
@@ -136,6 +139,31 @@ public class Util {
 		double y = (lat / denmark_height) * -480;
 		
 		return new Point2D.Double(x, y);
+	}
+	
+	public static boolean writeObjectToFile(Object object, String filename) {
+		try {
+			FileOutputStream fout = new FileOutputStream(filename);
+			ObjectOutputStream oos = new ObjectOutputStream(fout);
+			oos.writeObject(object);
+			oos.close();
+			return true;
+		} catch(Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	public static Object readObjectFromFile(String filename) {
+		try {
+			FileInputStream fout = new FileInputStream(filename);
+			ObjectInputStream oos = new ObjectInputStream(fout);
+			Object object = oos.readObject();
+			oos.close();
+			return object;
+		} catch(Exception e) {
+			return null;
+		}
 	}
 	
 }
