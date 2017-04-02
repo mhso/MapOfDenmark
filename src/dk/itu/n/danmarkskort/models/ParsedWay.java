@@ -62,9 +62,9 @@ public class ParsedWay extends ParsedObject {
 		} else if("coastline".equals(attributes.get("natural"))) {
 			type = WayType.COASTLINE;
 		} else if(attributes.containsKey("highway")) {
-			if(attributes.get("highway").equals("track")) 			type = WayType.WAY_TRACK;
-			else if(attributes.get("highway").equals("path")) 		type = WayType.WAY_PATH;
-			else if(attributes.get("highway").equals("service")) 	type = WayType.WAY_SERVICE;
+			if(attributes.get("highway").equals("track")) 			type = WayType.HIGHWAY_TRACK;
+			else if(attributes.get("highway").equals("path")) 		type = WayType.HIGHWAY_PATH;
+			else if(attributes.get("highway").equals("service")) 	type = WayType.HIGHWAY_SERVICE;
 			else if(attributes.get("highway").equals("tertiary"))	type = WayType.HIGHWAY_TERTIARY;
 			else if(attributes.get("highway").equals("secondary"))	type = WayType.HIGHWAY_SECONDARY;
 			else if(attributes.get("highway").equals("primary"))	type = WayType.HIGHWAY_PRIMARY;
@@ -75,7 +75,7 @@ public class ParsedWay extends ParsedObject {
 			else if(attributes.get("highway").equals("steps"))		type = WayType.HIGHWAY_STEPS;
 			else if(attributes.get("highway").equals("motorway"))	type = WayType.HIGHWAY_MOTORWAY;
 			else if(attributes.get("highway").equals("trunk"))		type = WayType.HIGHWAY_TRUNK;
-			else type = WayType.WAY_UNDEFINED;
+			else type = WayType.HIGHWAY_UNDEFINED;
 		}
 		else if("ferry".equals(attributes.get("route"))) {
 			type = WayType.ROUTE_FERRY;
