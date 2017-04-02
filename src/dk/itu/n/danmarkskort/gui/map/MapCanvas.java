@@ -67,8 +67,11 @@ public class MapCanvas extends JPanel {
 			return;
 		}
 		
-		if(imageManager != null) imageManager.draw(g2d);
-		//drawMapShapes(g2d);
+		if(Main.buffered) {
+			if(imageManager != null) imageManager.draw(g2d);
+		} else {
+			drawMapShapes(g2d);
+		}
 		
 	}
 	
@@ -174,7 +177,7 @@ public class MapCanvas extends JPanel {
 	
 	public void pan(double dx, double dy) {
 		transform.preConcatenate(AffineTransform.getTranslateInstance(dx, dy));
-		if(imageManager != null) imageManager.pan(dx, dy);
+		if(Main.buffered && imageManager != null) imageManager.pan(dx, dy);
 		repaint();
 	}
 	
@@ -226,7 +229,7 @@ public class MapCanvas extends JPanel {
 			transform.preConcatenate(AffineTransform.getScaleInstance(scaleBefore/scaleAfter, scaleBefore/scaleAfter));
 		}
 		
-		if(imageManager != null) {
+		if(Main.buffered && imageManager != null) {
 			zero = new Point2D.Double(transform.getTranslateX(), transform.getTranslateY());
 			imageManager.forceFullRepaint();
 		}
@@ -266,8 +269,10 @@ public class MapCanvas extends JPanel {
 		Region mapRegion = Main.model.getMapRegion();
 		purePan(-mapRegion.x1, -mapRegion.y2);
 		zoom(getWidth() / (mapRegion.x2 - mapRegion.x1));
-		zero = new Point2D.Double(transform.getTranslateX(), transform.getTranslateY());
-		imageManager = new BufferedMapManager();
+		if(Main.buffered) {
+			zero = new Point2D.Double(transform.getTranslateX(), transform.getTranslateY());
+			imageManager = new BufferedMapManager();	
+		}
 	}
 
 }

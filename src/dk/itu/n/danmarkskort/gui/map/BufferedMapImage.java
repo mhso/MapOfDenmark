@@ -10,6 +10,7 @@ import dk.itu.n.danmarkskort.Main;
 public class BufferedMapImage extends BufferedImage {
 
 	public Point pos;
+	@SuppressWarnings("unused")
 	private BufferedMapManager manager;
 	
 	public BufferedMapImage(BufferedMapManager manager, Point pos) {
@@ -21,8 +22,6 @@ public class BufferedMapImage extends BufferedImage {
 	public void render() {
 		Point2D currentPan = Main.map.getCurrentPan();
 		Main.map.purePanToTile(getPosition());
-		Main.log(Main.map.getTransform().getTranslateX()/Main.map.getZoomRaw() - Main.map.getZero().getX());
-		Main.log(Main.map.getTransform().getTranslateY()/Main.map.getZoomRaw() - Main.map.getZero().getY());
 		Main.map.drawMapShapes((Graphics2D) getGraphics());
 		Main.map.purePanToPosition(currentPan);
 	}

@@ -1,10 +1,8 @@
 package dk.itu.n.danmarkskort.gui.map;
 
-import java.awt.EventQueue;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.Point2D;
 import java.util.HashMap;
 
 import dk.itu.n.danmarkskort.Main;
