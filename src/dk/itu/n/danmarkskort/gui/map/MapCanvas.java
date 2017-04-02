@@ -4,6 +4,7 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
@@ -43,9 +44,13 @@ public class MapCanvas extends JPanel {
 	private WaytypeGraphicSpec currentWTGSpec;
 	private boolean outline;
 	private Graphics2D currentGraphics;
-
+	
+	private BufferedMapManager imageManager = null;
+	private Point2D zero;
+	
 	public MapCanvas() {
 		new MapMouseController(this);
+		setDoubleBuffered(true);
 	}
 
 	protected void paintComponent(Graphics _g) {
@@ -62,6 +67,15 @@ public class MapCanvas extends JPanel {
 			return;
 		}
 		
+		if(Main.buffered) {
+			if(imageManager != null) imageManager.draw(g2d);
+		} else {
+			drawMapShapes(g2d);
+		}
+		
+	}
+	
+	public void drawMapShapes(Graphics2D g2d) {
 		g2d.setTransform(transform);
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		drawMapRegion(g2d);
@@ -163,7 +177,26 @@ public class MapCanvas extends JPanel {
 	
 	public void pan(double dx, double dy) {
 		transform.preConcatenate(AffineTransform.getTranslateInstance(dx, dy));
+		if(Main.buffered && imageManager != null) imageManager.pan(dx, dy);
 		repaint();
+	}
+	
+	public void purePan(double dx, double dy) { //Only pans map temporary without automatic repaint.
+		transform.preConcatenate(AffineTransform.getTranslateInstance(dx, dy));
+	}
+	
+	public void purePanToTile(Point tilePosition) {
+		transform.preConcatenate(AffineTransform.getTranslateInstance(-transform.getTranslateX(), -transform.getTranslateY()));
+		transform.preConcatenate(AffineTransform.getTranslateInstance(zero.getX() + -tilePosition.getX() * getWidth(), zero.getY() + -tilePosition.getY() * getHeight()));
+	}
+	
+	public void purePanToPosition(Point2D position) {
+		transform.preConcatenate(AffineTransform.getTranslateInstance(-transform.getTranslateX(), -transform.getTranslateY()));
+		transform.preConcatenate(AffineTransform.getTranslateInstance(position.getX(), position.getY()));
+	}
+	
+	public Point2D getCurrentPan() {
+		return new Point2D.Double(transform.getTranslateX(), transform.getTranslateY());
 	}
 
 	public void update(Observable o, Object arg) {
@@ -195,6 +228,11 @@ public class MapCanvas extends JPanel {
 		else if(getZoom() < 1) {
 			transform.preConcatenate(AffineTransform.getScaleInstance(scaleBefore/scaleAfter, scaleBefore/scaleAfter));
 		}
+		
+		if(Main.buffered && imageManager != null) {
+			zero = new Point2D.Double(transform.getTranslateX(), transform.getTranslateY());
+			imageManager.forceFullRepaint();
+		}
 		repaint();
 	}
 	
@@ -217,17 +255,24 @@ public class MapCanvas extends JPanel {
 		Region view = getGeographicalRegion();
 		double zoom = Math.floor(Math.log(denmarkWidth/view.getWidth())*2.5);
 		return zoom;
-//		return ((Math.sqrt(getZoomRaw()) - 80) / 500) * MAX_ZOOM + 3.4;
 	}
 	
 	public double getZoomRaw() {
 		return transform.getScaleX();
 	}
 
+	public Point2D getZero() {
+		return zero;
+	}
+	
 	public void zoomToBounds() {
 		Region mapRegion = Main.model.getMapRegion();
-		pan(-mapRegion.x1, -mapRegion.y2);
+		purePan(-mapRegion.x1, -mapRegion.y2);
 		zoom(getWidth() / (mapRegion.x2 - mapRegion.x1));
+		if(Main.buffered) {
+			zero = new Point2D.Double(transform.getTranslateX(), transform.getTranslateY());
+			imageManager = new BufferedMapManager();	
+		}
 	}
 
 }
