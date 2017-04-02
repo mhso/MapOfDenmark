@@ -32,7 +32,6 @@ public class LightWeightParser extends SAXAdapter {
     public HashMap<Long, ParsedItem> temporaryWayReferences;
     public HashMap<Long, ParsedItem> temporaryRelationReferences;
 
-    // bør efter endt OSM indlæsning omdanne alle ArrayLists til KD-træer
     public EnumMap<WayType, ArrayList<ParsedItem>> enumMap;
     public EnumMap<WayType, KDTree> enumMapKD;
 
@@ -100,7 +99,7 @@ public class LightWeightParser extends SAXAdapter {
         for(WayType wt : WayType.values()) count += enumMap.get(wt).size();
         Main.log("Ways and Relations saved: " + count);
 
-        Main.log("Converting WayType ArrayLists to KDTrees");
+        Main.log("Splitting data into KDTrees");
 
         enumMapKD = new EnumMap<>(WayType.class);
         for(WayType wt : WayType.values()) {
@@ -218,16 +217,10 @@ public class LightWeightParser extends SAXAdapter {
             	for(OSMParserListener listener : parser.parserListeners) listener.onParsingGotItem(way);
             }
             else if(relation != null) {
-                /*if(waytype == WayType.COASTLINE) {
-                    ParsedCoastline coastline = (ParsedCoastline) relation;
-                    enumMap.get(waytype).add(coastline);
-                }
-                else {*/
-                    enumMap.get(waytype).add(relation);
-                    for(OSMParserListener listener : parser.parserListeners) listener.onParsingGotItem(relation);
-                /*}*/
+                enumMap.get(waytype).add(relation);
+                for(OSMParserListener listener : parser.parserListeners) listener.onParsingGotItem(relation);
             }
-            else if(node != null) ;// do something eventually
+            else if(node != null) ; // her skal der ske noget hvis vi vil gemme andre single-node points end addresser
         }
 
         if(way != null) {
