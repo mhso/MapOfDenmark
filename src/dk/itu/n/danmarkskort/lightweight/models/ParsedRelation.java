@@ -1,7 +1,5 @@
 package dk.itu.n.danmarkskort.lightweight.models;
 
-import dk.itu.n.danmarkskort.Main;
-
 import java.awt.*;
 import java.awt.geom.Path2D;
 import java.util.ArrayList;
@@ -11,7 +9,7 @@ public class ParsedRelation extends ParsedItem {
 
     private long id;
     private ArrayList<ParsedNode> nodes;
-    public ArrayList<ParsedItem> items;
+    private ArrayList<ParsedItem> items;
     private Shape shape;
 
     public ParsedRelation(long id) { this.id = id; }
@@ -24,7 +22,11 @@ public class ParsedRelation extends ParsedItem {
 
     public ArrayList<ParsedNode> getNodes() {
         ArrayList<ParsedNode> nodeList = new ArrayList<>();
-        for(ParsedItem item : items) nodeList.addAll(item.getNodes());
+        if(items != null) {
+            for(ParsedItem item : items) nodeList.addAll(item.getNodes());
+        } else if(nodes != null) {
+            return nodes;
+        }
         return nodeList;
     }
 

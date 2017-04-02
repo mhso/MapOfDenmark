@@ -92,7 +92,7 @@ public class MapLayersPage extends JPanel {
         buttonBike.addActionListener(e -> {
         	GraphicRepresentation.addToOverriddenSpecs(WayType.HIGHWAY_FOOTWAY);
         	GraphicRepresentation.addToOverriddenSpecs(WayType.HIGHWAY_CYCLEWAY);
-        	GraphicRepresentation.addToOverriddenSpecs(WayType.WAY_TRACK);
+        	GraphicRepresentation.addToOverriddenSpecs(WayType.HIGHWAY_TRACK);
         	Main.map.repaint();
         });
         buttonBike.setOpaque(false);
