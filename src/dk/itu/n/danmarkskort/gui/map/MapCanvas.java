@@ -56,6 +56,11 @@ public class MapCanvas extends JPanel {
 	protected void paintComponent(Graphics _g) {
 		drawMap((Graphics2D)_g);
 	}
+	
+	public void forceRepaint() {
+		zoomChanged = true;
+		repaint();
+	}
 
 	public AffineTransform getTransform() {
 		return transform;
@@ -127,8 +132,8 @@ public class MapCanvas extends JPanel {
 
 	public List<WaytypeGraphicSpec> getOnScreenGraphicsForCurrentZoom() {
 		List<WaytypeGraphicSpec> wayTypeSpecs = GraphicRepresentation.getGraphicSpecs((int)getZoom());
-		if(wayTypeSpecs == null) return new ArrayList<WaytypeGraphicSpec>();
 		zoomChanged = false;
+		if(wayTypeSpecs == null) return new ArrayList<WaytypeGraphicSpec>();
 		return wayTypeSpecs;
 	}
 	
