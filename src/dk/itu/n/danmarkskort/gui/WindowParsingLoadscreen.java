@@ -22,6 +22,7 @@ import javax.swing.border.LineBorder;
 import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.Util;
 import dk.itu.n.danmarkskort.backend.OSMParserListener;
+import dk.itu.n.danmarkskort.lightweight.models.ParsedItem;
 import dk.itu.n.danmarkskort.models.ParsedObject;
 import dk.itu.n.danmarkskort.models.ParsedWay;
 
@@ -108,14 +109,6 @@ public class WindowParsingLoadscreen extends JFrame implements OSMParserListener
 	}
 
 	@Override
-	public void onParsingGotObject(ParsedObject parsedObject) {
-		if(showObjectString) {
-			labelStatus.setText(parsedObject.toString());
-			showObjectString = false;
-		}
-	}
-
-	@Override
 	public void onLineCountHundred() {
 		lineCountHundreds++;
 		setProgressPercent();
@@ -131,5 +124,13 @@ public class WindowParsingLoadscreen extends JFrame implements OSMParserListener
 	public void onWayLinked(ParsedWay way) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void onParsingGotItem(Object parsedItem) {
+		if(showObjectString) {
+			labelStatus.setText(parsedItem.toString());
+			showObjectString = false;
+		}
 	}
 }

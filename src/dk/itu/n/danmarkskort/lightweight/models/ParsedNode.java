@@ -20,4 +20,8 @@ public class ParsedNode {
     public float getLon() { return lon; }
     public float getLat() { return lat; }
     public float[] getPoint() { return new float[]{lon, lat}; }
+    
+    public String toString() {
+    	return "ParsedNode [" + "key=" + key + ", lon=" + lon + ", lat=" + lat + "]";
+    }
 }

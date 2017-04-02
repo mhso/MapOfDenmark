@@ -55,4 +55,8 @@ public class ParsedWay extends ParsedItem{
         if(nodes != null && nodes.size() > 0) return nodes.get(0).getLat();
         return -1;
     }
+    
+    public String toString() {
+    	return "ParsedWay [" + "id=" + id + ", firstLon=" + getFirstLon() + ", firstLat=" + getFirstLat() + ", nodeAmount=" + nodes.size() + "]";
+    }
 }

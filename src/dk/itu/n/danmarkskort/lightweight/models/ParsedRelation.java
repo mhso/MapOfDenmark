@@ -68,4 +68,11 @@ public class ParsedRelation extends ParsedItem {
         else if(items != null) return items.get(0).getFirstLat();
         return -1;
     }
+    
+    public String toString() {
+    	int nodeAmount = 0;
+    	if(nodes != null) nodeAmount = nodes.size();
+    	return "ParsedRelation [" + "id=" + id 	+ ", firstLon=" + getFirstLon() + ", firstLat=" 	+ getFirstLat() + ", nodeAmount=" + nodeAmount + 
+    			", itemAmount=" + items.size() + "]";
+    }
 }

@@ -197,7 +197,7 @@ public class OSMNodeHandler implements ContentHandler {
 				ParsedWay way = (ParsedWay)lastParsedObject;
 				if(way.isCompletelyLinked()) for(OSMParserListener listener : parser.parserListeners) listener.onWayLinked(way);
 			} else {
-				for(OSMParserListener listener : parser.parserListeners) listener.onParsingGotObject(lastParsedObject);
+				
 			}
 			currentParsedObjects.remove(lastParsedObject);
 		}

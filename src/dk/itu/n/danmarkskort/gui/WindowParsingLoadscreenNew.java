@@ -20,6 +20,7 @@ import java.awt.Dimension;
 import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.Util;
 import dk.itu.n.danmarkskort.backend.OSMParserListener;
+import dk.itu.n.danmarkskort.lightweight.models.ParsedItem;
 import dk.itu.n.danmarkskort.models.ParsedObject;
 import dk.itu.n.danmarkskort.models.ParsedWay;
 
@@ -104,9 +105,9 @@ public class WindowParsingLoadscreenNew extends JFrame implements OSMParserListe
 	}
 
 	@Override
-	public void onParsingGotObject(ParsedObject parsedObject) {
+	public void onParsingGotItem(Object parsedItem) {
 		if(showObjectString) {
-			labelStatus.setText(parsedObject.toString());
+			labelStatus.setText(parsedItem.toString());
 			showObjectString = false;
 		}
 	}
