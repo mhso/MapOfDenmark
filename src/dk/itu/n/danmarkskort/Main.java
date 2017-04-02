@@ -39,7 +39,6 @@ public class Main {
 		if(window != null) window.getContentPane().removeAll();
 		if(lightweight) {
 			osmParser = new OSMParser();
-			System.out.println(osmParser.hashCode());
 			model = new LightWeightParser(osmParser);
 			GraphicRepresentation.main(new String[]{"resources/ThemeBasic.XML"});
 			prepareParser(args);

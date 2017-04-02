@@ -28,7 +28,6 @@ import dk.itu.n.danmarkskort.mapgfx.WaytypeGraphicSpec;
 import dk.itu.n.danmarkskort.models.ParsedBounds;
 import dk.itu.n.danmarkskort.models.ParsedWay;
 import dk.itu.n.danmarkskort.models.Region;
-import dk.itu.n.danmarkskort.models.WayType;
 
 public class MapCanvas extends JPanel {
 
@@ -38,15 +37,16 @@ public class MapCanvas extends JPanel {
 	private boolean antiAlias = true;
 	public int shapesDrawn = 0;
 	private final int MAX_ZOOM = 20;
-	private boolean resetDrawing;
 
-	private WayType currentType;
 	private WaytypeGraphicSpec currentWTGSpec;
 	private boolean outline;
+	private boolean zoomChanged;
 	private Graphics2D currentGraphics;
 	
 	private BufferedMapManager imageManager = null;
 	private Point2D zero;
+
+	private List<WaytypeGraphicSpec> wayTypesVisible;
 	
 	public MapCanvas() {
 		new MapMouseController(this);
@@ -54,7 +54,7 @@ public class MapCanvas extends JPanel {
 	}
 
 	protected void paintComponent(Graphics _g) {
-		if(!resetDrawing) drawMap((Graphics2D)_g);
+		drawMap((Graphics2D)_g);
 	}
 
 	public AffineTransform getTransform() {
@@ -79,7 +79,7 @@ public class MapCanvas extends JPanel {
 		g2d.setTransform(transform);
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		drawMapRegion(g2d);
-		List<WaytypeGraphicSpec> wayTypesVisible = getOnScreenGraphicsForCurrentZoom();
+		if(zoomChanged) wayTypesVisible = getOnScreenGraphicsForCurrentZoom();
 		shapesDrawn = 0;
 		currentGraphics = g2d;
 
@@ -128,6 +128,7 @@ public class MapCanvas extends JPanel {
 	public List<WaytypeGraphicSpec> getOnScreenGraphicsForCurrentZoom() {
 		List<WaytypeGraphicSpec> wayTypeSpecs = GraphicRepresentation.getGraphicSpecs((int)getZoom());
 		if(wayTypeSpecs == null) return new ArrayList<WaytypeGraphicSpec>();
+		zoomChanged = false;
 		return wayTypeSpecs;
 	}
 	
@@ -162,17 +163,6 @@ public class MapCanvas extends JPanel {
 		Region mapRegion = Main.model.getMapRegion();
 		g2d.draw(new Line2D.Double(0, 0, mapRegion.x1, mapRegion.y1));
 		g2d.draw(new Rectangle2D.Double(mapRegion.x1, mapRegion.y1, mapRegion.getWidth(), mapRegion.getHeight()));
-	}
-	
-	public void eraseMap(boolean erase) {
-		resetDrawing = erase;
-		if(resetDrawing) {
-			Graphics g = getGraphics();
-			Color oldColor = g.getColor();
-			g.setColor(getBackground());
-			g.fillRect(0, 0, getWidth(), getHeight());
-			g.setColor(oldColor);
-		}
 	}
 	
 	public void pan(double dx, double dy) {
@@ -218,7 +208,8 @@ public class MapCanvas extends JPanel {
 		}
 	}
 	
-	public void zoom(double factor) {	
+	public void zoom(double factor) {
+		double zoomBefore = getZoom();
 		double scaleBefore = getZoomRaw();
 		transform.preConcatenate(AffineTransform.getScaleInstance(factor, factor));
 		double scaleAfter = getZoomRaw();
@@ -233,6 +224,7 @@ public class MapCanvas extends JPanel {
 			zero = new Point2D.Double(transform.getTranslateX(), transform.getTranslateY());
 			imageManager.forceFullRepaint();
 		}
+		if(zoomBefore != getZoom()) zoomChanged = true;
 		repaint();
 	}
 	
