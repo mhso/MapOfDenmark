@@ -72,7 +72,7 @@ public class MapLayersPage extends JPanel {
         JRadioButton buttonDefault = new JRadioButton("");
         buttonDefault.addActionListener(e -> {
         	GraphicRepresentation.setAllDefault();
-        	Main.map.repaint();
+        	Main.map.forceRepaint();
         });
         buttonDefault.setSelected(true);
         buttonDefault.setOpaque(false);
@@ -93,7 +93,7 @@ public class MapLayersPage extends JPanel {
         	GraphicRepresentation.addToOverriddenSpecs(WayType.HIGHWAY_FOOTWAY);
         	GraphicRepresentation.addToOverriddenSpecs(WayType.HIGHWAY_CYCLEWAY);
         	GraphicRepresentation.addToOverriddenSpecs(WayType.HIGHWAY_TRACK);
-        	Main.map.repaint();
+        	Main.map.forceRepaint();
         });
         buttonBike.setOpaque(false);
         panelBike.add(buttonBike, BorderLayout.EAST);
@@ -114,7 +114,7 @@ public class MapLayersPage extends JPanel {
         	GraphicRepresentation.addToOverriddenSpecs(WayType.HIGHWAY_PRIMARY);
         	GraphicRepresentation.addToOverriddenSpecs(WayType.HIGHWAY_TRUNK);
         	GraphicRepresentation.addToOverriddenSpecs(WayType.HIGHWAY_SECONDARY);
-        	Main.map.repaint();
+        	Main.map.forceRepaint();
         });
         buttonCar.setOpaque(false);
         panelCar.add(buttonCar, BorderLayout.EAST);
@@ -241,7 +241,7 @@ public class MapLayersPage extends JPanel {
 			if(action.equals("default")) GraphicRepresentation.setDefault(wayType);
 			else if(action.equals("override")) GraphicRepresentation.addToOverriddenSpecs(wayType);
 			else if(action.equals("filter")) GraphicRepresentation.setFilteredElement(wayType, true);
-			Main.map.repaint();
+			Main.map.forceRepaint();
 		}	
 	}
 	
