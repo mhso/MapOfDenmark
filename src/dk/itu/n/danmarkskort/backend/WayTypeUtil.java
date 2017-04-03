@@ -1,6 +1,6 @@
-package dk.itu.n.danmarkskort.lightweight;
+package dk.itu.n.danmarkskort.backend;
 
-import dk.itu.n.danmarkskort.models.WayType;
+import dk.itu.n.danmarkskort.newmodels.WayType;
 
 public class WayTypeUtil {
 
@@ -28,7 +28,7 @@ public class WayTypeUtil {
                     case "pedestrian":
                         return WayType.PEDESTRIAN;
                     case "unclassified":
-                        return WayType.HIGHWAY_ROAD;
+                        return WayType.HIGHWAY_UNCLASSIFIED;
                     case "service":
                         return WayType.HIGHWAY_SERVICE;
                     case "driveway":
@@ -39,10 +39,10 @@ public class WayTypeUtil {
                     case "footway":
                     case "bridleway":
                     case "track":
-                    //case "steps":
+                    case "steps":
                         return WayType.HIGHWAY_FOOTWAY;
                     default:
-                        return WayType.WAY_UNDEFINED;
+                        return WayType.HIGHWAY_UNDEFINED;
                 }
             case "building":
                 switch (v) {
@@ -50,6 +50,8 @@ public class WayTypeUtil {
                         return WayType.BUILDING_SCHOOL;
                     case "train_station":
                         return WayType.TRAIN_STATION;
+                    case "roof":
+                        return WayType.ROOF;
                     default:
                         return WayType.BUILDING;
                 }
@@ -61,6 +63,7 @@ public class WayTypeUtil {
                         return WayType.FOREST;
                     case "industrial":
                         return WayType.INDUSTRIAL;
+                    case "recreation_ground":
                     case "grass":
                         return WayType.GRASS;
                     case "retail":
@@ -87,6 +90,8 @@ public class WayTypeUtil {
                         return WayType.COASTLINE;
                     case "scrub":
                         return WayType.SCRUB;
+                    case "wood":
+                        return WayType.WOOD;
                     case "wetland":
                         return WayType.WETLAND;
                     case "sand":
@@ -97,6 +102,8 @@ public class WayTypeUtil {
                 switch(v) {
                     case "light_rail":
                         return WayType.LIGHT_RAIL;
+                    case "platform":
+                        return WayType.PLATFORM;
                 }
                 return oldtype;
             case "man_made":
@@ -122,11 +129,19 @@ public class WayTypeUtil {
                     case "stadium":
                         return WayType.STADIUM;
                     case "park":
+                    case "garden":
                         return WayType.PARK;
                     case "playground":
                         return WayType.PLAYGROUND;
+                    case "track":
                     case "pitch":
-                        return WayType.PITCH;
+                        return WayType.SPORT;
+                }
+                return oldtype;
+            case "amenity":
+                switch(v) {
+                    case "parking":
+                        return WayType.PARKING;
                 }
                 return oldtype;
         }

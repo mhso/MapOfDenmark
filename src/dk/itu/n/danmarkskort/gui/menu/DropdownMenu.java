@@ -4,15 +4,13 @@ import dk.itu.n.danmarkskort.gui.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 public class DropdownMenu extends CustomDropdown {
-
+	
+	private static final long serialVersionUID = 8481689365025322045L;
     private JPanel menuItems, wrapper;
     private JPanel routePage, aboutUsPage, settingsPage, mapLayersPage, loadPage, savePage, pinPointPage;
+
     private GridBagConstraints gbcContainer;
     private JScrollPane contentPane;
     private TopPanel topPanel;
@@ -28,7 +26,7 @@ public class DropdownMenu extends CustomDropdown {
         loadPage = new LoadPage();
         savePage = new SavePage();
         settingsPage = new SettingsPage();
-        mapLayersPage = new MapLayersPage();
+        mapLayersPage = new MapLayersPage(this);
         aboutUsPage = new AboutUsPage();
         pinPointPage = new PinPointPage();
         

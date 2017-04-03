@@ -3,7 +3,7 @@ package dk.itu.n.danmarkskort.mapgfx;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
-import dk.itu.n.danmarkskort.models.WayType;
+import dk.itu.n.danmarkskort.newmodels.WayType;
 
 /**
  * This class is used for storing information about the visual representation of a map element 
@@ -14,6 +14,7 @@ public abstract class WaytypeGraphicSpec implements Comparable<WaytypeGraphicSpe
 	private Color innerColor;
 	private Color outerColor;
 	private int layer;
+	private boolean isFiltered;
 	
 	/**
 	 * Apply the inner line/area attributes of this WaytypeGraphicSpec to a given Graphics2D object.
@@ -66,6 +67,14 @@ public abstract class WaytypeGraphicSpec implements Comparable<WaytypeGraphicSpe
 	
 	public void setOuterColor(Color outerColor) {
 		this.outerColor = outerColor;
+	}
+	
+	public boolean isFiltered() {
+		return isFiltered;
+	}
+	
+	public void setFiltered(boolean filtered) {
+		isFiltered = filtered;
 	}
 	
 	public int compareTo(WaytypeGraphicSpec otherSpec) {

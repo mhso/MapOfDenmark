@@ -38,7 +38,7 @@
 			<layer layer="3"/>
 		</line>
 		<line>
-			<type name="WAY_UNDEFINED"/>
+			<type name="HIGHWAY_UNDEFINED"/>
 			<innercolor color="FFFFFF"/>
 			<lineproperties linewidth="60"/>
 			<layer layer="3"/>
@@ -51,37 +51,51 @@
 			<layer layer="3"/>
 		</line>
 		<line>
-			<type name="WAY_SERVICE"/>
+			<type name="HIGHWAY_SERVICE"/>
 			<innercolor color="FFFFFF"/>
 			<lineproperties linewidth="20"/>
 			<layer layer="3"/>
 		</line>
 		<line>
 			<type name="HIGHWAY_FOOTWAY"/>
-			<innercolor color="C83C38"/>
-			<lineproperties linedash="5, 5" linewidth="10"/>
+			<innercolor color="B7B393"/>
+			<lineproperties linedash="5, 5" linewidth="8"/>
 			<layer layer="3"/>
 		</line>
 		<line>
 			<type name="HIGHWAY_CYCLEWAY"/>
-			<innercolor color="4E76C8"/>
-			<lineproperties linedash="5, 5" linewidth="10"/>
+			<innercolor color="939FB7"/>
+			<lineproperties linedash="5, 5" linewidth="8"/>
 			<layer layer="3"/>
+		</line>
+		<line>
+			<type name="HIGHWAY_UNCLASSIFIED"/>
+			<innercolor color="FFFFFF"/>
+			<outercolor color="C3C3C3"/>
+			<lineproperties linewidth="40"/>
+			<layer layer="3"/>
+		</line>
+		<line>
+			<type name="LIGHT_RAIL"/>
+			<innercolor color="6D6D6D"/>
+			<lineproperties linewidth="8"/>
+			<layer layer="2"/>
 		</line>
 		<line>
 			<type name="COASTLINE"/>
 			<innercolor color="000000"/>
-			<lineproporties linewidth="60"/>
+			<lineproperties linewidth="20"/>
 			<layer layer="5"/>
 		</line>
+		<!-- Lige nu er den smækket sammen med HIGHWAY_FOOTWAY
 		<line>
-			<type name="WAY_PATH"/>
+			<type name="HIGHWAY_PATH"/>
 			<innercolor color="FFCC33"/>
 			<outercolor color="333300"/>
 			<lineproperties linedash="5, 5" linewidth="10"/>
 			<layer layer="3"/>
-		</line>
-</lines>
+		</line>-->
+	</lines>
 	<areas>
 		<area>
 			<type name="WATER"/>
@@ -90,38 +104,78 @@
 		</area>
 		<area>
 			<type name="RESIDENTIAL"/>
-			<innercolor color="EAEAEA"/>
+			<innercolor color="E0E0E0"/>
+			<layer layer="1"/>
+		</area>
+		<area>
+			<type name="INDUSTRIAL"/>
+			<innercolor color="EBDBE8"/>
 			<layer layer="1"/>
 		</area>
 		<area>
 			<type name="BUILDING"/>
-			<innercolor color="D9D0C9"/>
+			<innercolor color="CACACA"/>
 			<layer layer="5"/>
+		</area>
+		<area>
+			<type name="PARKING"/>
+			<innercolor color="F8F1C5"/>
+			<layer layer="2"/>
+		</area>
+		<area>
+			<type name="CEMETERY"/>
+			<innercolor color="C2DCC6"/>
+			<layer layer="2"/>
+		</area>
+		<area>
+			<type name="CONSTRUCTION"/>
+			<innercolor color="C7C7B4"/>
+			<layer layer="2"/>
+		</area>
+		<area>
+			<type name="PLATFORM"/>
+			<innercolor color="BBBBBB"/>
+			<layer layer="3"/>
 		</area>
 		<area>
 			<type name="GRASS"/>
 			<innercolor color="CBEFA8"/>
-			<layer layer="3"/>
+			<layer layer="2"/>
+		</area>
+		<area>
+			<type name="WOOD"/>
+			<innercolor color="ADD19E"/>
+			<layer layer="2"/>
+		</area>
+		<area>
+			<type name="SCRUB"/>
+			<innercolor color="B5E3B5"/>
+			<layer layer="2"/>
 		</area>
 		<area>
 			<type name="FARMLAND"/>
 			<innercolor color="FFECAA"/>
-			<layer layer="3"/>
+			<layer layer="2"/>
 		</area>
 		<area>
 			<type name="SPORT"/>
-			<innercolor color="00FF99"/>
+			<innercolor color="AAE0CB"/>
 			<layer layer="3"/>
+		</area>
+		<area>
+			<type name="RAILWAY"/>
+			<innercolor color="EBDBE8"/>
+			<layer layer="1"/>
 		</area>
 		<area>
 			<type name="PARK"/>
 			<innercolor color="CDEBB0"/>
-			<layer layer="3"/>
+			<layer layer="2"/>
 		</area>
 		<area>
 			<type name="FOREST"/>
 			<innercolor color="ADD19E"/>
-			<layer layer="3"/>
+			<layer layer="2"/>
 		</area>
 	</areas>
 	<labels>

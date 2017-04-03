@@ -27,7 +27,6 @@ public class CustomScrollBarUI extends BasicScrollBarUI {
 
         Graphics2D g2d = (Graphics2D) g;
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        JScrollBar scrollbar = (JScrollBar) c;
 
         g2d.fillRoundRect(x + 4, y + 4, w - 8, h - 8,12,12);
         g2d.dispose();

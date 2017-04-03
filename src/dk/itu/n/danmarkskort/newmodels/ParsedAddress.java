@@ -1,4 +1,4 @@
-package dk.itu.n.danmarkskort.lightweight.models;
+package dk.itu.n.danmarkskort.newmodels;
 
 public class ParsedAddress {
 
@@ -47,6 +47,6 @@ public class ParsedAddress {
  	}
     
     public String toString(){
-    	return street +" "+housenumber+" "+postcode+" "+city;
+    	return street +", "+housenumber+", "+postcode+", "+city;
     }
 }

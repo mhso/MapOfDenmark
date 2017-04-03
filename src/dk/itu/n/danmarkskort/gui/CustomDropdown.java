@@ -2,14 +2,12 @@ package dk.itu.n.danmarkskort.gui;
 
 import dk.itu.n.danmarkskort.Main;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.swing.*;
-import javax.swing.event.ChangeListener;
 
 public class CustomDropdown extends JPopupMenu {
-    public CustomDropdown() {
+	private static final long serialVersionUID = 6967771850567290975L;
+
+	public CustomDropdown() {
         setFocusable(false);
         setBorderPainted(false);
         setBorder(BorderFactory.createEmptyBorder());

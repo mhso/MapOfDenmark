@@ -3,6 +3,8 @@ package dk.itu.n.danmarkskort.gui;
 import javax.swing.JMenuItem;
 
 public class DropdownRightClick extends CustomDropdown {
+	private static final long serialVersionUID = -3776480204582099583L;
+
 	public DropdownRightClick() {
 		super();
 		

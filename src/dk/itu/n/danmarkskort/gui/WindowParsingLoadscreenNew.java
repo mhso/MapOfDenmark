@@ -20,13 +20,11 @@ import java.awt.Dimension;
 import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.Util;
 import dk.itu.n.danmarkskort.backend.OSMParserListener;
-import dk.itu.n.danmarkskort.models.ParsedObject;
-import dk.itu.n.danmarkskort.models.ParsedWay;
 
 import javax.imageio.ImageIO;
 
 public class WindowParsingLoadscreenNew extends JFrame implements OSMParserListener {
-
+	private static final long serialVersionUID = 4049548769311961507L;
 	private JPanel contentPane;
 	private JPanel panel;
 	private JLabel labelStatus;
@@ -104,9 +102,9 @@ public class WindowParsingLoadscreenNew extends JFrame implements OSMParserListe
 	}
 
 	@Override
-	public void onParsingGotObject(ParsedObject parsedObject) {
+	public void onParsingGotItem(Object parsedItem) {
 		if(showObjectString) {
-			labelStatus.setText(parsedObject.toString());
+			labelStatus.setText(parsedItem.toString());
 			showObjectString = false;
 		}
 	}
@@ -124,7 +122,7 @@ public class WindowParsingLoadscreenNew extends JFrame implements OSMParserListe
 	}
 	
 	private class BGImage extends JPanel {
-		private BufferedImage[] subImagesBlue = new BufferedImage[74];
+		private BufferedImage[] subImages = new BufferedImage[74];
 		private BufferedImage[] subImagesRed = new BufferedImage[74];
 		
 		public BGImage() {
@@ -141,17 +139,22 @@ public class WindowParsingLoadscreenNew extends JFrame implements OSMParserListe
 			catch (IOException e) {
 				e.printStackTrace();
 			}
-			subImagesBlue[0] = mainImage.getSubimage(0, 0, 
+			subImages[0] = mainImage.getSubimage(0, 0, 
 					mainImage.getWidth(), 3);
 			int y = mainImage.getHeight()-4;
 			for(int i = 73; i >= 0; i--) {
-				subImagesBlue[i] = mainImage.getSubimage(0, y, 
+				subImages[i] = mainImage.getSubimage(0, y, 
 						mainImage.getWidth(), 4);
+				for(int j = 0; j < subImages[i].getWidth(); j++) {
+					for(int k = 0; k < subImages[i].getHeight(); k++) {
+						if(subImages[i].getRGB(j, k) != Color.WHITE.getRGB()) subImages[i].setRGB(j, k, Color.LIGHT_GRAY.getRGB());
+					}
+				}
 				BufferedImage redImage = copyImage.getSubimage(0, y, 
 						mainImage.getWidth(), 4);
 				for(int j = 0; j < redImage.getWidth(); j++) {
 					for(int k = 0; k < redImage.getHeight(); k++) {
-						if(redImage.getRGB(j, k) != Color.WHITE.getRGB()) redImage.setRGB(j, k, Color.RED.getRGB());
+						if(redImage.getRGB(j, k) != Color.WHITE.getRGB()) redImage.setRGB(j, k, Color.GREEN.getRGB());
 					}
 				}
 				subImagesRed[i] = redImage;
@@ -170,7 +173,5 @@ public class WindowParsingLoadscreenNew extends JFrame implements OSMParserListe
 			}
 		}
 	}
-
-	public void onWayLinked(ParsedWay way) {}
 }
 

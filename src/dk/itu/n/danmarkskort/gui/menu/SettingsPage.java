@@ -8,7 +8,8 @@ import dk.itu.n.danmarkskort.gui.Style;
 import java.awt.*;
 
 public class SettingsPage extends JPanel {
-    Style style;
+	private static final long serialVersionUID = 4642167284178775315L;
+	private Style style;
     
     public SettingsPage() {
     	style = new Style();

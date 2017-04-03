@@ -12,13 +12,14 @@ import org.xml.sax.helpers.XMLReaderFactory;
 
 import dk.itu.n.danmarkskort.DKConstants;
 import dk.itu.n.danmarkskort.SAXAdapter;
-import dk.itu.n.danmarkskort.models.WayType;
+import dk.itu.n.danmarkskort.newmodels.WayType;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 public class GraphicRepresentation {
 	private static ArrayList<WaytypeGraphicSpec>[] zoomLevelArr = new ArrayList[20];
+	private static List<WaytypeGraphicSpec> overriddenSpecs = new ArrayList<>();
 	private static EnumMap<WayType, Integer> zoomMap = new EnumMap<>(WayType.class);
 	
 	/**
@@ -35,19 +36,97 @@ public class GraphicRepresentation {
 	public static List<WaytypeGraphicSpec> getGraphicSpecs(int zoomLevel) {
 		zoomLevel -= 1;
 		List<WaytypeGraphicSpec> cummulativeList = new ArrayList<>();
+		cummulativeList.addAll(overriddenSpecs);
 		for(int i = zoomLevel; i >= 0; i--) {
-			cummulativeList.addAll(zoomLevelArr[i]);
+			for(WaytypeGraphicSpec wgs : zoomLevelArr[i]) {
+				if(!wgs.isFiltered() && !overriddenSpecs.contains(wgs)) cummulativeList.add(wgs);
+			}
 		}
 		cummulativeList.sort(null);
 		return cummulativeList;
 	}
 	
 	/**
-	 * Test main method.
-	 * @param args Arguments.
+	 * Add a WayType to Overridden Graphic Specifications, meaning the Graphic Specification for this WayType will be drawn at any zoom level.
+	 * 
+	 * @param wayType The WayType that should always be drawn.
 	 */
-	public static void main(String[] args) {
-		if(args.length > 0) parseData(new InputSource(args[0]));
+	public static void addToOverriddenSpecs(WayType wayType) {
+		for(int i = 0; i < zoomLevelArr.length; i++) {
+			for(int j = 0; j < zoomLevelArr[i].size(); j++) {
+				if(zoomLevelArr[i].get(j).getWayType() == wayType) overriddenSpecs.add(zoomLevelArr[i].get(j));
+			}
+		}
+	}
+	
+	/**
+	 * Set the Graphic Specification, associated with the specified WayType, back to its default zoom level.
+	 * 
+	 * @param wayType The WayType that should be reset to its default zoom level.
+	 */
+	public static void setDefault(WayType wayType) {
+		for(int i = 0; i < zoomLevelArr.length; i++) {
+			for(int j = 0; j < zoomLevelArr[i].size(); j++) {
+				if(zoomLevelArr[i].get(j).getWayType() == wayType) {
+					overriddenSpecs.remove(zoomLevelArr[i].get(j));
+					zoomLevelArr[i].get(j).setFiltered(false);
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Set all Graphic Specification back to their default zoom levels.
+	 */
+	public static void setAllDefault() {
+		overriddenSpecs.removeAll(overriddenSpecs);
+		for(int i = 0; i < zoomLevelArr.length; i++) {
+			for(int j = 0; j < zoomLevelArr[i].size(); j++) {
+				if(zoomLevelArr[i].get(j).isFiltered()) zoomLevelArr[i].get(j).setFiltered(false);
+			}
+		}
+	}
+	
+	/**
+	 * Set whether a WayType should be filtered from the drawing process.
+	 * 
+	 * @param wayType The WayType to set filtering for.
+	 * @param filtered Whether the WayType should be filtered.
+	 */
+	public static void setFilteredElement(WayType wayType, boolean filtered) {
+		for(int i = 0; i < zoomLevelArr.length; i++) {
+			for(int j = 0; j < zoomLevelArr[i].size(); j++) {
+				if(zoomLevelArr[i].get(j).getWayType() == wayType) zoomLevelArr[i].get(j).setFiltered(filtered);
+			}
+		}
+	}
+	
+	/**
+	 * Check whether the specified WayType is being filtered in the drawing process.
+	 * 
+	 * @param wayType The WayType to check for.
+	 * @return Whether the WayType is being drawn.
+	 */
+	public static boolean isFiltered(WayType wayType) {
+		for(int i = 0; i < zoomLevelArr.length; i++) {
+			for(int j = 0; j < zoomLevelArr[i].size(); j++) {
+				if(zoomLevelArr[i].get(j).getWayType() == wayType) return zoomLevelArr[i].get(j).isFiltered();
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * Check whether the specified WayType is overriding the zoom hierarchy, I.E: always being drawn.
+	 * 
+	 * @param wayType The WayType to check for.
+	 * @return Whether the WayType is always being drawn.
+	 */
+	public static boolean isOverridden(WayType wayType) {
+		for(WaytypeGraphicSpec wgs : overriddenSpecs) {
+			if(wgs.getWayType() == wayType) return true;
+		}
+		return false;
 	}
 	
 	/**

@@ -115,7 +115,7 @@ public class AddressController{
 		return null;
 	}
 	
-	public void addressParsed(dk.itu.n.danmarkskort.lightweight.models.ParsedAddress address) {
+	public void addressParsed(dk.itu.n.danmarkskort.newmodels.ParsedAddress address) {
         HashMap<String, HashMap<String, Float[]>> postcode;
         HashMap<String, Float[]> street;
 

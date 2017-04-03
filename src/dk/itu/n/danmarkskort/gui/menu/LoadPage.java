@@ -6,18 +6,17 @@ import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.Util;
 import dk.itu.n.danmarkskort.address.AddressController;
 import dk.itu.n.danmarkskort.gui.Style;
-import dk.itu.n.danmarkskort.models.Region;
+import dk.itu.n.danmarkskort.newmodels.Region;
 
 import java.awt.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import java.awt.event.ActionListener;
 import java.io.File;
-import java.nio.file.Files;
-import java.awt.event.ActionEvent;
+import java.text.DecimalFormat;
 
 public class LoadPage extends JPanel  {
+	private static final long serialVersionUID = -3622354925202477780L;
 	private Style style;
 	private JLabel lblCurrentmapfilename, lblCurrentmapfilesize, lblCurrentmapaddressesfound, lblCurrentmapbounds;
 	
@@ -110,13 +109,13 @@ public class LoadPage extends JPanel  {
         
         Region bounds = Main.model.getMapRegion();
         
-        String format = "%.2f";
+        DecimalFormat format = new DecimalFormat("###,###.##");
         double latKm = -bounds.getHeight()*110.574;
         double lonKm = bounds.getWidth()*111.320*Math.cos(Math.toRadians(-bounds.y2));
         double squareKm = latKm*lonKm;
-        lblCurrentmapbounds = new JLabel("<html><body>Longtitude: " + String.format(format, bounds.x1) + " - " + String.format(format, bounds.x2) + 
-        		"<br>Latitude: " + String.format(format, -bounds.y1) + " - " + String.format(format, -bounds.y2) + 
-        		"<br>Square Kilometres: " + String.format(format, squareKm) + " km²</body></html>");
+        lblCurrentmapbounds = new JLabel("<html><body>Lontitude: " + format.format(bounds.x1) + " - " + format.format(bounds.x2) + 
+        		"<br>Latitude: " + format.format(-bounds.y1) + " - " + format.format(-bounds.y2) + 
+        		"<br>Square Kilometres: " + format.format(squareKm) + " km²</body></html>");
         GridBagConstraints gbc_lblCurrentmapbounds = new GridBagConstraints();
         gbc_lblCurrentmapbounds.anchor = GridBagConstraints.WEST;
         gbc_lblCurrentmapbounds.insets = new Insets(0, 0, 5, 0);
@@ -132,7 +131,7 @@ public class LoadPage extends JPanel  {
         gbc_lblAddressesFound.gridy = 4;
         panelCenter.add(lblAddressesFound, gbc_lblAddressesFound);
         
-        lblCurrentmapaddressesfound = new JLabel("" + AddressController.getInstance().getAddressSize());
+        lblCurrentmapaddressesfound = new JLabel("" + format.format(AddressController.getInstance().getAddressSize()));
         GridBagConstraints gbc_lblCurrentmapaddressesfound = new GridBagConstraints();
         gbc_lblCurrentmapaddressesfound.anchor = GridBagConstraints.WEST;
         gbc_lblCurrentmapaddressesfound.insets = new Insets(0, 0, 5, 0);
@@ -157,10 +156,8 @@ public class LoadPage extends JPanel  {
 			Main.window.revalidate();
 			Main.window.repaint();
 			Main.map.zoomToBounds();
-        } else {
         }
-
-	}
+    }
 	
 	private JFileChooser viewFileChooser(String dialogTitle, String approveBtnTxt){
 		JFileChooser fc = new JFileChooser();

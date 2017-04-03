@@ -1,20 +1,20 @@
-package dk.itu.n.danmarkskort.lightweight;
+package dk.itu.n.danmarkskort.backend;
 
 import dk.itu.n.danmarkskort.DKConstants;
 import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.SAXAdapter;
 import dk.itu.n.danmarkskort.Util;
 import dk.itu.n.danmarkskort.address.AddressController;
-import dk.itu.n.danmarkskort.backend.OSMParser;
-import dk.itu.n.danmarkskort.backend.OSMParserListener;
 import dk.itu.n.danmarkskort.lightweight.models.*;
-import dk.itu.n.danmarkskort.lightweight.models.ParsedAddress;
-import dk.itu.n.danmarkskort.lightweight.models.ParsedWay;
-import dk.itu.n.danmarkskort.kdtree.KDTree;
-import dk.itu.n.danmarkskort.kdtree.KDTreeLeaf;
-import dk.itu.n.danmarkskort.kdtree.KDTreeNode;
-import dk.itu.n.danmarkskort.models.Region;
-import dk.itu.n.danmarkskort.models.WayType;
+import dk.itu.n.danmarkskort.newmodels.ParsedAddress;
+import dk.itu.n.danmarkskort.newmodels.ParsedItem;
+import dk.itu.n.danmarkskort.newmodels.ParsedNode;
+import dk.itu.n.danmarkskort.newmodels.ParsedRelation;
+import dk.itu.n.danmarkskort.newmodels.ParsedWay;
+import dk.itu.n.danmarkskort.newmodels.Region;
+import dk.itu.n.danmarkskort.newmodels.WayType;
+import dk.itu.n.danmarkskort.kdtree.*;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
@@ -36,16 +36,15 @@ public class LightWeightParser extends SAXAdapter {
     public HashMap<Long, ParsedItem> temporaryWayReferences;
     public HashMap<Long, ParsedItem> temporaryRelationReferences;
 
-    // bør efter endt OSM indlæsning omdanne alle ArrayLists til KD-træer
     public EnumMap<WayType, ArrayList<ParsedItem>> enumMap;
     public EnumMap<WayType, KDTree> enumMapKD;
 
     private ParsedWay way;
     private ParsedRelation relation;
-    private NodeMap.Node node;
+    private ParsedNode node;
     private ParsedAddress address;
 
-    private ArrayList<Float> currentNodes;
+    private ArrayList<ParsedNode> currentNodes;
     private ArrayList<ParsedItem> currentItems;
 
     private WayType waytype;
@@ -104,7 +103,7 @@ public class LightWeightParser extends SAXAdapter {
         for(WayType wt : WayType.values()) count += enumMap.get(wt).size();
         Main.log("Ways and Relations saved: " + count);
 
-        Main.log("Converting WayType ArrayLists to KDTrees");
+        Main.log("Splitting data into KDTrees");
 
         enumMapKD = new EnumMap<>(WayType.class);
         for(WayType wt : WayType.values()) {
@@ -145,30 +144,23 @@ public class LightWeightParser extends SAXAdapter {
                 float lon = Float.parseFloat(atts.getValue("lon"));
                 float lat = Float.parseFloat(atts.getValue("lat"));
                 nodeMap.put(id, lon * lonFactor, -lat);
-                node = nodeMap.get(Long.parseLong(atts.getValue("id")));
+                node = nodeMap.get(id);
                 break;
             case "way":
                 way = new ParsedWay(Long.parseLong(atts.getValue("id")));
-                // no longer needed? wayMap.put(way.getID(), way);
                 break;
             case "relation":
                 relation = new ParsedRelation(Long.parseLong(atts.getValue("id")));
-                // no longer needed? relationMap.put(relation.getID(), relation);
                 break;
             case "nd":
-                NodeMap.Node node = nodeMap.get(Long.parseLong(atts.getValue("ref")));
-                currentNodes.add(node.getLon());
-                currentNodes.add(node.getLat());
+                currentNodes.add(nodeMap.get(Long.parseLong(atts.getValue("ref"))));
                 break;
             case "member":
                 long ref = Long.parseLong(atts.getValue("ref"));
                 String type = atts.getValue("type");
                 switch(type) {
                     case "node":
-                        if(nodeMap.get(ref) != null) {
-                            currentNodes.add(nodeMap.get(ref).getLon());
-                            currentNodes.add(nodeMap.get(ref).getLat());
-                        }
+                        if(nodeMap.get(ref) != null) currentNodes.add(nodeMap.get(ref));
                         break;
                     case "way":
                         if(temporaryWayReferences.containsKey(ref)) currentItems.add(temporaryWayReferences.get(ref));
@@ -224,27 +216,34 @@ public class LightWeightParser extends SAXAdapter {
 
     private void addCurrent() {
         if(waytype != null) {
-            if(way != null) enumMap.get(waytype).add(way);
-            else if(relation != null) {
-                if(waytype == WayType.COASTLINE) {
-                    ParsedCoastline coastline = (ParsedCoastline) relation;
-                    enumMap.get(waytype).add(coastline);
-                }
-                else {
-                    enumMap.get(waytype).add(relation);
-                }
+            if(way != null) {
+            	enumMap.get(waytype).add(way);
+            	for(OSMParserListener listener : parser.parserListeners) listener.onParsingGotItem(way);
             }
-            else if(node != null) ;// do something eventually
+            else if(relation != null) {
+                enumMap.get(waytype).add(relation);
+                for(OSMParserListener listener : parser.parserListeners) listener.onParsingGotItem(relation);
+            }
+            else if(node != null) {
+            	for(OSMParserListener listener : parser.parserListeners) listener.onParsingGotItem(node);
+            } 
         }
 
-        if(way != null) temporaryWayReferences.put(way.getID(), way);
-        else if(relation != null) temporaryRelationReferences.put(relation.getID(), relation);
+        if(way != null) {
+        	temporaryWayReferences.put(way.getID(), way);
+        	for(OSMParserListener listener : parser.parserListeners) listener.onParsingGotItem(way);
+        }
+        else if(relation != null) {
+        	temporaryRelationReferences.put(relation.getID(), relation);
+        	for(OSMParserListener listener : parser.parserListeners) listener.onParsingGotItem(relation);
+        }
 
         if(address != null) {
             if(node != null) address.setCoords(node.getPoint());
             else if (way != null) address.setWay(way);
             else if (relation != null) address.setRelation(relation);
-            //AddressController.getInstance().addressParsed(address);
+            AddressController.getInstance().addressParsed(address);
+            for(OSMParserListener listener : parser.parserListeners) listener.onParsingGotItem(address);
         }
         cleanUp();
     }
@@ -264,7 +263,6 @@ public class LightWeightParser extends SAXAdapter {
         temporaryWayReferences = null;
         temporaryRelationReferences = null;
         System.gc();
-        // ideally all objects have been passed on, and this object would delete all references to anything. A really big clean up!
     }
     
     public boolean isFinished() {

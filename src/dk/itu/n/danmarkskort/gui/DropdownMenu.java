@@ -1,7 +1,6 @@
 package dk.itu.n.danmarkskort.gui;
 
 import javax.swing.*;
-import javax.swing.plaf.ColorUIResource;
 import java.awt.*;
 
 public class DropdownMenu extends JPopupMenu{
