@@ -36,9 +36,10 @@ public class TopPanel extends JPanel {
     private JTextField input;
     private JPanel searchInputWrapper, topParent;
     private JButton menu;
+    private List<String> dropSuggestionsList;
 
     public TopPanel(Style style) {
-
+    	dropSuggestionsList = new ArrayList<String>();
         this.style = style;
         setOpaque(false);
 
@@ -155,17 +156,29 @@ public class TopPanel extends JPanel {
 
     // Skal nok flyttes senere, for at overholde MVC
     public void searchForAddress(String address) {
-        Address addr = SearchController.getInstance().getSearchFieldAddressObj(address);
-        if(addr != null )System.out.println("Toppanel->searchForAddress: "+addr.toString());
+    	if(!address.trim().isEmpty()) {
+    		Address addr = SearchController.getInstance().getSearchFieldAddressObj(address);
+        	if(addr != null ) { 
+        		System.out.println("Toppanel->searchForAddress: "+addr.toString());
+        		panZoomToCoordinates(addr.getLonLat());
+        	} else {
+        		JOptionPane.showMessageDialog(null, "No match found.", "Missing information", JOptionPane.INFORMATION_MESSAGE);
+        	}
+    	} else {
+    		JOptionPane.showMessageDialog(null, "Search field can't be empty.", "Missing information", JOptionPane.INFORMATION_MESSAGE);
+    	}
     }
 
-    public void populateSuggestions(List<String> list) {
+    private void panZoomToCoordinates(float[] lonLat) {
+		// TODO Auto-generated method stub
+    	System.out.println("Toppanel->panZoomToCoordinats (lon, lat): (" + lonLat[0] + ", " + lonLat[1] + ")");
+	}
+
+	public void populateSuggestions(List<String> list) {
         dropSuggestions.setVisible(false);
         dropSuggestions.removeAll();
-        int i = 0;
-        for(String st : list){
-            dropSuggestions.addElement(input, st);
-            if(++i > 10) break;
+        for(String str : list){
+            dropSuggestions.addElement(input, str);
         }
         dropSuggestions.showDropdown(input);
     }
@@ -208,13 +221,45 @@ public class TopPanel extends JPanel {
         }
 
         public void dropdownSuggestions(int offset, String text) {
-            if(offset > 1) {
-                populateSuggestions(SearchController.getInstance().getSearchFieldSuggestions(text));
-                revalidate();
-                repaint();
+        	
+            if(offset > 1 && text.length() > 1) {
+            	
+//            	char charAtEnd = text.charAt(text.length()-1);
+//            	int countSameCharAtPos = 0;
+//            	for(String str : dropSuggestionsList) {
+//            		if(str.charAt(text.length()-1) == charAtEnd) countSameCharAtPos++;
+////            		System.out.println("Char compare: " + str.charAt(text.length()-1) + " = " + charAtEnd);
+//            	}
+//            	
+//            	
+//            	if(countSameCharAtPos == 0) {
+////            		dropSuggestionsList = SearchController.getInstance().getSearchFieldSuggestions(text);
+////            		System.out.println("refresh list");
+////            	}
+//            	
+//                populateSuggestions(dropSuggestionsList);
+            	dropSuggestionsList = SearchController.getInstance().getSearchFieldSuggestions(text);
+            	populateSuggestions(dropSuggestionsList);
+                
+            		//swingSearch(text);
             } else {
                 dropSuggestions.setVisible(false);
             }
         }
+    }
+    
+    private void swingSearch(String text){
+	    SwingWorker worker = new SwingWorker<List<String>, Void>() {
+	        @Override
+	        public List<String> doInBackground() {
+	            return dropSuggestionsList = SearchController.getInstance().getSearchFieldSuggestions(text);
+	        }
+	
+	        @Override
+	        public void done() {
+	        	populateSuggestions(dropSuggestionsList);
+	        }
+	    };
+	    worker.execute();
     }
 }

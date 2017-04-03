@@ -32,7 +32,8 @@ public class SearchController{
     }
 	
 	public List<String> getSearchFieldSuggestions(String inputStr){
-		return AddressController.getInstance().getSearchSuggestions(inputStr);
+		long limitAmountOfResults = 5;
+		return AddressController.getInstance().getSearchSuggestions(inputStr, limitAmountOfResults);
 	}
 	
 	public Address getSearchFieldAddressObj(String inputStr){
