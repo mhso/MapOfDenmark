@@ -39,6 +39,7 @@ public class GraphicRepresentation {
 		cummulativeList.addAll(overriddenSpecs);
 		for(int i = zoomLevel; i >= 0; i--) {
 			for(WaytypeGraphicSpec wgs : zoomLevelArr[i]) {
+
 				if(!wgs.isFiltered() && !overriddenSpecs.contains(wgs)) cummulativeList.add(wgs);
 			}
 		}

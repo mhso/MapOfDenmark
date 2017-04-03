@@ -37,11 +37,13 @@ public class ParsedRelation extends ParsedItem {
 
     public Path2D getPath() {
         Path2D path = new Path2D.Float(Path2D.WIND_EVEN_ODD);
+        ArrayList<Member> outers = new ArrayList<>();
         if(members.size() > 0) {
             ParsedNode lastNode = members.get(0).getReference().getLastNode();
             path.append(members.get(0).getReference().getPath(), true);
             for(int i = 1; i < members.size(); i++) {
-                ParsedItem current = members.get(i).getReference();
+                /* current = members.get(i);
+                if(current)
                 if(lastNode != current.getFirstNode()) {
                     Collections.reverse(current.getNodes());
                 }
@@ -50,7 +52,7 @@ public class ParsedRelation extends ParsedItem {
                 } else {
                     path.append(current.getPath(), false);
                 }
-                lastNode = current.getLastNode();
+                lastNode = current.getLastNode();*/
             }
         }
         return path;
