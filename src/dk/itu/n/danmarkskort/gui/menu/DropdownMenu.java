@@ -12,7 +12,7 @@ import java.awt.event.MouseEvent;
 public class DropdownMenu extends CustomDropdown {
 
     private JPanel menuItems, wrapper;
-    private JPanel routePage, aboutUsPage, settingsPage, mapLayersPage, loadPage, savePage;
+    private JPanel routePage, aboutUsPage, settingsPage, mapLayersPage, loadPage, savePage, pinPointPage;
     private GridBagConstraints gbcContainer;
     private JScrollPane contentPane;
     private TopPanel topPanel;
@@ -30,7 +30,8 @@ public class DropdownMenu extends CustomDropdown {
         settingsPage = new SettingsPage();
         mapLayersPage = new MapLayersPage();
         aboutUsPage = new AboutUsPage();
-
+        pinPointPage = new PinPointPage();
+        
         wrapper = new JPanel(new GridBagLayout());
         gbcContainer = new GridBagConstraints();
 
@@ -79,6 +80,12 @@ public class DropdownMenu extends CustomDropdown {
         aboutUsButton.addActionListener(e -> addToContentPane(aboutUsPage));
         menuItems.add(aboutUsButton, gbcMenuItems);
 
+        // pinpoint
+        gbcMenuItems.gridy = 6;
+        CustomButton pinPointButton = style.menuInfoButton();
+        aboutUsButton.addActionListener(e -> addToContentPane(pinPointPage));
+        menuItems.add(pinPointButton, gbcMenuItems);
+        
         menuItems.setPreferredSize(new Dimension(topPanel.getMenuWidth(), menuItems.getPreferredSize().height));
         gbcContainer.gridx = 0;
         wrapper.add(menuItems, gbcContainer);
