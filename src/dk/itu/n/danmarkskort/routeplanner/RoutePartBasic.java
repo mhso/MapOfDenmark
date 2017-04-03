@@ -7,7 +7,7 @@ import java.awt.GridBagConstraints;
 import java.awt.Insets;
 
 public class RoutePartBasic extends JPanel {
-
+	private static final long serialVersionUID = 3150387631326599889L;
 	private final String ROUTE_FROM, ROUTE_TO, ROUTE_DISTANCE, ROUTE_POSITION;
 	
 	public RoutePartBasic(int routePosition, String routeFrom, String routeTo, String routeDistance) {

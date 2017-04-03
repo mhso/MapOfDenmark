@@ -4,14 +4,10 @@ import dk.itu.n.danmarkskort.gui.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 public class DropdownMenu extends CustomDropdown {
-
-    private JPanel menuItems, wrapper;
+	private static final long serialVersionUID = 8481689365025322045L;
+	private JPanel menuItems, wrapper;
     private JPanel routePage, aboutUsPage, settingsPage, mapLayersPage, loadPage, savePage;
     private GridBagConstraints gbcContainer;
     private JScrollPane contentPane;

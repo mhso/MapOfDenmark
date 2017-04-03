@@ -12,7 +12,7 @@ import org.xml.sax.helpers.XMLReaderFactory;
 
 import dk.itu.n.danmarkskort.DKConstants;
 import dk.itu.n.danmarkskort.SAXAdapter;
-import dk.itu.n.danmarkskort.models.WayType;
+import dk.itu.n.danmarkskort.newmodels.WayType;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -44,14 +44,6 @@ public class GraphicRepresentation {
 		}
 		cummulativeList.sort(null);
 		return cummulativeList;
-	}
-	
-	/**
-	 * Test main method.
-	 * @param args Arguments.
-	 */
-	public static void main(String[] args) {
-		if(args.length > 0) parseData(new InputSource(args[0]));
 	}
 	
 	/**

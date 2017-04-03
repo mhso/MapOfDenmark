@@ -6,7 +6,7 @@ import javax.swing.border.TitledBorder;
 import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.gui.Style;
 import dk.itu.n.danmarkskort.mapgfx.GraphicRepresentation;
-import dk.itu.n.danmarkskort.models.WayType;
+import dk.itu.n.danmarkskort.newmodels.WayType;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -19,7 +19,8 @@ import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 
 public class MapLayersPage extends JPanel {
-    private Style style;
+	private static final long serialVersionUID = -6963692316700756734L;
+	private Style style;
     private DropdownMenu menu;
     
     public MapLayersPage(DropdownMenu menu) {

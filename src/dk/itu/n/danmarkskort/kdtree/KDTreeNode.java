@@ -2,28 +2,24 @@ package dk.itu.n.danmarkskort.kdtree;
 
 import dk.itu.n.danmarkskort.DKConstants;
 import dk.itu.n.danmarkskort.gui.map.MapCanvas;
-import dk.itu.n.danmarkskort.lightweight.models.ParsedItem;
-import dk.itu.n.danmarkskort.lightweight.models.ParsedNode;
-import dk.itu.n.danmarkskort.models.Region;
+import dk.itu.n.danmarkskort.newmodels.ParsedItem;
+import dk.itu.n.danmarkskort.newmodels.ParsedNode;
+import dk.itu.n.danmarkskort.newmodels.Region;
 
 import java.util.ArrayList;
 
 public class KDTreeNode extends KDTree {
 
-    private transient final int maxData = 1000;
-
     private KDTree leftChild;
     private KDTree rightChild;
     private float leftSplit;
     private float rightSplit;
-    private KDTree parent; // should this just be deleted? At least now we can move both up and down
 
     public KDTreeNode(ArrayList<ParsedItem> list) {
-        this(listToArray(list), null, true);
+        this(listToArray(list), true);
     }
 
-    public KDTreeNode(ParsedItem[] array, KDTree parent, boolean sortByLon) {
-        this.parent = parent;
+    public KDTreeNode(ParsedItem[] array, boolean sortByLon) {
         createStructure(array, sortByLon);
     }
 
@@ -63,10 +59,10 @@ public class KDTreeNode extends KDTree {
                 for(ParsedNode node : nodes) rightSplit = node.getLat() < rightSplit ? node.getLat() : rightSplit; // nederst er værdierne størst
             }
         }
-        if(leftArray.length > DKConstants.KD_SIZE) leftChild = new KDTreeNode(leftArray, this, !sortByLon);
+        if(leftArray.length > DKConstants.KD_SIZE) leftChild = new KDTreeNode(leftArray, !sortByLon);
         else leftChild = new KDTreeLeaf(leftArray, this);
 
-        if(rightArray.length > DKConstants.KD_SIZE) rightChild = new KDTreeNode(rightArray, this, !sortByLon);
+        if(rightArray.length > DKConstants.KD_SIZE) rightChild = new KDTreeNode(rightArray, !sortByLon);
         else rightChild = new KDTreeLeaf(rightArray, this);
     }
 
@@ -93,8 +89,6 @@ public class KDTreeNode extends KDTree {
         leftChild.makeShapes();
         rightChild.makeShapes();
     }
-    @Override
-    public KDTree getParent() { return parent; }
     @Override
     public int size() { return leftChild.size() + rightChild.size(); }
 

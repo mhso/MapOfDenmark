@@ -1,6 +1,6 @@
-package dk.itu.n.danmarkskort.lightweight;
+package dk.itu.n.danmarkskort.backend;
 
-import dk.itu.n.danmarkskort.lightweight.models.ParsedNode;
+import dk.itu.n.danmarkskort.newmodels.ParsedNode;
 
 public class NodeMap {
 
@@ -25,7 +25,6 @@ public class NodeMap {
     }
 
     public ParsedNode get(long key) {
-        int i = 0;
         for(ParsedNode node = nodes[getHash(key)]; node != null; node = node.getNext()) {
             if(node.getKey() == key) return node;
         }

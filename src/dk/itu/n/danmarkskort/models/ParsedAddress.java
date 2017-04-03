@@ -1,5 +1,7 @@
 package dk.itu.n.danmarkskort.models;
 
+import dk.itu.n.danmarkskort.newmodels.ParsedObject;
+
 public class ParsedAddress extends ParsedObject {
 
 	private String city, houseNumber, postCode, address;
