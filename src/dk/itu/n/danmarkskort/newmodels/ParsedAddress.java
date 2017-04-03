@@ -25,15 +25,15 @@ public class ParsedAddress {
 
     public float getFirstLon() {
         if(coords != null) return coords[0];
-        else if (way != null) return way.getFirstLon();
-        else if(relation != null) return relation.getFirstLon();
+        else if (way != null) return way.getFirstNode().getLon();
+        else if(relation != null) return relation.getFirstNode().getLon();
         return -1;
     }
 
     public float getFirstLat() {
         if(coords != null) return coords[1];
-        else if (way != null) return way.getFirstLat();
-        else if(relation != null) return relation.getFirstLat();
+        else if (way != null) return way.getFirstNode().getLat();
+        else if(relation != null) return relation.getFirstNode().getLat();
         return -1;
     }
     

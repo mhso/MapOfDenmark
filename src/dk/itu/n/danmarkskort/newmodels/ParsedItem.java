@@ -9,16 +9,16 @@ public abstract class ParsedItem {
     //private boolean isVisible = true;
 
     public int compareLon(ParsedItem item) {
-        float a = getFirstLon();
-        float b = item.getFirstLon();
+        float a = getFirstNode().getLon();
+        float b = item.getFirstNode().getLon();
         if(a > b) return 1;
         if(a == b) return 0;
         return 0;
     }
 
     public int compareLat(ParsedItem item) {
-        float a = getFirstLat();
-        float b = item.getFirstLat();
+        float a = getFirstNode().getLat();
+        float b = item.getFirstNode().getLat();
         if(a > b) return 1;
         if(a == b) return 0;
         return 0;
@@ -31,6 +31,4 @@ public abstract class ParsedItem {
     public abstract ParsedNode getLastNode();
     public abstract ArrayList<ParsedNode> getNodes();
     public abstract Path2D getPath();
-    public abstract float getFirstLon();
-    public abstract float getFirstLat();
 }

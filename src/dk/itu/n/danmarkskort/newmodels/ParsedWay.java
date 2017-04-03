@@ -34,26 +34,17 @@ public class ParsedWay extends ParsedItem{
 
     @Override
     public ParsedNode getFirstNode() {
-        return nodes.get(0);
+        if(nodes.size() > 0) return nodes.get(0);
+        return null;
     }
 
     @Override
     public ParsedNode getLastNode() {
-        return nodes.get(nodes.size() - 1);
-    }
-
-    @Override
-    public float getFirstLon() {
-        if(nodes.size() > 0) return nodes.get(0).getLon();
-        return -1;
-    }
-    @Override
-    public float getFirstLat() {
-        if(nodes.size() > 0) return nodes.get(0).getLat();
-        return -1;
+        if(nodes.size() > 0) return nodes.get(nodes.size() - 1);
+        return null;
     }
     
     public String toString() {
-    	return "ParsedWay [" + "id=" + id + ", firstLon=" + getFirstLon() + ", firstLat=" + getFirstLat() + ", nodeAmount=" + nodes.size() + "]";
+    	return "ParsedWay [" + "id=" + id + ", firstLon=" + getFirstNode().getLon() + ", firstLat=" + getFirstNode().getLat() + ", nodeAmount=" + nodes.size() + "]";
     }
 }

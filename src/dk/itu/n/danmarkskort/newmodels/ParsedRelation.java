@@ -1,9 +1,12 @@
 package dk.itu.n.danmarkskort.newmodels;
 
+import dk.itu.n.danmarkskort.Main;
+
 import java.awt.*;
 import java.awt.geom.Path2D;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 
 public class ParsedRelation extends ParsedItem {
 
@@ -37,51 +40,87 @@ public class ParsedRelation extends ParsedItem {
 
     public Path2D getPath() {
         Path2D path = new Path2D.Float(Path2D.WIND_EVEN_ODD);
-        ArrayList<Member> outers = new ArrayList<>();
         if(members.size() > 0) {
-            ParsedNode lastNode = members.get(0).getReference().getLastNode();
-            path.append(members.get(0).getReference().getPath(), true);
-            for(int i = 1; i < members.size(); i++) {
-                /* current = members.get(i);
-                if(current)
-                if(lastNode != current.getFirstNode()) {
-                    Collections.reverse(current.getNodes());
+            ArrayList<ParsedItem> outers = new ArrayList<>();
+            Member current;
+            ParsedNode firstNode = null;
+
+            for(int i = 0; i < members.size(); i++) {
+                current = members.get(i);
+                if(current.isOuter()) {
+                    outers.add(current.getReference());
                 }
-                if(lastNode == current.getFirstNode()) {
-                    path.append(current.getPath(), true);
-                } else {
-                    path.append(current.getPath(), false);
+                else if(!current.isOuter()) {
+                    path.append(members.get(i).getReference().getPath(), false);
+                    if(!outers.isEmpty()) {
+                        path.append(connectOuters(outers), false);
+                        outers = new ArrayList<>();
+                    }
                 }
-                lastNode = current.getLastNode();*/
+            }
+            if(!outers.isEmpty()) path.append(connectOuters(outers), false);
+        }
+        return path;
+    }
+
+    public Path2D connectOuters(ArrayList<ParsedItem> outerList) {
+        Path2D path = new Path2D.Float();
+        path.append(outerList.get(0).getPath(), false);
+        ParsedNode lastNode = outerList.get(0).getLastNode();
+        if(outerList.size() > 1) {
+            for(int j = 1; j < outerList.size(); j++) {
+                for(int k = j; k < outerList.size(); k++ ) {
+                    if(lastNode == outerList.get(k).getFirstNode()) {
+                        path.append(outerList.get(k).getPath(), true);
+                        lastNode = outerList.get(k).getLastNode();
+                        Collections.swap(outerList, j, k);
+                        break;
+                    }
+                    else if(lastNode == outerList.get(k).getLastNode()) {
+                        ArrayList<ParsedNode> reversedNodes = new ArrayList<>(outerList.get(k).getNodes());
+                        Collections.reverse(reversedNodes);
+                        path.append(nodesToPath(reversedNodes), true);
+                        lastNode = reversedNodes.get(reversedNodes.size() - 1);
+                        Collections.swap(outerList, j, k);
+                        break;
+                    }
+                    else if(k == outerList.size() - 1) {
+                        path.append(outerList.get(j).getPath(), false);
+                        lastNode = outerList.get(j).getLastNode();
+                    }
+                }
             }
         }
         return path;
     }
 
-    @Override
-    public ParsedNode getFirstNode() { return null;}
-
-    @Override
-    public ParsedNode getLastNode() { return null; }
-
-    @Override
-    public float getFirstLon() {
-        if(nodes != null && nodes.size() > 0) return nodes.get(0).getLon();
-        else if(members.size() > 0) return members.get(0).getReference().getFirstLon();
-        return -1;
+    public Path2D nodesToPath(ArrayList<ParsedNode> n) {
+        Path2D path = new Path2D.Float();
+        path.moveTo(n.get(0).getLon(), n.get(0).getLat());
+        for(int i = 1; i < n.size(); i++) {
+            path.lineTo(n.get(i).getLon(), n.get(i).getLat());
+        }
+        return path;
     }
 
     @Override
-    public float getFirstLat() {
-        if(nodes != null && nodes.size() > 0) return nodes.get(0).getLat();
-        else if(members.size() > 0) return members.get(0).getReference().getFirstLat();
-        return -1;
+    public ParsedNode getFirstNode() {
+        if(nodes != null && nodes.size() > 0) return nodes.get(0);
+        else if(members.size() > 0) return members.get(0).getReference().getFirstNode();
+        return null;
+    }
+
+    @Override
+    public ParsedNode getLastNode() {
+        if(nodes != null && nodes.size() > 0) return nodes.get(nodes.size() - 1);
+        else if(members.size() > 0) return members.get(0).getReference().getLastNode();
+        return null;
     }
     
     public String toString() {
     	int nodeAmount = 0;
     	if(nodes != null) nodeAmount = nodes.size();
-    	return "ParsedRelation [" + "id=" + id 	+ ", firstLon=" + getFirstLon() + ", firstLat=" 	+ getFirstLat() + ", nodeAmount=" + nodeAmount + 
+    	return "ParsedRelation [" + "id=" + id 	+ ", firstLon=" + getFirstNode().getLon() + ", firstLat=" 	+ getFirstNode().getLat() + ", nodeAmount=" + nodeAmount +
     			", itemAmount=" + members.size() + "]";
     }
 
