@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.commons.lang3.StringUtils;
+
 public class Street {
 	private String street;
 	private Map<String, Housenumber> housenumbers;
@@ -33,14 +35,6 @@ public class Street {
 		}
 	}
 	
-	public void addHousenumber(Housenumber hn){
-		if(hn.getHousenumber() != null && hn.getLonLat() != null) {
-			Housenumber newHousenumber = getHousenumber(hn.getHousenumber());
-			if(newHousenumber == null) newHousenumber = new Housenumber(postcode, this, hn.getHousenumber(), hn.getLonLat());
-			housenumbers.put(hn.getHousenumber().toLowerCase(), newHousenumber);
-		}
-	}
-	
 	public Housenumber getHousenumber(String housenumber) {
 		if(housenumber == null) return null;
 		return housenumbers.get(housenumber.toLowerCase());
@@ -49,19 +43,9 @@ public class Street {
 	public String getStreet() {
 		return street;
 	}
+
 	
-	public List<Housenumber> housenumberContains(String housenumber){
-		List<Housenumber> list = new ArrayList<Housenumber>();
-		if(housenumber == null) return list;
-		for(Entry<String, Housenumber> entry : housenumbers.entrySet()){
-			if(entry.getKey().contains(housenumber.toLowerCase())) {
-				list.add(entry.getValue());
-			}
-		}
-		return list;
-	}
-	
-	public Map<String, Housenumber> housenumberContains(Map<String, Housenumber> inputList, String housenumber){
+	private Map<String, Housenumber> housenumberContains(Map<String, Housenumber> inputList, String housenumber){
 		Map<String, Housenumber> list = new HashMap<String, Housenumber>();
 		if(housenumber == null) return list;
 		for(Entry<String, Housenumber> entry : inputList.entrySet()){
@@ -72,22 +56,24 @@ public class Street {
 		return list;
 	}
 	
-	public List<Housenumber> housenumberStartsWith(String housenumber){
-		List<Housenumber> list = new ArrayList<Housenumber>();
+	private Map<String, Housenumber> housenumberStartsWith(Map<String, Housenumber> inputList, String housenumber){
+		Map<String, Housenumber> list = new HashMap<String, Housenumber>();
 		if(housenumber == null) return list;
-		for(Entry<String, Housenumber> entry : housenumbers.entrySet()){
+		for(Entry<String, Housenumber> entry : inputList.entrySet()){
 			if(entry.getKey().startsWith(housenumber.toLowerCase())) {
-				list.add(entry.getValue());
+				list.put(entry.getKey(), entry.getValue());
 			}
 		}
 		return list;
 	}
 	
-	public Map<String, Housenumber> housenumberStartsWith(Map<String, Housenumber> inputList, String housenumber){
+	private Map<String, Housenumber> housenumberLevenshteinDistance(Map<String, Housenumber> inputList, String housenumber){
 		Map<String, Housenumber> list = new HashMap<String, Housenumber>();
+		int minValue = 0, maxValue = 3;
 		if(housenumber == null) return list;
 		for(Entry<String, Housenumber> entry : inputList.entrySet()){
-			if(entry.getKey().startsWith(housenumber.toLowerCase())) {
+			if(StringUtils.getLevenshteinDistance(entry.getKey(), housenumber.toLowerCase()) > minValue &&
+					StringUtils.getLevenshteinDistance(entry.getKey(), housenumber.toLowerCase()) < maxValue) {
 				list.put(entry.getKey(), entry.getValue());
 			}
 		}
@@ -111,6 +97,9 @@ public class Street {
 				break;
 			case STARTSWITH:
 				list = housenumberStartsWith(inputList, addr.getHousenumber());
+				break;
+			case LEVENSHTEINDISTANCE:
+				list = housenumberLevenshteinDistance(inputList, addr.getHousenumber());
 				break;
 			default:
 				break;

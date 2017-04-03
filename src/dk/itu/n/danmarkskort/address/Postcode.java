@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.commons.lang3.StringUtils;
+
 public class Postcode {
 	private String postcode;
 	private String city;
@@ -47,14 +49,6 @@ public class Postcode {
 			streets.put(street.toLowerCase(), newStreet);
 		}
 	}
-	
-	public void addStreet(Street st){
-		if(st.getStreet() != null){
-			Street newStreet = getStreet(st.getStreet());
-			if(newStreet == null) newStreet = new Street(this, st.getStreet());
-			streets.put(st.getStreet().toLowerCase(), newStreet);
-		}
-	}
 
 	public Map<String, Street> getStreets() {
 		return streets;
@@ -69,18 +63,7 @@ public class Postcode {
 		return postcode;
 	}
 	
-	public List<Street> streetContains(String street){
-		List<Street> list = new ArrayList<Street>();
-		if(street == null) return list;
-		for(Entry<String, Street> entry : streets.entrySet()){
-			if(entry.getKey().contains(street.toLowerCase())) {
-				list.add(entry.getValue());
-			}
-		}
-		return list;
-	}
-	
-	public Map<String, Street> streetContains(Map<String, Street> inputList, String street){
+	private Map<String, Street> streetContains(Map<String, Street> inputList, String street){
 		Map<String, Street> list = new HashMap<String, Street>();
 		if(street == null) return list;
 		for(Entry<String, Street> entry : inputList.entrySet()){
@@ -91,22 +74,24 @@ public class Postcode {
 		return list;
 	}
 	
-	public List<Street> streetStartsWith(String street){
-		List<Street> list = new ArrayList<Street>();
+	private Map<String, Street> streetStartsWith(Map<String, Street> inputList, String street){
+		Map<String, Street> list = new HashMap<String, Street>();
 		if(street == null) return list;
-		for(Entry<String, Street> entry : streets.entrySet()){
+		for(Entry<String, Street> entry : inputList.entrySet()){
 			if(entry.getKey().startsWith(street.toLowerCase())) {
-				list.add(entry.getValue());
+				list.put(entry.getKey(), entry.getValue());
 			}
 		}
 		return list;
 	}
 	
-	public Map<String, Street> streetStartsWith(Map<String, Street> inputList, String street){
+	private Map<String, Street> streetLevenshteinDistance(Map<String, Street> inputList, String street){
 		Map<String, Street> list = new HashMap<String, Street>();
+		int minValue = 0, maxValue = 3;
 		if(street == null) return list;
 		for(Entry<String, Street> entry : inputList.entrySet()){
-			if(entry.getKey().startsWith(street.toLowerCase())) {
+			if(StringUtils.getLevenshteinDistance(entry.getKey(), street.toLowerCase()) > minValue &&
+					StringUtils.getLevenshteinDistance(entry.getKey(), street.toLowerCase()) < maxValue) {
 				list.put(entry.getKey(), entry.getValue());
 			}
 		}
@@ -130,6 +115,9 @@ public class Postcode {
 				break;
 			case STARTSWITH:
 				list = streetStartsWith(inputList, addr.getStreet());
+				break;
+			case LEVENSHTEINDISTANCE:
+				list = streetLevenshteinDistance(inputList, addr.getStreet());
 				break;
 			default:
 				break;

@@ -275,7 +275,8 @@ public class RoutePage extends JPanel {
     
     private boolean updateValidInputAddrTo(JTextField field, JLabel labelName){
     	boolean valid = false;
-    	Address addr = SearchController.getInstance().getSearchFieldAddressObj(field.getText());
+    	Address addr = null;
+    	if(!field.getText().isEmpty()) addr = SearchController.getInstance().getSearchFieldAddressObj(field.getText());
     	if(addr != null) valid = true;
     	changeValidAddrIcon(labelName, valid);
     	return valid;
