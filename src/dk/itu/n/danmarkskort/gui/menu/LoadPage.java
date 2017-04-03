@@ -6,19 +6,17 @@ import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.Util;
 import dk.itu.n.danmarkskort.address.AddressController;
 import dk.itu.n.danmarkskort.gui.Style;
-import dk.itu.n.danmarkskort.models.Region;
+import dk.itu.n.danmarkskort.newmodels.Region;
 
 import java.awt.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import java.awt.event.ActionListener;
 import java.io.File;
-import java.nio.file.Files;
 import java.text.DecimalFormat;
-import java.awt.event.ActionEvent;
 
 public class LoadPage extends JPanel  {
+	private static final long serialVersionUID = -3622354925202477780L;
 	private Style style;
 	private JLabel lblCurrentmapfilename, lblCurrentmapfilesize, lblCurrentmapaddressesfound, lblCurrentmapbounds;
 	
@@ -158,10 +156,8 @@ public class LoadPage extends JPanel  {
 			Main.window.revalidate();
 			Main.window.repaint();
 			Main.map.zoomToBounds();
-        } else {
         }
-
-	}
+    }
 	
 	private JFileChooser viewFileChooser(String dialogTitle, String approveBtnTxt){
 		JFileChooser fc = new JFileChooser();

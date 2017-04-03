@@ -3,7 +3,7 @@ package dk.itu.n.danmarkskort.mapgfx;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
-import dk.itu.n.danmarkskort.models.WayType;
+import dk.itu.n.danmarkskort.newmodels.WayType;
 
 /**
  * This class is used for storing information about the visual representation of a map element 

@@ -24,6 +24,7 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 public class ThemeCreatorMain extends JFrame {
+	private static final long serialVersionUID = 8618838356916069134L;
 	private JPanel contentPane;
 	private int themeCount;
 	

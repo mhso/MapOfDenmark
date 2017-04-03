@@ -1,10 +1,8 @@
 package dk.itu.n.danmarkskort.mapgfx;
 
 import java.awt.BorderLayout;
-import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.EventQueue;
 
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
@@ -16,13 +14,11 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -57,6 +53,7 @@ import javax.swing.JOptionPane;
 
 public class ThemeCreator extends JFrame {
 
+	private static final long serialVersionUID = 7510624414996124339L;
 	private JPanel contentPane;
 	private JPanel themeEditPanel;
 	private String selectedFile;

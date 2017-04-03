@@ -3,12 +3,12 @@ package dk.itu.n.danmarkskort.gui;
 import dk.itu.n.danmarkskort.extras.AlphaImageIcon;
 import javax.swing.*;
 
-import dk.itu.n.danmarkskort.extras.AlphaImageIcon;
 import java.awt.*;
 
 public class CustomButton extends JButton {
+	private static final long serialVersionUID = 8833927450795701033L;
 
-    public CustomButton(String filename, float alpha, float alphaHover) {
+	public CustomButton(String filename, float alpha, float alphaHover) {
         this(filename, alpha, alphaHover, null);
     }
 

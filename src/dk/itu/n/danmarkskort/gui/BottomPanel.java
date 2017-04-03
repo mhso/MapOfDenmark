@@ -1,12 +1,12 @@
 package dk.itu.n.danmarkskort.gui;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 
 public class BottomPanel extends JPanel {
 
-    Style style;
+	private static final long serialVersionUID = 4413404136962289564L;
+	Style style;
     GridBagConstraints gbcParent;
 
     public BottomPanel(Style style) {

@@ -1,6 +1,6 @@
-package dk.itu.n.danmarkskort.lightweight;
+package dk.itu.n.danmarkskort.backend;
 
-import dk.itu.n.danmarkskort.models.WayType;
+import dk.itu.n.danmarkskort.newmodels.WayType;
 
 public class WayTypeUtil {
 

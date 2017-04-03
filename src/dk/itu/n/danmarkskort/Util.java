@@ -3,25 +3,25 @@ package dk.itu.n.danmarkskort;
 import java.awt.Dimension;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.LineNumberReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Map;
+
+import dk.itu.n.danmarkskort.newmodels.Coordinate;
+
 import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.Robot;
 import java.awt.Toolkit;
 import java.awt.geom.Point2D;
 
-import dk.itu.n.danmarkskort.models.Coordinate;
-import dk.itu.n.danmarkskort.models.ParsedBounds;
-
 public class Util {
-
-	public static ParsedBounds BOUNDS_DENMARK = new ParsedBounds(54.44065D, 7.7011D, 58.06239D, 15.65449D);
-	public static final float FACTOR_LON = (float)(Math.cos((BOUNDS_DENMARK.minLat + (BOUNDS_DENMARK.maxLat - BOUNDS_DENMARK.minLat) / 2)) / 180 * Math.PI); 
 	
 	public static float getRAMUsageInMB() {
 		return (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1000000F;
@@ -121,8 +121,8 @@ public class Util {
 	
 	public static Point2D coordinateToScreen(Coordinate coord) {
 		
-		double lat = coord.getLat()  - BOUNDS_DENMARK.minLat;
-		double lon = coord.getLong() - BOUNDS_DENMARK.minLong;
+		double lat = coord.getLat()  - DKConstants.BOUNDS_DENMARK.minLat;
+		double lon = coord.getLong() - DKConstants.BOUNDS_DENMARK.minLong;
 		
 		return coordinateToScreen(lat, lon);
 	}
@@ -130,12 +130,37 @@ public class Util {
 	public static Point2D coordinateToScreen(double lat, double lon) {
 		int window_width  = Main.map.getWidth();
 		int window_height = Main.map.getHeight();
-		double denmark_width  = BOUNDS_DENMARK.getWidth();
-		double denmark_height = BOUNDS_DENMARK.getHeight();
+		double denmark_width  = DKConstants.BOUNDS_DENMARK.getWidth();
+		double denmark_height = DKConstants.BOUNDS_DENMARK.getHeight();
 		double x = (lon / denmark_width)  * 640;
 		double y = (lat / denmark_height) * -480;
 		
 		return new Point2D.Double(x, y);
+	}
+	
+	public static boolean writeObjectToFile(Object object, String filename) {
+		try {
+			FileOutputStream fout = new FileOutputStream(filename);
+			ObjectOutputStream oos = new ObjectOutputStream(fout);
+			oos.writeObject(object);
+			oos.close();
+			return true;
+		} catch(Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	public static Object readObjectFromFile(String filename) {
+		try {
+			FileInputStream fout = new FileInputStream(filename);
+			ObjectInputStream oos = new ObjectInputStream(fout);
+			Object object = oos.readObject();
+			oos.close();
+			return object;
+		} catch(Exception e) {
+			return null;
+		}
 	}
 	
 }

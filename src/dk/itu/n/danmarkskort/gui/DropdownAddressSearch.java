@@ -7,8 +7,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class DropdownAddressSearch extends CustomDropdown {
-
-	private JTextField txtField;
+	private static final long serialVersionUID = -9057099852028144701L;
 	private Style style;
 	private int selectedIndex = -1;
 	private Component widthComponent;

@@ -4,8 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 
 public class GUIManager extends JPanel{
-
-    Style style;
+	private static final long serialVersionUID = 8887124630631749354L;
+	Style style;
 
     public GUIManager() {
 

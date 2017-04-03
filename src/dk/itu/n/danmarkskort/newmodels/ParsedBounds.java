@@ -1,4 +1,4 @@
-package dk.itu.n.danmarkskort.models;
+package dk.itu.n.danmarkskort.newmodels;
 
 public class ParsedBounds extends ParsedObject {
 
