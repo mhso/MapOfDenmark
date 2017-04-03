@@ -15,22 +15,15 @@ import java.util.stream.Collectors;
 
 public class AddressController{
 	private Map<float[], Address> addresses;
-	private Map<float[], String> addressesNotAccepted;
 	private int addressesNotAcceptedCount;
 	private List<Address> searchList = new ArrayList<Address>();
 
 	private static AddressController instance;
-	private HashMap<String, HashMap> addressDatabase;
 
 	private final static Lock lock = new ReentrantLock();
-	private static final int TreeMap = 0;
-
-	private int numAddresses;
 	
 	private AddressController(){
 		addresses =  new HashMap<float[], Address>();
-		addressesNotAccepted =  new HashMap<float[], String>();
-		addressDatabase = new HashMap<>();
 	}
 	int count = 0; 
 
@@ -144,92 +137,47 @@ public class AddressController{
 		//System.out.println("Addr: looking for suggestions ");
 		Address addrBuild = AddressParser.parse(find, true);
 		List<String> result = new ArrayList<String>();
-		System.out.println("find: " + find);
-		System.out.println("addrBuild: " + addrBuild.toStringShort());
+		//System.out.println("find: " + find);
+		//System.out.println("addrBuild: " + addrBuild.toStringShort());
 		
-		// perfect input
-//		Postcode postcode = AddressHolder.postcodes.get(addrBuild.getPostcode());
-//		if(postcode != null){
-//			System.out.println("postcode: OK");
-//			String city = postcode.getCity();
-//			Street street = postcode.getStreet(addrBuild.getStreet());
-//			if(street != null){
-//				System.out.println("street: OK");
-//				Housenumber housenumber = street.getHousenumber(addrBuild.getHousenumber());
-//				if(housenumber != null) {
-//					System.out.println("housenumber: OK");
-//					result.add(street.getStreet() + " " + housenumber.getHousenumber() + ", " + postcode.getPostcode() + " " + postcode.getCity());
-//					return result;
+			List<Postcode> list; 
+			list = AddressHolder.search(addrBuild,
+					SearchEnum.NOT_IN_USE, SearchEnum.NOT_IN_USE, SearchEnum.STARTSWITH, SearchEnum.NOT_IN_USE);
+//			System.out.println("Address result 1: " + AddressHolder.count(list));
+//			if(list.size() < limitAmountOfResults) { list = AddressHolder.search(addrBuild,
+//					SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.STARTSWITH);
+//			System.out.println("Address result 2: " + AddressHolder.count(list));
+//			}
+//			if(list.size() < limitAmountOfResults) { list = AddressHolder.search(addrBuild,
+//					SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.STARTSWITH, SearchEnum.NOT_IN_USE);
+//			System.out.println("Address result 3: " + AddressHolder.count(list));
+//			}
+//			if(list.size() < limitAmountOfResults) { list = AddressHolder.search(addrBuild,
+//					SearchEnum.EQUALS, SearchEnum.STARTSWITH, SearchEnum.NOT_IN_USE, SearchEnum.NOT_IN_USE);
+//			System.out.println("Address result 4: " + AddressHolder.count(list));
+//			}
+//			if(list.size() < limitAmountOfResults) { list = AddressHolder.search(addrBuild,
+//					SearchEnum.EQUALS, SearchEnum.NOT_IN_USE, SearchEnum.NOT_IN_USE, SearchEnum.NOT_IN_USE);
+//			System.out.println("Address result 5: " + AddressHolder.count(list));
+//			}
+//			if(list.size() < limitAmountOfResults) { list = AddressHolder.search(addrBuild,
+//					SearchEnum.STARTSWITH, SearchEnum.NOT_IN_USE, SearchEnum.NOT_IN_USE, SearchEnum.NOT_IN_USE);
+//			System.out.println("Address result 6: " + AddressHolder.count(list));
+//			}
+//			for(Postcode pc : list){
+//				for(Street st : pc.getStreets().values()){
+//					for(Housenumber hn : st.getHousenumbers().values()){
+//						//System.out.println(st.getStreet() + " " + hn.getHousenumber() + " " + pc.getPostcode() + " " + pc.getCity());
+//						result.add(st.getStreet() + " " + hn.getHousenumber() + " " + pc.getPostcode() + " " + pc.getCity());
+//					}
 //				}
 //			}
-//
-//		} else {
-			List<Postcode> list = AddressHolder.search(addrBuild, AddressHolder.Enums.STARTSWITH, AddressHolder.Enums.NOT_IN_USE, AddressHolder.Enums.NOT_IN_USE, AddressHolder.Enums.NOT_IN_USE);
-			System.out.println("Not in use :"
-					+ list.size() +
-					" | "
-			);
-			
-//			System.out.println("Street :"
-//					+ AddressHolder.search(addrBuild, AddressHolder.Enums.EQUALS, AddressHolder.Enums.NOT_IN_USE, AddressHolder.Enums.NOT_IN_USE, AddressHolder.Enums.NOT_IN_USE).size() +
-//					" | "
-//					+ AddressHolder.search(addrBuild, AddressHolder.Enums.STARTSWITH, AddressHolder.Enums.NOT_IN_USE, AddressHolder.Enums.NOT_IN_USE, AddressHolder.Enums.NOT_IN_USE).size() +
-//					" | "
-//					+ AddressHolder.search(addrBuild, AddressHolder.Enums.CONTAINS, AddressHolder.Enums.NOT_IN_USE, AddressHolder.Enums.NOT_IN_USE, AddressHolder.Enums.NOT_IN_USE).size() +
-//					" | "	
-//			);
-			
-//			System.out.println("Street Housenumber :"
-//					+ AddressHolder.search(addrBuild, AddressHolder.Enums.EQUALS, AddressHolder.Enums.EQUALS, AddressHolder.Enums.NOT_IN_USE, AddressHolder.Enums.NOT_IN_USE).size() +
-//					" | "
-//					+ AddressHolder.search(addrBuild, AddressHolder.Enums.EQUALS, AddressHolder.Enums.STARTSWITH, AddressHolder.Enums.NOT_IN_USE, AddressHolder.Enums.NOT_IN_USE).size() +
-//					" | "
-//					+ AddressHolder.search(addrBuild, AddressHolder.Enums.EQUALS, AddressHolder.Enums.CONTAINS, AddressHolder.Enums.NOT_IN_USE, AddressHolder.Enums.NOT_IN_USE).size() +
-//					" | "	
-//			);
-//			
-//			System.out.println("Street Housenumber postcode:"
-//					+ AddressHolder.search(addrBuild, AddressHolder.Enums.EQUALS, AddressHolder.Enums.EQUALS, AddressHolder.Enums.EQUALS, AddressHolder.Enums.NOT_IN_USE).size() +
-//					" | "
-//					+ AddressHolder.search(addrBuild, AddressHolder.Enums.EQUALS, AddressHolder.Enums.EQUALS, AddressHolder.Enums.STARTSWITH, AddressHolder.Enums.NOT_IN_USE).size() +
-//					" | "
-//					+ AddressHolder.search(addrBuild, AddressHolder.Enums.EQUALS, AddressHolder.Enums.EQUALS, AddressHolder.Enums.CONTAINS, AddressHolder.Enums.NOT_IN_USE).size() +
-//					" | "	
-//			);
-//			
-//			System.out.println("Postcode :"
-//					+ AddressHolder.search(addrBuild, AddressHolder.Enums.NOT_IN_USE, AddressHolder.Enums.NOT_IN_USE, AddressHolder.Enums.EQUALS, AddressHolder.Enums.NOT_IN_USE).size() +
-//					" | "
-//					+ AddressHolder.search(addrBuild, AddressHolder.Enums.NOT_IN_USE, AddressHolder.Enums.NOT_IN_USE, AddressHolder.Enums.STARTSWITH, AddressHolder.Enums.NOT_IN_USE).size() +
-//					" | "
-//					+ AddressHolder.search(addrBuild, AddressHolder.Enums.NOT_IN_USE, AddressHolder.Enums.NOT_IN_USE, AddressHolder.Enums.CONTAINS, AddressHolder.Enums.NOT_IN_USE).size() +
-//					" | "	
-//			);
-//			
-//			System.out.println("City :"
-//					+ AddressHolder.search(addrBuild, AddressHolder.Enums.NOT_IN_USE, AddressHolder.Enums.NOT_IN_USE, AddressHolder.Enums.NOT_IN_USE, AddressHolder.Enums.EQUALS).size() +
-//					" | "
-//					+ AddressHolder.search(addrBuild, AddressHolder.Enums.NOT_IN_USE, AddressHolder.Enums.NOT_IN_USE, AddressHolder.Enums.NOT_IN_USE, AddressHolder.Enums.STARTSWITH).size() +
-//					" | "
-//					+ AddressHolder.search(addrBuild, AddressHolder.Enums.NOT_IN_USE, AddressHolder.Enums.NOT_IN_USE, AddressHolder.Enums.NOT_IN_USE, AddressHolder.Enums.CONTAINS).size() +
-//					" | "	
-//			);
-			
-			for(Postcode ps : list){
-				for(Street st : ps.getStreets().values()){
-					for(Housenumber hn : st.getHousenumbers().values()){
-						result.add(st.getStreet() + " " + hn.getHousenumber() + " " + ps.getPostcode() + " " + ps.getCity());
-					}
-				}
-			}
-			
-//		}
-		
+//		System.out.println("Address result count: " + AddressHolder.count(list));
 		Collections.sort(result, String.CASE_INSENSITIVE_ORDER);
 		// Remove duplicates and return
 		timerUtil.off();
 		Main.log("Addresse Suggestion time: " + timerUtil.toString());
-		return result.parallelStream().distinct().limit(10l).collect(Collectors.toList());
+		return result.parallelStream().distinct().limit(limitAmountOfResults).collect(Collectors.toList());
 	}
 	
 	public Address createOsmAddress(float[] lonLat, Map<String, String> attributes){
@@ -247,28 +195,6 @@ public class AddressController{
 	}
 	
 	public void addressParsed(dk.itu.n.danmarkskort.lightweight.models.ParsedAddress address) {
-//        HashMap<String, HashMap<String, Float[]>> postcode;
-//        HashMap<String, Float[]> street;
-
-//        if(addressDatabase.containsKey(address.getPostcode())) {
-//        	postcode = addressDatabase.get(address.getPostcode());
-//		} else {
-//            postcode = new HashMap<>();
-//            addressDatabase.put(address.getPostcode(), postcode);
-//        }
-//
-//        if(postcode.containsKey(address.getStreet())) {
-//        	street = postcode.get(address.getStreet());
-//		} else {
-//            street = new HashMap<>();
-//            postcode.put(address.getStreet(), street);
-//        }
-//
-//        if(!street.containsKey(address.getHousenumber())) {
-//        	Float[] coords = new Float[]{address.getFirstLon(), address.getFirstLat()};
-//            street.put(address.getHousenumber(), coords);
-//            numAddresses++;
-//        }
         
         if(address != null) {	
 			float[] lonLat = new float[] {address.getFirstLon(), address.getFirstLat()};
