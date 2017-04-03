@@ -14,15 +14,12 @@ public class ParsedWay extends ParsedItem{
 
     public ParsedWay(long id) {
         this.id = id;
+        nodes = new ArrayList<>();
     }
 
-    public void addNodes(ArrayList<ParsedNode> nodes) {
-        this.nodes = nodes;
-    }
+    public void addNode(ParsedNode node) { nodes.add(node); }
 
-    public ArrayList<ParsedNode> getNodes() {
-        return nodes;
-    }
+    public ArrayList<ParsedNode> getNodes() { return nodes; }
 
     public long getID() { return id; }
 
@@ -47,12 +44,12 @@ public class ParsedWay extends ParsedItem{
 
     @Override
     public float getFirstLon() {
-        if(nodes != null && nodes.size() > 0) return nodes.get(0).getLon();
+        if(nodes.size() > 0) return nodes.get(0).getLon();
         return -1;
     }
     @Override
     public float getFirstLat() {
-        if(nodes != null && nodes.size() > 0) return nodes.get(0).getLat();
+        if(nodes.size() > 0) return nodes.get(0).getLat();
         return -1;
     }
     

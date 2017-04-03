@@ -30,7 +30,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
-import dk.itu.n.danmarkskort.SAXAdapter;
+import dk.itu.n.danmarkskort.backend.SAXAdapter;
 
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;

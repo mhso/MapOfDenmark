@@ -1,4 +1,4 @@
-package dk.itu.n.danmarkskort;
+package dk.itu.n.danmarkskort.backend;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;

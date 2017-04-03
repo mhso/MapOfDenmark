@@ -5,6 +5,9 @@ import java.util.ArrayList;
 
 public abstract class ParsedItem {
 
+    // Dette har nok ikke så høj prioritet
+    //private boolean isVisible = true;
+
     public int compareLon(ParsedItem item) {
         float a = getFirstLon();
         float b = item.getFirstLon();
@@ -20,6 +23,9 @@ public abstract class ParsedItem {
         if(a == b) return 0;
         return 0;
     }
+
+    //public void setVisible(boolean b) { isVisible = b; }
+    //public boolean isVisible() { return isVisible; }
 
     public abstract ParsedNode getFirstNode();
     public abstract ParsedNode getLastNode();

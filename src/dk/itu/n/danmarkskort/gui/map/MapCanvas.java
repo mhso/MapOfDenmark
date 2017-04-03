@@ -83,6 +83,7 @@ public class MapCanvas extends JPanel {
 		currentGraphics = g2d;
 
 		// drawing all the outlines, if the current WayTypeGraphicSpec has one
+		Main.log(wayTypesVisible);
 		for (WaytypeGraphicSpec wayTypeGraphic : wayTypesVisible) {
 			currentWTGSpec = wayTypeGraphic;
 			if(currentWTGSpec.getOuterColor() != null) {
