@@ -2,19 +2,17 @@ package dk.itu.n.danmarkskort.gui.menu;
 
 import javax.swing.*;
 
-import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.gui.Style;
 
 import java.awt.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import java.awt.event.ActionListener;
 import java.io.File;
-import java.awt.event.ActionEvent;
 
 public class SavePage extends JPanel  {
-	Style style;
+	private static final long serialVersionUID = -4502910705647356589L;
+	private Style style;
 	
     public SavePage() {
     	style = new Style();
@@ -76,8 +74,7 @@ public class SavePage extends JPanel  {
 			}
 			//model.save(file.getAbsolutePath());
 			System.out.println("Save Current Map to bin: "+file.getAbsolutePath());
-        } else {
-        }	
+        }
 	}
 	
 	private JFileChooser viewFileChooser(String dialogTitle, String approveBtnTxt){

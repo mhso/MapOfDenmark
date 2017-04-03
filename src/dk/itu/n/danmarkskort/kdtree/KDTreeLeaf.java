@@ -1,15 +1,14 @@
 package dk.itu.n.danmarkskort.kdtree;
 
 import dk.itu.n.danmarkskort.gui.map.MapCanvas;
-import dk.itu.n.danmarkskort.lightweight.models.ParsedItem;
-import dk.itu.n.danmarkskort.models.Region;
+import dk.itu.n.danmarkskort.newmodels.ParsedItem;
+import dk.itu.n.danmarkskort.newmodels.Region;
 
 import java.awt.*;
 import java.util.ArrayList;
 
 public class KDTreeLeaf extends KDTree {
 
-    private KDTree parent;
     private ParsedItem[] data;
     private Shape[] shapes;
 
@@ -37,8 +36,6 @@ public class KDTreeLeaf extends KDTree {
     public void getShapes(Region reg, MapCanvas map, boolean sortByLon) {
         map.drawShapes(shapes);
     }
-    @Override
-    public KDTree getParent() { return parent; }
     @Override public int size() {
         return data.length;
     }

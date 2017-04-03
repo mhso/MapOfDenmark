@@ -1,4 +1,4 @@
-package dk.itu.n.danmarkskort.models;
+package dk.itu.n.danmarkskort.newmodels;
 
 import java.awt.geom.Point2D;
 

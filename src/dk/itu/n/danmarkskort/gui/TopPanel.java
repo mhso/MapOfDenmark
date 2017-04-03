@@ -6,31 +6,21 @@ import dk.itu.n.danmarkskort.gui.menu.RoutePage;
 import dk.itu.n.danmarkskort.search.SearchController;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.text.AbstractDocument;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DocumentFilter;
 
-import com.sun.scenario.effect.DropShadow;
-
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 public class TopPanel extends JPanel {
-
-    private Style style;
+	private static final long serialVersionUID = -3413495967270668324L;
+	private Style style;
     private DropdownAddressSearch dropSuggestions;
     private DropdownMenu dropMenu;
     private JTextField input;

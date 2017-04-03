@@ -1,4 +1,4 @@
-package dk.itu.n.danmarkskort.lightweight.models;
+package dk.itu.n.danmarkskort.newmodels;
 
 import java.awt.*;
 import java.awt.geom.Path2D;

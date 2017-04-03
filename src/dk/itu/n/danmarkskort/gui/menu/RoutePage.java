@@ -6,35 +6,21 @@ import javax.swing.text.AbstractDocument;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DocumentFilter;
-import javax.swing.text.DocumentFilter.FilterBypass;
 
 import dk.itu.n.danmarkskort.address.Address;
 import dk.itu.n.danmarkskort.gui.DropdownAddressSearch;
 import dk.itu.n.danmarkskort.gui.Style;
-import dk.itu.n.danmarkskort.gui.TopPanel;
 import dk.itu.n.danmarkskort.routeplanner.RoutePlannerMain;
 import dk.itu.n.danmarkskort.search.SearchController;
 
 import java.awt.*;
-import java.awt.event.ActionListener;
-import java.awt.event.FocusListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
 import java.util.List;
-import java.awt.event.ActionEvent;
-import java.awt.event.ItemListener;
-import java.awt.event.ItemEvent;
-import javax.swing.event.PopupMenuListener;
-import javax.swing.event.PopupMenuEvent;
-import java.awt.event.InputMethodListener;
-import java.awt.event.InputMethodEvent;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
 
 public class RoutePage extends JPanel {
-
-    Style style;
+	private static final long serialVersionUID = 6134418299293182669L;
+	Style style;
     private JTextField txtAddrFrom;
     private JTextField txtAddrTo;
     JLabel lblAddrFromConfirmed, lblAddrToConfirmed;

@@ -1,16 +1,20 @@
-package dk.itu.n.danmarkskort.lightweight;
+package dk.itu.n.danmarkskort.backend;
 
 import dk.itu.n.danmarkskort.DKConstants;
 import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.SAXAdapter;
 import dk.itu.n.danmarkskort.Util;
 import dk.itu.n.danmarkskort.address.AddressController;
-import dk.itu.n.danmarkskort.backend.OSMParser;
-import dk.itu.n.danmarkskort.backend.OSMParserListener;
 import dk.itu.n.danmarkskort.lightweight.models.*;
+import dk.itu.n.danmarkskort.newmodels.ParsedAddress;
+import dk.itu.n.danmarkskort.newmodels.ParsedItem;
+import dk.itu.n.danmarkskort.newmodels.ParsedNode;
+import dk.itu.n.danmarkskort.newmodels.ParsedRelation;
+import dk.itu.n.danmarkskort.newmodels.ParsedWay;
+import dk.itu.n.danmarkskort.newmodels.Region;
+import dk.itu.n.danmarkskort.newmodels.WayType;
 import dk.itu.n.danmarkskort.kdtree.*;
-import dk.itu.n.danmarkskort.models.Region;
-import dk.itu.n.danmarkskort.models.WayType;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
@@ -220,7 +224,9 @@ public class LightWeightParser extends SAXAdapter {
                 enumMap.get(waytype).add(relation);
                 for(OSMParserListener listener : parser.parserListeners) listener.onParsingGotItem(relation);
             }
-            else if(node != null) ; // her skal der ske noget hvis vi vil gemme andre single-node points end addresser
+            else if(node != null) {
+            	for(OSMParserListener listener : parser.parserListeners) listener.onParsingGotItem(node);
+            } 
         }
 
         if(way != null) {

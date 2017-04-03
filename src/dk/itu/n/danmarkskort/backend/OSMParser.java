@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import org.xml.sax.InputSource;
@@ -18,8 +17,6 @@ import org.xml.sax.helpers.XMLReaderFactory;
 import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.MemoryUtil;
 import dk.itu.n.danmarkskort.TimerUtil;
-import dk.itu.n.danmarkskort.Util;
-import dk.itu.n.danmarkskort.lightweight.LightWeightParser;
 
 // This class can parse an OSM file, and turn it into tile files. 
 public class OSMParser {
@@ -91,14 +88,8 @@ public class OSMParser {
 	private void loadOSM(InputSource source, String fileName) {
 		try {
 			XMLReader reader = XMLReaderFactory.createXMLReader();
-			if(Main.lightweight) {
-				reader.setContentHandler(Main.model);
-				reader.parse(source);
-			}
-			else {
-				reader.setContentHandler(new OSMNodeHandler(this, fileName));
-				reader.parse(source);
-			}
+			reader.setContentHandler(Main.model);
+			reader.parse(source);
 		} catch (SAXException | IOException e) {
 			e.printStackTrace();
 		}

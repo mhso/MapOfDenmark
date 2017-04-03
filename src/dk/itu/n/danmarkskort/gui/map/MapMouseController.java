@@ -2,7 +2,6 @@ package dk.itu.n.danmarkskort.gui.map;
 
 
 import java.awt.Dimension;
-import java.awt.MouseInfo;
 import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -35,10 +34,6 @@ public class MapMouseController extends MouseAdapter {
 
 	public void mousePressed(MouseEvent e) {
 		lastMousePosition = e.getPoint();
-	}
-
-	public void mouseReleased(MouseEvent e) {
-
 	}
 
 	public void mouseDragged(MouseEvent e) {

@@ -5,29 +5,27 @@ import java.awt.Toolkit;
 
 import javax.swing.*;
 
+import org.xml.sax.InputSource;
+
+import dk.itu.n.danmarkskort.backend.LightWeightParser;
 import dk.itu.n.danmarkskort.backend.OSMParser;
-import dk.itu.n.danmarkskort.backend.TileController;
 import dk.itu.n.danmarkskort.gui.WindowParsingLoadscreenNew;
 import dk.itu.n.danmarkskort.gui.map.MapCanvas;
-import dk.itu.n.danmarkskort.lightweight.LightWeightParser;
 import dk.itu.n.danmarkskort.mapgfx.GraphicRepresentation;
 
 public class Main {
 
 	public final static String APP_NAME = "Map";
-	public final static String APP_VERSION = "0.4";
+	public final static String APP_VERSION = "0.5";
 	public final static boolean debug = true;
 	public final static boolean production = false;
+	public final static boolean buffered = true;
 	
 	public static OSMParser osmParser;
-	public static TileController tileController;
 	public static JFrame window;
 	public static LightWeightParser model;
 	public static MapCanvas map;
 	public static MainCanvas mainPanel;
-
-	public final static boolean lightweight = true;
-	public final static boolean buffered = false;
 	
 	public static void main(String[] args) {
         startup(args);
@@ -37,27 +35,16 @@ public class Main {
 
 	public static void startup(String[] args) {
 		if(window != null) window.getContentPane().removeAll();
-		if(lightweight) {
-			osmParser = new OSMParser();
-			model = new LightWeightParser(osmParser);
-			GraphicRepresentation.main(new String[]{"resources/ThemeBasic.XML"});
-			prepareParser(args);
-		} else {
-			osmParser = new OSMParser();
-			tileController = new TileController();
-			prepareParser(args);
-		}
-
+		osmParser = new OSMParser();
+		model = new LightWeightParser(osmParser);
+		GraphicRepresentation.parseData(new InputSource("resources/ThemeBasic.XML"));
+		prepareParser(args);
 	}
 
 	public static void prepareParser(String[] args) {
 		WindowParsingLoadscreenNew loadScreen = new WindowParsingLoadscreenNew();
 		LoadScreenThread loadScreenThread = new LoadScreenThread(loadScreen);
-		//osmParser.addListener(AddressController.getInstance());
 		osmParser.addListener(loadScreen);
-		if(!lightweight) {
-			osmParser.addListener(tileController);
-		}
 		loadScreenThread.setFilenameAndRun(args[0]);
 		osmParser.parseFile(args[0]);
 	}

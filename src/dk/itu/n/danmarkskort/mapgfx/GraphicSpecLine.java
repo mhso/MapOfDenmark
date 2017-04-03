@@ -5,7 +5,6 @@ import java.awt.Graphics2D;
 import java.util.Arrays;
 
 import dk.itu.n.danmarkskort.DKConstants;
-import dk.itu.n.danmarkskort.Main;
 
 public class GraphicSpecLine extends WaytypeGraphicSpec {
 	private float lineWidth;
@@ -52,7 +51,7 @@ public class GraphicSpecLine extends WaytypeGraphicSpec {
 		this.dashArr = dashArr;
 		if(this.dashArr != null) {
 		    for(int i = 0; i < this.dashArr.length; i++) {
-                this.dashArr[i] *= 0.000006f;
+                this.dashArr[i] *= DKConstants.LINE_OUTLINE_WIDTH;
             }
         }
 	}
