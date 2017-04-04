@@ -27,6 +27,7 @@ import dk.itu.n.danmarkskort.mapgfx.GraphicSpecLine;
 import dk.itu.n.danmarkskort.mapgfx.WaytypeGraphicSpec;
 import dk.itu.n.danmarkskort.newmodels.ParsedBounds;
 import dk.itu.n.danmarkskort.newmodels.Region;
+import dk.itu.n.danmarkskort.newmodels.WayType;
 
 public class MapCanvas extends JPanel {
 
@@ -71,6 +72,10 @@ public class MapCanvas extends JPanel {
 	}
 	
 	public void drawMap(Graphics2D g2d) {
+		KDTree coastTree = Main.model.enumMapKD.get(WayType.COASTLINE);
+		if(coastTree == null || coastTree.size(getGeographicalRegion()) == 0) g2d.setColor(Color.BLACK);
+		else g2d.setColor(new Color(110, 192, 255));
+		g2d.fillRect(0, 0, getWidth(), getHeight());
 		if(Main.buffered) {
 			if(imageManager != null) imageManager.draw(g2d);
 		} else {

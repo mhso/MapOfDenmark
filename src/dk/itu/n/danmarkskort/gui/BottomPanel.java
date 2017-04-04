@@ -1,6 +1,7 @@
 package dk.itu.n.danmarkskort.gui;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 
 import dk.itu.n.danmarkskort.DKConstants;
 import dk.itu.n.danmarkskort.Main;
@@ -12,18 +13,14 @@ public class BottomPanel extends JPanel implements CanvasListener {
 
 	private static final long serialVersionUID = 4413404136962289564L;
 	Style style;
-    GridBagConstraints gbcParent;
     private JLabel scale;
 
     public BottomPanel(Style style) {
 
         this.style = style;
 
-        setLayout(new GridBagLayout());
+        setLayout(new BorderLayout());
         setOpaque(false);
-
-        gbcParent = new GridBagConstraints();
-        gbcParent.anchor = GridBagConstraints.SOUTH;
 
         Main.map.addCanvasListener(this);
         addLeft();
@@ -32,80 +29,52 @@ public class BottomPanel extends JPanel implements CanvasListener {
     }
 
     private void addLeft() {
-        GridBagConstraints gbc = new GridBagConstraints();
+        JPanel leftPanel = new JPanel(new BorderLayout());
+        leftPanel.setBorder(new EmptyBorder(0, 0, 10, 0));
+        leftPanel.setOpaque(false);
 
-        JLabel dummy = new JLabel();
-        gbc.weightx = 1;
-        gbc.gridx = 1;
-        gbc.gridy = 0;
-        gbc.weighty = 1;
-
-        JPanel leftPanel = new JPanel(new GridBagLayout());
-        gbcParent.gridx = 0;
-        gbcParent.gridy = 1;
-        leftPanel.add(dummy, gbc);
-
-        gbc.weightx = 0.0;
-        gbc.weighty = 0.0;
-        gbc.gridx = 0;
-        gbc.gridy = 1;
         scale = new ScaleLabel("Scale: ");
+        scale.setOpaque(true);
         scale.setFont(new Font(scale.getFont().getName(), Font.PLAIN, 12));
         scale.setHorizontalAlignment(SwingConstants.CENTER);
 
-        leftPanel.add(scale, gbc);
-        add(leftPanel, gbcParent);
+        leftPanel.add(scale, BorderLayout.SOUTH);
+        add(leftPanel, BorderLayout.WEST);
     }
 
     private void addCenter() {
-        // the idea is that this panel is gonna contain a box at the bottom center,
-        // which displays the longitude-latitude where the mouse is, and a the name
-        // of the nearest street
+        JPanel centerPanel = new JPanel();
+        centerPanel.setLayout(new BorderLayout());
+        centerPanel.setBorder(new EmptyBorder(38, 0, 10, 0));
+        centerPanel.setOpaque(false);
 
-        //right now it contains nothing
-
-        JLabel dummy = new JLabel();
-        gbcParent.gridx = 1;
-        gbcParent.weightx = 1;
-        add(dummy, gbcParent);
+        JLabel coordsLabel = new JLabel("Lon: 0, Lat: 0");
+        coordsLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        centerPanel.add(coordsLabel, BorderLayout.NORTH);
+        
+        JLabel nearestStreetLabel = new JLabel("<html><body><u>Streetname</u></body></html>");
+        nearestStreetLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        centerPanel.add(nearestStreetLabel, BorderLayout.SOUTH);
+        
+        add(centerPanel, BorderLayout.CENTER);
     }
 
     private void addRight() {
-
-        JPanel rightParent = new JPanel(new GridBagLayout());
+        JPanel rightParent = new JPanel(new GridLayout(2, 1, 0, 5));
         rightParent.setOpaque(false);
 
-        GridBagConstraints gbc = new GridBagConstraints();
-
-        JLabel dummy = new JLabel();
-        gbc.weighty = 1;
-        gbc.weightx = 1;
-        rightParent.add(dummy, gbc);
-
         CustomButton zoomIn = style.zoomInButton();
-        gbc.gridx = 1;
-        gbc.gridy = 1;
-        gbc.weighty = 0.0;
-        gbc.weightx = 0.0;
         zoomIn.setBorder(BorderFactory.createLineBorder(style.zoomButtonBG(), 5));
-        rightParent.add(zoomIn, gbc);
+        rightParent.add(zoomIn);
 
         CustomButton zoomOut = style.zoomOutButton();
         zoomOut.setBorder(BorderFactory.createLineBorder(style.zoomButtonBG(), 5));
-        gbc.gridy = 2;
-        gbc.insets = new Insets(5, 0, 0, 0);
-        rightParent.add(zoomOut, gbc);
+        rightParent.add(zoomOut);
 
-        gbcParent.gridx = 2;
-        gbcParent.weightx = 0.0;
-        add(rightParent, gbcParent);
+        add(rightParent, BorderLayout.EAST);
     }
 
     private void setScale() {
-    	if(Main.map == null) return;
-    	double denmarkWidth = DKConstants.BOUNDS_DENMARK.maxLong - DKConstants.BOUNDS_DENMARK.minLong;
-        double denmarkLonKm = denmarkWidth*111.320*Math.cos(Math.toRadians(-DKConstants.BOUNDS_DENMARK.maxLat));
-        
     	double viewWidth = Main.map.getGeographicalRegion().getWidth();
         double viewLonKm = viewWidth*111.320*Math.cos(Math.toRadians(-Main.map.getGeographicalRegion().y2));
     	
