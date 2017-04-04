@@ -33,10 +33,12 @@ public class SearchController{
 	
 	public List<String> getSearchFieldSuggestions(String inputStr){
 		long limitAmountOfResults = 5;
+		if(inputStr == null || inputStr.isEmpty()) return null;
 		return AddressController.getInstance().getSearchSuggestions(inputStr, limitAmountOfResults);
 	}
 	
 	public Address getSearchFieldAddressObj(String inputStr){
+		if(inputStr == null || inputStr.isEmpty()) return null;
 		return AddressController.getInstance().getSearchResult(inputStr);
 	} 
 }

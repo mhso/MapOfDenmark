@@ -1,17 +1,17 @@
 package dk.itu.n.danmarkskort.address;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.commons.lang3.StringUtils;
 
+import dk.itu.n.danmarkskort.newmodels.Region;
+
 public class Postcode {
-	private String postcode;
-	private String city;
+	private String postcode, city;
 	private Map<String, Street> streets;
+	private Region region;
 	
 	Postcode(String postcode, String city){
 		this.postcode = postcode;
@@ -20,8 +20,36 @@ public class Postcode {
 	}
 
 	public String getCity() { return city; }
-
 	public void setCity(String city) { this.city = city; }
+	
+	public Region getRegion(){
+		if(region == null) region = genRegion();
+		return region;
+	}
+
+	private Region genRegion(){
+		Region region =  new Region(0, 0, 0, 0);
+		for(Street st : streets.values()){
+				Region stR = st.getRegion();
+				if(region.x1 < stR.x1) region.x1 = stR.x1;
+				if(region.y1 < stR.y1) region.y1 = stR.y1;
+				if(region.x2 > stR.x2) region.x2 = stR.x2;
+				if(region.y2 > stR.y2) region.y2 = stR.y2;
+		}
+		System.out.println(region.toString());
+		return region;
+	}
+	
+	public Map<Region, Street> searchRegion(Region input){
+		Map<Region, Street> regions = new HashMap<Region, Street>();
+		for(Street st : streets.values()) {
+			Region stR = st.getRegion();
+			if(input.x1 >= stR.x1 && input.y1 >= stR.y2 && input.x1 >= stR.x1 && input.y1 >= stR.y2){
+				regions.put(st.getRegion(), st);
+			}
+		}
+		return regions;
+	}
 	
 	public int count(){
 		int size = 0;

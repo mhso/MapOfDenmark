@@ -6,10 +6,13 @@ import java.util.Map.Entry;
 
 import org.apache.commons.lang3.StringUtils;
 
+import dk.itu.n.danmarkskort.newmodels.Region;
+
 public class Street {
 	private String street;
 	private Map<String, Housenumber> housenumbers;
 	private Postcode postcode;
+	private Region region;
 	
 	public Postcode getPostcode() { return postcode; }
 	public void setPostcode(Postcode postcode) { this.postcode = postcode; }
@@ -18,6 +21,40 @@ public class Street {
 		this.setPostcode(postcode);
 		this.street = street;
 		housenumbers = new HashMap<String, Housenumber>();
+		region = null;
+	}
+	public Region getRegion(){
+		if(region == null) region = genRegion();
+		return region;
+	}
+	
+	private Region genRegion(){
+		Region region =  new Region(0, 0, 0, 0);
+		for(Housenumber hn : housenumbers.values()){
+				float[] lonLat = hn.getLonLat();
+				float lon = lonLat[0];
+				float lat = lonLat[1];
+				if(region.x1 < lon) region.x1 = lon;
+				if(region.y1 < lat) region.y1 = lat;
+				if(region.x2 > lon) region.x2 = lon;
+				if(region.y2 > lat) region.y2 = lat;
+		}
+		System.out.println(region.toString());
+		return region;
+	}
+	
+	public Map<Region, Housenumber> searchRegion(Region input){
+		Map<Region, Housenumber> regions = new HashMap<Region, Housenumber>();
+		for(Housenumber hn : housenumbers.values()) {
+			float[] lonLat = hn.getLonLat();
+			float lon = lonLat[0];
+			float lat = lonLat[1];
+			Region region =  new Region(lon, lat, lon, lat);
+			if(input.x1 >= lon && input.y1 >= lat && input.x1 >= lon && input.y1 >= lat){
+				regions.put(region, hn);
+			}
+		}
+		return regions;
 	}
 	
 	public int count(){ return housenumbers.size(); }
@@ -102,4 +139,5 @@ public class Street {
 		}
 		return list;
 	}
+
 }

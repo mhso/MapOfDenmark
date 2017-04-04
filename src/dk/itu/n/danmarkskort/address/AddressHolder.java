@@ -1,10 +1,13 @@
 package dk.itu.n.danmarkskort.address;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.commons.lang3.StringUtils;
+
+import dk.itu.n.danmarkskort.newmodels.Region;
 
 public class AddressHolder {
 	public static HashMap<String, Postcode> postcodes = new HashMap<String, Postcode>();
@@ -188,5 +191,32 @@ public class AddressHolder {
 		if(p == null) p = new Postcode(hn.getPostcode().getPostcode(), hn.getPostcode().getCity());
 			p.addAddress(hn.getStreet().getStreet(), hn.getHousenumber(), hn.getLonLat());
 			inputList.putIfAbsent(p.getPostcode(), p);
+	}
+	
+	public static Map<Region, Postcode> getRegions(){
+		Map<Region, Postcode> regions = new HashMap<Region, Postcode>();
+		for(Postcode pc : postcodes.values()) regions.put(pc.getRegion(), pc);
+		return regions;
+	}
+	
+	public static Map<Region, Postcode> searchRegion(Region input){
+		Map<Region, Postcode> regions = new HashMap<Region, Postcode>();
+		for(Postcode pc : postcodes.values()) {
+			Region pcR = pc.getRegion();
+			if(input.x1 >= pcR.x1 && input.y1 >= pcR.y2 && input.x1 >= pcR.x1 && input.y1 >= pcR.y2){
+				regions.put(pc.getRegion(), pc);
+			}
+		}
+		return regions;
+	}
+	
+	public static Map<Region, Housenumber> searchCoordinats(Region input){	
+		Map<Region, Housenumber> regions = new HashMap<Region, Housenumber>();
+		for(Postcode pc : searchRegion(input).values()) {
+			for(Street st : pc.searchRegion(input).values()){
+				regions.putAll(st.searchRegion(input));
+			}
+		}
+		return regions;
 	}
 }
