@@ -11,7 +11,7 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
 import dk.itu.n.danmarkskort.DKConstants;
-import dk.itu.n.danmarkskort.SAXAdapter;
+import dk.itu.n.danmarkskort.backend.SAXAdapter;
 import dk.itu.n.danmarkskort.newmodels.WayType;
 
 import org.xml.sax.Attributes;
@@ -39,6 +39,7 @@ public class GraphicRepresentation {
 		cummulativeList.addAll(overriddenSpecs);
 		for(int i = zoomLevel; i >= 0; i--) {
 			for(WaytypeGraphicSpec wgs : zoomLevelArr[i]) {
+
 				if(!wgs.isFiltered() && !overriddenSpecs.contains(wgs)) cummulativeList.add(wgs);
 			}
 		}

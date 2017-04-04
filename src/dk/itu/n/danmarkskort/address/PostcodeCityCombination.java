@@ -40,7 +40,7 @@ public class PostcodeCityCombination {
 		if(city != null) {
 			if(combinations.containsKey(key)){
 				int count = combinations.get(key);
-				combinations.put(key, count++);
+				combinations.put(key, ++count);
 			} else {
 				combinations.put(key, 1);
 			}
@@ -66,6 +66,7 @@ public class PostcodeCityCombination {
 					}      
 			   }
 		}
+		clearCombinations();
 	}
 	
 	public int sizeBestMatches(){
@@ -76,7 +77,12 @@ public class PostcodeCityCombination {
 		if(bestMatches.size() > 0) combinations = null;
 	}
 	
+	public void clearBestMatches(){
+		if(bestMatches.size() > 0) bestMatches = null;
+	}
+	
 	public String getCity(String postcode){
+		if(combinations != null) compileBestMatches();
 		if(postcode == null) return null;
 		return bestMatches.get(postcode);
 	}

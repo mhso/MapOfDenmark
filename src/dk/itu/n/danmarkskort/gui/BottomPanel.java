@@ -1,13 +1,19 @@
 package dk.itu.n.danmarkskort.gui;
 
 import javax.swing.*;
+
+import dk.itu.n.danmarkskort.DKConstants;
+import dk.itu.n.danmarkskort.Main;
+import dk.itu.n.danmarkskort.gui.map.CanvasListener;
+
 import java.awt.*;
 
-public class BottomPanel extends JPanel {
+public class BottomPanel extends JPanel implements CanvasListener {
 
 	private static final long serialVersionUID = 4413404136962289564L;
 	Style style;
     GridBagConstraints gbcParent;
+    private JLabel scale;
 
     public BottomPanel(Style style) {
 
@@ -19,6 +25,7 @@ public class BottomPanel extends JPanel {
         gbcParent = new GridBagConstraints();
         gbcParent.anchor = GridBagConstraints.SOUTH;
 
+        Main.map.addCanvasListener(this);
         addLeft();
         addCenter();
         addRight();
@@ -42,7 +49,9 @@ public class BottomPanel extends JPanel {
         gbc.weighty = 0.0;
         gbc.gridx = 0;
         gbc.gridy = 1;
-        JLabel scale = new JLabel(style.scaleIndicator());
+        scale = new ScaleLabel("Scale: ");
+        scale.setFont(new Font(scale.getFont().getName(), Font.PLAIN, 12));
+        scale.setHorizontalAlignment(SwingConstants.CENTER);
 
         leftPanel.add(scale, gbc);
         add(leftPanel, gbcParent);
@@ -92,4 +101,31 @@ public class BottomPanel extends JPanel {
         add(rightParent, gbcParent);
     }
 
+    private void setScale() {
+    	if(Main.map == null) return;
+    	double denmarkWidth = DKConstants.BOUNDS_DENMARK.maxLong - DKConstants.BOUNDS_DENMARK.minLong;
+        double denmarkLonKm = denmarkWidth*111.320*Math.cos(Math.toRadians(-DKConstants.BOUNDS_DENMARK.maxLat));
+        
+    	double viewWidth = Main.map.getGeographicalRegion().getWidth();
+        double viewLonKm = viewWidth*111.320*Math.cos(Math.toRadians(-Main.map.getGeographicalRegion().y2));
+    	
+        String scaleString = " km";
+        double kmScale = viewLonKm/12;
+        if(kmScale < 1) {
+        	kmScale *= 1000;
+        	scaleString = " m";
+        }
+    	scale.setText((int)kmScale + scaleString);
+    }
+    
+    @Override
+	public void onZoomLevelChanged() {
+		
+	}
+
+	@Override
+	public void onZoom() {
+		setScale();
+	}
+	
 }

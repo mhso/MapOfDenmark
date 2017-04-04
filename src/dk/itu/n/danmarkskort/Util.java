@@ -13,13 +13,10 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 
-import dk.itu.n.danmarkskort.newmodels.Coordinate;
-
 import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.Robot;
 import java.awt.Toolkit;
-import java.awt.geom.Point2D;
 
 public class Util {
 	
@@ -36,7 +33,7 @@ public class Util {
 	}
 	
 	public static String getCurrentOSMFolderPath() {
-		return Util.getCurrentDirectoryPath() + "/parsedOSMFiles/" + Main.osmParser.getChecksum();
+		return Util.getCurrentDirectoryPath() + "/parsedOSMFiles/" + Main.osmReader.getChecksum();
 	}
 	
 	public static String getFileChecksum(MessageDigest digest, File file) throws IOException {
@@ -119,25 +116,6 @@ public class Util {
 		}
 	}
 	
-	public static Point2D coordinateToScreen(Coordinate coord) {
-		
-		double lat = coord.getLat()  - DKConstants.BOUNDS_DENMARK.minLat;
-		double lon = coord.getLong() - DKConstants.BOUNDS_DENMARK.minLong;
-		
-		return coordinateToScreen(lat, lon);
-	}
-	
-	public static Point2D coordinateToScreen(double lat, double lon) {
-		int window_width  = Main.map.getWidth();
-		int window_height = Main.map.getHeight();
-		double denmark_width  = DKConstants.BOUNDS_DENMARK.getWidth();
-		double denmark_height = DKConstants.BOUNDS_DENMARK.getHeight();
-		double x = (lon / denmark_width)  * 640;
-		double y = (lat / denmark_height) * -480;
-		
-		return new Point2D.Double(x, y);
-	}
-	
 	public static boolean writeObjectToFile(Object object, String filename) {
 		try {
 			FileOutputStream fout = new FileOutputStream(filename);
@@ -159,7 +137,7 @@ public class Util {
 			oos.close();
 			return object;
 		} catch(Exception e) {
-			e.printStackTrace();
+			Main.log("Could not find file: " + filename);
 			return null;
 		}
 	}

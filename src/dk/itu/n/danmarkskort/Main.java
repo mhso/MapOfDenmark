@@ -7,8 +7,8 @@ import javax.swing.*;
 
 import org.xml.sax.InputSource;
 
-import dk.itu.n.danmarkskort.backend.LightWeightParser;
 import dk.itu.n.danmarkskort.backend.OSMParser;
+import dk.itu.n.danmarkskort.backend.OSMReader;
 import dk.itu.n.danmarkskort.gui.WindowParsingLoadscreenNew;
 import dk.itu.n.danmarkskort.gui.map.MapCanvas;
 import dk.itu.n.danmarkskort.gui.map.PinPointManager;
@@ -22,9 +22,9 @@ public class Main {
 	public final static boolean production = false;
 	public final static boolean buffered = true;
 	
-	public static OSMParser osmParser;
+	public static OSMReader osmReader;
 	public static JFrame window;
-	public static LightWeightParser model;
+	public static OSMParser model;
 	public static MapCanvas map;
 	public static MainCanvas mainPanel;
 	public static PinPointManager pinPointManager;
@@ -37,8 +37,8 @@ public class Main {
 
 	public static void startup(String[] args) {
 		if(window != null) window.getContentPane().removeAll();
-		osmParser = new OSMParser();
-		model = new LightWeightParser(osmParser);
+		osmReader = new OSMReader();
+		model = new OSMParser(osmReader);
 		GraphicRepresentation.parseData(new InputSource("resources/ThemeBasic.XML"));
 		prepareParser(args);
 	}
@@ -46,9 +46,9 @@ public class Main {
 	public static void prepareParser(String[] args) {
 		WindowParsingLoadscreenNew loadScreen = new WindowParsingLoadscreenNew();
 		LoadScreenThread loadScreenThread = new LoadScreenThread(loadScreen);
-		osmParser.addListener(loadScreen);
+		osmReader.addListener(loadScreen);
 		loadScreenThread.setFilenameAndRun(args[0]);
-		osmParser.parseFile(args[0]);
+		osmReader.parseFile(args[0]);
 	}
 	
 	public static void main() {
@@ -85,10 +85,12 @@ public class Main {
     	JPanel overlay = new JPanel();
         overlay.setLayout(new OverlayLayout(overlay));
         overlay.setPreferredSize(new Dimension(DKConstants.WINDOW_WIDTH, DKConstants.WINDOW_HEIGHT));
-        
-    	map = new MapCanvas();
-        map.setPreferredSize(new Dimension(DKConstants.WINDOW_WIDTH, DKConstants.WINDOW_HEIGHT));
+
+        map = new MapCanvas();
         pinPointManager = PinPointManager.load(map);
+        mainPanel = new MainCanvas();
+        
+        map.setPreferredSize(new Dimension(DKConstants.WINDOW_WIDTH, DKConstants.WINDOW_HEIGHT));
         mainPanel = new MainCanvas();
         overlay.add(mainPanel);
     	overlay.add(map);
