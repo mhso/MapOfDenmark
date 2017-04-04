@@ -163,7 +163,7 @@ public class OSMParser extends SAXAdapter {
                 break;
             case "tag":
                 String k = atts.getValue("k");
-                String v = atts.getValue("v");
+                String v = atts.getValue("v").trim();
                 switch(k) {
                     case "addr:city":
                         if (address == null) address = new ParsedAddress();
