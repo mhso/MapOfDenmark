@@ -19,7 +19,7 @@ public class Main {
 	public final static String APP_VERSION = "0.5";
 	public final static boolean debug = true;
 	public final static boolean production = false;
-	public final static boolean buffered = false;
+	public final static boolean buffered = true;
 	
 	public static OSMReader osmReader;
 	public static JFrame window;
@@ -82,9 +82,9 @@ public class Main {
     	JPanel overlay = new JPanel();
         overlay.setLayout(new OverlayLayout(overlay));
         overlay.setPreferredSize(new Dimension(DKConstants.WINDOW_WIDTH, DKConstants.WINDOW_HEIGHT));
-        map = new MapCanvas();
         mainPanel = new MainCanvas();
-    	
+        
+    	map = new MapCanvas();
         map.setPreferredSize(new Dimension(DKConstants.WINDOW_WIDTH, DKConstants.WINDOW_HEIGHT));
         
         overlay.add(mainPanel);
