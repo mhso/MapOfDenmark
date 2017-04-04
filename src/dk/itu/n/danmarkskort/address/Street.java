@@ -29,28 +29,28 @@ public class Street {
 	}
 	
 	private Region genRegion(){
-		Region region =  new Region(0, 0, 0, 0);
+		Region region =  new Region(Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, Double.MAX_VALUE);
 		for(Housenumber hn : housenumbers.values()){
 				float[] lonLat = hn.getLonLat();
 				float lon = lonLat[0];
 				float lat = lonLat[1];
-				if(region.x1 < lon) region.x1 = lon;
-				if(region.y1 < lat) region.y1 = lat;
-				if(region.x2 > lon) region.x2 = lon;
-				if(region.y2 > lat) region.y2 = lat;
+				Region hnR = new Region(lon, lat, lon, lat);
+				if(hnR.x1 > region.x1) region.x1 = hnR.x1;
+				if(hnR.y1 > region.y1) region.y1 = hnR.y1;
+				if(hnR.x2 < region.x2) region.x2 = hnR.x2;
+				if(hnR.y2 < region.y2) region.y2 = hnR.y2;
 		}
-		System.out.println(region.toString());
 		return region;
 	}
 	
-	public Map<Region, Housenumber> searchRegion(Region input){
+	public Map<Region, Housenumber> searchRegions(Region input){
 		Map<Region, Housenumber> regions = new HashMap<Region, Housenumber>();
 		for(Housenumber hn : housenumbers.values()) {
 			float[] lonLat = hn.getLonLat();
 			float lon = lonLat[0];
 			float lat = lonLat[1];
 			Region region =  new Region(lon, lat, lon, lat);
-			if(input.x1 >= lon && input.y1 >= lat && input.x1 >= lon && input.y1 >= lat){
+			if(input.x1 >= lon && input.y1 >= lat && input.x2 >= lon && input.y2 >= lat){
 				regions.put(region, hn);
 			}
 		}

@@ -6,6 +6,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import dk.itu.n.danmarkskort.address.Address;
 import dk.itu.n.danmarkskort.address.AddressController;
+import dk.itu.n.danmarkskort.newmodels.Region;
 
 public class SearchController{
 	private static SearchController instance;
@@ -33,12 +34,31 @@ public class SearchController{
 	
 	public List<String> getSearchFieldSuggestions(String inputStr){
 		long limitAmountOfResults = 5;
-		if(inputStr == null || inputStr.isEmpty()) return null;
-		return AddressController.getInstance().getSearchSuggestions(inputStr, limitAmountOfResults);
+		
+			if(inputStr == null || inputStr.isEmpty()) return null;
+			return AddressController.getInstance().getSearchSuggestions(inputStr, limitAmountOfResults);
+	
 	}
 	
 	public Address getSearchFieldAddressObj(String inputStr){
 		if(inputStr == null || inputStr.isEmpty()) return null;
-		return AddressController.getInstance().getSearchResult(inputStr);
+		String cordRegex = "((\\-{0,1})([0-9]{1,3})(\\.)(\\-{0,1})([0-9]{5,7}))";
+		String cordsRegex = cordRegex + "(\\,\\s)" + cordRegex;
+		
+			
+		if(inputStr.matches(cordsRegex +"\\; "+ cordsRegex)){
+			String[] strArr = inputStr.replaceAll(";", ",").split(", ");
+			float[] cord = new float[strArr.length];
+			for(int i=0; i<cord.length; i++) cord[i] = Float.parseFloat(strArr[i]);
+			AddressController.getInstance().searchRegionHousenumber(new Region(cord[0], cord[1], cord[2], cord[3]));
+			return null;
+		}else if(inputStr.matches(cordsRegex)) {
+			String[] strArr = inputStr.split(", ");
+			float[] cord = new float[strArr.length];
+			for(int i=0; i<cord.length; i++) cord[i] = Float.parseFloat(strArr[i]);
+			AddressController.getInstance().searchHousenumber(cord);				return null;
+		} else {
+			return AddressController.getInstance().getSearchResult(inputStr);
+		}
 	} 
 }

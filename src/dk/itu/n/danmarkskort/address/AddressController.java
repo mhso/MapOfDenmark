@@ -2,6 +2,7 @@ package dk.itu.n.danmarkskort.address;
 
 import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.TimerUtil;
+import dk.itu.n.danmarkskort.newmodels.Region;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -73,6 +74,19 @@ public class AddressController{
 			}
 		}
 		return null;
+	}
+	
+	public void searchHousenumber(float[] lonLat){
+		Housenumber hn = AddressHolder.searchHousenumber(lonLat);
+		if(hn != null) System.out.println("input: " + hn.toString());
+		if(hn == null) System.out.println("searchHousenumber: no match");
+	}
+	
+	public void searchRegionHousenumber(Region input){
+		for(Housenumber hn : AddressHolder.searchRegionHousenumber(input).values()){
+			System.out.println(hn.toString());
+		}
+		System.out.println("searchHousenumber: no matches");
 	}
 	
 	private List<String> searchSuggestions(String find, long limitAmountOfResults){
@@ -153,6 +167,21 @@ public class AddressController{
 			}
         }	
     }
+	
+	private void testRegionSearch(){
+		
+		System.out.println("Regions search found: ");
+		for(Region r : AddressHolder.getRegions().keySet()){
+			System.out.println(r.toString());
+		}
+		
+//		Map<Region, Housenumber> hnR = AddressHolder.searchCoordinats(new Region(12.60597000d, 55.67397000d, 12.60597000d, 55.67397000d));
+//		System.out.println("Regions search found: " + hnR.size());
+//		for(Housenumber hn : hnR.values()){
+//			System.out.println(hn.toString());
+//		}
+//		System.out.println("Regions search found: " + hnR.size());
+	}
 
 	public void onLWParsingFinished() {
 		
@@ -162,8 +191,13 @@ public class AddressController{
 			entry.getValue().setCity(PostcodeCityCombination.getInstance().getCity(entry.getKey()));
 		}
 		PostcodeCityCombination.getInstance().clearBestMatches();
+		
+		//testRegionSearch();
+		
 		Main.log("Addresses (accepted): " + getAddressSize());
 		Main.log("Addresses (not accepted): " + addressesNotAcceptedCount);
+		
+		
 	}
 	
 	public int getAddressSize() {

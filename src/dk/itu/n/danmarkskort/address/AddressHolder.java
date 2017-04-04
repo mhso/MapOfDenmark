@@ -199,24 +199,47 @@ public class AddressHolder {
 		return regions;
 	}
 	
-	public static Map<Region, Postcode> searchRegion(Region input){
+	public static Map<Region, Postcode> searchRegionPostcode(Region input){
 		Map<Region, Postcode> regions = new HashMap<Region, Postcode>();
 		for(Postcode pc : postcodes.values()) {
 			Region pcR = pc.getRegion();
-			if(input.x1 >= pcR.x1 && input.y1 >= pcR.y2 && input.x1 >= pcR.x1 && input.y1 >= pcR.y2){
+			if(input.x1 >= pcR.x1
+					&& input.y1 >= pcR.y1
+					&& input.x2 <= pcR.x2
+					&& input.y2 <= pcR.y2){
 				regions.put(pc.getRegion(), pc);
+			}
+			System.out.println("Compare: " + pcR.toString());
+			System.out.println("Input: " + input.toString() +"\n");
+		}
+		return regions;
+	}
+	
+	public static Map<Region, Housenumber> searchRegionHousenumber(Region input){	
+		Map<Region, Housenumber> regions = new HashMap<Region, Housenumber>();
+		for(Postcode pc : searchRegionPostcode(input).values()) {
+			for(Street st : pc.searchRegions(input).values()){
+				regions.putAll(st.searchRegions(input));
 			}
 		}
 		return regions;
 	}
 	
-	public static Map<Region, Housenumber> searchCoordinats(Region input){	
-		Map<Region, Housenumber> regions = new HashMap<Region, Housenumber>();
-		for(Postcode pc : searchRegion(input).values()) {
-			for(Street st : pc.searchRegion(input).values()){
-				regions.putAll(st.searchRegion(input));
+	public static Housenumber searchHousenumber(float[] lonLat){
+		Region input = new Region(lonLat[0], lonLat[1], lonLat[0], lonLat[1]);
+		for(Postcode pc : searchRegionPostcode(input).values()) {
+			System.out.println("AddressHolder -> searchHousenumber: Postcode");
+			for(Street st : pc.searchRegions(input).values()){
+				System.out.println("AddressHolder -> searchHousenumber: Street");
+				for(Housenumber hn : st.searchRegions(input).values()){
+					System.out.println("AddressHolder -> searchHousenumber: Housenumber");
+					float[] hnLonLat = hn.getLonLat();
+					if(hnLonLat[0] == lonLat[0] && hnLonLat[0] == lonLat[0]) {
+						return hn;
+					}
+				}
 			}
 		}
-		return regions;
+		return null;
 	}
 }

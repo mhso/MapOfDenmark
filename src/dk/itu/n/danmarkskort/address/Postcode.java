@@ -28,23 +28,25 @@ public class Postcode {
 	}
 
 	private Region genRegion(){
-		Region region =  new Region(0, 0, 0, 0);
+		Region region =  new Region(Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY, Double.MAX_VALUE, Double.MAX_VALUE);
 		for(Street st : streets.values()){
 				Region stR = st.getRegion();
-				if(region.x1 < stR.x1) region.x1 = stR.x1;
-				if(region.y1 < stR.y1) region.y1 = stR.y1;
-				if(region.x2 > stR.x2) region.x2 = stR.x2;
-				if(region.y2 > stR.y2) region.y2 = stR.y2;
+				if(stR.x1 > region.x1) region.x1 = stR.x1;
+				if(stR.y1 > region.y1) region.y1 = stR.y1;
+				if(stR.x2 < region.x2) region.x2 = stR.x2;
+				if(stR.y2 < region.y2) region.y2 = stR.y2;
 		}
-		System.out.println(region.toString());
 		return region;
 	}
 	
-	public Map<Region, Street> searchRegion(Region input){
+	public Map<Region, Street> searchRegions(Region input){
 		Map<Region, Street> regions = new HashMap<Region, Street>();
 		for(Street st : streets.values()) {
 			Region stR = st.getRegion();
-			if(input.x1 >= stR.x1 && input.y1 >= stR.y2 && input.x1 >= stR.x1 && input.y1 >= stR.y2){
+			if(input.x1 >= stR.x1
+					&& input.y1 >= stR.y1
+					&& input.x2 <= stR.x2
+					&& input.y2 <= stR.y2){
 				regions.put(st.getRegion(), st);
 			}
 		}
