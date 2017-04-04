@@ -1,8 +1,6 @@
 package dk.itu.n.danmarkskort.address;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -12,26 +10,25 @@ public class Street {
 	private String street;
 	private Map<String, Housenumber> housenumbers;
 	private Postcode postcode;
-		
+	
+	public Postcode getPostcode() { return postcode; }
+	public void setPostcode(Postcode postcode) { this.postcode = postcode; }
+	
 	Street(Postcode postcode, String street){
 		this.setPostcode(postcode);
 		this.street = street;
 		housenumbers = new HashMap<String, Housenumber>();
 	}
 	
-	public int count(){
-		return housenumbers.size();
-	}
+	public int count(){ return housenumbers.size(); }
 
-	public Map<String, Housenumber> getHousenumbers() {
-		return housenumbers;
-	}
+	public Map<String, Housenumber> getHousenumbers() { return housenumbers; }
 	
 	public void addHousenumber(String housenumber, float[] latLon){
 		if(housenumber != null && latLon != null) {
-			Housenumber newHousenumber = getHousenumber(housenumber);
-			if(newHousenumber == null) newHousenumber = new Housenumber(postcode, this, housenumber, latLon);
-			housenumbers.put(housenumber.toLowerCase(), newHousenumber);
+			Housenumber hn = getHousenumber(housenumber);
+			if(hn == null) hn = new Housenumber(postcode, this, housenumber, latLon);
+			housenumbers.put(housenumber.toLowerCase(), hn);
 		}
 	}
 	
@@ -40,9 +37,7 @@ public class Street {
 		return housenumbers.get(housenumber.toLowerCase());
 	}
 
-	public String getStreet() {
-		return street;
-	}
+	public String getStreet() { return street; }
 
 	
 	private Map<String, Housenumber> housenumberContains(Map<String, Housenumber> inputList, String housenumber){
@@ -92,13 +87,13 @@ public class Street {
 					list.put(hn.getHousenumber(), hn);
 				}
 				break;
-			case NOT_IN_USE:
+			case ANY:
 				list = inputList;
 				break;
 			case STARTSWITH:
 				list = housenumberStartsWith(inputList, addr.getHousenumber());
 				break;
-			case LEVENSHTEINDISTANCE:
+			case LEVENSHTEIN:
 				list = housenumberLevenshteinDistance(inputList, addr.getHousenumber());
 				break;
 			default:
@@ -106,13 +101,5 @@ public class Street {
 			
 		}
 		return list;
-	}
-
-	public Postcode getPostcode() {
-		return postcode;
-	}
-
-	public void setPostcode(Postcode postcode) {
-		this.postcode = postcode;
 	}
 }

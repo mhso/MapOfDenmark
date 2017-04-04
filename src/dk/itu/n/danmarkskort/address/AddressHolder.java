@@ -127,13 +127,13 @@ public class AddressHolder {
 					list.put(pc.getPostcode(), pc);
 				}
 				break;
-			case NOT_IN_USE:
+			case ANY:
 				list = inputList;
 				break;
 			case STARTSWITH:
 				list = postcodeStartsWith(inputList, addr.getPostcode());
 				break;
-			case LEVENSHTEINDISTANCE:
+			case LEVENSHTEIN:
 				list = postcodeLevenshteinDistance(inputList, addr.getPostcode());
 				break;
 			default:
@@ -154,13 +154,13 @@ public class AddressHolder {
 			case EQUALS:
 				list = cityEquals(inputList, addr.getPostcode());
 				break;
-			case NOT_IN_USE:
+			case ANY:
 				list = inputList;
 				break;
 			case STARTSWITH:
 				list = cityStartsWith(inputList, addr.getPostcode());
 				break;
-			case LEVENSHTEINDISTANCE:
+			case LEVENSHTEIN:
 				list = cityLevenshteinDistance(inputList, addr.getPostcode());
 				break;
 			default:

@@ -19,19 +19,13 @@ public class Postcode {
 		streets = new HashMap<String, Street>();
 	}
 
-	public String getCity() {
-		return city;
-	}
+	public String getCity() { return city; }
 
-	public void setCity(String city) {
-		this.city = city;
-	}
+	public void setCity(String city) { this.city = city; }
 	
 	public int count(){
 		int size = 0;
-		for(Street st : streets.values()){
-			size += st.count();
-		}
+		for(Street st : streets.values()) size += st.count();
 		return size;
 	}
 	
@@ -43,25 +37,21 @@ public class Postcode {
 	
 	public void addAddress(String street, String housenumber, float[] latLon){
 		if(street != null && housenumber != null && latLon != null){
-			Street newStreet = getStreet(street);
-			if(newStreet == null) newStreet = new Street(this, street);
-			newStreet.addHousenumber(housenumber, latLon);
-			streets.put(street.toLowerCase(), newStreet);
+			Street st = getStreet(street);
+			if(st == null) st = new Street(this, street);
+			st.addHousenumber(housenumber, latLon);
+			streets.put(street.toLowerCase(), st);
 		}
 	}
 
-	public Map<String, Street> getStreets() {
-		return streets;
-	}
+	public Map<String, Street> getStreets() { return streets; }
 	
 	public Street getStreet(String street) {
 		if(street == null) return null;
 		return streets.get(street.toLowerCase());
 	}
 
-	public String getPostcode() {
-		return postcode;
-	}
+	public String getPostcode() { return postcode; }
 	
 	private Map<String, Street> streetContains(Map<String, Street> inputList, String street){
 		Map<String, Street> list = new HashMap<String, Street>();
@@ -110,13 +100,13 @@ public class Postcode {
 					list.put(st.getStreet(), st);
 				}
 				break;
-			case NOT_IN_USE:
+			case ANY:
 				list = inputList;
 				break;
 			case STARTSWITH:
 				list = streetStartsWith(inputList, addr.getStreet());
 				break;
-			case LEVENSHTEINDISTANCE:
+			case LEVENSHTEIN:
 				list = streetLevenshteinDistance(inputList, addr.getStreet());
 				break;
 			default:

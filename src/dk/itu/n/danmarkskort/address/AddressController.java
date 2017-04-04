@@ -49,16 +49,16 @@ public class AddressController{
 		list = AddressHolder.search(addrBuild,
 				SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.EQUALS);
 		if(list.size() < 1) { list = AddressHolder.search(addrBuild,
-				SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.NOT_IN_USE);
+				SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.ANY);
 		}
 		if(list.size() < 1) { list = AddressHolder.search(addrBuild,
-				SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.NOT_IN_USE, SearchEnum.EQUALS);
+				SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.ANY, SearchEnum.EQUALS);
 		}
 		if(list.size() < 1) { list = AddressHolder.search(addrBuild,
-				SearchEnum.LEVENSHTEINDISTANCE, SearchEnum.EQUALS, SearchEnum.NOT_IN_USE, SearchEnum.EQUALS);
+				SearchEnum.LEVENSHTEIN, SearchEnum.EQUALS, SearchEnum.ANY, SearchEnum.EQUALS);
 		}
 		if(list.size() < 1) { list = AddressHolder.search(addrBuild,
-				SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.NOT_IN_USE, SearchEnum.LEVENSHTEINDISTANCE);
+				SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.ANY, SearchEnum.LEVENSHTEIN);
 		}
 		
 		if(list.size() == 1) {
@@ -86,46 +86,35 @@ public class AddressController{
 			Map<String, Postcode> list; 
 			list = AddressHolder.search(addrBuild,
 					SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.EQUALS);
-			//System.out.println("Address result 1: " + AddressHolder.count(list));
-			if(list.size() != 1 && list.size() < limitAmountOfResults) { list = AddressHolder.search(addrBuild,
-					SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.NOT_IN_USE);
-			//System.out.println("Address result 2: " + AddressHolder.count(list));
+			if(list.size() != 1 && list.size() < limitAmountOfResults) { list.putAll(AddressHolder.search(addrBuild,
+					SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.ANY));
 			}
-			if(list.size() != 1 && list.size() < limitAmountOfResults) { list = AddressHolder.search(addrBuild,
-					SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.NOT_IN_USE, SearchEnum.NOT_IN_USE);
-			//System.out.println("Address result 3: " + AddressHolder.count(list));
+			if(list.size() != 1 && list.size() < limitAmountOfResults) { list.putAll(AddressHolder.search(addrBuild,
+					SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.ANY, SearchEnum.ANY));
 			}
-			if(list.size() != 1 && list.size() < limitAmountOfResults) { list = AddressHolder.search(addrBuild,
-					SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.STARTSWITH, SearchEnum.NOT_IN_USE);
-			//System.out.println("Address result 4: " + AddressHolder.count(list));
+			if(list.size() != 1 && list.size() < limitAmountOfResults) { list.putAll(AddressHolder.search(addrBuild,
+					SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.STARTSWITH, SearchEnum.ANY));
 			}
-			if(list.size() != 1 && list.size() < limitAmountOfResults) { list = AddressHolder.search(addrBuild,
-					SearchEnum.EQUALS, SearchEnum.STARTSWITH, SearchEnum.NOT_IN_USE, SearchEnum.NOT_IN_USE);
-			//System.out.println("Address result 5: " + AddressHolder.count(list));
+			if(list.size() != 1 && list.size() < limitAmountOfResults) { list.putAll(AddressHolder.search(addrBuild,
+					SearchEnum.EQUALS, SearchEnum.STARTSWITH, SearchEnum.ANY, SearchEnum.ANY));
 			}
-			if(list.size() != 1 && list.size() < limitAmountOfResults) { list = AddressHolder.search(addrBuild,
-					SearchEnum.EQUALS, SearchEnum.NOT_IN_USE, SearchEnum.NOT_IN_USE, SearchEnum.NOT_IN_USE);
-			//System.out.println("Address result 6: " + AddressHolder.count(list));
+			if(list.size() != 1 && list.size() < limitAmountOfResults) { list.putAll(AddressHolder.search(addrBuild,
+					SearchEnum.EQUALS, SearchEnum.ANY, SearchEnum.ANY, SearchEnum.ANY));
 			}
-			if(list.size() != 1 && list.size() < limitAmountOfResults) { list = AddressHolder.search(addrBuild,
-					SearchEnum.NOT_IN_USE, SearchEnum.NOT_IN_USE, SearchEnum.EQUALS, SearchEnum.NOT_IN_USE);
-			//System.out.println("Address result 6: " + AddressHolder.count(list));
+			if(list.size() != 1 && list.size() < limitAmountOfResults) { list.putAll(AddressHolder.search(addrBuild,
+					SearchEnum.ANY, SearchEnum.ANY, SearchEnum.EQUALS, SearchEnum.ANY));
 			}
-			if(list.size() != 1 && list.size() < limitAmountOfResults) { list = AddressHolder.search(addrBuild,
-					SearchEnum.NOT_IN_USE, SearchEnum.NOT_IN_USE, SearchEnum.NOT_IN_USE, SearchEnum.EQUALS);
-			//System.out.println("Address result 6: " + AddressHolder.count(list));
+			if(list.size() != 1 && list.size() < limitAmountOfResults) { list.putAll(AddressHolder.search(addrBuild,
+					SearchEnum.ANY, SearchEnum.ANY, SearchEnum.ANY, SearchEnum.EQUALS));
 			}
-			if(list.size() < 1) { list = AddressHolder.search(addrBuild,
-					SearchEnum.STARTSWITH, SearchEnum.NOT_IN_USE, SearchEnum.NOT_IN_USE, SearchEnum.NOT_IN_USE);
-			//System.out.println("Address result 7: " + AddressHolder.count(list));
+			if(list.size() < 1) { list.putAll(AddressHolder.search(addrBuild,
+					SearchEnum.STARTSWITH, SearchEnum.ANY, SearchEnum.ANY, SearchEnum.ANY));
 			}
-			if(list.size() < 1) { list = AddressHolder.search(addrBuild,
-					SearchEnum.LEVENSHTEINDISTANCE, SearchEnum.NOT_IN_USE, SearchEnum.NOT_IN_USE, SearchEnum.NOT_IN_USE);
-			//System.out.println("Address result 8: " + AddressHolder.count(list));
+			if(list.size() < 1) { list.putAll(AddressHolder.search(addrBuild,
+					SearchEnum.LEVENSHTEIN, SearchEnum.ANY, SearchEnum.ANY, SearchEnum.ANY));
 			}
-			if(list.size() < 1) { list = AddressHolder.search(addrBuild,
-					SearchEnum.NOT_IN_USE, SearchEnum.NOT_IN_USE, SearchEnum.NOT_IN_USE, SearchEnum.LEVENSHTEINDISTANCE);
-			//System.out.println("Address result 8: " + AddressHolder.count(list));
+			if(list.size() < 1) { list.putAll(AddressHolder.search(addrBuild,
+					SearchEnum.ANY, SearchEnum.ANY, SearchEnum.ANY, SearchEnum.LEVENSHTEIN));
 			}
 			System.out.println("Address results: " + AddressHolder.count(list));
 			for(Postcode pc : list.values()){
@@ -162,13 +151,11 @@ public class AddressController{
 //				}			
 				Postcode postcode = AddressHolder.postcodes.get(addrParsed.getPostcode());
 				if(postcode == null) postcode = new Postcode(addrParsed.getPostcode(), addrParsed.getCity());
-				postcode.addAddress(addrParsed.getStreet().toLowerCase(), addrParsed.getHousenumber(), lonLat);
+				postcode.addAddress(addrParsed.getStreet(), addrParsed.getHousenumber(), lonLat);
 				
 				AddressHolder.postcodes.put(addrParsed.getPostcode(), postcode);
-//				addresses.put(lonLat, addrParsed);
 				PostcodeCityCombination.getInstance().add(addrParsed.getPostcode(), addrParsed.getCity());
 			} else {
-				//addressesNotAccepted.put(lonLat, address.toStringShort());
 				addressesNotAcceptedCount++;
 			}
         }	
@@ -176,11 +163,11 @@ public class AddressController{
 
 	public void onLWParsingFinished() {
 		PostcodeCityCombination.getInstance().compileBestMatches();
-		//PostcodeCityCombination.getInstance().printBestMaches();
 		PostcodeCityCombination.getInstance().clearCombinations();
 		for(Entry<String, Postcode> entry : AddressHolder.postcodes.entrySet()){
 			entry.getValue().setCity(PostcodeCityCombination.getInstance().getCity(entry.getKey()));
 		}
+		PostcodeCityCombination.getInstance().clearBestMatches();
 		Main.log("Addresses (accepted): " + getAddressSize());
 		Main.log("Addresses (not accepted): " + addressesNotAcceptedCount);
 	}

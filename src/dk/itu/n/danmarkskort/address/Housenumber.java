@@ -7,35 +7,19 @@ public class Housenumber {
 	private Street street;
 	
 	public Housenumber(Postcode postcode, Street street, String housenumber, float[] lonLat){
-		this.setPostcode(postcode);
-		this.setStreet(street);
+		this.postcode = postcode;
+		this.street = street;
 		this.housenumber = housenumber;
 		this.lonLat = lonLat;
 	}
 
-	public float[] getLonLat() {
-		return lonLat;
-	}
+	public float[] getLonLat() { return lonLat; }
 
-	public String getHousenumber() {
-		return housenumber;
-	}
+	public String getHousenumber() { return housenumber; }
 
-	public Postcode getPostcode() {
-		return postcode;
-	}
+	public Postcode getPostcode() { return postcode; }
 
-	public void setPostcode(Postcode postcode) {
-		this.postcode = postcode;
-	}
-
-	public Street getStreet() {
-		return street;
-	}
-
-	public void setStreet(Street street) {
-		this.street = street;
-	}
+	public Street getStreet() { return street; }
 	
 	public String toString(){
 		return street.getStreet() + " " + this.housenumber + ", " + postcode.getPostcode() + " " + postcode.getCity();
