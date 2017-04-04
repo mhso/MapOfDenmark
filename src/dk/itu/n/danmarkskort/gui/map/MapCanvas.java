@@ -45,6 +45,7 @@ public class MapCanvas extends JPanel {
 	private BufferedMapManager imageManager = null;
 	private Point2D zero;
 
+	private List<CanvasListener> listeners = new ArrayList<>();
 	private List<WaytypeGraphicSpec> wayTypesVisible;
 	
 	public MapCanvas() {
@@ -55,6 +56,10 @@ int count = 0;
 	protected void paintComponent(Graphics _g) {
 		Main.log(count++);
 		drawMap((Graphics2D)_g);
+	}
+	
+	public void addCanvasListener(CanvasListener l) {
+		listeners.add(l);
 	}
 	
 	public void forceRepaint() {
@@ -192,7 +197,11 @@ int count = 0;
 			zero = new Point2D.Double(transform.getTranslateX(), transform.getTranslateY());
 			imageManager.forceFullRepaint();
 		}
-		if(zoomBefore != getZoom()) zoomChanged = true;
+		for(CanvasListener listener : listeners) listener.onZoom();
+		if(zoomBefore != getZoom()) {
+			zoomChanged = true;
+			for(CanvasListener listener : listeners) listener.onZoomLevelChanged();
+		}
 		repaint();
 	}
 	

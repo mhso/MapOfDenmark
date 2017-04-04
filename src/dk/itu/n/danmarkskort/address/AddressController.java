@@ -138,17 +138,10 @@ public class AddressController{
 			float[] lonLat = new float[] {address.getFirstLon(), address.getFirstLat()};
 			Address addrParsed = AddressParser.parse(address.toStringShort(), false);
 			if(addrParsed != null 
-					&& addrParsed.getStreet() != null
-					&& addrParsed.getHousenumber() != null
-					&& addrParsed.getPostcode() != null) {
+					&& addrParsed.getStreet() != null && addrParsed.getStreet().length() > 0
+					&& addrParsed.getHousenumber() != null && addrParsed.getHousenumber().length() > 0
+					&& addrParsed.getPostcode() != null && addrParsed.getPostcode().length() == 4) {
 				addrParsed.setLonLat(lonLat);
-				//System.out.println("OSM: "+address.toString());
-				//System.out.println("ADC: "+addrParsed.toStringShort());
-//				if(!address.toStringShort().equals(addrParsed.toStringShort())) {
-//					System.out.println("--- ALARM NOT MATCHING ALARM ---\n --> OSM: "+address.toStringShort()
-//						+"\n --> ADC: "+addrParsed.toStringShort()
-//						+"\n --> ADC: "+addrParsed.toString());
-//				}			
 				Postcode postcode = AddressHolder.postcodes.get(addrParsed.getPostcode());
 				if(postcode == null) postcode = new Postcode(addrParsed.getPostcode(), addrParsed.getCity());
 				postcode.addAddress(addrParsed.getStreet(), addrParsed.getHousenumber(), lonLat);
@@ -162,8 +155,9 @@ public class AddressController{
     }
 
 	public void onLWParsingFinished() {
-		PostcodeCityCombination.getInstance().compileBestMatches();
-		PostcodeCityCombination.getInstance().clearCombinations();
+		
+		//PostcodeCityCombination.getInstance().compileBestMatches();
+		
 		for(Entry<String, Postcode> entry : AddressHolder.postcodes.entrySet()){
 			entry.getValue().setCity(PostcodeCityCombination.getInstance().getCity(entry.getKey()));
 		}
