@@ -81,12 +81,12 @@
 			<lineproperties linewidth="8"/>
 			<layer layer="2"/>
 		</line>
-		<line>
+		<!--<line>
 			<type name="COASTLINE"/>
 			<innercolor color="000000"/>
 			<lineproperties linewidth="20"/>
-			<layer layer="5"/>
-		</line>
+			<layer layer="1"/>	
+		</line>-->
 		<!-- Lige nu er den smækket sammen med HIGHWAY_FOOTWAY
 		<line>
 			<type name="HIGHWAY_PATH"/>
@@ -98,9 +98,14 @@
 	</lines>
 	<areas>
 		<area>
+			<type name="COASTLINE"/>
+			<innercolor color="39FF14"/>
+			<layer layer="1"/>
+		</area>
+		<area>
 			<type name="WATER"/>
 			<innercolor color="6EC0FF"/>
-			<layer layer="1"/>
+			<layer layer="2"/>
 		</area>
 		<area>
 			<type name="RESIDENTIAL"/>

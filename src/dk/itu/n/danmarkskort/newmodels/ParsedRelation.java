@@ -38,6 +38,7 @@ public class ParsedRelation extends ParsedItem {
         return nodeList;
     }
 
+    @Override
     public Path2D getPath() {
         Path2D path = new Path2D.Float(Path2D.WIND_EVEN_ODD);
         if(members.size() > 0) {
@@ -45,14 +46,13 @@ public class ParsedRelation extends ParsedItem {
             Member current;
             ParsedNode firstNode = null;
 
-            for(int i = 0; i < members.size(); i++) {
-                current = members.get(i);
-                if(current.isOuter()) {
+            for(Member member : members) {
+                current = member;
+                if (current.isOuter()) {
                     outers.add(current.getReference());
-                }
-                else if(!current.isOuter()) {
-                    path.append(members.get(i).getReference().getPath(), false);
-                    if(!outers.isEmpty()) {
+                } else if (!current.isOuter()) {
+                    path.append(member.getReference().getPath(), false);
+                    if (!outers.isEmpty()) {
                         path.append(connectOuters(outers), false);
                         outers = new ArrayList<>();
                     }
@@ -63,42 +63,39 @@ public class ParsedRelation extends ParsedItem {
         return path;
     }
 
-    public Path2D connectOuters(ArrayList<ParsedItem> outerList) {
+    @Override
+    public Path2D getReversedPath() {
+        return getPath();
+        // This is not correct, but I don't think its an issue.
+        // relations in relations is only something we have with busroutes and the likes
+        // and that's not something we are displaying at the moment, and probably never will
+    }
+
+    private Path2D connectOuters(ArrayList<ParsedItem> outerList) {
         Path2D path = new Path2D.Float();
         path.append(outerList.get(0).getPath(), false);
         ParsedNode lastNode = outerList.get(0).getLastNode();
         if(outerList.size() > 1) {
-            for(int j = 1; j < outerList.size(); j++) {
-                for(int k = j; k < outerList.size(); k++ ) {
-                    if(lastNode == outerList.get(k).getFirstNode()) {
-                        path.append(outerList.get(k).getPath(), true);
-                        lastNode = outerList.get(k).getLastNode();
-                        Collections.swap(outerList, j, k);
-                        break;
-                    }
-                    else if(lastNode == outerList.get(k).getLastNode()) {
-                        ArrayList<ParsedNode> reversedNodes = new ArrayList<>(outerList.get(k).getNodes());
-                        Collections.reverse(reversedNodes);
-                        path.append(nodesToPath(reversedNodes), true);
-                        lastNode = reversedNodes.get(reversedNodes.size() - 1);
-                        Collections.swap(outerList, j, k);
-                        break;
-                    }
-                    else if(k == outerList.size() - 1) {
-                        path.append(outerList.get(j).getPath(), false);
+            for(int i = 1; i < outerList.size(); i++) {
+                for(int j = i; j < outerList.size(); j++ ) {
+                    if(lastNode == outerList.get(j).getFirstNode()) {
+                        path.append(outerList.get(j).getPath(), true);
                         lastNode = outerList.get(j).getLastNode();
+                        Collections.swap(outerList, i, j);
+                        break;
+                    }
+                    else if(lastNode == outerList.get(j).getLastNode()) {
+                        path.append(outerList.get(j).getReversedPath(), true);
+                        lastNode = outerList.get(j).getFirstNode();
+                        Collections.swap(outerList, i, j);
+                        break;
+                    }
+                    else if(j == outerList.size() - 1) {
+                        path.append(outerList.get(i).getPath(), false);
+                        lastNode = outerList.get(i).getLastNode();
                     }
                 }
             }
-        }
-        return path;
-    }
-
-    public Path2D nodesToPath(ArrayList<ParsedNode> n) {
-        Path2D path = new Path2D.Float();
-        path.moveTo(n.get(0).getLon(), n.get(0).getLat());
-        for(int i = 1; i < n.size(); i++) {
-            path.lineTo(n.get(i).getLon(), n.get(i).getLat());
         }
         return path;
     }
@@ -116,6 +113,11 @@ public class ParsedRelation extends ParsedItem {
         else if(members.size() > 0) return members.get(0).getReference().getLastNode();
         return null;
     }
+
+    @Override
+    public void appendParsedItem(ParsedItem item) {
+        members.add(new Member(item, false));
+    }
     
     public String toString() {
     	int nodeAmount = 0;
@@ -128,12 +130,12 @@ public class ParsedRelation extends ParsedItem {
         private ParsedItem reference;
         private boolean isOuter;
 
-        public Member(ParsedItem reference, boolean isOuter) {
+        Member(ParsedItem reference, boolean isOuter) {
             this.reference = reference;
             this.isOuter = isOuter;
         }
 
-        public ParsedItem getReference() { return reference; }
-        public boolean isOuter() { return isOuter; }
+        ParsedItem getReference() { return reference; }
+        boolean isOuter() { return isOuter; }
     }
 }

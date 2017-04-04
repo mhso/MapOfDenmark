@@ -51,8 +51,9 @@ public class MapCanvas extends JPanel {
 		new MapMouseController(this);
 		setDoubleBuffered(true);
 	}
-
+int count = 0;
 	protected void paintComponent(Graphics _g) {
+		Main.log(count++);
 		drawMap((Graphics2D)_g);
 	}
 	
@@ -82,10 +83,12 @@ public class MapCanvas extends JPanel {
 		shapesDrawn = 0;
 		currentGraphics = g2d;
 
+		if(wayTypesVisible == null) return;
+
 		// drawing all the outlines, if the current WayTypeGraphicSpec has one
 		for (WaytypeGraphicSpec wayTypeGraphic : wayTypesVisible) {
 			currentWTGSpec = wayTypeGraphic;
-			if(currentWTGSpec.getOuterColor() != null) {
+			if (currentWTGSpec.getOuterColor() != null) {
 				KDTree kdTree = Main.model.enumMapKD.get(wayTypeGraphic.getWayType());
 				if (kdTree == null) {
 					continue;

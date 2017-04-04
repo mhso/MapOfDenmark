@@ -24,12 +24,36 @@ public class ParsedWay extends ParsedItem{
     public long getID() { return id; }
 
     public Path2D getPath() {
+        return getPath(true);
+    }
+
+    public Path2D getReversedPath() {
+        return getPath(false);
+    }
+
+    private Path2D getPath(boolean rightWay) {
         Path2D path = new Path2D.Float();
-        path.moveTo(nodes.get(0).getLon(), nodes.get(0).getLat());
-        for(int i = 1; i < nodes.size(); i++) {
-        	path.lineTo(nodes.get(i).getLon(), nodes.get(i).getLat());
+        if(rightWay) {
+            path.moveTo(nodes.get(0).getLon(), nodes.get(0).getLat());
+            for (int i = 1; i < nodes.size(); i++) {
+                path.lineTo(nodes.get(i).getLon(), nodes.get(i).getLat());
+            }
+        }
+        else {
+            path.moveTo(nodes.get(nodes.size() - 1).getLon(), nodes.get(nodes.size() - 1).getLat());
+            for (int i = nodes.size() - 2; i >= 0; i--) {
+                path.lineTo(nodes.get(i).getLon(), nodes.get(i).getLat());
+            }
         }
         return path;
+    }
+
+    @Override
+    public void appendParsedItem(ParsedItem item) {
+        ArrayList<ParsedNode> newNodes = item.getNodes();
+        for(int i = 1; i < newNodes.size(); i++) {
+            nodes.add(newNodes.get(i));
+        }
     }
 
     @Override

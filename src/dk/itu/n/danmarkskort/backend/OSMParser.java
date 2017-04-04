@@ -97,10 +97,14 @@ public class OSMParser extends SAXAdapter {
         for(WayType wt : WayType.values()) {
             ArrayList<ParsedItem> current = enumMap.get(wt);
             KDTree tree;
-            if(current.isEmpty()) tree = null;
-            else if(current.size() < DKConstants.KD_SIZE) tree = new KDTreeLeaf(current, null);
+            if(wt == WayType.COASTLINE) {
+                CoastlineUtil.connect(current);
+
+            }
+            if (current.isEmpty()) tree = null;
+            else if (current.size() < DKConstants.KD_SIZE) tree = new KDTreeLeaf(current, null);
             else tree = new KDTreeNode(current);
-            if(tree != null) tree.makeShapes();
+            if (tree != null) tree.makeShapes();
             enumMap.remove(wt);
             enumMapKD.put(wt, tree);
         }
@@ -217,7 +221,7 @@ public class OSMParser extends SAXAdapter {
             if(node != null) address.setCoords(node.getPoint());
             else if (way != null) address.setWay(way);
             else if (relation != null) address.setRelation(relation);
-            AddressController.getInstance().addressParsed(address);
+            //AddressController.getInstance().addressParsed(address);
             for(OSMParserListener listener : parser.parserListeners) listener.onParsingGotItem(address);
         }
         cleanUp();
