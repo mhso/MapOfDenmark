@@ -80,8 +80,8 @@ public class DropdownMenu extends CustomDropdown {
 
         // pinpoint
         gbcMenuItems.gridy = 6;
-        CustomButton pinPointButton = style.menuInfoButton();
-        aboutUsButton.addActionListener(e -> addToContentPane(pinPointPage));
+        CustomButton pinPointButton = style.menuPinPointButton();
+        pinPointButton.addActionListener(e -> addToContentPane(pinPointPage));
         menuItems.add(pinPointButton, gbcMenuItems);
         
         menuItems.setPreferredSize(new Dimension(topPanel.getMenuWidth(), menuItems.getPreferredSize().height));
@@ -134,4 +134,7 @@ public class DropdownMenu extends CustomDropdown {
                 loc.x - style.topPanelBorderWidth() - 6,
                 loc.y + source.getHeight() + style.topPanelBorderWidth() + 1);
     }
+
+	protected void onClick(String text) {
+	}
 }

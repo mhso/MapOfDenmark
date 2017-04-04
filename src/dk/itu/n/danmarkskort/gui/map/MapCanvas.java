@@ -4,6 +4,7 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.Shape;
@@ -46,6 +47,7 @@ public class MapCanvas extends JPanel {
 	private Point2D zero;
 
 	private List<WaytypeGraphicSpec> wayTypesVisible;
+	private boolean repaintPinPointsOnly = false;
 	
 	public MapCanvas() {
 		new MapMouseController(this);
@@ -53,6 +55,7 @@ public class MapCanvas extends JPanel {
 	}
 
 	protected void paintComponent(Graphics _g) {
+		_g.clearRect(0, 0, getWidth(), getHeight());
 		drawMap((Graphics2D)_g);
 	}
 	
@@ -66,12 +69,22 @@ public class MapCanvas extends JPanel {
 	}
 	
 	public void drawMap(Graphics2D g2d) {
+		if(repaintPinPointsOnly) {
+			if(Main.pinPointManager != null) Main.pinPointManager.drawPinPoints(g2d);
+			repaintPinPointsOnly = false;
+			return;
+		}
 		if(Main.buffered) {
 			if(imageManager != null) imageManager.draw(g2d);
 		} else {
 			drawMapShapes(g2d);
 		}
-		
+		if(Main.pinPointManager != null) Main.pinPointManager.drawPinPoints(g2d);
+	}
+	
+	public void repaintPinPoints() {
+		repaintPinPointsOnly = true;
+		repaint();
 	}
 	
 	public void drawMapShapes(Graphics2D g2d) {
@@ -173,6 +186,16 @@ public class MapCanvas extends JPanel {
 		return new Region(topLeft.getX(), topLeft.getY(), bottomRight.getX(), bottomRight.getY());
 	}
 	
+	public Point2D getRelativeMousePosition() {
+		Point mousePositionScreen = MouseInfo.getPointerInfo().getLocation();
+		Point mapCanvasPosition = getLocationOnScreen();
+		return new Point(mousePositionScreen.x - mapCanvasPosition.x, mousePositionScreen.y - mapCanvasPosition.y);
+	}
+	
+	public Point2D getGeographicalMousePosition() {
+		return toModelCoords(getRelativeMousePosition());
+	}
+	
 	public void zoom(double factor) {
 		double zoomBefore = getZoom();
 		double scaleBefore = getZoomRaw();
@@ -193,14 +216,18 @@ public class MapCanvas extends JPanel {
 		repaint();
 	}
 	
-	public Point2D toModelCoords(Point2D screenPosition) {
+	public Point2D toModelCoords(Point2D relativeToMapCanvasPosition) {
 		try {
-			return transform.inverseTransform(screenPosition, null);
+			return transform.inverseTransform(relativeToMapCanvasPosition, null);
 		} catch (NoninvertibleTransformException e) {
 			throw new RuntimeException(e);
 		}
 	}
-
+	
+	public Point2D toScreenCoords(Point2D coordinates) {
+		return transform.transform(coordinates, null);
+	}
+	
 	public void toggleAA() {
 		antiAlias = !antiAlias;
 		repaint();

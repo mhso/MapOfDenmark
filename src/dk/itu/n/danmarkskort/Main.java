@@ -11,6 +11,7 @@ import dk.itu.n.danmarkskort.backend.LightWeightParser;
 import dk.itu.n.danmarkskort.backend.OSMParser;
 import dk.itu.n.danmarkskort.gui.WindowParsingLoadscreenNew;
 import dk.itu.n.danmarkskort.gui.map.MapCanvas;
+import dk.itu.n.danmarkskort.gui.map.PinPointManager;
 import dk.itu.n.danmarkskort.mapgfx.GraphicRepresentation;
 
 public class Main {
@@ -26,6 +27,7 @@ public class Main {
 	public static LightWeightParser model;
 	public static MapCanvas map;
 	public static MainCanvas mainPanel;
+	public static PinPointManager pinPointManager;
 	
 	public static void main(String[] args) {
         startup(args);
@@ -76,17 +78,18 @@ public class Main {
         window.setLocationRelativeTo(null);
         window.setVisible(true);
         map.zoomToBounds();
+        
     }
     
     public static JPanel createFrameComponents() {
     	JPanel overlay = new JPanel();
         overlay.setLayout(new OverlayLayout(overlay));
         overlay.setPreferredSize(new Dimension(DKConstants.WINDOW_WIDTH, DKConstants.WINDOW_HEIGHT));
-        mainPanel = new MainCanvas();
         
     	map = new MapCanvas();
         map.setPreferredSize(new Dimension(DKConstants.WINDOW_WIDTH, DKConstants.WINDOW_HEIGHT));
-        
+        pinPointManager = PinPointManager.load(map);
+        mainPanel = new MainCanvas();
         overlay.add(mainPanel);
     	overlay.add(map);
     	return overlay;

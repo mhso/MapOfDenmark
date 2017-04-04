@@ -159,6 +159,7 @@ public class Util {
 			oos.close();
 			return object;
 		} catch(Exception e) {
+			e.printStackTrace();
 			return null;
 		}
 	}

@@ -36,6 +36,10 @@ public class MapMouseController extends MouseAdapter {
 		lastMousePosition = e.getPoint();
 	}
 
+	public void mouseMoved(MouseEvent e) {
+		if(Main.pinPointManager != null) Main.pinPointManager.checkHover();
+	}
+	
 	public void mouseDragged(MouseEvent e) {
 		Point2D currentMousePosition = e.getPoint();
 		double dx = currentMousePosition.getX() - lastMousePosition.getX();
