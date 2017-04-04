@@ -68,7 +68,7 @@ public class LoadPage extends JPanel  {
         gbc_lblCurrentMap.gridy = 1;
         panelCenter.add(lblCurrentMap, gbc_lblCurrentMap);
 
-        lblCurrentmapfilename = new JLabel(Main.osmParser.getFileName());
+        lblCurrentmapfilename = new JLabel(Main.osmReader.getFileName());
         GridBagConstraints gbc_lblCurrentmapfilename = new GridBagConstraints();
         gbc_lblCurrentmapfilename.anchor = GridBagConstraints.WEST;
         gbc_lblCurrentmapfilename.insets = new Insets(0, 0, 5, 0);
@@ -84,7 +84,7 @@ public class LoadPage extends JPanel  {
         gbc_lblFilesize.gridy = 2;
         panelCenter.add(lblFilesize, gbc_lblFilesize);
         
-        long fileSize = Util.getFileSize(new File(Main.osmParser.getFileName()));
+        long fileSize = Util.getFileSize(new File(Main.osmReader.getFileName()));
         long kb = fileSize/1024;
 		long mb = kb/1024;
         

@@ -109,11 +109,11 @@ public class WayTypeUtil {
             case "man_made":
                 switch(v) {
                     case "breakwater":
-                        return WayType.WAY_BREAKWATER;
+                        return WayType.BREAKWATER;
                     case "pier":
-                        return WayType.WAY_PIER;
+                        return WayType.PIER;
                     case "embankment":
-                        return WayType.WAY_EMBANKMENT;
+                        return WayType.EMBANKMENT;
                 }
                 return oldtype;
             case "waterway":
