@@ -25,6 +25,9 @@ import javax.imageio.ImageIO;
 
 public class WindowParsingLoadscreenNew extends JFrame implements OSMParserListener {
 	private static final long serialVersionUID = 4049548769311961507L;
+	private static final Color BAR_STATIC_COLOR = Color.LIGHT_GRAY;
+	private static final Color BAR_LOADING_COLOR = new Color(0, 153, 0);
+	
 	private JPanel contentPane;
 	private JPanel panel;
 	private JLabel labelStatus;
@@ -147,14 +150,14 @@ public class WindowParsingLoadscreenNew extends JFrame implements OSMParserListe
 						mainImage.getWidth(), 4);
 				for(int j = 0; j < subImages[i].getWidth(); j++) {
 					for(int k = 0; k < subImages[i].getHeight(); k++) {
-						if(subImages[i].getRGB(j, k) != Color.WHITE.getRGB()) subImages[i].setRGB(j, k, Color.LIGHT_GRAY.getRGB());
+						if(subImages[i].getRGB(j, k) != Color.WHITE.getRGB()) subImages[i].setRGB(j, k, BAR_STATIC_COLOR.getRGB());
 					}
 				}
 				BufferedImage redImage = copyImage.getSubimage(0, y, 
 						mainImage.getWidth(), 4);
 				for(int j = 0; j < redImage.getWidth(); j++) {
 					for(int k = 0; k < redImage.getHeight(); k++) {
-						if(redImage.getRGB(j, k) != Color.WHITE.getRGB()) redImage.setRGB(j, k, Color.GREEN.getRGB());
+						if(redImage.getRGB(j, k) != Color.WHITE.getRGB()) redImage.setRGB(j, k, BAR_LOADING_COLOR.getRGB());
 					}
 				}
 				subImagesRed[i] = redImage;
