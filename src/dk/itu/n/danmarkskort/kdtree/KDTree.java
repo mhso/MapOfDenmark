@@ -18,4 +18,6 @@ public abstract class KDTree {
     public abstract void makeShapes();
     
     public abstract int size();
+    public abstract int size(Region r);
+    public abstract int size(Region r, boolean b);
 }

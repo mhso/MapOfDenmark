@@ -12,6 +12,8 @@ import javax.swing.JLabel;
 import dk.itu.n.danmarkskort.DKConstants;
 
 public class ScaleLabel extends JLabel {
+	private static final long serialVersionUID = 7223963683459327164L;
+
 	public ScaleLabel(String text) {
 		super(text);
 		setPreferredSize(new Dimension(DKConstants.WINDOW_WIDTH/12, 20));
@@ -26,8 +28,8 @@ public class ScaleLabel extends JLabel {
 		g2d.setColor(Color.BLACK);
 		g2d.setStroke(new BasicStroke(1));
 		Point l = getLocation();
-		g2d.drawLine(l.x, l.y+6, l.x, l.y+getHeight()-1);
-		g2d.drawLine(l.x, l.y+getHeight()-1, l.x+getWidth(), l.y+getHeight()-1);
-		g2d.drawLine(l.x+getWidth()-1, l.y+6, l.x+getWidth()-1, l.y+getHeight()-1);
+		g2d.drawLine(0, 8, 0, getHeight());
+		g2d.drawLine(0, getHeight()-1, l.x+getWidth(), getHeight()-1);
+		g2d.drawLine(getWidth()-1, 8, getWidth()-1, getHeight());
 	}
 }
