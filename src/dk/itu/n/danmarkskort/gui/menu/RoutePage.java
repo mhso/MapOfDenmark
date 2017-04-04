@@ -261,7 +261,8 @@ public class RoutePage extends JPanel {
     
     private boolean updateValidInputAddrTo(JTextField field, JLabel labelName){
     	boolean valid = false;
-    	Address addr = SearchController.getInstance().getSearchFieldAddressObj(field.getText());
+    	Address addr = null;
+    	if(!field.getText().isEmpty()) addr = SearchController.getInstance().getSearchFieldAddressObj(field.getText());
     	if(addr != null) valid = true;
     	changeValidAddrIcon(labelName, valid);
     	return valid;
@@ -276,6 +277,12 @@ public class RoutePage extends JPanel {
     private void openFindRoute(){
     	if(validateToFromFields()){
     		RoutePlannerMain routePlannerMain =  new RoutePlannerMain(txtAddrFrom.getText(), txtAddrTo.getText());
+    	} else if(!txtAddrFrom.getText().trim().isEmpty() && !txtAddrTo.getText().trim().isEmpty()) {
+    		menu.blockVisibility(true);
+    		JOptionPane.showMessageDialog(this, "To/From fields can't be empty.", "Missing information", JOptionPane.INFORMATION_MESSAGE);
+    	} else {
+    		menu.blockVisibility(true);
+    		JOptionPane.showMessageDialog(this, "The address input not found,\n please refere to the smilyes.", "Wrong information", JOptionPane.INFORMATION_MESSAGE);
     	}
     }
 

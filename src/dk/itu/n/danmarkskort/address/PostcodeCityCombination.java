@@ -76,6 +76,10 @@ public class PostcodeCityCombination {
 		if(bestMatches.size() > 0) combinations = null;
 	}
 	
+	public void clearBestMatches(){
+		if(bestMatches.size() > 0) bestMatches = null;
+	}
+	
 	public String getCity(String postcode){
 		if(postcode == null) return null;
 		return bestMatches.get(postcode);
