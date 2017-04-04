@@ -82,9 +82,9 @@ public class Main {
     	JPanel overlay = new JPanel();
         overlay.setLayout(new OverlayLayout(overlay));
         overlay.setPreferredSize(new Dimension(DKConstants.WINDOW_WIDTH, DKConstants.WINDOW_HEIGHT));
+        map = new MapCanvas();
         mainPanel = new MainCanvas();
-        
-    	map = new MapCanvas();
+    	
         map.setPreferredSize(new Dimension(DKConstants.WINDOW_WIDTH, DKConstants.WINDOW_HEIGHT));
         
         overlay.add(mainPanel);
