@@ -7,8 +7,8 @@ import javax.swing.*;
 
 import org.xml.sax.InputSource;
 
-import dk.itu.n.danmarkskort.backend.LightWeightParser;
 import dk.itu.n.danmarkskort.backend.OSMParser;
+import dk.itu.n.danmarkskort.backend.OSMReader;
 import dk.itu.n.danmarkskort.gui.WindowParsingLoadscreenNew;
 import dk.itu.n.danmarkskort.gui.map.MapCanvas;
 import dk.itu.n.danmarkskort.mapgfx.GraphicRepresentation;
@@ -19,11 +19,11 @@ public class Main {
 	public final static String APP_VERSION = "0.5";
 	public final static boolean debug = true;
 	public final static boolean production = false;
-	public final static boolean buffered = true;
+	public final static boolean buffered = false;
 	
-	public static OSMParser osmParser;
+	public static OSMReader osmReader;
 	public static JFrame window;
-	public static LightWeightParser model;
+	public static OSMParser model;
 	public static MapCanvas map;
 	public static MainCanvas mainPanel;
 	
@@ -35,8 +35,8 @@ public class Main {
 
 	public static void startup(String[] args) {
 		if(window != null) window.getContentPane().removeAll();
-		osmParser = new OSMParser();
-		model = new LightWeightParser(osmParser);
+		osmReader = new OSMReader();
+		model = new OSMParser(osmReader);
 		GraphicRepresentation.parseData(new InputSource("resources/ThemeBasic.XML"));
 		prepareParser(args);
 	}
@@ -44,9 +44,9 @@ public class Main {
 	public static void prepareParser(String[] args) {
 		WindowParsingLoadscreenNew loadScreen = new WindowParsingLoadscreenNew();
 		LoadScreenThread loadScreenThread = new LoadScreenThread(loadScreen);
-		osmParser.addListener(loadScreen);
+		osmReader.addListener(loadScreen);
 		loadScreenThread.setFilenameAndRun(args[0]);
-		osmParser.parseFile(args[0]);
+		osmReader.parseFile(args[0]);
 	}
 	
 	public static void main() {
