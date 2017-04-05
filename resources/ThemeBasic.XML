@@ -99,7 +99,7 @@
 	<areas>
 		<area>
 			<type name="COASTLINE"/>
-			<innercolor color="39FF14"/>
+			<innercolor color="F0F0E6"/>
 			<layer layer="1"/>
 		</area>
 		<area>
@@ -159,7 +159,7 @@
 		</area>
 		<area>
 			<type name="FARMLAND"/>
-			<innercolor color="FFECAA"/>
+			<innercolor color="FFF1C2"/>
 			<layer layer="2"/>
 		</area>
 		<area>

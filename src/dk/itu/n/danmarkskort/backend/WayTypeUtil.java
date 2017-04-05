@@ -59,6 +59,8 @@ public class WayTypeUtil {
                 switch(v) {
                     case "residential":
                         return WayType.RESIDENTIAL;
+                    case "farmland":
+                        return WayType.FARMLAND;
                     case "forest":
                         return WayType.FOREST;
                     case "industrial":

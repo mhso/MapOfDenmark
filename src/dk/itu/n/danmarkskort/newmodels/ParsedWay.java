@@ -10,7 +10,9 @@ public class ParsedWay extends ParsedItem{
     private ArrayList<ParsedNode> nodes;
     private Shape shape;
 
-    public ParsedWay() {}
+    public ParsedWay() {
+        nodes = new ArrayList<>();
+    }
 
     public ParsedWay(long id) {
         this.id = id;
@@ -18,6 +20,8 @@ public class ParsedWay extends ParsedItem{
     }
 
     public void addNode(ParsedNode node) { nodes.add(node); }
+
+    public void addNodes(ArrayList<ParsedNode> nodes) { this.nodes.addAll(nodes); }
 
     public ArrayList<ParsedNode> getNodes() { return nodes; }
 
