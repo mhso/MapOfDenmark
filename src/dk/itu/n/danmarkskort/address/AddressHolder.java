@@ -193,46 +193,39 @@ public class AddressHolder {
 			inputList.putIfAbsent(p.getPostcode(), p);
 	}
 	
-	public static Map<Region, Postcode> getRegions(){
-		Map<Region, Postcode> regions = new HashMap<Region, Postcode>();
+	public static Map<RegionFloat, Postcode> getRegions(){
+		Map<RegionFloat, Postcode> regions = new HashMap<RegionFloat, Postcode>();
 		for(Postcode pc : postcodes.values()) regions.put(pc.getRegion(), pc);
 		return regions;
 	}
 	
-	public static Map<Region, Postcode> searchRegionPostcode(Region input){
-		Map<Region, Postcode> regions = new HashMap<Region, Postcode>();
+	public static Map<RegionFloat, Postcode> searchRegionWithin(RegionFloat input){
+		Map<RegionFloat, Postcode> regions = new HashMap<RegionFloat, Postcode>();
 		for(Postcode pc : postcodes.values()) {
-			Region pcR = pc.getRegion();
-			if(input.x1 >= pcR.x1
-					&& input.y1 >= pcR.y1
-					&& input.x2 <= pcR.x2
-					&& input.y2 <= pcR.y2){
+			RegionFloat pcR = pc.getRegion();
+			if(pcR.isWithin(input)){
 				regions.put(pc.getRegion(), pc);
+				System.out.println("MATCH: ADD: " + pc.getPostcode());
 			}
-			System.out.println("Compare: " + pcR.toString());
-			System.out.println("Input: " + input.toString() +"\n");
 		}
 		return regions;
 	}
 	
-	public static Map<Region, Housenumber> searchRegionHousenumber(Region input){	
-		Map<Region, Housenumber> regions = new HashMap<Region, Housenumber>();
-		for(Postcode pc : searchRegionPostcode(input).values()) {
-			for(Street st : pc.searchRegions(input).values()){
-				regions.putAll(st.searchRegions(input));
+	public static Map<RegionFloat, Housenumber> searchRegionHousenumbers(RegionFloat input){	
+		Map<RegionFloat, Housenumber> regions = new HashMap<RegionFloat, Housenumber>();
+		for(Postcode pc : searchRegionWithin(input).values()) {
+			for(Street st : pc.searchRegionWithin(input).values()){
+				regions.putAll(st.searchRegionWithin(input));
 			}
 		}
 		return regions;
 	}
 	
 	public static Housenumber searchHousenumber(float[] lonLat){
-		Region input = new Region(lonLat[0], lonLat[1], lonLat[0], lonLat[1]);
-		for(Postcode pc : searchRegionPostcode(input).values()) {
-			System.out.println("AddressHolder -> searchHousenumber: Postcode");
-			for(Street st : pc.searchRegions(input).values()){
-				System.out.println("AddressHolder -> searchHousenumber: Street");
-				for(Housenumber hn : st.searchRegions(input).values()){
-					System.out.println("AddressHolder -> searchHousenumber: Housenumber");
+		RegionFloat input = new RegionFloat(lonLat[0], lonLat[1], lonLat[0], lonLat[1]);
+		for(Postcode pc : searchRegionWithin(input).values()) {
+			for(Street st : pc.searchRegionWithin(input).values()){
+				for(Housenumber hn : st.searchRegionWithin(input).values()){
 					float[] hnLonLat = hn.getLonLat();
 					if(hnLonLat[0] == lonLat[0] && hnLonLat[0] == lonLat[0]) {
 						return hn;

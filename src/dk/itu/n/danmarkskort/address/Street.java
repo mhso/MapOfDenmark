@@ -12,7 +12,7 @@ public class Street {
 	private String street;
 	private Map<String, Housenumber> housenumbers;
 	private Postcode postcode;
-	private Region region;
+	private RegionFloat region;
 	
 	public Postcode getPostcode() { return postcode; }
 	public void setPostcode(Postcode postcode) { this.postcode = postcode; }
@@ -23,18 +23,18 @@ public class Street {
 		housenumbers = new HashMap<String, Housenumber>();
 		region = null;
 	}
-	public Region getRegion(){
+	public RegionFloat getRegion(){
 		if(region == null) region = genRegion();
 		return region;
 	}
 	
-	private Region genRegion(){
-		Region region =  new Region(Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, Double.MAX_VALUE);
+	private RegionFloat genRegion(){
+		RegionFloat region =  new RegionFloat(Float.NEGATIVE_INFINITY, Float.NEGATIVE_INFINITY, Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY);
 		for(Housenumber hn : housenumbers.values()){
 				float[] lonLat = hn.getLonLat();
 				float lon = lonLat[0];
 				float lat = lonLat[1];
-				Region hnR = new Region(lon, lat, lon, lat);
+				RegionFloat hnR = new RegionFloat(lon, lat, lon, lat);
 				if(hnR.x1 > region.x1) region.x1 = hnR.x1;
 				if(hnR.y1 > region.y1) region.y1 = hnR.y1;
 				if(hnR.x2 < region.x2) region.x2 = hnR.x2;
@@ -43,15 +43,15 @@ public class Street {
 		return region;
 	}
 	
-	public Map<Region, Housenumber> searchRegions(Region input){
-		Map<Region, Housenumber> regions = new HashMap<Region, Housenumber>();
+	public Map<RegionFloat, Housenumber> searchRegionWithin(RegionFloat input){
+		Map<RegionFloat, Housenumber> regions = new HashMap<RegionFloat, Housenumber>();
 		for(Housenumber hn : housenumbers.values()) {
 			float[] lonLat = hn.getLonLat();
 			float lon = lonLat[0];
 			float lat = lonLat[1];
-			Region region =  new Region(lon, lat, lon, lat);
-			if(input.x1 >= lon && input.y1 >= lat && input.x2 >= lon && input.y2 >= lat){
-				regions.put(region, hn);
+			RegionFloat hnR =  new RegionFloat(lon, lat, lon, lat);
+			if(hnR.isWithin(input)){
+				regions.put(hnR, hn);
 			}
 		}
 		return regions;

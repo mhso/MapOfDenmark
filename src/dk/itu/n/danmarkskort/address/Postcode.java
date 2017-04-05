@@ -11,7 +11,7 @@ import dk.itu.n.danmarkskort.newmodels.Region;
 public class Postcode {
 	private String postcode, city;
 	private Map<String, Street> streets;
-	private Region region;
+	private RegionFloat region;
 	
 	Postcode(String postcode, String city){
 		this.postcode = postcode;
@@ -22,15 +22,15 @@ public class Postcode {
 	public String getCity() { return city; }
 	public void setCity(String city) { this.city = city; }
 	
-	public Region getRegion(){
+	public RegionFloat getRegion(){
 		if(region == null) region = genRegion();
 		return region;
 	}
 
-	private Region genRegion(){
-		Region region =  new Region(Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY, Double.MAX_VALUE, Double.MAX_VALUE);
+	private RegionFloat genRegion(){
+		RegionFloat region =  new RegionFloat(Float.NEGATIVE_INFINITY, Float.NEGATIVE_INFINITY, Float.MAX_VALUE, Float.MAX_VALUE);
 		for(Street st : streets.values()){
-				Region stR = st.getRegion();
+			RegionFloat stR = st.getRegion();
 				if(stR.x1 > region.x1) region.x1 = stR.x1;
 				if(stR.y1 > region.y1) region.y1 = stR.y1;
 				if(stR.x2 < region.x2) region.x2 = stR.x2;
@@ -39,15 +39,13 @@ public class Postcode {
 		return region;
 	}
 	
-	public Map<Region, Street> searchRegions(Region input){
-		Map<Region, Street> regions = new HashMap<Region, Street>();
+	public Map<RegionFloat, Street> searchRegionWithin(RegionFloat input){
+		Map<RegionFloat, Street> regions = new HashMap<RegionFloat, Street>();
 		for(Street st : streets.values()) {
-			Region stR = st.getRegion();
-			if(input.x1 >= stR.x1
-					&& input.y1 >= stR.y1
-					&& input.x2 <= stR.x2
-					&& input.y2 <= stR.y2){
+			RegionFloat stR = st.getRegion();
+			if(stR.isWithin(input)){
 				regions.put(st.getRegion(), st);
+				System.out.println("MATCH: ADD: " + st.getStreet());
 			}
 		}
 		return regions;
