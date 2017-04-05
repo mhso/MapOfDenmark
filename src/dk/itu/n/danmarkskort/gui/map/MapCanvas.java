@@ -4,6 +4,7 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.Shape;
@@ -47,6 +48,7 @@ public class MapCanvas extends JPanel {
 
 	private List<CanvasListener> listeners = new ArrayList<>();
 	private List<WaytypeGraphicSpec> wayTypesVisible;
+	private boolean repaintPinPointsOnly = false;
 	
 	public MapCanvas() {
 		new MapMouseController(this);
@@ -54,6 +56,7 @@ public class MapCanvas extends JPanel {
 	}
 
 	protected void paintComponent(Graphics _g) {
+		_g.clearRect(0, 0, getWidth(), getHeight());
 		drawMap((Graphics2D)_g);
 	}
 	
@@ -71,12 +74,25 @@ public class MapCanvas extends JPanel {
 	}
 	
 	public void drawMap(Graphics2D g2d) {
+		if(repaintPinPointsOnly) {
+			if(Main.pinPointManager != null) Main.pinPointManager.drawPinPoints(g2d);
+			repaintPinPointsOnly = false;
+			return;
+		}
 		if(Main.buffered) {
 			if(imageManager != null) imageManager.draw(g2d);
 		} else {
 			drawMapShapes(g2d);
 		}
-		
+		if(Main.pinPointManager != null) {
+			Main.pinPointManager.drawPinPoints(g2d);
+			Main.pinPointManager.drawSystemPinPoints(g2d);
+		}
+	}
+	
+	public void repaintPinPoints() {
+		repaintPinPointsOnly = true;
+		repaint();
 	}
 	
 	public void drawMapShapes(Graphics2D g2d) {
@@ -164,6 +180,19 @@ public class MapCanvas extends JPanel {
 		transform.preConcatenate(AffineTransform.getTranslateInstance(position.getX(), position.getY()));
 	}
 	
+	public void panToPosition(Point2D position) {
+		Point2D middleGeo = this.getGeographicalMiddleOfView();
+		Point2D screenGeo = this.toScreenCoords(middleGeo);
+		Point2D screenTarget = this.toScreenCoords(position);
+		pan(screenGeo.getX() - screenTarget.getX(), screenGeo.getY() - screenTarget.getY());
+		repaint();
+	}
+	
+	public Point2D getGeographicalMiddleOfView() {
+		Region region = this.getGeographicalRegion();
+		return new Point2D.Double(region.x1 + region.getWidth() / 2, region.y1 + region.getHeight() / 2);
+	}
+	
 	public Point2D getCurrentPan() {
 		return new Point2D.Double(transform.getTranslateX(), transform.getTranslateY());
 	}
@@ -176,6 +205,16 @@ public class MapCanvas extends JPanel {
 		Point2D topLeft = toModelCoords(new Point2D.Double(0, 0));
 		Point2D bottomRight = toModelCoords(new Point2D.Double(getWidth(), getHeight()));
 		return new Region(topLeft.getX(), topLeft.getY(), bottomRight.getX(), bottomRight.getY());
+	}
+	
+	public Point2D getRelativeMousePosition() {
+		Point mousePositionScreen = MouseInfo.getPointerInfo().getLocation();
+		Point mapCanvasPosition = getLocationOnScreen();
+		return new Point(mousePositionScreen.x - mapCanvasPosition.x, mousePositionScreen.y - mapCanvasPosition.y);
+	}
+	
+	public Point2D getGeographicalMousePosition() {
+		return toModelCoords(getRelativeMousePosition());
 	}
 	
 	public void zoom(double factor) {
@@ -202,14 +241,18 @@ public class MapCanvas extends JPanel {
 		repaint();
 	}
 	
-	public Point2D toModelCoords(Point2D screenPosition) {
+	public Point2D toModelCoords(Point2D relativeToMapCanvasPosition) {
 		try {
-			return transform.inverseTransform(screenPosition, null);
+			return transform.inverseTransform(relativeToMapCanvasPosition, null);
 		} catch (NoninvertibleTransformException e) {
 			throw new RuntimeException(e);
 		}
 	}
-
+	
+	public Point2D toScreenCoords(Point2D coordinates) {
+		return transform.transform(coordinates, null);
+	}
+	
 	public void toggleAA() {
 		antiAlias = !antiAlias;
 		repaint();

@@ -36,6 +36,10 @@ public class MapMouseController extends MouseAdapter {
 		lastMousePosition = e.getPoint();
 	}
 
+	public void mouseMoved(MouseEvent e) {
+		if(Main.pinPointManager != null) Main.pinPointManager.checkHover();
+	}
+	
 	public void mouseDragged(MouseEvent e) {
 		Point2D currentMousePosition = e.getPoint();
 		double dx = currentMousePosition.getX() - lastMousePosition.getX();
@@ -52,8 +56,6 @@ public class MapMouseController extends MouseAdapter {
 		} else if(warp == 3) {
 			dy += screenSize.getHeight();
 		}
-		
-		if(warp != -1) Main.log(warp + "");
 		
 		canvas.pan(dx, dy);
 		lastMousePosition = currentMousePosition;
