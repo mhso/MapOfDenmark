@@ -239,12 +239,7 @@ public class MapCanvas extends JPanel {
 	}
 	
 	public void snapToZoom(int zoomValue) {
-		double currentZoom = getZoom();
-		ParsedBounds denmark = DKConstants.BOUNDS_DENMARK;
-		double denmarkWidth = denmark.maxLong - denmark.minLong;
-		Region view = getGeographicalRegion();
-		double scale = nextZoom/currentZoom;
-		zoom(scale);
+		
 	}
 	
 	public Point2D toModelCoords(Point2D relativeToMapCanvasPosition) {
