@@ -33,9 +33,9 @@ public class WindowParsingLoadscreenNew extends JFrame implements OSMParserListe
 	private JLabel labelStatus;
 	private BufferedImage mainImage;
 	private long fileSize;
-	private boolean showObjectString = true;
 	private double currentPercent;
 	private JLabel labelPercent;
+	private int objectCount = 1000;
 	
 	public void initialize(String fileName) {
 		getFileSize(fileName);
@@ -106,17 +106,17 @@ public class WindowParsingLoadscreenNew extends JFrame implements OSMParserListe
 
 	@Override
 	public void onParsingGotItem(Object parsedItem) {
-		if(showObjectString) {
+		objectCount++;
+		if(objectCount >= 1000) {
 			labelStatus.setText(parsedItem.toString());
-			showObjectString = false;
+			objectCount = 0;
 		}
 	}
 
 	@Override
-	public void onLineCountHundred() {
+	public void onLineCountThousand() {
 		currentPercent++;
 		setProgressPercent();
-		showObjectString = true;
 	}
 
 	@Override

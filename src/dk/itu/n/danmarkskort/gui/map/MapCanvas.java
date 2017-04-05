@@ -28,7 +28,6 @@ import dk.itu.n.danmarkskort.mapgfx.GraphicSpecLine;
 import dk.itu.n.danmarkskort.mapgfx.WaytypeGraphicSpec;
 import dk.itu.n.danmarkskort.newmodels.ParsedBounds;
 import dk.itu.n.danmarkskort.newmodels.Region;
-import dk.itu.n.danmarkskort.newmodels.WayType;
 
 public class MapCanvas extends JPanel {
 
@@ -49,7 +48,6 @@ public class MapCanvas extends JPanel {
 
 	private List<CanvasListener> listeners = new ArrayList<>();
 	private List<WaytypeGraphicSpec> wayTypesVisible;
-	private boolean repaintPinPointsOnly = false;
 	
 	public MapCanvas() {
 		new MapMouseController(this);
@@ -87,7 +85,6 @@ public class MapCanvas extends JPanel {
 	}
 	
 	public void repaintPinPoints() {
-		repaintPinPointsOnly = true;
 		repaint();
 	}
 	
@@ -213,6 +210,10 @@ public class MapCanvas extends JPanel {
 		return toModelCoords(getRelativeMousePosition());
 	}
 	
+	public void mouseMoved() {
+		for(CanvasListener listener : listeners) listener.onMouseMoved();
+	}
+	
 	public void zoom(double factor) {
 		double zoomBefore = getZoom();
 		double scaleBefore = getZoomRaw();
@@ -237,6 +238,15 @@ public class MapCanvas extends JPanel {
 		repaint();
 	}
 	
+	public void snapToZoom(int zoomValue) {
+		double currentZoom = getZoom();
+		ParsedBounds denmark = DKConstants.BOUNDS_DENMARK;
+		double denmarkWidth = denmark.maxLong - denmark.minLong;
+		Region view = getGeographicalRegion();
+		double scale = nextZoom/currentZoom;
+		zoom(scale);
+	}
+	
 	public Point2D toModelCoords(Point2D relativeToMapCanvasPosition) {
 		try {
 			return transform.inverseTransform(relativeToMapCanvasPosition, null);
@@ -258,8 +268,7 @@ public class MapCanvas extends JPanel {
 		ParsedBounds denmark = DKConstants.BOUNDS_DENMARK;
 		double denmarkWidth = denmark.maxLong - denmark.minLong;
 		Region view = getGeographicalRegion();
-		double zoom = Math.floor(Math.log(denmarkWidth/view.getWidth())*2.5);
-		return zoom;
+		return Math.floor(Math.log(denmarkWidth/view.getWidth())*2.5);
 	}
 	
 	public double getZoomRaw() {
@@ -278,6 +287,7 @@ public class MapCanvas extends JPanel {
 			zero = new Point2D.Double(transform.getTranslateX(), transform.getTranslateY());
 			imageManager = new BufferedMapManager();	
 		}
+		for(CanvasListener listener : listeners) listener.onSetupDone();
 	}
 
 }

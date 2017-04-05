@@ -60,7 +60,7 @@ public class OSMParser extends SAXAdapter {
 		if(currentCount == byteCount) return;
 		byteCount = currentCount;
 		
-		for(OSMParserListener listener : parser.parserListeners) listener.onLineCountHundred();
+		for(OSMParserListener listener : parser.parserListeners) listener.onLineCountThousand();
 	}
 	
 	public void setDocumentLocator(Locator locator) {
@@ -217,7 +217,7 @@ public class OSMParser extends SAXAdapter {
             if(node != null) address.setCoords(node.getPoint());
             else if (way != null) address.setWay(way);
             else if (relation != null) address.setRelation(relation);
-            AddressController.getInstance().addressParsed(address);
+            //AddressController.getInstance().addressParsed(address);
             for(OSMParserListener listener : parser.parserListeners) listener.onParsingGotItem(address);
         }
         cleanUp();
