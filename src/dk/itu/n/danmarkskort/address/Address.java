@@ -39,12 +39,7 @@ public class Address{
  	public void setPostcode(String postcode) { this.postcode = postcode; }
 
  	public void setCity(String city) { this.city = city; }
- 	public String getCity() {
- 		if(city != null) { 
- 			return city;
- 		};
- 		return PostcodeCityCombination.getInstance().getCity(postcode);
- 	}
+ 	public String getCity() { return city; }
  	
  	public String toStringShort(){
  		StringBuilder sb = new StringBuilder();
@@ -58,6 +53,6 @@ public class Address{
 	@Override
 	public String toString() {
 		return "Address [lon=" + lonLat[0] + ", lat=" + lonLat[1] + ", street=" + street + ", housenumber="
-				+ housenumber + ", postcode=" + postcode + ", city=" + getCity() + "]";
+				+ housenumber + ", postcode=" + postcode + ", city=" + city + "]";
 	}
 }
