@@ -11,6 +11,7 @@ import javax.imageio.ImageIO;
 
 import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.Util;
+import dk.itu.n.danmarkskort.gui.menu.PinPointPage;
 import dk.itu.n.danmarkskort.newmodels.Region;
 
 public class PinPointManager implements Serializable {
@@ -51,6 +52,7 @@ public class PinPointManager implements Serializable {
 		pinPoints.put(name, pinPoint);
 		Main.mainPanel.repaint();
 		save();
+		PinPointPage.update();
 		return true;
 	}
 	

@@ -38,6 +38,7 @@ public class MapMouseController extends MouseAdapter {
 
 	public void mouseMoved(MouseEvent e) {
 		if(Main.pinPointManager != null) Main.pinPointManager.checkHover();
+		canvas.mouseMoved();
 	}
 	
 	public void mouseDragged(MouseEvent e) {

@@ -52,7 +52,6 @@ public class MapCanvas extends JPanel implements ActionListener {
 
 	private List<CanvasListener> listeners = new ArrayList<>();
 	private List<WaytypeGraphicSpec> wayTypesVisible;
-	private boolean repaintPinPointsOnly = false;
 	
 	public boolean scaleCurrentLayer = false;
 	private Timer zoomTimer;
@@ -104,7 +103,6 @@ public class MapCanvas extends JPanel implements ActionListener {
 	}
 	
 	public void repaintPinPoints() {
-		repaintPinPointsOnly = true;
 		repaint();
 	}
 	
@@ -232,6 +230,10 @@ public class MapCanvas extends JPanel implements ActionListener {
 		return toModelCoords(getRelativeMousePosition());
 	}
 	
+	public void mouseMoved() {
+		for(CanvasListener listener : listeners) listener.onMouseMoved();
+	}
+	
 	public void zoom(double factor) {
 		double zoomBefore = getZoom();
 		double scaleBefore = getZoomRaw();
@@ -264,6 +266,10 @@ public class MapCanvas extends JPanel implements ActionListener {
 		repaint();
 	}
 	
+	public void snapToZoom(int zoomValue) {
+		
+	}
+	
 	public Point2D toModelCoords(Point2D relativeToMapCanvasPosition) {
 		try {
 			return transform.inverseTransform(relativeToMapCanvasPosition, null);
@@ -285,8 +291,7 @@ public class MapCanvas extends JPanel implements ActionListener {
 		ParsedBounds denmark = DKConstants.BOUNDS_DENMARK;
 		double denmarkWidth = denmark.maxLong - denmark.minLong;
 		Region view = getGeographicalRegion();
-		double zoom = Math.floor(Math.log(denmarkWidth/view.getWidth())*2.5);
-		return zoom;
+		return Math.floor(Math.log(denmarkWidth/view.getWidth())*2.5);
 	}
 	
 	public double getZoomRaw() {
@@ -306,6 +311,7 @@ public class MapCanvas extends JPanel implements ActionListener {
 			imageManager = new BufferedMapManager();	
 			imageManager.forceFullRepaint();
 		}
+		for(CanvasListener listener : listeners) listener.onSetupDone();
 	}
 
 	public void actionPerformed(ActionEvent e) {
