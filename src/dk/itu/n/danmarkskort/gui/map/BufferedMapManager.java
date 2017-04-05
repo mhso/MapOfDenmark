@@ -28,12 +28,10 @@ public class BufferedMapManager {
 	}
 	
 	public void storeZoomImages() {
-		Main.log("Storing zoom images");
 		for(int i=0; i<4; i++) {
 			zoomImages[i] = new BufferedMapImage(this, images[i].getPosition());
 			zoomImages[i].setData(images[i].getData());
 		}
-		Main.log("Done storing data");
 	}
 	
 	public void prepareWorker() {

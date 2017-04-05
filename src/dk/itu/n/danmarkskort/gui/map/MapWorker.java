@@ -38,9 +38,7 @@ public class MapWorker implements Runnable{
 				}
 			}
 			MapWorker.blocked = true;
-			Main.log("Starting new render");
 			queue.get(0).render();
-			Main.log("Ending new render");
 			Main.mainPanel.repaint();
 			if(clearAfterNext) {
 				clearAfterNext = false;
