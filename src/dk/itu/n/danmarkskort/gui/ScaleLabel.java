@@ -25,11 +25,11 @@ public class ScaleLabel extends JLabel {
 	}
 	
 	public void drawScale(Graphics2D g2d) {
-		g2d.setColor(Color.BLACK);
+		g2d.setColor(Color.WHITE);
 		g2d.setStroke(new BasicStroke(1));
 		Point l = getLocation();
-		g2d.drawLine(0, 8, 0, getHeight());
-		g2d.drawLine(0, getHeight()-1, l.x+getWidth(), getHeight()-1);
-		g2d.drawLine(getWidth()-1, 8, getWidth()-1, getHeight());
+		g2d.drawLine(2, 8, 2, getHeight()-3);
+		g2d.drawLine(2, getHeight()-3, l.x+getWidth()-2, getHeight()-3);
+		g2d.drawLine(getWidth()-3, 8, getWidth()-3, getHeight()-3);
 	}
 }

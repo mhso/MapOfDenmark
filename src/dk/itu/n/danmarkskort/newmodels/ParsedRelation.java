@@ -120,6 +120,7 @@ public class ParsedRelation extends ParsedItem {
     public String toString() {
     	int nodeAmount = 0;
     	if(nodes != null) nodeAmount = nodes.size();
+
     	return "ParsedRelation [" + "id=" + id 	+ ", firstLon=" + getFirstNode().getLon() + ", firstLat=" 	+ getFirstNode().getLat() + ", nodeAmount=" + nodeAmount +
     			", itemAmount=" + members.size() + "]";
     }

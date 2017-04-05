@@ -17,6 +17,7 @@ import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.Robot;
 import java.awt.Toolkit;
+import java.awt.geom.Point2D;
 
 public class Util {
 	
@@ -116,6 +117,10 @@ public class Util {
 		}
 	}
 	
+	public static Point2D toRealCoords(Point2D fakeCoords) {
+		return new Point2D.Float((float)fakeCoords.getX()/Main.model.lonFactor, (float)-fakeCoords.getY());
+	}
+	
 	public static boolean writeObjectToFile(Object object, String filename) {
 		try {
 			FileOutputStream fout = new FileOutputStream(filename);
@@ -137,6 +142,7 @@ public class Util {
 			oos.close();
 			return object;
 		} catch(Exception e) {
+			Main.log("Could not find file: " + filename);
 			return null;
 		}
 	}

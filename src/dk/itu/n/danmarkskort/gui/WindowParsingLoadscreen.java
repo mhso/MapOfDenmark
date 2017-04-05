@@ -103,7 +103,7 @@ public class WindowParsingLoadscreen extends JFrame implements OSMParserListener
 	}
 
 	@Override
-	public void onLineCountHundred() {
+	public void onLineCountThousand() {
 		lineCountHundreds++;
 		setProgressPercent();
 		showObjectString = true;
