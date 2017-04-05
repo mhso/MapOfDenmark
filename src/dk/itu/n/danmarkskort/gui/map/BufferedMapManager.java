@@ -14,6 +14,7 @@ public class BufferedMapManager {
 	private BufferedMapImage[] oldImages = new BufferedMapImage[4];
 	private BufferedMapImage[] zoomImages = new BufferedMapImage[4];
 	private AffineTransform transform = new AffineTransform();
+	public AffineTransform overallTransform = new AffineTransform();
 	private AffineTransform oldTransform = new AffineTransform();
 	private Thread mapWorkerThread;
 	private MapWorker mapWorker;
@@ -82,7 +83,12 @@ public class BufferedMapManager {
 	
 	public void zoom(double factor) {
 		transform.preConcatenate(AffineTransform.getScaleInstance(factor, factor));
+		overallTransform.preConcatenate(AffineTransform.getScaleInstance(factor, factor));
 		oldTransform = transform;
+	}
+	
+	public AffineTransform getTransform() {
+		return transform;
 	}
 	
 	public boolean hasTile(Point point) {
@@ -136,6 +142,7 @@ public class BufferedMapManager {
 	
 	public void pan(double dx, double dy) {
 		transform.preConcatenate(AffineTransform.getTranslateInstance(dx, dy));
+		overallTransform.preConcatenate(AffineTransform.getTranslateInstance(dx, dy));
 		oldTransform = transform;
 		checkForUpdates();
 	}

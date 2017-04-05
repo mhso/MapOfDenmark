@@ -37,6 +37,7 @@ public class MapCanvas extends JPanel implements ActionListener {
 	private static final long serialVersionUID = -4476997375977002964L;
 
 	private AffineTransform transform = new AffineTransform();
+	private AffineTransform actualTransform = new AffineTransform();
 	private boolean antiAlias = true;
 	public int shapesDrawn = 0;
 	private final int MAX_ZOOM = 20;
@@ -57,12 +58,16 @@ public class MapCanvas extends JPanel implements ActionListener {
 	private Timer zoomTimer;
 	
 	public MapCanvas() {
-		zoomTimer = new Timer(1000, this);
+		zoomTimer = new Timer(200, this);
 		zoomTimer.setRepeats(false);
 		new MapMouseController(this);
 		setDoubleBuffered(true);
 	}
 
+	public void repair() {
+		transform = (AffineTransform) actualTransform.clone();
+	}
+	
 	protected void paintComponent(Graphics _g) {
 		_g.clearRect(0, 0, getWidth(), getHeight());
 		drawMap((Graphics2D)_g);
@@ -87,6 +92,7 @@ public class MapCanvas extends JPanel implements ActionListener {
 				if(scaleCurrentLayer) imageManager.drawOldImages(g2d);
 				else if(imageManager.isRepainting()) imageManager.drawOldImages(g2d);
 				else imageManager.draw(g2d);
+				//drawMapShapes(g2d);
 			}
 		} else {
 			drawMapShapes(g2d);
@@ -168,7 +174,9 @@ public class MapCanvas extends JPanel implements ActionListener {
 	}
 	
 	public void pan(double dx, double dy) {
+		repair();
 		transform.preConcatenate(AffineTransform.getTranslateInstance(dx, dy));
+		actualTransform.preConcatenate(AffineTransform.getTranslateInstance(dx, dy));
 		if(Main.buffered && imageManager != null) imageManager.pan(dx, dy);
 		repaint();
 	}
@@ -227,13 +235,17 @@ public class MapCanvas extends JPanel implements ActionListener {
 	public void zoom(double factor) {
 		double zoomBefore = getZoom();
 		double scaleBefore = getZoomRaw();
+		repair();
 		transform.preConcatenate(AffineTransform.getScaleInstance(factor, factor));
+		actualTransform.preConcatenate(AffineTransform.getScaleInstance(factor, factor));
 		double scaleAfter = getZoomRaw();
 		if(getZoom() > MAX_ZOOM) {
 			transform.preConcatenate(AffineTransform.getScaleInstance(scaleBefore/scaleAfter, scaleBefore/scaleAfter));
+			actualTransform.preConcatenate(AffineTransform.getScaleInstance(scaleBefore/scaleAfter, scaleBefore/scaleAfter));
 		}
 		else if(getZoom() < 1) {
 			transform.preConcatenate(AffineTransform.getScaleInstance(scaleBefore/scaleAfter, scaleBefore/scaleAfter));
+			actualTransform.preConcatenate(AffineTransform.getScaleInstance(scaleBefore/scaleAfter, scaleBefore/scaleAfter));
 		}
 
 		for(CanvasListener listener : listeners) listener.onZoom();
@@ -287,7 +299,7 @@ public class MapCanvas extends JPanel implements ActionListener {
 	
 	public void zoomToBounds() {
 		Region mapRegion = Main.model.getMapRegion();
-		purePan(-mapRegion.x1, -mapRegion.y2);
+		pan(-mapRegion.x1, -mapRegion.y2);
 		zoom(getWidth() / (mapRegion.x2 - mapRegion.x1));
 		if(Main.buffered) {
 			zero = new Point2D.Double(transform.getTranslateX(), transform.getTranslateY());
