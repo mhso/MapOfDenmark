@@ -84,7 +84,10 @@ public class MapCanvas extends JPanel {
 		} else {
 			drawMapShapes(g2d);
 		}
-		if(Main.pinPointManager != null) Main.pinPointManager.drawPinPoints(g2d);
+		if(Main.pinPointManager != null) {
+			Main.pinPointManager.drawPinPoints(g2d);
+			Main.pinPointManager.drawSystemPinPoints(g2d);
+		}
 	}
 	
 	public void repaintPinPoints() {
@@ -175,6 +178,19 @@ public class MapCanvas extends JPanel {
 	public void purePanToPosition(Point2D position) {
 		transform.preConcatenate(AffineTransform.getTranslateInstance(-transform.getTranslateX(), -transform.getTranslateY()));
 		transform.preConcatenate(AffineTransform.getTranslateInstance(position.getX(), position.getY()));
+	}
+	
+	public void panToPosition(Point2D position) {
+		Point2D middleGeo = this.getGeographicalMiddleOfView();
+		Point2D screenGeo = this.toScreenCoords(middleGeo);
+		Point2D screenTarget = this.toScreenCoords(position);
+		pan(screenGeo.getX() - screenTarget.getX(), screenGeo.getY() - screenTarget.getY());
+		repaint();
+	}
+	
+	public Point2D getGeographicalMiddleOfView() {
+		Region region = this.getGeographicalRegion();
+		return new Point2D.Double(region.x1 + region.getWidth() / 2, region.y1 + region.getHeight() / 2);
 	}
 	
 	public Point2D getCurrentPan() {

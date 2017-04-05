@@ -2,11 +2,9 @@ package dk.itu.n.danmarkskort.gui.map;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
 import java.io.Serializable;
 
 import dk.itu.n.danmarkskort.Main;
@@ -17,11 +15,20 @@ public class PinPoint implements Serializable {
 	private static final long serialVersionUID = -3229202388000112060L;
 	private Point2D location;
 	private String name;
+	private int iconIndex = 0;
 	private boolean hover;
 	
 	public PinPoint(Point2D location, String name) {
 		this.location = location;
 		this.name = name;
+	}
+	
+	public void setIconIndex(int iconIndex) {
+		this.iconIndex = iconIndex;
+	}
+	
+	public int getIconIndex() {
+		return iconIndex;
 	}
 	
 	public Point2D getLocation() {

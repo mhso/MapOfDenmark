@@ -57,8 +57,6 @@ public class MapMouseController extends MouseAdapter {
 			dy += screenSize.getHeight();
 		}
 		
-		if(warp != -1) Main.log(warp + "");
-		
 		canvas.pan(dx, dy);
 		lastMousePosition = currentMousePosition;
 		

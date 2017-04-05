@@ -17,6 +17,7 @@ public class PinPointManager implements Serializable {
 
 	private static final long serialVersionUID = 8260486034670292677L;
 	private HashMap<String, PinPoint> pinPoints = new HashMap<String, PinPoint>();
+	private HashMap<String, PinPoint> systemPinPoints = new HashMap<String, PinPoint>();
 	private transient BufferedImage icon;
 	private transient MapCanvas canvas;
 	
@@ -53,7 +54,33 @@ public class PinPointManager implements Serializable {
 		return true;
 	}
 	
+	public boolean removePinPoint(PinPoint pinPoint) {
+		if(pinPoints.containsValue(pinPoint)) {
+			pinPoints.remove(pinPoint.getName());
+			return true;
+		} else return false;
+	}
+	
+	public boolean addSystemPinPoint(String name, PinPoint pinPoint) {
+		if(systemPinPoints.containsKey(name)) return false;
+		systemPinPoints.put(name, pinPoint);
+		Main.mainPanel.repaint();
+		save();
+		return true;
+	}
+	
+	public boolean removeSystemPinPoint(PinPoint pinPoint) {
+		if(systemPinPoints.containsValue(pinPoint)) {
+			systemPinPoints.remove(pinPoint.getName());
+			return true;
+		} else return false;
+	}
+	
 	public PinPoint getPinPoint(String name) {
+		return pinPoints.get(name);
+	}
+	
+	public PinPoint getSystemPinPoint(String name) {
 		return pinPoints.get(name);
 	}
 	
@@ -61,7 +88,6 @@ public class PinPointManager implements Serializable {
 		Region mapRegion = canvas.getGeographicalRegion();
 		
 		for(PinPoint pinPoint : pinPoints.values()) {
-			Main.log(pinPoint.getLocation());
 			if(pinPoint.isInRegion(mapRegion)) {
 				if(pinPoint.checkHover()) {
 					Main.mainPanel.repaint();
@@ -72,7 +98,7 @@ public class PinPointManager implements Serializable {
 	}
 	
 	public void panToLocation(PinPoint pinPoint) {
-		canvas.purePanToPosition(pinPoint.getLocation());
+		canvas.panToPosition(pinPoint.getLocation());
 	}
 	
 	public boolean panToLocation(String name) {
@@ -94,8 +120,20 @@ public class PinPointManager implements Serializable {
 		}
 	}
 	
+	public void drawSystemPinPoints(Graphics2D g) {
+		Region mapRegion = canvas.getGeographicalRegion();
+		
+		for(PinPoint pinPoint : systemPinPoints.values()) {
+			if(pinPoint.isInRegion(mapRegion)) pinPoint.draw(g);
+		}
+	}
+	
 	public int size() {
 		return pinPoints.size();
+	}
+	
+	public int systemSize() {
+		return systemPinPoints.size();
 	}
 	
 	public static PinPointManager load(MapCanvas canvas) {
@@ -111,6 +149,10 @@ public class PinPointManager implements Serializable {
 	
 	public PinPoint[] getPinPoints() {
 		return this.pinPoints.values().toArray(new PinPoint[pinPoints.values().size()]);
+	}
+	
+	public PinPoint[] getSystemPinPoints() {
+		return this.systemPinPoints.values().toArray(new PinPoint[systemPinPoints.values().size()]);
 	}
 	
 }
