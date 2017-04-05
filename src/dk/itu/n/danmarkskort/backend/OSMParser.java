@@ -103,10 +103,7 @@ public class OSMParser extends SAXAdapter {
         enumMapKD = new EnumMap<>(WayType.class);
 
         for(WayType wt : WayType.values()) {
-            System.gc();
             Main.log("KD'ing " + wt);
-            Main.log(Util.getRAMUsageInMB());
-
             ArrayList<ParsedItem> current = enumMap.get(wt);
             KDTree tree;
 

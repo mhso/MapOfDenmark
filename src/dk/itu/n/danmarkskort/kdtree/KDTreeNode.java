@@ -26,22 +26,18 @@ public class KDTreeNode extends KDTree {
 
     public void createStructure(ParsedItem[] array, boolean sortByLon) {
         //  finds the median of the given list, either by lon or lat values
-        Main.log("quickselecting");
         ParsedItem median = QuickSelect.quickSelect(array, (array.length + 1) / 2, sortByLon);
 
-        Main.log("left array");
         ParsedItem[] leftArray = new ParsedItem[(array.length + 1) / 2];
         for(int i = 0; i < leftArray.length; i++) {
             leftArray[i] = array[i];
         }
 
-        Main.log("right array");
         ParsedItem[] rightArray = new ParsedItem[array.length - leftArray.length];
         for(int i = 0; i < rightArray.length; i ++) {
             rightArray[i] = array[i + leftArray.length];
         }
 
-        Main.log("finding left and right split");
         if(sortByLon) {
             leftSplit = median.getFirstNode().getLon();
             for(ParsedItem item : leftArray) {
@@ -65,7 +61,6 @@ public class KDTreeNode extends KDTree {
                 for(ParsedNode node : nodes) rightSplit = node.getLat() < rightSplit ? node.getLat() : rightSplit; // nederst er værdierne størst
             }
         }
-        Main.log("recursive step!");
         if(leftArray.length > DKConstants.KD_SIZE) leftChild = new KDTreeNode(leftArray, !sortByLon);
         else leftChild = new KDTreeLeaf(leftArray, this);
 
