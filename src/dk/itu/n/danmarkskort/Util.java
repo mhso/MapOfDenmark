@@ -137,6 +137,7 @@ public class Util {
 			oos.close();
 			return object;
 		} catch(Exception e) {
+			Main.log("Could not find file: " + filename);
 			return null;
 		}
 	}

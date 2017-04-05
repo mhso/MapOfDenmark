@@ -79,4 +79,9 @@ public class DropdownAddressSearch extends CustomDropdown {
 	public void showDropdown(Component source) {
 		show(source, 0, source.getHeight());
 	}
+
+	@Override
+	protected void onClick(String text) {
+		
+	}
 }
