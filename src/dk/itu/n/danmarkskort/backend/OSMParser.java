@@ -171,16 +171,16 @@ public class OSMParser extends SAXAdapter {
             case "member":
                 long ref = Long.parseLong(atts.getValue("ref"));
                 String type = atts.getValue("type");
-                boolean isOuter = atts.getValue("role").equals("outer");
+                String role = atts.getValue("role");
                 switch(type) {
                     case "node":
                         if(nodeMap.get(ref) != null) relation.addNode(nodeMap.get(ref));
                         break;
                     case "way":
-                        if(temporaryWayReferences.containsKey(ref)) relation.addMember(temporaryWayReferences.get(ref), isOuter);
+                        if(temporaryWayReferences.containsKey(ref)) relation.addMember(temporaryWayReferences.get(ref), role);
                         break;
                     case "relation":
-                        if(temporaryRelationReferences.containsKey(ref)) relation.addMember(temporaryRelationReferences.get(ref), isOuter);
+                        if(temporaryRelationReferences.containsKey(ref)) relation.addMember(temporaryRelationReferences.get(ref), role);
                         break;
                 }
                 break;
@@ -248,7 +248,7 @@ public class OSMParser extends SAXAdapter {
             if(node != null) address.setCoords(node.getPoint());
             else if (way != null) address.setWay(way);
             else if (relation != null) address.setRelation(relation);
-            AddressController.getInstance().addressParsed(address);
+            //AddressController.getInstance().addressParsed(address);
             for(OSMParserListener listener : parser.parserListeners) listener.onParsingGotItem(address);
         }
         cleanUp();

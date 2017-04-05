@@ -33,6 +33,4 @@ public abstract class ParsedItem {
     public abstract ArrayList<ParsedNode> getNodes();
     public abstract Path2D getPath();
     public abstract Path2D getReversedPath();
-
-    public abstract void appendParsedItem(ParsedItem item);
 }

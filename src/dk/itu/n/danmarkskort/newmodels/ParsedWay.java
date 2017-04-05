@@ -53,14 +53,6 @@ public class ParsedWay extends ParsedItem{
     }
 
     @Override
-    public void appendParsedItem(ParsedItem item) {
-        ArrayList<ParsedNode> newNodes = item.getNodes();
-        for(int i = 1; i < newNodes.size(); i++) {
-            nodes.add(newNodes.get(i));
-        }
-    }
-
-    @Override
     public ParsedNode getFirstNode() {
         if(nodes.size() > 0) return nodes.get(0);
         return null;
