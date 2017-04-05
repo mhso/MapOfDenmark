@@ -25,5 +25,5 @@ public class DKConstants {
 	/**
 	 * The factor that longitude coordinates gets multiplied by. This is because the world is spherical.
 	 */
-	public static final float FACTOR_LON = (float)(Math.cos((BOUNDS_DENMARK.minLat + (BOUNDS_DENMARK.maxLat - BOUNDS_DENMARK.minLat) / 2)) / 180 * Math.PI); 
+	public static final float FACTOR_LON_DENMARK = (float)(Math.cos((BOUNDS_DENMARK.minLat + (BOUNDS_DENMARK.maxLat - BOUNDS_DENMARK.minLat) / 2)) / 180 * Math.PI); 
 }

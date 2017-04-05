@@ -65,7 +65,7 @@ public class OSMParser extends SAXAdapter {
 		if(currentCount == byteCount) return;
 		byteCount = currentCount;
 		
-		for(OSMParserListener listener : parser.parserListeners) listener.onLineCountHundred();
+		for(OSMParserListener listener : parser.parserListeners) listener.onLineCountThousand();
 	}
 	
 	public void setDocumentLocator(Locator locator) {

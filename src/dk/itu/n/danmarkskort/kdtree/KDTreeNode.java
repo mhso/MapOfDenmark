@@ -93,5 +93,21 @@ public class KDTreeNode extends KDTree {
     }
     @Override
     public int size() { return leftChild.size() + rightChild.size(); }
+    
+    public int size(Region reg) {
+    	return size(reg, true);
+    }
+    public int size(Region reg, boolean sortByLon) {
+    	int size = 0;
+    	if(sortByLon) {
+            if(reg.x1 < leftSplit) size += leftChild.size(reg, !sortByLon);
+            if(reg.x2 > rightSplit) size += rightChild.size(reg, !sortByLon);
+        }
+        else {
+            if(reg.y1 < leftSplit) size += leftChild.size(reg, !sortByLon);
+            if(reg.y2 > rightSplit) size += rightChild.size(reg, !sortByLon);
+        }
+    	return size;
+    }
 
 }

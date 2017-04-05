@@ -1,29 +1,38 @@
 package dk.itu.n.danmarkskort.gui;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 
-import dk.itu.n.danmarkskort.DKConstants;
 import dk.itu.n.danmarkskort.Main;
+import dk.itu.n.danmarkskort.Util;
 import dk.itu.n.danmarkskort.gui.map.CanvasListener;
 
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.geom.Point2D;
+import javax.swing.border.EtchedBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 public class BottomPanel extends JPanel implements CanvasListener {
 
 	private static final long serialVersionUID = 4413404136962289564L;
+	private final Color BORDER_HIGHTLIGHT = Color.GRAY;
+	private final Color BORDER_SHADOW = Color.DARK_GRAY;
+	
 	Style style;
-    GridBagConstraints gbcParent;
     private JLabel scale;
+	private JLabel coordsLabel;
+	private JSlider zoomSlider;
 
     public BottomPanel(Style style) {
-
+    	setBorder(new EmptyBorder(0, 10, 0, 10));
+    	setOpaque(false);
+    	
         this.style = style;
 
-        setLayout(new GridBagLayout());
-        setOpaque(false);
-
-        gbcParent = new GridBagConstraints();
-        gbcParent.anchor = GridBagConstraints.SOUTH;
+        setLayout(new BorderLayout());
 
         Main.map.addCanvasListener(this);
         addLeft();
@@ -32,80 +41,74 @@ public class BottomPanel extends JPanel implements CanvasListener {
     }
 
     private void addLeft() {
-        GridBagConstraints gbc = new GridBagConstraints();
+        JPanel leftPanel = new JPanel(new BorderLayout());
+        leftPanel.setOpaque(false);
+        
+        JPanel southLeftPanel = new JPanel();
+        southLeftPanel.setLayout(new BorderLayout());
+        southLeftPanel.setBackground(style.panelBG());
+        leftPanel.add(southLeftPanel, BorderLayout.SOUTH);
 
-        JLabel dummy = new JLabel();
-        gbc.weightx = 1;
-        gbc.gridx = 1;
-        gbc.gridy = 0;
-        gbc.weighty = 1;
-
-        JPanel leftPanel = new JPanel(new GridBagLayout());
-        gbcParent.gridx = 0;
-        gbcParent.gridy = 1;
-        leftPanel.add(dummy, gbc);
-
-        gbc.weightx = 0.0;
-        gbc.weighty = 0.0;
-        gbc.gridx = 0;
-        gbc.gridy = 1;
         scale = new ScaleLabel("Scale: ");
+        scale.setBorder(new EtchedBorder(EtchedBorder.RAISED, BORDER_HIGHTLIGHT, BORDER_SHADOW));
+        scale.setForeground(Color.WHITE);
+        scale.setOpaque(false);
         scale.setFont(new Font(scale.getFont().getName(), Font.PLAIN, 12));
         scale.setHorizontalAlignment(SwingConstants.CENTER);
 
-        leftPanel.add(scale, gbc);
-        add(leftPanel, gbcParent);
+        southLeftPanel.add(scale, BorderLayout.SOUTH);
+        add(leftPanel, BorderLayout.WEST);
     }
 
     private void addCenter() {
-        // the idea is that this panel is gonna contain a box at the bottom center,
-        // which displays the longitude-latitude where the mouse is, and a the name
-        // of the nearest street
+        JPanel centerPanel = new JPanel();
+        centerPanel.setOpaque(false);
+        centerPanel.setBorder(new EmptyBorder(0, 300, 0, 300));
+        centerPanel.setLayout(new BorderLayout());
+        
+        JPanel southCenterPanel = new JPanel();
+        southCenterPanel.setLayout(new BorderLayout());
+        southCenterPanel.setBorder(new EtchedBorder(EtchedBorder.RAISED, BORDER_HIGHTLIGHT, BORDER_SHADOW));
+        southCenterPanel.setBackground(style.panelBG());
+        centerPanel.add(southCenterPanel, BorderLayout.SOUTH);
 
-        //right now it contains nothing
-
-        JLabel dummy = new JLabel();
-        gbcParent.gridx = 1;
-        gbcParent.weightx = 1;
-        add(dummy, gbcParent);
+        coordsLabel = new JLabel("Lon: 0, Lat: 0");
+        coordsLabel.setForeground(Color.WHITE);
+        coordsLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        southCenterPanel.add(coordsLabel, BorderLayout.CENTER);
+        
+        JLabel nearestStreetLabel = new JLabel("<html><body><u>Streetname</u></body></html>");
+        nearestStreetLabel.setForeground(Color.WHITE);
+        nearestStreetLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        southCenterPanel.add(nearestStreetLabel, BorderLayout.SOUTH);
+        
+        add(centerPanel, BorderLayout.CENTER);
     }
 
     private void addRight() {
+        JPanel rightParent = new JPanel();
+        rightParent.setBackground(style.panelBG());
 
-        JPanel rightParent = new JPanel(new GridBagLayout());
-        rightParent.setOpaque(false);
-
-        GridBagConstraints gbc = new GridBagConstraints();
-
-        JLabel dummy = new JLabel();
-        gbc.weighty = 1;
-        gbc.weightx = 1;
-        rightParent.add(dummy, gbc);
-
-        CustomButton zoomIn = style.zoomInButton();
-        gbc.gridx = 1;
-        gbc.gridy = 1;
-        gbc.weighty = 0.0;
-        gbc.weightx = 0.0;
-        zoomIn.setBorder(BorderFactory.createLineBorder(style.zoomButtonBG(), 5));
-        rightParent.add(zoomIn, gbc);
-
-        CustomButton zoomOut = style.zoomOutButton();
-        zoomOut.setBorder(BorderFactory.createLineBorder(style.zoomButtonBG(), 5));
-        gbc.gridy = 2;
-        gbc.insets = new Insets(5, 0, 0, 0);
-        rightParent.add(zoomOut, gbc);
-
-        gbcParent.gridx = 2;
-        gbcParent.weightx = 0.0;
-        add(rightParent, gbcParent);
+        add(rightParent, BorderLayout.EAST);
+        rightParent.setLayout(new BorderLayout(0, 0));
+        
+        zoomSlider = new JSlider();
+        zoomSlider.setBorder(new EtchedBorder(EtchedBorder.RAISED, BORDER_HIGHTLIGHT, BORDER_SHADOW));
+        zoomSlider.setOrientation(SwingConstants.VERTICAL);
+        zoomSlider.setForeground(Color.LIGHT_GRAY);
+        zoomSlider.setOpaque(false);
+        zoomSlider.setPaintLabels(true);
+        zoomSlider.setPaintTicks(true);
+        zoomSlider.setSnapToTicks(true);
+        zoomSlider.setMinorTickSpacing(1);
+        zoomSlider.setMajorTickSpacing(19);
+        zoomSlider.setMinimum(1);
+        zoomSlider.setMaximum(20);
+        
+        rightParent.add(zoomSlider, BorderLayout.SOUTH);
     }
 
     private void setScale() {
-    	if(Main.map == null) return;
-    	double denmarkWidth = DKConstants.BOUNDS_DENMARK.maxLong - DKConstants.BOUNDS_DENMARK.minLong;
-        double denmarkLonKm = denmarkWidth*111.320*Math.cos(Math.toRadians(-DKConstants.BOUNDS_DENMARK.maxLat));
-        
     	double viewWidth = Main.map.getGeographicalRegion().getWidth();
         double viewLonKm = viewWidth*111.320*Math.cos(Math.toRadians(-Main.map.getGeographicalRegion().y2));
     	
@@ -119,6 +122,13 @@ public class BottomPanel extends JPanel implements CanvasListener {
     }
     
     @Override
+    public void onMouseMoved() {
+    	Point2D mousePoint = Util.toRealCoords(Main.map.getGeographicalMousePosition());
+    	coordsLabel.setText("Lon: " + String.format("%.4f", mousePoint.getX()) + ", Lat: " + 
+    			String.format("%.4f", mousePoint.getY()));
+    }
+    
+    @Override
 	public void onZoomLevelChanged() {
 		
 	}
@@ -126,6 +136,17 @@ public class BottomPanel extends JPanel implements CanvasListener {
 	@Override
 	public void onZoom() {
 		setScale();
+	}
+
+	@Override
+	public void onSetupDone() {
+        zoomSlider.setValue((int)Main.map.getZoom());
+        /* zoomSlider.addChangeListener(new ChangeListener() {
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				Main.map.snapToZoom(zoomSlider.getValue());
+			}
+        }); */
 	}
 	
 }
