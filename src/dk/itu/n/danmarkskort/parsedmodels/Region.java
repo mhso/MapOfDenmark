@@ -1,4 +1,4 @@
-package dk.itu.n.danmarkskort.newmodels;
+package dk.itu.n.danmarkskort.parsedmodels;
 
 import java.awt.geom.Point2D;
 
@@ -31,6 +31,10 @@ public class Region {
 
 	public String toString() {
 		return "Region [x1=" + x1 + ", x2=" + x2 + ", y1=" + y1 + ", y2=" + y2 + "]";
+	}
+	
+	public boolean containsPoint(Point2D point) {
+		return (point.getX() >= x1 && point.getX() <= x2 && point.getY() >= y1 && point.getY() <= y2);
 	}
 	
 }

@@ -1,8 +1,8 @@
 package dk.itu.n.danmarkskort.kdtree;
 
 import dk.itu.n.danmarkskort.gui.map.MapCanvas;
-import dk.itu.n.danmarkskort.newmodels.ParsedItem;
-import dk.itu.n.danmarkskort.newmodels.Region;
+import dk.itu.n.danmarkskort.parsedmodels.ParsedItem;
+import dk.itu.n.danmarkskort.parsedmodels.Region;
 
 import java.util.ArrayList;
 

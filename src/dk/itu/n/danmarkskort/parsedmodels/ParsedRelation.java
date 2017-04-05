@@ -1,6 +1,4 @@
-package dk.itu.n.danmarkskort.newmodels;
-
-import dk.itu.n.danmarkskort.Main;
+package dk.itu.n.danmarkskort.parsedmodels;
 
 import java.awt.*;
 import java.awt.geom.Path2D;
@@ -25,7 +23,9 @@ public class ParsedRelation extends ParsedItem {
     public void addNode(ParsedNode node) { nodes.add(node); }
     public void addNodes(ArrayList<ParsedNode> nodes) { this.nodes.addAll(nodes); }
     public void addMember(ParsedItem item, String role) {
-        if(role.equals("outer")) outers.add(item);
+        if(role.equals("outer")) {
+            outers.add(item);
+        }
         else inners.add(item);
     }
 
@@ -94,7 +94,7 @@ public class ParsedRelation extends ParsedItem {
 
     @Override
     public ParsedNode getFirstNode() {
-        if(nodes != null && nodes.size() > 0) return nodes.get(0);
+        if(nodes.size() > 0) return nodes.get(0);
         else if(outers.size() > 0) return outers.get(0).getFirstNode();
         else if(inners.size() > 0) return inners.get(0).getFirstNode();
         return null;
@@ -102,16 +102,18 @@ public class ParsedRelation extends ParsedItem {
 
     @Override
     public ParsedNode getLastNode() {
-        if(nodes != null && nodes.size() > 0) return nodes.get(nodes.size() - 1);
-        else if(outers.size() > 0) return outers.get(0).getLastNode();
-        else if(inners.size() > 0) return inners.get(0).getLastNode();
+        if(nodes.size() > 0) return nodes.get(nodes.size() - 1);
+        else if(outers.size() > 0) return outers.get(outers.size() - 1).getLastNode();
+        else if(inners.size() > 0) return inners.get(inners.size() - 1).getLastNode();
         return null;
     }
     
     public String toString() {
     	int nodeAmount = 0;
     	if(nodes != null) nodeAmount = nodes.size();
-    	return "ParsedRelation [" + "id=" + id 	+ ", firstLon=" + getFirstNode().getLon() + ", firstLat=" 	+ getFirstNode().getLat() + ", nodeAmount=" + nodeAmount +
-    			", itemAmount=" + (inners.size() + outers.size()) + "]";
+
+    	return "ParsedRelation [" + "id=" + id 	+ ", firstLon=" + getFirstNode().getLon() + ", firstLat="
+                + getFirstNode().getLat() + ", nodeAmount=" + nodeAmount
+                + ", itemAmount=" + (inners.size() + outers.size()) + "]";
     }
 }

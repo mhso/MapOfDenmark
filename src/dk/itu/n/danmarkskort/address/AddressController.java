@@ -132,7 +132,7 @@ public class AddressController{
 		return result.parallelStream().distinct().limit(limitAmountOfResults).collect(Collectors.toList());
 	}
 	
-	public void addressParsed(dk.itu.n.danmarkskort.newmodels.ParsedAddress address) {
+	public void addressParsed(dk.itu.n.danmarkskort.parsedmodels.ParsedAddress address) {
         
         if(address != null) {	
 			float[] lonLat = new float[] {address.getFirstLon(), address.getFirstLat()};

@@ -1,6 +1,6 @@
 package dk.itu.n.danmarkskort;
 
-import dk.itu.n.danmarkskort.newmodels.ParsedBounds;
+import dk.itu.n.danmarkskort.parsedmodels.ParsedBounds;
 
 public class DKConstants {
 	/**

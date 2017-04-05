@@ -2,7 +2,7 @@ package dk.itu.n.danmarkskort.kdtree;
 
 import java.util.Random;
 
-import dk.itu.n.danmarkskort.newmodels.ParsedItem;
+import dk.itu.n.danmarkskort.parsedmodels.ParsedItem;
 
 public class QuickSelect {
 

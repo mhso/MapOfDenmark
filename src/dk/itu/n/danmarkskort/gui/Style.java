@@ -10,7 +10,8 @@ public class Style {
     private Color panelBG, inputFieldBG, panelTextColor, zoomButtonBG, menuContentBG, menuItemsBG, scrollBarThumb, scrollBarThumbActive,
                 dropdownItemBG, dropdownItemBGActive, dropdowItemTextColor, dropdownItemTextColorActive;
     private CustomButton searchButton, menuButton,routeButton, zoomInButton, zoomOutButton,
-            menuLayerButton, menuSaveButton, menuOpenButton, menuSettingsButton, menuRouteButton, menuInfoButton;
+            menuLayerButton, menuSaveButton, menuOpenButton, menuSettingsButton, menuRouteButton, menuInfoButton, 
+            menuPinPointButton;
     private ImageIcon scaleIndicator, arrowUpDownButton;
 
     public Style() {
@@ -48,7 +49,8 @@ public class Style {
         menuSettingsButton = new CustomButton("resources/icons/settings.png", menuAlpha, menuAlphaHover);
         menuRouteButton = new CustomButton("resources/icons/menuroute.png", menuAlpha, menuAlphaHover);
         menuInfoButton = new CustomButton("resources/icons/info.png", menuAlpha, menuAlphaHover);
-
+        menuPinPointButton = new CustomButton("resources/icons/info.png", menuAlpha, menuAlphaHover);
+        
         zoomInButton = new CustomButton("resources/icons/zoomin.png", alphaFloat, alphaHover, zoomButtonBG);
         zoomOutButton = new CustomButton("resources/icons/zoomout.png", alphaFloat, alphaHover, zoomButtonBG);
 
@@ -89,7 +91,8 @@ public class Style {
     public CustomButton menuSettingsButton() { return menuSettingsButton; }
     public CustomButton menuRouteButton() { return menuRouteButton; }
     public CustomButton menuInfoButton() { return menuInfoButton; }
-
+    public CustomButton menuPinPointButton() { return menuPinPointButton; }
+    
     public ImageIcon scaleIndicator() { return scaleIndicator; }
     public ImageIcon arrowUpDownButton() { return arrowUpDownButton; }
 

@@ -4,7 +4,7 @@ import dk.itu.n.danmarkskort.DKConstants;
 import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.Util;
 import dk.itu.n.danmarkskort.address.AddressController;
-import dk.itu.n.danmarkskort.newmodels.*;
+import dk.itu.n.danmarkskort.parsedmodels.*;
 import dk.itu.n.danmarkskort.kdtree.*;
 
 import org.xml.sax.Attributes;
@@ -38,6 +38,10 @@ public class OSMParser extends SAXAdapter {
     private ParsedAddress address;
 
     private WayType waytype;
+    private String name;
+    private Integer maxSpeed;
+    private boolean oneWay;
+
     private boolean finished = false;
     private long fileSize;
     private int byteCount;
@@ -187,25 +191,46 @@ public class OSMParser extends SAXAdapter {
             case "tag":
                 String k = atts.getValue("k");
                 String v = atts.getValue("v").trim();
-                switch(k) {
-                    case "addr:city":
-                        if (address == null) address = new ParsedAddress();
-                        address.setCity(v);
-                        break;
-                    case "addr:postcode":
-                        if (address == null) address = new ParsedAddress();
-                        address.setPostcode(v);
-                        break;
-                    case "addr:housenumber":
-                        if (address == null) address = new ParsedAddress();
-                        address.setHousenumber(v);
-                        break;
-                    case "addr:street":
-                        if (address == null) address = new ParsedAddress();
-                        address.setStreet(v);
-                        break;
+                if(node != null) {
+                    switch(k) {
+                        case "addr:city":
+                            if (address == null) address = new ParsedAddress();
+                            address.setCity(v);
+                            break;
+                        case "addr:postcode":
+                            if (address == null) address = new ParsedAddress();
+                            address.setPostcode(v);
+                            break;
+                        case "addr:housenumber":
+                            if (address == null) address = new ParsedAddress();
+                            address.setHousenumber(v);
+                            break;
+                        case "addr:street":
+                            if (address == null) address = new ParsedAddress();
+                            address.setStreet(v);
+                            break;
+                    }
+                    break;
                 }
-                waytype = WayTypeUtil.tagToType(k, v, waytype);
+                else {
+                    waytype = WayTypeUtil.tagToType(k, v, waytype);
+                    switch (k) {
+                        case "name":
+                            name = v;
+                            break;
+                        case "maxspeed":
+                            try{
+                                maxSpeed = Integer.parseInt(v);
+                            }
+                            catch (NumberFormatException e) {
+                                // do nothing
+                            }
+                            break;
+                        case "oneway":
+                            if(v.equals("yes")) oneWay = true;
+                            break;
+                    }
+                }
                 break;
         }
     }
@@ -259,7 +284,11 @@ public class OSMParser extends SAXAdapter {
         relation = null;
         address = null;
         node = null;
+
         waytype = null;
+        name = null;
+        oneWay = false;
+        maxSpeed = null;
     }
 
     private void temporaryClean() {
