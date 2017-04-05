@@ -7,11 +7,7 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.Shape;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.Line2D;
-import java.awt.geom.NoninvertibleTransformException;
-import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
+import java.awt.geom.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
@@ -27,6 +23,7 @@ import dk.itu.n.danmarkskort.mapgfx.GraphicSpecLine;
 import dk.itu.n.danmarkskort.mapgfx.WaytypeGraphicSpec;
 import dk.itu.n.danmarkskort.newmodels.ParsedBounds;
 import dk.itu.n.danmarkskort.newmodels.Region;
+import dk.itu.n.danmarkskort.newmodels.WayType;
 
 public class MapCanvas extends JPanel {
 
@@ -52,9 +49,8 @@ public class MapCanvas extends JPanel {
 		new MapMouseController(this);
 		setDoubleBuffered(true);
 	}
-int count = 0;
+
 	protected void paintComponent(Graphics _g) {
-		Main.log(count++);
 		drawMap((Graphics2D)_g);
 	}
 	
@@ -90,7 +86,9 @@ int count = 0;
 
 		if(wayTypesVisible == null) return;
 
-		// drawing all the outlines, if the current WayTypeGraphicSpec has one
+        drawBackground(g2d);
+
+        // drawing all the outlines, if the current WayTypeGraphicSpec has one
 		for (WaytypeGraphicSpec wayTypeGraphic : wayTypesVisible) {
 			currentWTGSpec = wayTypeGraphic;
 			if (currentWTGSpec.getOuterColor() != null) {
@@ -131,6 +129,24 @@ int count = 0;
 			}
 		}
 	}
+
+	private void drawBackground(Graphics2D g2d) {
+        Region region = Main.model.getMapRegion();
+        Path2D background = new Path2D.Double();
+        background.moveTo(region.x1, region.y1);
+        background.lineTo(region.x2, region.y1);
+        background.lineTo(region.x2, region.y2);
+        background.lineTo(region.x1, region.y2);
+        background.lineTo(region.x1, region.y1);
+
+        // backgroundcolor for the map. If there's a coastline use the water innercolor, otherwise use the coastline innercolor
+        if(Main.model.enumMapKD.containsKey(WayType.COASTLINE) && Main.model.enumMapKD.get(WayType.COASTLINE).size() > 0) {
+            g2d.setColor(new Color(110, 192, 255));
+        }
+        else g2d.setColor(new Color(240, 240, 230));
+
+        g2d.fill(background);
+    }
 
 	public List<WaytypeGraphicSpec> getOnScreenGraphicsForCurrentZoom() {
 		List<WaytypeGraphicSpec> wayTypeSpecs = GraphicRepresentation.getGraphicSpecs((int)getZoom());

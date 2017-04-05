@@ -6,7 +6,6 @@ import java.awt.*;
 import java.awt.geom.Path2D;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 
 public class ParsedRelation extends ParsedItem {
 
@@ -22,6 +21,7 @@ public class ParsedRelation extends ParsedItem {
     }
 
     public void addNode(ParsedNode node) { nodes.add(node); }
+    public void addNodes(ArrayList<ParsedNode> nodes) { this.nodes.addAll(nodes); }
     public void addMember(ParsedItem reference, boolean isOuter) { members.add(new Member(reference, isOuter)); }
 
     public long getID() { return id; }
@@ -48,16 +48,10 @@ public class ParsedRelation extends ParsedItem {
 
             for(Member member : members) {
                 current = member;
-                if (current.isOuter()) {
-                    outers.add(current.getReference());
-                } else if (!current.isOuter()) {
-                    path.append(member.getReference().getPath(), false);
-                    if (!outers.isEmpty()) {
-                        path.append(connectOuters(outers), false);
-                        outers = new ArrayList<>();
-                    }
-                }
+                if (current.isOuter()) outers.add(current.getReference());
+                else path.append(member.getReference().getPath(), false);
             }
+
             if(!outers.isEmpty()) path.append(connectOuters(outers), false);
         }
         return path;

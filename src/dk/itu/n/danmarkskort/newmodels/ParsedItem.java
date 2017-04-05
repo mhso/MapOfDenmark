@@ -27,6 +27,7 @@ public abstract class ParsedItem {
     //public void setVisible(boolean b) { isVisible = b; }
     //public boolean isVisible() { return isVisible; }
 
+    public abstract void addNodes(ArrayList<ParsedNode> nodes);
     public abstract ParsedNode getFirstNode();
     public abstract ParsedNode getLastNode();
     public abstract ArrayList<ParsedNode> getNodes();
