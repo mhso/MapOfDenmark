@@ -1,11 +1,9 @@
 package dk.itu.n.danmarkskort.models;
 
-import dk.itu.n.danmarkskort.models.Model;
-
 import java.awt.geom.Path2D;
 import java.util.ArrayList;
 
-public abstract class ParsedItem extends Model {
+public abstract class ParsedItem {
 
     // Dette har nok ikke så høj prioritet
     //private boolean isVisible = true;
