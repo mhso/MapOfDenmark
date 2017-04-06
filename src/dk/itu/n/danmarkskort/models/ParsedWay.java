@@ -1,5 +1,7 @@
 package dk.itu.n.danmarkskort.models;
 
+import dk.itu.n.danmarkskort.Main;
+
 import java.awt.*;
 import java.awt.geom.Path2D;
 import java.util.ArrayList;
@@ -7,8 +9,8 @@ import java.util.ArrayList;
 public class ParsedWay extends ParsedItem{
 
     private long id;
-    private ArrayList<ParsedNode> nodes;
-    private Shape shape;
+    ArrayList<ParsedNode> nodes;
+    Shape shape;
 
     public ParsedWay() {
         nodes = new ArrayList<>();
@@ -21,7 +23,7 @@ public class ParsedWay extends ParsedItem{
 
     public void addNode(ParsedNode node) { nodes.add(node); }
 
-    public void addNodes(ArrayList<ParsedNode> nodes) { this.nodes.addAll(nodes); }
+    void addNodes(ArrayList<ParsedNode> nodes) { this.nodes.addAll(nodes); }
 
     public ArrayList<ParsedNode> getNodes() { return nodes; }
 
@@ -33,6 +35,21 @@ public class ParsedWay extends ParsedItem{
 
     public Path2D getReversedPath() {
         return getPath(false);
+    }
+
+    @Override
+    public void deleteOldRefs() {
+        nodes = null;
+    }
+
+    @Override
+    public void makeShape() {
+        shape = getPath();
+    }
+
+    @Override
+    public Shape getShape() {
+        return shape;
     }
 
     private Path2D getPath(boolean rightWay) {
@@ -54,11 +71,10 @@ public class ParsedWay extends ParsedItem{
 
     @Override
     public ParsedNode getFirstNode() {
-        if(nodes.size() > 0) return nodes.get(0);
+        if(nodes != null && nodes.size() > 0) return nodes.get(0);
         return null;
     }
 
-    @Override
     public ParsedNode getLastNode() {
         if(nodes.size() > 0) return nodes.get(nodes.size() - 1);
         return null;

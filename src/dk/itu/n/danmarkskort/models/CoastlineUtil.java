@@ -5,10 +5,10 @@ import java.util.HashMap;
 
 public class CoastlineUtil {
 
-    public static void connectCoastline(HashMap<ParsedNode, ParsedItem> coastlineMap, ParsedItem current) {
-        ParsedItem before = coastlineMap.remove(current.getFirstNode());
-        ParsedItem after = coastlineMap.remove(current.getLastNode());
-        ParsedItem merged = new ParsedWay();
+    public static void connectCoastline(HashMap<ParsedNode, ParsedWay> coastlineMap, ParsedWay current) {
+        ParsedWay before = coastlineMap.remove(current.getFirstNode());
+        ParsedWay after = coastlineMap.remove(current.getLastNode());
+        ParsedWay merged = new ParsedWay();
 
         if(before != null) merged.addNodes(before.getNodes());
         merged.addNodes(current.getNodes());
@@ -18,7 +18,7 @@ public class CoastlineUtil {
         coastlineMap.put(merged.getLastNode(), merged);
     }
 
-    public static void fixUnfinishedCoastlines(HashMap<ParsedNode, ParsedItem> coastlineMap) {
+    public static void fixUnfinishedCoastlines(HashMap<ParsedNode, ParsedWay> coastlineMap) {
 
     }
 }

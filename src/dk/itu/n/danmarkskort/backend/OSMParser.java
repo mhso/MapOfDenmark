@@ -17,6 +17,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.HashMap;
+import java.util.Map;
 
 public class OSMParser extends SAXAdapter {
 
@@ -25,9 +26,9 @@ public class OSMParser extends SAXAdapter {
     private NodeMap nodeMap;
     private HashMap<Long, ParsedWay> wayMap;
     private HashMap<Long, ParsedRelation> relationMap;
-    private HashMap<Long, ParsedItem> temporaryWayReferences;
-    private HashMap<Long, ParsedItem> temporaryRelationReferences;
-    private HashMap<ParsedNode, ParsedItem> coastlineMap;
+    private HashMap<Long, ParsedWay> temporaryWayReferences;
+    private HashMap<Long, ParsedRelation> temporaryRelationReferences;
+    private HashMap<ParsedNode, ParsedWay> coastlineMap;
 
     public EnumMap<WayType, ArrayList<ParsedItem>> enumMap;
     public EnumMap<WayType, KDTree> enumMapKD;
@@ -122,10 +123,14 @@ public class OSMParser extends SAXAdapter {
                 else if (current.size() < DKConstants.KD_SIZE) tree = new KDTreeLeaf(current);
                 else tree = new KDTreeNode(current);
             }
-
-            if (tree != null) tree.makeShapes();
             enumMap.remove(wt);
+            if(tree != null) tree.makeShapes();
             enumMapKD.put(wt, tree);
+        }
+
+        for(Map.Entry<WayType, KDTree> entry : enumMapKD.entrySet()) {
+            KDTree current = entry.getValue();
+            if(current != null) current.deleteOldRefs();
         }
 
         for(OSMParserListener listener : parser.parserListeners) listener.onParsingFinished();
