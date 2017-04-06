@@ -172,10 +172,30 @@ public class AddressController{
 		timerUtilA.on();
         if(address != null) {
         	
-        	if(AddressValidator.isAddress(address.toString())) {
-        		System.out.println("Addr: OK: " + address.toString());
+        	if(AddressValidator.isAddressMinimum(address.getStreet(), address.getHousenumber(), address.getPostcode())) {
+        		//System.out.println("Addr: OK: " + address.toString());
         	} else {
-        		System.out.println("Addr: NOT OK: " + address.toString());
+        		if(AddressValidator.isAddressMinimum(
+        				AddressValidator.prepStreetname(address.getStreet()),
+        				AddressValidator.prepHousenumber(address.getHousenumber()),
+        				AddressValidator.prepPostcode(address.getPostcode())
+        				)) {
+            		//System.out.println("Addr: OK: " + address.toString());
+            	} else {
+            		if(address.getPostcode() != null){
+            			
+            			
+		        		System.out.println("Addr: NOT OK: " + address.toString());
+		        		System.out.println(" ---> " + address.getStreet() + " | "
+		        		+ address.getHousenumber() + " | "
+		        		+ address.getPostcode() + " | "
+		        		+ address.getCity());
+		        		
+		        		System.out.println(" ------> " + AddressValidator.prepStreetname(address.getStreet()) + " | "
+		        		+ AddressValidator.prepHousenumber(address.getHousenumber()) + " | "
+        				+ AddressValidator.prepPostcode(address.getPostcode()));
+            		}
+            	}
         	}
         	
 //			float[] lonLat = new float[] {address.getFirstLon(), address.getFirstLat()};
