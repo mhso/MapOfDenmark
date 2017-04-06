@@ -44,10 +44,9 @@ public class Main {
 	}
 
 	public static void prepareParser(String[] args) {
-		WindowParsingLoadscreenNew loadScreen = new WindowParsingLoadscreenNew();
-		LoadScreenThread loadScreenThread = new LoadScreenThread(loadScreen);
+		WindowParsingLoadscreenNew loadScreen = new WindowParsingLoadscreenNew(args[0]);
 		osmReader.addListener(loadScreen);
-		loadScreenThread.setFilenameAndRun(args[0]);
+		loadScreen.run();
 		osmReader.parseFile(args[0]);
 	}
 	
@@ -81,8 +80,7 @@ public class Main {
         
         window.setLocationRelativeTo(null);
         window.setVisible(true);
-        map.zoomToBounds();
-        
+        map.setupDone();
     }
     
     public static JPanel createFrameComponents() {
@@ -99,25 +97,5 @@ public class Main {
         overlay.add(mainPanel);
     	overlay.add(map);
     	return overlay;
-    }
-    
-    private static class LoadScreenThread implements Runnable {
-    	private WindowParsingLoadscreenNew loadScreen;
-    	private String fileName;
-    	
-    	public LoadScreenThread(WindowParsingLoadscreenNew loadScreen) {
-    		this.loadScreen = loadScreen;
-    	}
-    	
-    	public void setFilenameAndRun(String fileName) {
-    		this.fileName = fileName;
-    		run();
-    	}
-    	
-		@Override
-		public void run() {
-			loadScreen.initialize(fileName);
-		}
-    	
     }
 }

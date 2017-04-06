@@ -23,7 +23,7 @@ import dk.itu.n.danmarkskort.backend.OSMParserListener;
 
 import javax.imageio.ImageIO;
 
-public class WindowParsingLoadscreenNew extends JFrame implements OSMParserListener {
+public class WindowParsingLoadscreenNew extends JFrame implements OSMParserListener, Runnable {
 	private static final long serialVersionUID = 4049548769311961507L;
 	private static final Color BAR_STATIC_COLOR = Color.LIGHT_GRAY;
 	private static final Color BAR_LOADING_COLOR = new Color(0, 153, 0);
@@ -36,9 +36,13 @@ public class WindowParsingLoadscreenNew extends JFrame implements OSMParserListe
 	private double currentPercent;
 	private JLabel labelPercent;
 	private int objectCount = 1000;
+	private String fileName;
 	
-	public void initialize(String fileName) {
-		getFileSize(fileName);
+	public WindowParsingLoadscreenNew(String fileName) {
+		this.fileName = fileName;
+	}
+	
+	public void initialize() {
 		setTitle("Parsing Data");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
@@ -83,6 +87,11 @@ public class WindowParsingLoadscreenNew extends JFrame implements OSMParserListe
 		setPreferredSize(new Dimension(mainImage.getWidth(), mainImage.getHeight()+80));
 		setLocationRelativeTo(null);
 		setVisible(true);
+	}
+	
+	public void run() {
+		getFileSize(fileName);
+		initialize();
 	}
 	
 	private void getFileSize(String fileName) {
