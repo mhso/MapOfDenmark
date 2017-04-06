@@ -267,7 +267,17 @@ public class MapCanvas extends JPanel implements ActionListener {
 	}
 	
 	public void snapToZoom(int zoomValue) {
-		
+		double factor = 0.0;
+		int amount = 0;
+		if(zoomValue > getZoom()) {
+			factor = 1.5;
+			amount = (int)(zoomValue-getZoom());
+		}
+		else {
+			factor = 0.667;
+			amount = (int)(getZoom()-zoomValue);
+		}
+		for(int i = 0; i < amount; i++) zoom(factor);
 	}
 	
 	public Point2D toModelCoords(Point2D relativeToMapCanvasPosition) {

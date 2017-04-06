@@ -3,11 +3,14 @@ package dk.itu.n.danmarkskort.gui;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
+import dk.itu.n.danmarkskort.DKConstants;
 import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.Util;
 import dk.itu.n.danmarkskort.gui.map.CanvasListener;
 
 import java.awt.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
@@ -61,9 +64,11 @@ public class BottomPanel extends JPanel implements CanvasListener {
     }
 
     private void addCenter() {
+    	final int PANEL_SIZE = 380;
+    	
         JPanel centerPanel = new JPanel();
         centerPanel.setOpaque(false);
-        centerPanel.setBorder(new EmptyBorder(0, 300, 0, 300));
+        centerPanel.setBorder(new EmptyBorder(0, DKConstants.WINDOW_WIDTH/2-PANEL_SIZE/2, 0, Main.window.getWidth()/2-PANEL_SIZE/2));
         centerPanel.setLayout(new BorderLayout());
         
         JPanel southCenterPanel = new JPanel();
@@ -82,7 +87,14 @@ public class BottomPanel extends JPanel implements CanvasListener {
         nearestStreetLabel.setHorizontalAlignment(SwingConstants.CENTER);
         southCenterPanel.add(nearestStreetLabel, BorderLayout.SOUTH);
         
-        add(centerPanel, BorderLayout.CENTER);
+        add(centerPanel, BorderLayout.CENTER);   
+       
+        Main.window.addComponentListener(new ComponentAdapter() {
+			@Override
+			public void componentResized(ComponentEvent e) {
+				centerPanel.setBorder(new EmptyBorder(0, Main.window.getWidth()/2-PANEL_SIZE/2, 0, Main.window.getWidth()/2-PANEL_SIZE/2));
+			} 	
+        });
     }
 
     private void addRight() {
@@ -104,6 +116,7 @@ public class BottomPanel extends JPanel implements CanvasListener {
         zoomSlider.setMajorTickSpacing(19);
         zoomSlider.setMinimum(1);
         zoomSlider.setMaximum(20);
+        zoomSlider.addMouseListener(new SliderListener());
         
         rightParent.add(zoomSlider, BorderLayout.SOUTH);
     }
@@ -130,7 +143,7 @@ public class BottomPanel extends JPanel implements CanvasListener {
     
     @Override
 	public void onZoomLevelChanged() {
-		
+		zoomSlider.setValue((int)Main.map.getZoom());
 	}
 
 	@Override
@@ -141,12 +154,21 @@ public class BottomPanel extends JPanel implements CanvasListener {
 	@Override
 	public void onSetupDone() {
         zoomSlider.setValue((int)Main.map.getZoom());
-        /* zoomSlider.addChangeListener(new ChangeListener() {
-			@Override
-			public void stateChanged(ChangeEvent e) {
-				Main.map.snapToZoom(zoomSlider.getValue());
-			}
-        }); */
 	}
 	
+	private class SliderListener extends MouseAdapter {
+		private int currentZoom;
+		
+		@Override
+		public void mousePressed(MouseEvent e) {
+			currentZoom = zoomSlider.getValue();
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			if(zoomSlider.getValue() == currentZoom) return;
+			currentZoom = zoomSlider.getValue();
+			Main.map.snapToZoom(currentZoom);
+		}	
+	}
 }

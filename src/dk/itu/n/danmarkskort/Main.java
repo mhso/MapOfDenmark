@@ -74,7 +74,11 @@ public class Main {
         
         window.add(createFrameComponents());
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
+        window.setPreferredSize(new Dimension(DKConstants.WINDOW_WIDTH, DKConstants.WINDOW_HEIGHT));  
+        
         window.pack();
+        
         window.setLocationRelativeTo(null);
         window.setVisible(true);
         map.zoomToBounds();
