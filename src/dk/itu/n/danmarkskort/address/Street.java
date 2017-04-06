@@ -19,7 +19,7 @@ public class Street {
 	
 	Street(Postcode postcode, String street){
 		this.setPostcode(postcode);
-		this.streetObj = StringHolder.getInstance().make(street);
+		this.streetObj = StringHolder.make(street);
 		housenumbers = new HashMap<String, Housenumber>();
 		region = null;
 	}

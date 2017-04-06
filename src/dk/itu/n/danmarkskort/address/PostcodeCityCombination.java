@@ -8,34 +8,14 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class PostcodeCityCombination {
-	private static PostcodeCityCombination instance;
-	private final static Lock lock = new ReentrantLock();
-	private Map<String, Integer> combinations;
-	private Map<String, String> bestMatches;
+	private static Map<String, Integer> combinations = new HashMap<String, Integer>();
+	private static Map<String, String> bestMatches = new HashMap<String, String>();
 	private final static String SPLIT_VALUE = "<%>";
 	
 	private PostcodeCityCombination(){
-		combinations = new HashMap<String, Integer>();
-		bestMatches = new HashMap<String, String>();
 	}
 	
-	public static PostcodeCityCombination getInstance(){
-        if (instance == null) {
-            lock.lock();
-            try {
-                if (instance == null) {
-                	PostcodeCityCombination tmpInstance = new PostcodeCityCombination();
-                    instance = tmpInstance;
-                }
-            }
-            finally {
-                lock.unlock();
-            }
-        }
-        return instance;
-    }
-	
-	public void add(String postcode, String city){
+	public static void add(String postcode, String city){
 		String key = postcode+SPLIT_VALUE+city;
 		if(city != null) {
 			if(combinations.containsKey(key)){
@@ -47,7 +27,7 @@ public class PostcodeCityCombination {
 		}
 	}
 	
-	public void compileBestMatches(){
+	public static void compileBestMatches(){
 		for(Map.Entry<String, Integer> entry1: combinations.entrySet()) {
 			String[] arrPostCity1 = entry1.getKey().split(SPLIT_VALUE);
 			   for(Map.Entry<String, Integer> entry2: combinations.entrySet()) {
@@ -69,32 +49,32 @@ public class PostcodeCityCombination {
 		clearCombinations();
 	}
 	
-	public int sizeBestMatches(){
+	public static int sizeBestMatches(){
 		return bestMatches.size();
 	}
 	
-	public void clearCombinations(){
-		if(bestMatches.size() > 0) combinations = null;
+	public static void clearCombinations(){
+		if(bestMatches.size() > 0) combinations.clear();
 	}
 	
-	public void clearBestMatches(){
-		if(bestMatches.size() > 0) bestMatches = null;
+	public static void clearBestMatches(){
+		if(bestMatches.size() > 0) bestMatches.clear();
 	}
 	
-	public String getCity(String postcode){
+	public static String getCity(String postcode){
 		if(combinations != null) compileBestMatches();
 		if(postcode == null) return null;
 		return bestMatches.get(postcode);
 	}
 	
-	public void printCombinationMap(){
+	public static void printCombinationMap(){
 		for(String entry : combinations.keySet()){
 			String[] entrys = entry.split(SPLIT_VALUE);
 			System.out.println("Post nr.: "+entrys[0]+" City: "+entrys[1]+" Count:"+combinations.get(entry));
 		}
 	}
 	
-	public void printBestMaches(){
+	public static void printBestMaches(){
 		for(Entry<String, String> entry : bestMatches.entrySet()){
 			System.out.println("Post nr.: "+entry.getKey()+" City: "+entry.getValue());
 		}

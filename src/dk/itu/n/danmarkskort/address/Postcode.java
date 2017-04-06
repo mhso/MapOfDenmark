@@ -14,13 +14,13 @@ public class Postcode {
 	private RegionFloat region;
 	
 	Postcode(String postcode, String city){
-		this.postcodeObj = StringHolder.getInstance().make(postcode);
+		this.postcodeObj = StringHolder.make(postcode);
 		setCity(city);
 		streets = new HashMap<String, Street>();
 	}
 
 	public String getCity() { return cityObj.toString(); }
-	public void setCity(String city) { this.cityObj = StringHolder.getInstance().make(city);; }
+	public void setCity(String city) { this.cityObj = StringHolder.make(city);; }
 	
 	public RegionFloat getRegion(){
 		if(region == null) region = genRegion();

@@ -11,7 +11,6 @@ import dk.itu.n.danmarkskort.newmodels.Region;
 
 public class AddressHolder {
 	public static HashMap<String, Postcode> postcodes = new HashMap<String, Postcode>();
-	public static HashMap<Integer, String> housenumbers = new HashMap<Integer, String>();
 	
 	public AddressHolder(){
 	

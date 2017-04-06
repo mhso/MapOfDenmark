@@ -1,7 +1,5 @@
 package dk.itu.n.danmarkskort.address;
 
-import java.util.HashMap;
-
 public class Housenumber {
 	private float[] lonLat;
 	//private String housenumber;
@@ -12,7 +10,7 @@ public class Housenumber {
 	public Housenumber(Postcode postcode, Street street, String housenumber, float[] lonLat){
 		this.postcode = postcode;
 		this.street = street;
-		this.housenumberObj = StringHolder.getInstance().make(housenumber);
+		this.housenumberObj = StringHolder.make(housenumber);
 		this.lonLat = lonLat;
 	}
 
