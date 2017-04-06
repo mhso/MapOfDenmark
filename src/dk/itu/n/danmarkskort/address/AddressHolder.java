@@ -189,4 +189,55 @@ public class AddressHolder {
 			p.addAddress(hn.getStreet().getStreet(), hn.getHousenumber(), hn.getLonLat());
 			inputList.putIfAbsent(p.getPostcode(), p);
 	}
+	
+	public static Map<RegionFloat, Postcode> getRegions(){
+		Map<RegionFloat, Postcode> regions = new HashMap<RegionFloat, Postcode>();
+		for(Postcode pc : postcodes.values()) regions.put(pc.getRegion(), pc);
+		return regions;
+	}
+	
+	public static Map<RegionFloat, Postcode> searchRegionWithin(RegionFloat input){
+		Map<RegionFloat, Postcode> regions = new HashMap<RegionFloat, Postcode>();
+		for(Postcode pc : postcodes.values()) {
+			RegionFloat pcR = pc.getRegion();
+			if(pcR.isWithin(input)){
+				regions.put(pc.getRegion(), pc);
+				System.out.println("MATCH: ADD: " + pc.getPostcode());
+			}
+		}
+		return regions;
+	}
+	
+	public static Map<RegionFloat, Housenumber> searchRegionHousenumbers(RegionFloat input){	
+		Map<RegionFloat, Housenumber> regions = new HashMap<RegionFloat, Housenumber>();
+		for(Postcode pc : searchRegionWithin(input).values()) {
+			float expanVal = 0.0f;
+			for(int i=0; i<100; i++) {
+				RegionFloat r = new RegionFloat(input.x1 - expanVal, input.y1 - expanVal, input.x2 + expanVal, input.y2 + expanVal);
+				for(Street st : pc.searchRegionWithin(r).values()){
+					regions.putAll(st.searchRegionWithin(r));
+				}
+				expanVal = expanVal + 0.0000100f;
+//				System.out.println("searchRegionHousenumbers: " + r.toString() 
+//				+ " Size: " + pc.searchRegionWithin(r).values().size()
+//				+ " regions Size: " + regions.size());
+			}
+		}
+		return regions;
+	}
+	
+	public static Housenumber searchHousenumber(float[] lonLat){
+		RegionFloat input = new RegionFloat(lonLat[0], lonLat[1], lonLat[0], lonLat[1]);
+		for(Postcode pc : searchRegionWithin(input).values()) {
+			for(Street st : pc.searchRegionWithin(input).values()){
+				for(Housenumber hn : st.searchRegionWithin(input).values()){
+					float[] hnLonLat = hn.getLonLat();
+					if(hnLonLat[0] == lonLat[0] && hnLonLat[0] == lonLat[0]) {
+						return hn;
+					}
+				}
+			}
+		}
+		return null;
+	}
 }

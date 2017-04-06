@@ -16,17 +16,17 @@ public class PostcodeCityCombinationTest {
 
 	@Before
 	public void setUp() throws Exception {
-		PostcodeCityCombination.getInstance().add("5000", "Odense C");
-		PostcodeCityCombination.getInstance().add("5000", "Copenhagen");
-		PostcodeCityCombination.getInstance().add("5000", "Odense V");
-		PostcodeCityCombination.getInstance().add("5000", "Odense C");
+		PostcodeCityCombination.add("5000", "Odense C");
+		PostcodeCityCombination.add("5000", "Copenhagen");
+		PostcodeCityCombination.add("5000", "Odense V");
+		PostcodeCityCombination.add("5000", "Odense C");
 		
-		PostcodeCityCombination.getInstance().add("3400", "Hillerod");
-		PostcodeCityCombination.getInstance().add("3400", "Hillerød");
-		PostcodeCityCombination.getInstance().add("3400", "Hillerød");
-		PostcodeCityCombination.getInstance().add("3400", "Copenhagen");
-		PostcodeCityCombination.getInstance().add("3400", "Copenhagen");
-		PostcodeCityCombination.getInstance().add("3400", "Hillerød");
+		PostcodeCityCombination.add("3400", "Hillerod");
+		PostcodeCityCombination.add("3400", "Hillerød");
+		PostcodeCityCombination.add("3400", "Hillerød");
+		PostcodeCityCombination.add("3400", "Copenhagen");
+		PostcodeCityCombination.add("3400", "Copenhagen");
+		PostcodeCityCombination.add("3400", "Hillerød");
 	}
 
 	@After
@@ -35,12 +35,12 @@ public class PostcodeCityCombinationTest {
 
 	@Test
 	public void test() {
-		PostcodeCityCombination.getInstance().printCombinationMap();
-		PostcodeCityCombination.getInstance().compileBestMatches();
-		PostcodeCityCombination.getInstance().sizeBestMatches();
-		PostcodeCityCombination.getInstance().printBestMaches();
-		PostcodeCityCombination.getInstance().clearCombinations();
-		PostcodeCityCombination.getInstance().clearBestMatches();
+		PostcodeCityCombination.printCombinationMap();
+		PostcodeCityCombination.compileBestMatches();
+		PostcodeCityCombination.sizeBestMatches();
+		PostcodeCityCombination.printBestMaches();
+		PostcodeCityCombination.clearCombinations();
+		PostcodeCityCombination.clearBestMatches();
 		fail("Not yet implemented");
 		
 	}

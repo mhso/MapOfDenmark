@@ -1,5 +1,6 @@
 package dk.itu.n.danmarkskort.gui;
 
+import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.address.Address;
 import dk.itu.n.danmarkskort.gui.menu.DropdownMenu;
 import dk.itu.n.danmarkskort.gui.menu.RoutePage;
@@ -16,6 +17,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -163,6 +165,8 @@ public class TopPanel extends JPanel {
     private void panZoomToCoordinates(float[] lonLat) {
 		// TODO Auto-generated method stub
     	System.out.println("Toppanel->panZoomToCoordinats (lon, lat): (" + lonLat[0] + ", " + lonLat[1] + ")");
+    	Main.map.panToPosition(new Point2D.Float(lonLat[0], lonLat[1]));
+    	Main.mainPanel.repaint();
 	}
 
 	public void populateSuggestions(List<String> list) {
