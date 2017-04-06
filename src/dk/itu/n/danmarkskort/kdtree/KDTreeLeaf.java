@@ -37,6 +37,13 @@ public class KDTreeLeaf extends KDTree {
         map.drawShapes(shapes);
     }
     @Override public int size() {
-        return data.length;
+    	if(data == null) {
+    		if(shapes == null) return 0;
+    		return shapes.length;
+    	}
+    	return data.length;
     }
+    
+    public int size(Region reg) { return size(); }
+    public int size(Region reg, boolean sortByLon) { return size(); }
 }
