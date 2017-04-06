@@ -2,7 +2,6 @@ package dk.itu.n.danmarkskort.address;
 
 import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.TimerUtil;
-import dk.itu.n.danmarkskort.newmodels.Region;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -168,7 +167,7 @@ public class AddressController{
 		return result.parallelStream().distinct().limit(limitAmountOfResults).collect(Collectors.toList());
 	}
 	
-	public void addressParsed(dk.itu.n.danmarkskort.newmodels.ParsedAddress address) {
+	public void addressParsed(dk.itu.n.danmarkskort.models.ParsedAddress address) {
         
         if(address != null) {	
 			float[] lonLat = new float[] {address.getFirstLon(), address.getFirstLat()};

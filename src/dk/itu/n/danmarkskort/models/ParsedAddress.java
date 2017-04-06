@@ -1,4 +1,4 @@
-package dk.itu.n.danmarkskort.newmodels;
+package dk.itu.n.danmarkskort.models;
 
 public class ParsedAddress {
 

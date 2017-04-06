@@ -6,8 +6,6 @@ import java.util.Map.Entry;
 
 import org.apache.commons.lang3.StringUtils;
 
-import dk.itu.n.danmarkskort.newmodels.Region;
-
 public class Postcode {
 	private StringObj postcodeObj, cityObj;
 	private Map<String, Street> streets;

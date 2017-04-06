@@ -1,13 +1,10 @@
 package dk.itu.n.danmarkskort.address;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.commons.lang3.StringUtils;
-
-import dk.itu.n.danmarkskort.newmodels.Region;
 
 public class AddressHolder {
 	public static HashMap<String, Postcode> postcodes = new HashMap<String, Postcode>();

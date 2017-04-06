@@ -11,8 +11,9 @@ import javax.imageio.ImageIO;
 
 import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.Util;
+import dk.itu.n.danmarkskort.models.Region;
 import dk.itu.n.danmarkskort.gui.menu.PinPointPage;
-import dk.itu.n.danmarkskort.newmodels.Region;
+
 
 public class PinPointManager implements Serializable {
 

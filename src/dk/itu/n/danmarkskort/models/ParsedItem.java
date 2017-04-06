@@ -1,4 +1,4 @@
-package dk.itu.n.danmarkskort.newmodels;
+package dk.itu.n.danmarkskort.models;
 
 import java.awt.geom.Path2D;
 import java.util.ArrayList;
@@ -27,8 +27,10 @@ public abstract class ParsedItem {
     //public void setVisible(boolean b) { isVisible = b; }
     //public boolean isVisible() { return isVisible; }
 
+    public abstract void addNodes(ArrayList<ParsedNode> nodes);
     public abstract ParsedNode getFirstNode();
     public abstract ParsedNode getLastNode();
     public abstract ArrayList<ParsedNode> getNodes();
     public abstract Path2D getPath();
+    public abstract Path2D getReversedPath();
 }

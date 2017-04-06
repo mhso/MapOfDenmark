@@ -170,7 +170,6 @@ public class TopPanel extends JPanel {
 	}
 
 	public void populateSuggestions(List<String> list) {
-        dropSuggestions.setVisible(false);
         dropSuggestions.removeAll();
         for(String str : list){
             dropSuggestions.addElement(input, str);

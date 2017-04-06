@@ -1,6 +1,6 @@
 package dk.itu.n.danmarkskort.backend;
 
-import dk.itu.n.danmarkskort.newmodels.WayType;
+import dk.itu.n.danmarkskort.models.WayType;
 
 public class WayTypeUtil {
 
@@ -35,6 +35,8 @@ public class WayTypeUtil {
                         return WayType.HIGHWAY_DRIVEWAY;
                     case "cycleway":
                         return WayType.HIGHWAY_CYCLEWAY;
+                    case "traffic_signal":
+                        return oldtype;
                     case "path":
                     case "footway":
                     case "bridleway":
@@ -59,6 +61,8 @@ public class WayTypeUtil {
                 switch(v) {
                     case "residential":
                         return WayType.RESIDENTIAL;
+                    case "farmland":
+                        return WayType.FARMLAND;
                     case "forest":
                         return WayType.FOREST;
                     case "industrial":

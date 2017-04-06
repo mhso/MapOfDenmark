@@ -4,7 +4,7 @@ import dk.itu.n.danmarkskort.DKConstants;
 import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.Util;
 import dk.itu.n.danmarkskort.address.AddressController;
-import dk.itu.n.danmarkskort.newmodels.*;
+import dk.itu.n.danmarkskort.models.*;
 import dk.itu.n.danmarkskort.kdtree.*;
 
 import org.xml.sax.Attributes;
@@ -22,11 +22,12 @@ public class OSMParser extends SAXAdapter {
 
     public float minLatBoundary, minLonBoundary, maxLatBoundary, maxLonBoundary, lonFactor;
 
-    public NodeMap nodeMap;
-    public HashMap<Long, ParsedWay> wayMap;
-    public HashMap<Long, ParsedRelation> relationMap;
-    public HashMap<Long, ParsedItem> temporaryWayReferences;
-    public HashMap<Long, ParsedItem> temporaryRelationReferences;
+    private NodeMap nodeMap;
+    private HashMap<Long, ParsedWay> wayMap;
+    private HashMap<Long, ParsedRelation> relationMap;
+    private HashMap<Long, ParsedItem> temporaryWayReferences;
+    private HashMap<Long, ParsedItem> temporaryRelationReferences;
+    private HashMap<ParsedNode, ParsedItem> coastlineMap;
 
     public EnumMap<WayType, ArrayList<ParsedItem>> enumMap;
     public EnumMap<WayType, KDTree> enumMapKD;
@@ -37,6 +38,10 @@ public class OSMParser extends SAXAdapter {
     private ParsedAddress address;
 
     private WayType waytype;
+    private String name;
+    private Integer maxSpeed;
+    private boolean oneWay;
+
     private boolean finished = false;
     private long fileSize;
     private int byteCount;
@@ -75,6 +80,7 @@ public class OSMParser extends SAXAdapter {
         relationMap = new HashMap<>();
         temporaryWayReferences = new HashMap<>();
         temporaryRelationReferences = new HashMap<>();
+        coastlineMap = new HashMap<>();
 
         enumMap = new EnumMap<>(WayType.class);
         for(WayType waytype : WayType.values()) enumMap.put(waytype, new ArrayList<>());
@@ -87,20 +93,37 @@ public class OSMParser extends SAXAdapter {
         Main.log("Parsing finished.");
         Main.log("Max lon: " + maxLonBoundary + ", " + "Min lon: " + minLonBoundary);
 
-        int count = 0;
-        for(WayType wt : WayType.values()) count += enumMap.get(wt).size();
-        Main.log("Ways and Relations saved: " + count);
+        int numItemsSaved = 0;
+        for(WayType wt : WayType.values()) numItemsSaved += enumMap.get(wt).size();
+        Main.log("Ways and Relations saved: " + numItemsSaved);
 
         Main.log("Splitting data into KDTrees");
 
+        temporaryClean();
         enumMapKD = new EnumMap<>(WayType.class);
+
         for(WayType wt : WayType.values()) {
             ArrayList<ParsedItem> current = enumMap.get(wt);
             KDTree tree;
-            if(current.isEmpty()) tree = null;
-            else if(current.size() < DKConstants.KD_SIZE) tree = new KDTreeLeaf(current, null);
-            else tree = new KDTreeNode(current);
-            if(tree != null) tree.makeShapes();
+
+            if(wt == WayType.COASTLINE) {
+                if(coastlineMap.size() > 0) {
+                    coastlineMap.forEach((firstNode, item) -> {
+                        if (firstNode == item.getFirstNode()) {
+                            current.add(item);
+                        }
+                    });
+                    tree = new KDTreeLeaf(current);
+                }
+                else tree = null;
+            }
+            else {
+                if (current.isEmpty()) tree = null;
+                else if (current.size() < DKConstants.KD_SIZE) tree = new KDTreeLeaf(current);
+                else tree = new KDTreeNode(current);
+            }
+
+            if (tree != null) tree.makeShapes();
             enumMap.remove(wt);
             enumMapKD.put(wt, tree);
         }
@@ -148,41 +171,62 @@ public class OSMParser extends SAXAdapter {
             case "member":
                 long ref = Long.parseLong(atts.getValue("ref"));
                 String type = atts.getValue("type");
-                boolean isOuter = atts.getValue("role").equals("outer");
+                String role = atts.getValue("role");
                 switch(type) {
                     case "node":
                         if(nodeMap.get(ref) != null) relation.addNode(nodeMap.get(ref));
                         break;
                     case "way":
-                        if(temporaryWayReferences.containsKey(ref)) relation.addMember(temporaryWayReferences.get(ref), isOuter);
+                        if(temporaryWayReferences.containsKey(ref)) relation.addMember(temporaryWayReferences.get(ref), role);
                         break;
                     case "relation":
-                        if(temporaryRelationReferences.containsKey(ref)) relation.addMember(temporaryRelationReferences.get(ref), isOuter);
+                        if(temporaryRelationReferences.containsKey(ref)) relation.addMember(temporaryRelationReferences.get(ref), role);
                         break;
                 }
                 break;
             case "tag":
                 String k = atts.getValue("k");
                 String v = atts.getValue("v").trim();
-                switch(k) {
-                    case "addr:city":
-                        if (address == null) address = new ParsedAddress();
-                        address.setCity(v);
-                        break;
-                    case "addr:postcode":
-                        if (address == null) address = new ParsedAddress();
-                        address.setPostcode(v);
-                        break;
-                    case "addr:housenumber":
-                        if (address == null) address = new ParsedAddress();
-                        address.setHousenumber(v);
-                        break;
-                    case "addr:street":
-                        if (address == null) address = new ParsedAddress();
-                        address.setStreet(v);
-                        break;
+                if(node != null) {
+                    switch(k) {
+                        case "addr:city":
+                            if (address == null) address = new ParsedAddress();
+                            address.setCity(v);
+                            break;
+                        case "addr:postcode":
+                            if (address == null) address = new ParsedAddress();
+                            address.setPostcode(v);
+                            break;
+                        case "addr:housenumber":
+                            if (address == null) address = new ParsedAddress();
+                            address.setHousenumber(v);
+                            break;
+                        case "addr:street":
+                            if (address == null) address = new ParsedAddress();
+                            address.setStreet(v);
+                            break;
+                    }
+                    break;
                 }
-                waytype = WayTypeUtil.tagToType(k, v, waytype);
+                else {
+                    waytype = WayTypeUtil.tagToType(k, v, waytype);
+                    switch (k) {
+                        case "name":
+                            name = v;
+                            break;
+                        case "maxspeed":
+                            try{
+                                maxSpeed = Integer.parseInt(v);
+                            }
+                            catch (NumberFormatException e) {
+                                // do nothing
+                            }
+                            break;
+                        case "oneway":
+                            if(v.equals("yes")) oneWay = true;
+                            break;
+                    }
+                }
                 break;
         }
     }
@@ -200,7 +244,15 @@ public class OSMParser extends SAXAdapter {
 
     private void addCurrent() {
         if(waytype != null) {
-            if(way != null) {
+            if(waytype == WayType.COASTLINE) {
+                if(way != null) CoastlineUtil.connectCoastline(coastlineMap, way);
+                if(relation != null) {
+                    Main.log("does this really happen????");
+                    Main.log(relation.getID());
+                    CoastlineUtil.connectCoastline(coastlineMap, relation);
+                }
+            }
+            else if(way != null) {
             	enumMap.get(waytype).add(way);
             	for(OSMParserListener listener : parser.parserListeners) listener.onParsingGotItem(way);
             }
@@ -217,7 +269,7 @@ public class OSMParser extends SAXAdapter {
             if(node != null) address.setCoords(node.getPoint());
             else if (way != null) address.setWay(way);
             else if (relation != null) address.setRelation(relation);
-            AddressController.getInstance().addressParsed(address);
+            //AddressController.getInstance().addressParsed(address);
             for(OSMParserListener listener : parser.parserListeners) listener.onParsingGotItem(address);
         }
         cleanUp();
@@ -228,13 +280,21 @@ public class OSMParser extends SAXAdapter {
         relation = null;
         address = null;
         node = null;
+
         waytype = null;
+        name = null;
+        oneWay = false;
+        maxSpeed = null;
+    }
+
+    private void temporaryClean() {
+        temporaryWayReferences = null;
+        temporaryRelationReferences = null;
     }
 
     private void finalClean() {
         nodeMap = null;
-        temporaryWayReferences = null;
-        temporaryRelationReferences = null;
+        coastlineMap = null;
         System.gc();
     }
     
