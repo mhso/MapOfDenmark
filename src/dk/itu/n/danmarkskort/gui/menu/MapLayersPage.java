@@ -6,7 +6,7 @@ import javax.swing.border.TitledBorder;
 import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.gui.Style;
 import dk.itu.n.danmarkskort.mapgfx.GraphicRepresentation;
-import dk.itu.n.danmarkskort.newmodels.WayType;
+import dk.itu.n.danmarkskort.models.WayType;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;

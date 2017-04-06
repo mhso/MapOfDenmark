@@ -1,4 +1,4 @@
-package dk.itu.n.danmarkskort.newmodels;
+package dk.itu.n.danmarkskort.models;
 
 import java.awt.*;
 import java.awt.geom.Path2D;
@@ -10,7 +10,9 @@ public class ParsedWay extends ParsedItem{
     private ArrayList<ParsedNode> nodes;
     private Shape shape;
 
-    public ParsedWay() {}
+    public ParsedWay() {
+        nodes = new ArrayList<>();
+    }
 
     public ParsedWay(long id) {
         this.id = id;
@@ -19,15 +21,33 @@ public class ParsedWay extends ParsedItem{
 
     public void addNode(ParsedNode node) { nodes.add(node); }
 
+    public void addNodes(ArrayList<ParsedNode> nodes) { this.nodes.addAll(nodes); }
+
     public ArrayList<ParsedNode> getNodes() { return nodes; }
 
     public long getID() { return id; }
 
     public Path2D getPath() {
+        return getPath(true);
+    }
+
+    public Path2D getReversedPath() {
+        return getPath(false);
+    }
+
+    private Path2D getPath(boolean rightWay) {
         Path2D path = new Path2D.Float();
-        path.moveTo(nodes.get(0).getLon(), nodes.get(0).getLat());
-        for(int i = 1; i < nodes.size(); i++) {
-        	path.lineTo(nodes.get(i).getLon(), nodes.get(i).getLat());
+        if(rightWay) {
+            path.moveTo(nodes.get(0).getLon(), nodes.get(0).getLat());
+            for (int i = 1; i < nodes.size(); i++) {
+                path.lineTo(nodes.get(i).getLon(), nodes.get(i).getLat());
+            }
+        }
+        else {
+            path.moveTo(nodes.get(nodes.size() - 1).getLon(), nodes.get(nodes.size() - 1).getLat());
+            for (int i = nodes.size() - 2; i >= 0; i--) {
+                path.lineTo(nodes.get(i).getLon(), nodes.get(i).getLat());
+            }
         }
         return path;
     }
