@@ -9,11 +9,19 @@ import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.Shape;
 import java.awt.geom.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Line2D;
+import java.awt.geom.NoninvertibleTransformException;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 
 import javax.swing.JPanel;
+import javax.swing.Timer;
 
 import dk.itu.n.danmarkskort.DKConstants;
 import dk.itu.n.danmarkskort.Main;
@@ -26,11 +34,12 @@ import dk.itu.n.danmarkskort.models.ParsedBounds;
 import dk.itu.n.danmarkskort.models.Region;
 import dk.itu.n.danmarkskort.models.WayType;
 
-public class MapCanvas extends JPanel {
+public class MapCanvas extends JPanel implements ActionListener {
 
 	private static final long serialVersionUID = -4476997375977002964L;
 
 	private AffineTransform transform = new AffineTransform();
+	private AffineTransform actualTransform = new AffineTransform();
 	private boolean antiAlias = true;
 	public int shapesDrawn = 0;
 	private final int MAX_ZOOM = 20;
@@ -46,11 +55,20 @@ public class MapCanvas extends JPanel {
 	private List<CanvasListener> listeners = new ArrayList<>();
 	private List<WaytypeGraphicSpec> wayTypesVisible;
 	
+	public boolean scaleCurrentLayer = false;
+	private Timer zoomTimer;
+	
 	public MapCanvas() {
+		zoomTimer = new Timer(200, this);
+		zoomTimer.setRepeats(false);
 		new MapMouseController(this);
 		setDoubleBuffered(true);
 	}
 
+	public void repair() {
+		transform = (AffineTransform) actualTransform.clone();
+	}
+	
 	protected void paintComponent(Graphics _g) {
 		_g.clearRect(0, 0, getWidth(), getHeight());
 		drawMap((Graphics2D)_g);
@@ -71,7 +89,12 @@ public class MapCanvas extends JPanel {
 	
 	public void drawMap(Graphics2D g2d) {
 		if(Main.buffered) {
-			if(imageManager != null) imageManager.draw(g2d);
+			if(imageManager != null) {
+				if(scaleCurrentLayer) imageManager.drawOldImages(g2d);
+				else if(imageManager.isRepainting()) imageManager.drawOldImages(g2d);
+				else imageManager.draw(g2d);
+				//drawMapShapes(g2d);
+			}
 		} else {
 			drawMapShapes(g2d);
 		}
@@ -177,7 +200,9 @@ public class MapCanvas extends JPanel {
 	}
 	
 	public void pan(double dx, double dy) {
+		repair();
 		transform.preConcatenate(AffineTransform.getTranslateInstance(dx, dy));
+		actualTransform.preConcatenate(AffineTransform.getTranslateInstance(dx, dy));
 		if(Main.buffered && imageManager != null) imageManager.pan(dx, dy);
 		repaint();
 	}
@@ -240,29 +265,47 @@ public class MapCanvas extends JPanel {
 	public void zoom(double factor) {
 		double zoomBefore = getZoom();
 		double scaleBefore = getZoomRaw();
+		repair();
 		transform.preConcatenate(AffineTransform.getScaleInstance(factor, factor));
+		actualTransform.preConcatenate(AffineTransform.getScaleInstance(factor, factor));
 		double scaleAfter = getZoomRaw();
 		if(getZoom() > MAX_ZOOM) {
 			transform.preConcatenate(AffineTransform.getScaleInstance(scaleBefore/scaleAfter, scaleBefore/scaleAfter));
+			actualTransform.preConcatenate(AffineTransform.getScaleInstance(scaleBefore/scaleAfter, scaleBefore/scaleAfter));
 		}
 		else if(getZoom() < 1) {
 			transform.preConcatenate(AffineTransform.getScaleInstance(scaleBefore/scaleAfter, scaleBefore/scaleAfter));
+			actualTransform.preConcatenate(AffineTransform.getScaleInstance(scaleBefore/scaleAfter, scaleBefore/scaleAfter));
 		}
-		
-		if(Main.buffered && imageManager != null) {
-			zero = new Point2D.Double(transform.getTranslateX(), transform.getTranslateY());
-			imageManager.forceFullRepaint();
-		}
+
 		for(CanvasListener listener : listeners) listener.onZoom();
 		if(zoomBefore != getZoom()) {
 			zoomChanged = true;
 			for(CanvasListener listener : listeners) listener.onZoomLevelChanged();
 		}
+		
+		if(imageManager != null && !this.scaleCurrentLayer) {
+			imageManager.storeZoomImages();
+		}
+		if(imageManager != null) imageManager.zoom(factor);
+		this.scaleCurrentLayer = true;
+		
+		zoomTimer.restart();
 		repaint();
 	}
 	
 	public void snapToZoom(int zoomValue) {
-		
+		double factor = 0.0;
+		int amount = 0;
+		if(zoomValue > getZoom()) {
+			factor = 1.5;
+			amount = (int)(zoomValue-getZoom());
+		}
+		else {
+			factor = 0.667;
+			amount = (int)(getZoom()-zoomValue);
+		}
+		for(int i = 0; i < amount; i++) zoom(factor);
 	}
 	
 	public Point2D toModelCoords(Point2D relativeToMapCanvasPosition) {
@@ -299,13 +342,20 @@ public class MapCanvas extends JPanel {
 	
 	public void zoomToBounds() {
 		Region mapRegion = Main.model.getMapRegion();
-		purePan(-mapRegion.x1, -mapRegion.y2);
+		pan(-mapRegion.x1, -mapRegion.y2);
 		zoom(getWidth() / (mapRegion.x2 - mapRegion.x1));
 		if(Main.buffered) {
 			zero = new Point2D.Double(transform.getTranslateX(), transform.getTranslateY());
 			imageManager = new BufferedMapManager();	
+			imageManager.forceFullRepaint();
 		}
 		for(CanvasListener listener : listeners) listener.onSetupDone();
+	}
+
+	public void actionPerformed(ActionEvent e) {
+		zero = new Point2D.Double(transform.getTranslateX(), transform.getTranslateY());
+		scaleCurrentLayer = false;
+		imageManager.forceFullRepaint();
 	}
 
 }
