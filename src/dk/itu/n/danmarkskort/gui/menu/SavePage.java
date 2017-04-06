@@ -72,7 +72,9 @@ public class SavePage extends JPanel  {
 			if(!file.getAbsolutePath().endsWith(".bin")){
 				file = new File(file + ".bin");
 			}
-			//model.save(file.getAbsolutePath());
+			/* Hvad skal gemmes:
+			   1. OSMParser med parsed data og KD-træer.
+			   2.  */
 			System.out.println("Save Current Map to bin: "+file.getAbsolutePath());
         }
 	}
@@ -83,7 +85,7 @@ public class SavePage extends JPanel  {
 		fc.setApproveButtonText(approveBtnTxt);
 		fc.setAcceptAllFileFilterUsed(false);
 		fc.setFileSelectionMode(JFileChooser.APPROVE_OPTION);
-		fc.addChoosableFileFilter(new FileNameExtensionFilter("*.bin", "bin"));
+		fc.addChoosableFileFilter(new FileNameExtensionFilter("Bin Files", "bin"));
 		fc.setCurrentDirectory(new File(System.getProperty("user.home")));
 		return fc;
 	}
