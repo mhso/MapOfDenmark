@@ -22,9 +22,9 @@ import dk.itu.n.danmarkskort.mapgfx.GraphicRepresentation;
 import dk.itu.n.danmarkskort.mapgfx.GraphicSpecArea;
 import dk.itu.n.danmarkskort.mapgfx.GraphicSpecLine;
 import dk.itu.n.danmarkskort.mapgfx.WaytypeGraphicSpec;
-import dk.itu.n.danmarkskort.parsedmodels.ParsedBounds;
-import dk.itu.n.danmarkskort.parsedmodels.Region;
-import dk.itu.n.danmarkskort.parsedmodels.WayType;
+import dk.itu.n.danmarkskort.models.ParsedBounds;
+import dk.itu.n.danmarkskort.models.Region;
+import dk.itu.n.danmarkskort.models.WayType;
 
 public class MapCanvas extends JPanel {
 

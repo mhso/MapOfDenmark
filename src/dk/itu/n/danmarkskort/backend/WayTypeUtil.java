@@ -1,6 +1,6 @@
 package dk.itu.n.danmarkskort.backend;
 
-import dk.itu.n.danmarkskort.parsedmodels.WayType;
+import dk.itu.n.danmarkskort.models.WayType;
 
 public class WayTypeUtil {
 

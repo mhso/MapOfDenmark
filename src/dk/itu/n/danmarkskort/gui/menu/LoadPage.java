@@ -6,7 +6,7 @@ import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.Util;
 import dk.itu.n.danmarkskort.address.AddressController;
 import dk.itu.n.danmarkskort.gui.Style;
-import dk.itu.n.danmarkskort.parsedmodels.Region;
+import dk.itu.n.danmarkskort.models.Region;
 
 import java.awt.*;
 import javax.swing.border.TitledBorder;

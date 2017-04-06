@@ -1,6 +1,6 @@
 package dk.itu.n.danmarkskort.backend;
 
-import dk.itu.n.danmarkskort.parsedmodels.ParsedNode;
+import dk.itu.n.danmarkskort.models.ParsedNode;
 
 public class NodeMap {
 

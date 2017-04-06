@@ -8,7 +8,7 @@ import java.awt.geom.Point2D;
 import java.io.Serializable;
 
 import dk.itu.n.danmarkskort.Main;
-import dk.itu.n.danmarkskort.parsedmodels.Region;
+import dk.itu.n.danmarkskort.models.Region;
 
 public class PinPoint implements Serializable {
 

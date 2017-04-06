@@ -4,7 +4,7 @@ import dk.itu.n.danmarkskort.DKConstants;
 import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.Util;
 import dk.itu.n.danmarkskort.address.AddressController;
-import dk.itu.n.danmarkskort.parsedmodels.*;
+import dk.itu.n.danmarkskort.models.*;
 import dk.itu.n.danmarkskort.kdtree.*;
 
 import org.xml.sax.Attributes;
@@ -93,9 +93,9 @@ public class OSMParser extends SAXAdapter {
         Main.log("Parsing finished.");
         Main.log("Max lon: " + maxLonBoundary + ", " + "Min lon: " + minLonBoundary);
 
-        int count = 0;
-        for(WayType wt : WayType.values()) count += enumMap.get(wt).size();
-        Main.log("Ways and Relations saved: " + count);
+        int numItemsSaved = 0;
+        for(WayType wt : WayType.values()) numItemsSaved += enumMap.get(wt).size();
+        Main.log("Ways and Relations saved: " + numItemsSaved);
 
         Main.log("Splitting data into KDTrees");
 
@@ -103,7 +103,6 @@ public class OSMParser extends SAXAdapter {
         enumMapKD = new EnumMap<>(WayType.class);
 
         for(WayType wt : WayType.values()) {
-            Main.log("KD'ing " + wt);
             ArrayList<ParsedItem> current = enumMap.get(wt);
             KDTree tree;
 
@@ -114,13 +113,13 @@ public class OSMParser extends SAXAdapter {
                             current.add(item);
                         }
                     });
-                    tree = new KDTreeLeaf(current, null);
+                    tree = new KDTreeLeaf(current);
                 }
                 else tree = null;
             }
             else {
                 if (current.isEmpty()) tree = null;
-                else if (current.size() < DKConstants.KD_SIZE) tree = new KDTreeLeaf(current, null);
+                else if (current.size() < DKConstants.KD_SIZE) tree = new KDTreeLeaf(current);
                 else tree = new KDTreeNode(current);
             }
 

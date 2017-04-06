@@ -1,14 +1,14 @@
 package dk.itu.n.danmarkskort.kdtree;
 
 import dk.itu.n.danmarkskort.gui.map.MapCanvas;
-import dk.itu.n.danmarkskort.parsedmodels.ParsedItem;
-import dk.itu.n.danmarkskort.parsedmodels.Region;
+import dk.itu.n.danmarkskort.models.ParsedItem;
+import dk.itu.n.danmarkskort.models.Region;
 
 import java.util.ArrayList;
 
 public abstract class KDTree {
 
-    public static ParsedItem[] listToArray(ArrayList<ParsedItem> list) {
+    static ParsedItem[] listToArray(ArrayList<ParsedItem> list) {
         return list.toArray(new ParsedItem[list.size()]);
     }
 

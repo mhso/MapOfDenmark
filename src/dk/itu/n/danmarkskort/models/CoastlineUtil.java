@@ -1,4 +1,4 @@
-package dk.itu.n.danmarkskort.parsedmodels;
+package dk.itu.n.danmarkskort.models;
 
 import java.util.HashMap;
 

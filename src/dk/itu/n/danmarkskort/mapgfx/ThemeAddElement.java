@@ -31,7 +31,7 @@ import javax.swing.JButton;
 import javax.swing.border.MatteBorder;
 
 import dk.itu.n.danmarkskort.gui.CustomButton;
-import dk.itu.n.danmarkskort.parsedmodels.WayType;
+import dk.itu.n.danmarkskort.models.WayType;
 
 import javax.swing.JSlider;
 

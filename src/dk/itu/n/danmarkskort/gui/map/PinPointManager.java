@@ -11,7 +11,7 @@ import javax.imageio.ImageIO;
 
 import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.Util;
-import dk.itu.n.danmarkskort.parsedmodels.Region;
+import dk.itu.n.danmarkskort.models.Region;
 import dk.itu.n.danmarkskort.gui.menu.PinPointPage;
 
 

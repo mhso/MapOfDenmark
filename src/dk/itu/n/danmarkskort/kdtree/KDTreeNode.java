@@ -1,11 +1,10 @@
 package dk.itu.n.danmarkskort.kdtree;
 
 import dk.itu.n.danmarkskort.DKConstants;
-import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.gui.map.MapCanvas;
-import dk.itu.n.danmarkskort.parsedmodels.ParsedItem;
-import dk.itu.n.danmarkskort.parsedmodels.ParsedNode;
-import dk.itu.n.danmarkskort.parsedmodels.Region;
+import dk.itu.n.danmarkskort.models.ParsedItem;
+import dk.itu.n.danmarkskort.models.ParsedNode;
+import dk.itu.n.danmarkskort.models.Region;
 
 import java.util.ArrayList;
 
@@ -20,11 +19,11 @@ public class KDTreeNode extends KDTree {
         this(listToArray(list), true);
     }
 
-    public KDTreeNode(ParsedItem[] array, boolean sortByLon) {
+    private KDTreeNode(ParsedItem[] array, boolean sortByLon) {
         createStructure(array, sortByLon);
     }
 
-    public void createStructure(ParsedItem[] array, boolean sortByLon) {
+    private void createStructure(ParsedItem[] array, boolean sortByLon) {
         //  finds the median of the given list, either by lon or lat values
         ParsedItem median = QuickSelect.quickSelect(array, (array.length + 1) / 2, sortByLon);
 
@@ -62,10 +61,10 @@ public class KDTreeNode extends KDTree {
             }
         }
         if(leftArray.length > DKConstants.KD_SIZE) leftChild = new KDTreeNode(leftArray, !sortByLon);
-        else leftChild = new KDTreeLeaf(leftArray, this);
+        else leftChild = new KDTreeLeaf(leftArray);
 
         if(rightArray.length > DKConstants.KD_SIZE) rightChild = new KDTreeNode(rightArray, !sortByLon);
-        else rightChild = new KDTreeLeaf(rightArray, this);
+        else rightChild = new KDTreeLeaf(rightArray);
     }
 
     public KDTree getRightChild() { return rightChild; }

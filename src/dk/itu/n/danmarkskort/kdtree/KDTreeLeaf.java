@@ -1,8 +1,8 @@
 package dk.itu.n.danmarkskort.kdtree;
 
 import dk.itu.n.danmarkskort.gui.map.MapCanvas;
-import dk.itu.n.danmarkskort.parsedmodels.ParsedItem;
-import dk.itu.n.danmarkskort.parsedmodels.Region;
+import dk.itu.n.danmarkskort.models.ParsedItem;
+import dk.itu.n.danmarkskort.models.Region;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -12,11 +12,11 @@ public class KDTreeLeaf extends KDTree {
     private ParsedItem[] data;
     private Shape[] shapes;
 
-    public KDTreeLeaf(ParsedItem[] array, KDTree parent) {
+    public KDTreeLeaf(ParsedItem[] array) {
         data = array;
     }
 
-    public KDTreeLeaf(ArrayList<ParsedItem> list, KDTree parent) {
+    public KDTreeLeaf(ArrayList<ParsedItem> list) {
         data = listToArray(list);
     }
 
@@ -43,7 +43,7 @@ public class KDTreeLeaf extends KDTree {
     	}
     	return data.length;
     }
-    
+
     public int size(Region reg) { return size(); }
     public int size(Region reg, boolean sortByLon) { return size(); }
 }

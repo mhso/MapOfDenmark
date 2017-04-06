@@ -1,4 +1,4 @@
-package dk.itu.n.danmarkskort.parsedmodels;
+package dk.itu.n.danmarkskort.models;
 
 public class ParsedNode {
 
