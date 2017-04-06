@@ -11,6 +11,7 @@ import dk.itu.n.danmarkskort.newmodels.Region;
 
 public class AddressHolder {
 	public static HashMap<String, Postcode> postcodes = new HashMap<String, Postcode>();
+	public static HashMap<Integer, String> housenumbers = new HashMap<Integer, String>();
 	
 	public AddressHolder(){
 	
@@ -214,8 +215,16 @@ public class AddressHolder {
 	public static Map<RegionFloat, Housenumber> searchRegionHousenumbers(RegionFloat input){	
 		Map<RegionFloat, Housenumber> regions = new HashMap<RegionFloat, Housenumber>();
 		for(Postcode pc : searchRegionWithin(input).values()) {
-			for(Street st : pc.searchRegionWithin(input).values()){
-				regions.putAll(st.searchRegionWithin(input));
+			float expanVal = 0.0f;
+			for(int i=0; i<100; i++) {
+				RegionFloat r = new RegionFloat(input.x1 - expanVal, input.y1 - expanVal, input.x2 + expanVal, input.y2 + expanVal);
+				for(Street st : pc.searchRegionWithin(r).values()){
+					regions.putAll(st.searchRegionWithin(r));
+				}
+				expanVal = expanVal + 0.0000100f;
+//				System.out.println("searchRegionHousenumbers: " + r.toString() 
+//				+ " Size: " + pc.searchRegionWithin(r).values().size()
+//				+ " regions Size: " + regions.size());
 			}
 		}
 		return regions;

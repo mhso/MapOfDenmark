@@ -37,9 +37,27 @@ public class SearchController{
 	public List<String> getSearchFieldSuggestions(String inputStr){
 		long limitAmountOfResults = 5;
 		
-			if(inputStr == null || inputStr.isEmpty()) return null;
+		if(inputStr == null || inputStr.isEmpty()) return null;
+		String cordRegex = "((\\-{0,1})([0-9]{1,3})(\\.)(\\-{0,1})([0-9]{5,7}))";
+		String cordsRegex = cordRegex + "(\\,\\s)" + cordRegex;
+		
+		if(inputStr == null || inputStr.isEmpty()) return null;
+		
+		if(inputStr.matches(cordsRegex +"\\; "+ cordsRegex)){
+			String[] strArr = inputStr.replaceAll(";", ",").split(", ");
+			float[] cord = new float[strArr.length];
+			for(int i=0; i<cord.length; i++) cord[i] = Float.parseFloat(strArr[i]);
+			return AddressController.getInstance().searchSuggestions(
+					new RegionFloat(cord[0], cord[1], cord[2], cord[3]), limitAmountOfResults);
+		}else if(inputStr.matches(cordsRegex)) {
+			String[] strArr = inputStr.split(", ");
+			float[] cord = new float[strArr.length];
+			for(int i=0; i<cord.length; i++) cord[i] = Float.parseFloat(strArr[i]);
+			return AddressController.getInstance().searchSuggestions(
+					new RegionFloat(cord[0], cord[1], cord[0], cord[1]), limitAmountOfResults);
+		} else {
 			return AddressController.getInstance().getSearchSuggestions(inputStr, limitAmountOfResults);
-	
+		}
 	}
 	
 	public Address getSearchFieldAddressObj(String inputStr){

@@ -9,18 +9,18 @@ import org.apache.commons.lang3.StringUtils;
 import dk.itu.n.danmarkskort.newmodels.Region;
 
 public class Postcode {
-	private String postcode, city;
+	private StringObj postcodeObj, cityObj;
 	private Map<String, Street> streets;
 	private RegionFloat region;
 	
 	Postcode(String postcode, String city){
-		this.postcode = postcode;
-		this.city = city;
+		this.postcodeObj = StringHolder.getInstance().make(postcode);
+		setCity(city);
 		streets = new HashMap<String, Street>();
 	}
 
-	public String getCity() { return city; }
-	public void setCity(String city) { this.city = city; }
+	public String getCity() { return cityObj.toString(); }
+	public void setCity(String city) { this.cityObj = StringHolder.getInstance().make(city);; }
 	
 	public RegionFloat getRegion(){
 		if(region == null) region = genRegion();
@@ -79,7 +79,7 @@ public class Postcode {
 		return streets.get(street.toLowerCase());
 	}
 
-	public String getPostcode() { return postcode; }
+	public String getPostcode() { return postcodeObj.toString(); }
 	
 	private Map<String, Street> streetContains(Map<String, Street> inputList, String street){
 		Map<String, Street> list = new HashMap<String, Street>();

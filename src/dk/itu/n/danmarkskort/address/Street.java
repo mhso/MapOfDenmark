@@ -9,7 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 import dk.itu.n.danmarkskort.newmodels.Region;
 
 public class Street {
-	private String street;
+	private StringObj streetObj;
 	private Map<String, Housenumber> housenumbers;
 	private Postcode postcode;
 	private RegionFloat region;
@@ -19,7 +19,7 @@ public class Street {
 	
 	Street(Postcode postcode, String street){
 		this.setPostcode(postcode);
-		this.street = street;
+		this.streetObj = StringHolder.getInstance().make(street);
 		housenumbers = new HashMap<String, Housenumber>();
 		region = null;
 	}
@@ -50,8 +50,12 @@ public class Street {
 			float lon = lonLat[0];
 			float lat = lonLat[1];
 			RegionFloat hnR =  new RegionFloat(lon, lat, lon, lat);
+			System.out.println("Compare isWithin: hnR = input: ");
+			System.out.println("Larger: " + hnR.toString());
+			System.out.println("Smaller: " + input.toString());
 			if(hnR.isWithin(input)){
 				regions.put(hnR, hn);
+				System.out.println("Street -> searchRegionWithin: " + input.toString());
 			}
 		}
 		return regions;
@@ -74,7 +78,7 @@ public class Street {
 		return housenumbers.get(housenumber.toLowerCase());
 	}
 
-	public String getStreet() { return street; }
+	public String getStreet() { return streetObj.toString(); }
 
 	
 	private Map<String, Housenumber> housenumberContains(Map<String, Housenumber> inputList, String housenumber){
