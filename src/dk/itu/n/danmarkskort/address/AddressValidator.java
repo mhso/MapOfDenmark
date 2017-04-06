@@ -3,7 +3,13 @@ package dk.itu.n.danmarkskort.address;
 public class AddressValidator {
 	private final static String allowedAlphaSet = "a-zA-ZæøåÆØÅáÁéÉèÈöÖüÜëË";
 	private final static String allowedCharSet = "\\u002D\\u0027"+allowedAlphaSet;
-	
+	private final static String RGX_ALPHA = "[\\.\\u002D\\u0027a-zA-ZæøåÆØÅáÁéÉèÈöÖüÜëË ]";
+	private final static String RGX_MULTIPLEHOUSENUMBER = "([0-9]{1,3}[a-zA-Z]{1}\\-[0-9]{1,3}[a-zA-Z]{1})|([0-9]{1,3}\\-[0-9]{1,3})";
+	private final static String RGX_HOUSENUMBER = RGX_MULTIPLEHOUSENUMBER + "|([0-9]{1,3}[a-zA-Z]{1})|([0-9]{1,3})";
+	private final static String PAT_STREET_HOUSENUMBER = "^(([0-9]{1,3}+\\s"+RGX_ALPHA+"+)|("+RGX_ALPHA+"+))"
+			+ "\\s(?<housenumber>("+RGX_HOUSENUMBER+"\\s)|("+RGX_HOUSENUMBER+"$))";
+	private final static String RGX_POSTCODE = "([0-9]{4})";
+	private final static String PAT_POSTCODE_CITY =""+RGX_POSTCODE+"\\s("+RGX_ALPHA+"+$)";
 	public AddressValidator(){
 	}
 
@@ -74,5 +80,15 @@ public class AddressValidator {
 		return inputStr.replaceAll("kld\\.", "")
 				.replaceAll("st\\. ","")
 				.replaceAll("([0-9]{1,2})+(\\. sal) ","");
+	}
+	
+	public static boolean isAddress(String inputStr){
+		String str = cleanAddress(inputStr);
+		System.out.println("Addr Clean: " + str);
+		if(str.matches(".* "+RGX_HOUSENUMBER + "\\s" + RGX_POSTCODE + ".*")){ 
+			str = str.replaceAll("(.*)(" + RGX_POSTCODE + ")(.*)", "$1|$2$3");
+			return true;
+					}
+		return false;
 	}
 }
