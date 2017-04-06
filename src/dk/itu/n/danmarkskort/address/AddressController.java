@@ -16,10 +16,7 @@ import java.util.stream.Collectors;
 
 public class AddressController{
 	private int addressesNotAcceptedCount;
-
-
 	private static AddressController instance;
-
 	private final static Lock lock = new ReentrantLock();
 	
 	private AddressController(){
@@ -97,9 +94,6 @@ public class AddressController{
 			}
 			if(list.size() != 1 && list.size() < limitAmountOfResults) { list.putAll(AddressHolder.search(addrBuild,
 					SearchEnum.EQUALS, SearchEnum.STARTSWITH, SearchEnum.ANY, SearchEnum.ANY));
-			}
-			if(list.size() != 1 && list.size() < limitAmountOfResults) { list.putAll(AddressHolder.search(addrBuild,
-					SearchEnum.EQUALS, SearchEnum.ANY, SearchEnum.ANY, SearchEnum.ANY));
 			}
 			if(list.size() != 1 && list.size() < limitAmountOfResults) { list.putAll(AddressHolder.search(addrBuild,
 					SearchEnum.ANY, SearchEnum.ANY, SearchEnum.EQUALS, SearchEnum.ANY));
@@ -189,7 +183,7 @@ public class AddressController{
 				postcode.addAddress(addrParsed.getStreet(), addrParsed.getHousenumber(), lonLat);
 				
 				AddressHolder.postcodes.put(addrParsed.getPostcode(), postcode);
-				PostcodeCityCombination.getInstance().add(addrParsed.getPostcode(), addrParsed.getCity());
+				PostcodeCityCombination.add(addrParsed.getPostcode(), addrParsed.getCity());
 			} else {
 				addressesNotAcceptedCount++;
 			}
@@ -213,14 +207,10 @@ public class AddressController{
 
 	public void onLWParsingFinished() {
 		
-		//PostcodeCityCombination.getInstance().compileBestMatches();
-		
 		for(Entry<String, Postcode> entry : AddressHolder.postcodes.entrySet()){
-			entry.getValue().setCity(PostcodeCityCombination.getInstance().getCity(entry.getKey()));
+			entry.getValue().setCity(PostcodeCityCombination.getCity(entry.getKey()));
 		}
-		PostcodeCityCombination.getInstance().clearBestMatches();
-		
-		//testRegionSearch();
+		PostcodeCityCombination.clearBestMatches();
 		
 		Main.log("Addresses (accepted): " + getAddressSize());
 		Main.log("Addresses (not accepted): " + addressesNotAcceptedCount);
