@@ -168,37 +168,55 @@ public class AddressController{
 		return result.parallelStream().distinct().limit(limitAmountOfResults).collect(Collectors.toList());
 	}
 	
+	public void addAddress(float[] lonLat, String street, String housenumber, String postcode, String city){
+		Postcode pc = AddressHolder.postcodes.get(postcode);
+		if(pc == null) pc = new Postcode(postcode, city);
+		pc.addAddress(
+				street,
+				housenumber, 
+				lonLat);
+		
+		AddressHolder.postcodes.put(postcode, pc);
+		PostcodeCityCombination.add(postcode, city);
+	}
+	
+	private int acceptLvl1 = 0, acceptLvl2 = 0, acceptLvl3 = 0, acceptNot = 0;
 	public void addressParsed(dk.itu.n.danmarkskort.models.ParsedAddress address) {
+		
 		timerUtilA.on();
         if(address != null) {
-        	
-        	if(AddressValidator.isAddressMinimum(address.getStreet(), address.getHousenumber(), address.getPostcode())) {
+			float[] lonLat = new float[] {address.getFirstLon(), address.getFirstLat()};
+			
+        	if(AddressValidator.isAddressComplete(address.getStreet(),
+        			address.getHousenumber(),
+        			address.getPostcode(),
+        			address.getCity())) {
         		//System.out.println("Addr: OK: " + address.toString());
-        	} else {
-        		if(AddressValidator.isAddressMinimum(
+        		addAddress(lonLat, address.getStreet(), address.getHousenumber(), address.getPostcode(), address.getCity());
+        		acceptLvl1++;
+        	}else if(AddressValidator.isAddressMinimum(address.getStreet(), address.getHousenumber(), address.getPostcode())){
+        	addAddress(lonLat, address.getStreet(), address.getHousenumber(), address.getPostcode(), null);
+        	acceptLvl2++;
+        }else if(AddressValidator.isAddressMinimum(
         				AddressValidator.prepStreetname(address.getStreet()),
         				AddressValidator.prepHousenumber(address.getHousenumber()),
         				AddressValidator.prepPostcode(address.getPostcode())
         				)) {
+        			addAddress(lonLat, address.getStreet(), address.getHousenumber(), address.getPostcode(), "");
+        			acceptLvl3++;
             		//System.out.println("Addr: OK: " + address.toString());
-            	} else {
-            		if(address.getPostcode() != null){
-            			
-            			
-		        		System.out.println("Addr: NOT OK: " + address.toString());
-		        		System.out.println(" ---> " + address.getStreet() + " | "
-		        		+ address.getHousenumber() + " | "
-		        		+ address.getPostcode() + " | "
-		        		+ address.getCity());
-		        		
-		        		System.out.println(" ------> " + AddressValidator.prepStreetname(address.getStreet()) + " | "
-		        		+ AddressValidator.prepHousenumber(address.getHousenumber()) + " | "
-        				+ AddressValidator.prepPostcode(address.getPostcode()));
-            		}
-            	}
-        	}
-        	
-//			float[] lonLat = new float[] {address.getFirstLon(), address.getFirstLat()};
+         } else {
+            			acceptNot++;
+//		        		System.out.println("Addr: NOT OK: " + address.toString());
+//		        		System.out.println(" ---> " + address.getStreet() + " | "
+//		        		+ address.getHousenumber() + " | "
+//		        		+ address.getPostcode() + " | "
+//		        		+ address.getCity());
+//		        		
+//		        		System.out.println(" ------> " + AddressValidator.prepStreetname(address.getStreet()) + " | "
+//		        		+ AddressValidator.prepHousenumber(address.getHousenumber()) + " | "
+//        				+ AddressValidator.prepPostcode(address.getPostcode()));
+         }
 //			Address addrParsed = AddressParser.parse(address.toStringShort(), false);
 //			if(addrParsed != null 
 //					&& addrParsed.getStreet() != null && addrParsed.getStreet().length() > 0
@@ -216,11 +234,12 @@ public class AddressController{
 //			}
 //			lonLat = null;
 //			addrParsed = null;
-        }	
+        }
     }
 
 	public void onLWParsingFinished() {
 		timerUtilA.off();
+		System.out.print("acceptLvl1: " + acceptLvl1 + ", acceptLvl2: " + acceptLvl2 + ", acceptLvl3: " + acceptLvl3 + ", acceptNot: " + acceptNot);
 		Main.log("Addresses parse first to last time: " + timerUtilA.toString());
 		timerUtilB.on();
 		for(Entry<String, Postcode> entry : AddressHolder.postcodes.entrySet()){
@@ -231,9 +250,7 @@ public class AddressController{
 		Main.log("Addresses PostcodeCityCombination time: " + timerUtilB.toString());
 		
 		Main.log("Addresses (accepted): " + getAddressSize());
-		Main.log("Addresses (not accepted): " + addressesNotAcceptedCount);
-		
-		
+		Main.log("Addresses (not accepted): " + addressesNotAcceptedCount);		
 	}
 	
 	public int getAddressSize() {

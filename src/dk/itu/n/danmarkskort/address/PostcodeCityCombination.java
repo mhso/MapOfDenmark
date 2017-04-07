@@ -11,13 +11,13 @@ public class PostcodeCityCombination {
 	private static Map<String, Integer> combinations = new HashMap<String, Integer>();
 	private static Map<String, String> bestMatches = new HashMap<String, String>();
 	private final static String SPLIT_VALUE = "<%>";
-	
+	private static ArrayL
 	private PostcodeCityCombination(){
 	}
 	
 	public static void add(String postcode, String city){
 		String key = postcode+SPLIT_VALUE+city;
-		if(city != null) {
+		if(postcode != null && city != null) {
 			if(combinations.containsKey(key)){
 				int count = combinations.get(key);
 				combinations.put(key, ++count);
@@ -38,7 +38,6 @@ public class PostcodeCityCombination {
 			       String[] arrPostCity2 = entry2.getKey().split(SPLIT_VALUE);
 			       // compare value1 and value2;
 			       if(arrPostCity1[0].equalsIgnoreCase(arrPostCity2[0])
-			    		   && arrPostCity1[1].equalsIgnoreCase(arrPostCity2[1])
 			    		   && entry1.getValue() >= entry2.getValue()){
 						bestMatches.put(arrPostCity1[0], arrPostCity1[1]);
 					} else {
@@ -77,6 +76,16 @@ public class PostcodeCityCombination {
 	public static void printBestMaches(){
 		for(Entry<String, String> entry : bestMatches.entrySet()){
 			System.out.println("Post nr.: "+entry.getKey()+" City: "+entry.getValue());
+		}
+	}
+	
+	public class Combination{
+		StringObj postcode, city;
+		int count;
+		
+		public Combination(String postcode, String city){
+			this.postcode = StringHolder.make(postcode);
+			this.city = StringHolder.make(city);
 		}
 	}
 }
