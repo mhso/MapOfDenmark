@@ -1,7 +1,6 @@
 package dk.itu.n.danmarkskort.models;
 
 import java.awt.*;
-import java.awt.geom.Path2D;
 import java.util.ArrayList;
 
 public abstract class ParsedItem {
@@ -26,6 +25,5 @@ public abstract class ParsedItem {
     public abstract ArrayList<ParsedNode> getNodes();
     public abstract void makeShape();
     public abstract Shape getShape();
-
     public abstract void deleteOldRefs();
 }

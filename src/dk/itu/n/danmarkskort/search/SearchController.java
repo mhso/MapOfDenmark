@@ -6,9 +6,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import dk.itu.n.danmarkskort.address.Address;
 import dk.itu.n.danmarkskort.address.AddressController;
-import dk.itu.n.danmarkskort.address.Housenumber;
 import dk.itu.n.danmarkskort.address.RegionFloat;
-import dk.itu.n.danmarkskort.newmodels.Region;
 
 public class SearchController{
 	private static SearchController instance;

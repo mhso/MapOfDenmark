@@ -1,7 +1,5 @@
 package dk.itu.n.danmarkskort.models;
 
-import dk.itu.n.danmarkskort.Main;
-
 import java.awt.*;
 import java.awt.geom.Path2D;
 import java.util.ArrayList;
@@ -22,6 +20,10 @@ public class ParsedWay extends ParsedItem{
     }
 
     public void addNode(ParsedNode node) { nodes.add(node); }
+
+    public void setFirstNode(ParsedNode node) { nodes.set(0, node); }
+
+    public void setLastNode(ParsedNode node) { if(nodes.size() > 0) nodes.set(nodes.size() - 1, node); }
 
     void addNodes(ArrayList<ParsedNode> nodes) { this.nodes.addAll(nodes); }
 

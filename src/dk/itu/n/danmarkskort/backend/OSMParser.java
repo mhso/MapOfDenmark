@@ -114,6 +114,9 @@ public class OSMParser extends SAXAdapter {
                             current.add(item);
                         }
                     });
+                    CoastlineUtil.fixUnfinishedCoastlines(coastlineMap);
+                    Main.log("minlat: "+minLatBoundary+", minlon"+
+                            minLonBoundary +", maxlat: "+maxLatBoundary + ", maxlon: "+maxLonBoundary);
                     tree = new KDTreeLeaf(current);
                 }
                 else tree = null;
