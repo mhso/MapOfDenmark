@@ -1,27 +1,53 @@
 package dk.itu.n.danmarkskort.address;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.commons.lang3.StringUtils;
 
 public class Postcode {
-	private String postcode;
-	private String city;
+	private StringObj postcodeObj, cityObj;
 	private Map<String, Street> streets;
+	private RegionFloat region;
 	
 	Postcode(String postcode, String city){
-		this.postcode = postcode;
-		this.city = city;
+		this.postcodeObj = StringHolder.make(postcode);
+		setCity(city);
 		streets = new HashMap<String, Street>();
 	}
 
-	public String getCity() { return city; }
+	public String getCity() { return cityObj.toString(); }
+	public void setCity(String city) { this.cityObj = StringHolder.make(city);; }
+	
+	public RegionFloat getRegion(){
+		if(region == null) region = genRegion();
+		return region;
+	}
 
-	public void setCity(String city) { this.city = city; }
+	private RegionFloat genRegion(){
+		RegionFloat region =  new RegionFloat(Float.NEGATIVE_INFINITY, Float.NEGATIVE_INFINITY, Float.MAX_VALUE, Float.MAX_VALUE);
+		for(Street st : streets.values()){
+			RegionFloat stR = st.getRegion();
+				if(stR.x1 > region.x1) region.x1 = stR.x1;
+				if(stR.y1 > region.y1) region.y1 = stR.y1;
+				if(stR.x2 < region.x2) region.x2 = stR.x2;
+				if(stR.y2 < region.y2) region.y2 = stR.y2;
+		}
+		return region;
+	}
+	
+	public Map<RegionFloat, Street> searchRegionWithin(RegionFloat input){
+		Map<RegionFloat, Street> regions = new HashMap<RegionFloat, Street>();
+		for(Street st : streets.values()) {
+			RegionFloat stR = st.getRegion();
+			if(stR.isWithin(input)){
+				regions.put(st.getRegion(), st);
+				System.out.println("MATCH: ADD: " + st.getStreet());
+			}
+		}
+		return regions;
+	}
 	
 	public int count(){
 		int size = 0;
@@ -51,7 +77,7 @@ public class Postcode {
 		return streets.get(street.toLowerCase());
 	}
 
-	public String getPostcode() { return postcode; }
+	public String getPostcode() { return postcodeObj.toString(); }
 	
 	private Map<String, Street> streetContains(Map<String, Street> inputList, String street){
 		Map<String, Street> list = new HashMap<String, Street>();

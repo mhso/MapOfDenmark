@@ -4,6 +4,7 @@ import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.TimerUtil;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -14,10 +15,7 @@ import java.util.stream.Collectors;
 
 public class AddressController{
 	private int addressesNotAcceptedCount;
-
-
 	private static AddressController instance;
-
 	private final static Lock lock = new ReentrantLock();
 	
 	private AddressController(){
@@ -80,8 +78,6 @@ public class AddressController{
 		timerUtil.on();
 		Address addrBuild = AddressParser.parse(find, true);
 		List<String> result = new ArrayList<String>();
-		//System.out.println("find: " + find);
-		//System.out.println("addrBuild: " + addrBuild.toStringShort());
 		
 			Map<String, Postcode> list; 
 			list = AddressHolder.search(addrBuild,
@@ -97,9 +93,6 @@ public class AddressController{
 			}
 			if(list.size() != 1 && list.size() < limitAmountOfResults) { list.putAll(AddressHolder.search(addrBuild,
 					SearchEnum.EQUALS, SearchEnum.STARTSWITH, SearchEnum.ANY, SearchEnum.ANY));
-			}
-			if(list.size() != 1 && list.size() < limitAmountOfResults) { list.putAll(AddressHolder.search(addrBuild,
-					SearchEnum.EQUALS, SearchEnum.ANY, SearchEnum.ANY, SearchEnum.ANY));
 			}
 			if(list.size() != 1 && list.size() < limitAmountOfResults) { list.putAll(AddressHolder.search(addrBuild,
 					SearchEnum.ANY, SearchEnum.ANY, SearchEnum.EQUALS, SearchEnum.ANY));
@@ -132,6 +125,48 @@ public class AddressController{
 		return result.parallelStream().distinct().limit(limitAmountOfResults).collect(Collectors.toList());
 	}
 	
+	public Address getSearchResult(float[] lonLat){
+		Housenumber hn = AddressHolder.searchHousenumber(lonLat);
+		return new Address(hn.getLonLat(), hn.getStreet().getStreet(), hn.getHousenumber(), hn.getPostcode().getPostcode(), hn.getPostcode().getCity());
+	}
+	
+	public Address getNearstSearchResult(RegionFloat input){
+		Address addr =  getSearchResult(input.centerPoint());
+		if (addr == null) {
+			Collection<Housenumber> hns = AddressHolder.searchRegionHousenumbers(input).values();
+			Housenumber hn = regionRecursiveLookup(input);
+			addr = new Address(hn.getLonLat(), hn.getStreet().getStreet(), hn.getHousenumber(), hn.getPostcode().getPostcode(), hn.getPostcode().getCity());
+		}
+		return addr;
+	}
+	
+	public Housenumber regionRecursiveLookup(RegionFloat input){
+		Map<RegionFloat, Housenumber> hns = AddressHolder.searchRegionHousenumbers(input);
+		Housenumber house = null;
+		if(hns.size() == 1){ 
+			for(Housenumber hn : hns.values()) house = hn;
+		} else {
+			RegionFloat r = new RegionFloat(input.x1 - 0.000001f, input.y1 + 0.000001f, input.x2 + 0.000001f, input.y2 - 0.000001f);
+			house = regionRecursiveLookup(r);
+		}
+		return house;
+	}
+	
+	public List<String> searchSuggestions(RegionFloat input, long limitAmountOfResults){
+		TimerUtil timerUtil = new TimerUtil();
+		timerUtil.on();
+		List<String> result = new ArrayList<String>();
+		Collection<Housenumber> hns = AddressHolder.searchRegionHousenumbers(input).values();
+		for(Housenumber hn : hns){
+			result.add(hn.toString());
+		}
+		Collections.sort(result, String.CASE_INSENSITIVE_ORDER);
+		// Remove duplicates and return
+		timerUtil.off();
+		Main.log("Lon/lat Suggestion time: " + timerUtil.toString());
+		return result.parallelStream().distinct().limit(limitAmountOfResults).collect(Collectors.toList());
+	}
+	
 	public void addressParsed(dk.itu.n.danmarkskort.models.ParsedAddress address) {
         
         if(address != null) {	
@@ -147,23 +182,39 @@ public class AddressController{
 				postcode.addAddress(addrParsed.getStreet(), addrParsed.getHousenumber(), lonLat);
 				
 				AddressHolder.postcodes.put(addrParsed.getPostcode(), postcode);
-				PostcodeCityCombination.getInstance().add(addrParsed.getPostcode(), addrParsed.getCity());
+				PostcodeCityCombination.add(addrParsed.getPostcode(), addrParsed.getCity());
 			} else {
 				addressesNotAcceptedCount++;
 			}
         }	
     }
+	
+	private void testRegionSearch(){
+		
+		System.out.println("Regions search found: ");
+		for(RegionFloat r : AddressHolder.getRegions().keySet()){
+			System.out.println(r.toString());
+		}
+		
+//		Map<Region, Housenumber> hnR = AddressHolder.searchCoordinats(new Region(12.60597000d, 55.67397000d, 12.60597000d, 55.67397000d));
+//		System.out.println("Regions search found: " + hnR.size());
+//		for(Housenumber hn : hnR.values()){
+//			System.out.println(hn.toString());
+//		}
+//		System.out.println("Regions search found: " + hnR.size());
+	}
 
 	public void onLWParsingFinished() {
 		
-		//PostcodeCityCombination.getInstance().compileBestMatches();
-		
 		for(Entry<String, Postcode> entry : AddressHolder.postcodes.entrySet()){
-			entry.getValue().setCity(PostcodeCityCombination.getInstance().getCity(entry.getKey()));
+			entry.getValue().setCity(PostcodeCityCombination.getCity(entry.getKey()));
 		}
-		PostcodeCityCombination.getInstance().clearBestMatches();
+		PostcodeCityCombination.clearBestMatches();
+		
 		Main.log("Addresses (accepted): " + getAddressSize());
 		Main.log("Addresses (not accepted): " + addressesNotAcceptedCount);
+		
+		
 	}
 	
 	public int getAddressSize() {
