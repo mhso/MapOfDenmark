@@ -1,22 +1,30 @@
 package dk.itu.n.danmarkskort.address;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.apache.commons.lang3.text.WordUtils;
 
 import com.sun.corba.se.spi.orbutil.fsm.Input;
 
 public class AddressValidator {
-	private final static String allowedAlphaSet = "a-zA-ZæøåÆØÅáÁéÉèÈöÖüÜëË";
-	private final static String allowedCharSet = "\\u002D\\u0027"+allowedAlphaSet;
+	private final static String allowedAlphaSet = "a-zA-ZæøåÆØÅáÁéÉèÈöÖüÜëËÿŸäÄ";
+	private final static String allowedCharSet = "\\u002D\\u0027\\u002F"+allowedAlphaSet;
 
-	private final static String RGX_ALPHA = "\\.\\u002D\\u0027a-zA-ZæøåÆØÅáÁéÉèÈöÖüÜëË\\s";
-	private final static String RGX_ALPHA_NO = "[0-9]{0,3}\\.\\u002D\\u0027a-zA-ZæøåÆØÅáÁéÉèÈöÖüÜëË\\s";
+	private final static String RGX_ALPHA = "\\.\\u002D\\u0027"+allowedAlphaSet+"\\s";
+	private final static String RGX_ALPHA_NO = "[0-9]{0,3}\\.\\u002D\\u0027\\u002F"+allowedAlphaSet+"\\s";
 	
 	private final static String RGX_STREET = "(["+RGX_ALPHA_NO+"]{1,40})";
-	private final static String RGX_MULTIPLEHOUSENUMBER = "([0-9]{1,3}[A-Z]{1}\\-[0-9]{1,3}[A-Z]{1})|([0-9]{1,3}\\-[0-9]{1,3})";
+	private final static String RGX_MULTIPLEHOUSENUMBER = "([0-9]{1,3}[A-Z]{1}\\-[0-9]{1,3}[A-Z]{1})|([0-9]{1,3}[A-Z]{1}\\-[A-Z]{1})|([0-9]{1,3}\\-[0-9]{1,3})";
 	private final static String RGX_HOUSENUMBER = RGX_MULTIPLEHOUSENUMBER + "|([0-9]{1,3}[A-Z]{1})|([0-9]{1,3})";
 	
 	private final static String RGX_POSTCODE = "([0-9]{4})";
 	private final static String RGX_CITY = "(["+RGX_ALPHA+"]{1,34})";
+	
+	private final static Pattern PAT_STREET = Pattern.compile(RGX_STREET);
+	private final static Pattern PAT_HOUSENUMBER = Pattern.compile(RGX_HOUSENUMBER);
+	private final static Pattern PAT_POSTCODE = Pattern.compile(RGX_POSTCODE);
+	private final static Pattern PAT_CITY = Pattern.compile(RGX_CITY);
 
 	public AddressValidator(){
 	}
@@ -24,8 +32,8 @@ public class AddressValidator {
 	public static String cleanAddress(String inputStr){
 		inputStr = cleanExcessSpaces(inputStr);
 		inputStr = inputStr.replaceAll("[\\t\\u002C\\u002E]"," ") //replace tabs, Comma, dots
-				.replaceAll("[^0-9"+allowedCharSet+"\\s]","?");
-		inputStr = replaceDashSpaces(inputStr); //replace all non allowed char with "?"
+				.replaceAll("[^0-9"+allowedCharSet+"\\s]","?"); //replace all non allowed char with "?"
+		inputStr = replaceDashSpaces(inputStr);
 		inputStr = cleanExcessSpaces(inputStr);
 		inputStr = parseAddressFloor(inputStr);
 		inputStr = cleanAddressFloor(inputStr);
@@ -99,29 +107,20 @@ public class AddressValidator {
 				.replaceAll("([0-9]{1,2})+(\\. sal) ","");
 	}
 	
+	public static final Pattern PAT_EXTRACTPOSTCODE = Pattern.compile("(.*)(RGX_POSTCODE)(.*)");
 	public static String extractPostcode(String inputStr){
-		return inputStr
-				.replaceAll("(RGX_POSTCODE)", "$1");
+		return PAT_EXTRACTPOSTCODE.matcher(inputStr).replaceAll("$2");
 	}
 	
 	public static String capitalizeFully(String inputStr){
 		return WordUtils.capitalizeFully(inputStr);
 	}
 	
-//	public static boolean isAddress(String inputStr){
-//		String str = cleanAddress(inputStr);
-//		//System.out.println("Addr Clean: " + str);
-//		if(str.matches(PAT_STREET_HOUSENUMBER)){
-//			System.out.println("PAT_STREET_HOUSENUMBER seems okay :) ");
-//			if(str.matches(PAT_POSTCODE_CITY)){
-//				System.out.println("PAT_POSTCODE_CITY seems okay :) ");
-//				//str = str.replaceAll("(.*)(" + RGX_POSTCODE + ")(.*)", "$1|$2$3");
-//				return true;
-//			}
-//		return false;
-//		}
-//		return false;
-//	}
+	public static final Pattern PAT_SPLITUPPERCASELETTERS = Pattern.compile("([A-Z]+)([A-Z]+)");
+	public static String splitUppercaseLetters(String inputStr){
+		return PAT_SPLITUPPERCASELETTERS.matcher(inputStr).replaceAll("$1\\-$2");
+		
+	}
 	
 	public static String prepStreetname(String street){
 		if(street != null && !street.isEmpty()) return cleanAddress(street);
@@ -132,14 +131,14 @@ public class AddressValidator {
 		if(number != null && !number.isEmpty()) {
 			number = cleanExcessSpaces(number.toUpperCase());
 			number = number.replaceAll("[^0-9A-Z\\s\\-]", "");
-			number = replaceDashSpaces(number); //replace all non allowed char with "?"
+			number = replaceDashSpaces(number);
 			number = cleanExcessSpaces(number);
 			number = parseAddressFloor(number);
 			number = cleanAddressFloor(number);
 			number = parseAddressSide(number);
 			number = cleanAddressSide(number);
-			
-			return removeSpaces(number);
+			number = removeSpaces(number);
+			return splitUppercaseLetters(number);
 		}
 		return null;
 	}
@@ -165,22 +164,34 @@ public class AddressValidator {
 	}
 	
 	public static boolean isStreetname(String street){
-		if(street != null && !street.isEmpty() && street.matches(RGX_STREET)) return true;
+		if(street != null && !street.isEmpty()){
+			Matcher matcher = PAT_STREET.matcher(street);
+			if(matcher.matches()) return true;
+		}
 		return false;
 	}
 	
 	public static boolean isHousenumber(String number){
-		if(number != null && !number.isEmpty() && number.matches(RGX_HOUSENUMBER)) return true;
+		if(number != null && !number.isEmpty()){
+			Matcher matcher = PAT_HOUSENUMBER.matcher(number);
+			if(matcher.matches()) return true;
+		}
 		return false;
 	}
 	
 	public static boolean isPostcode(String postcode){
-		if(postcode != null && !postcode.isEmpty() && postcode.matches(RGX_POSTCODE)) return true;
+		if(postcode != null && !postcode.isEmpty()) {
+			Matcher matcher = PAT_POSTCODE.matcher(postcode);
+			if(matcher.matches()) return true;
+		}
 		return false;
 	}
 	
 	public static boolean isCityname(String city){
-		if(city != null && !city.isEmpty() && city.matches(RGX_CITY)) return true;
+		if(city != null && !city.isEmpty() && city.matches(RGX_CITY)){
+			Matcher matcher = PAT_CITY.matcher(city);
+			if(matcher.matches()) return true;
+		} 
 		return false;
 	}
 }
