@@ -19,7 +19,8 @@ import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 
 public class MapLayersPage extends JPanel {
-    private Style style;
+	private static final long serialVersionUID = -6963692316700756734L;
+	private Style style;
     private DropdownMenu menu;
     
     public MapLayersPage(DropdownMenu menu) {

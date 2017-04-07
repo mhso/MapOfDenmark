@@ -12,13 +12,11 @@ import java.awt.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import java.awt.event.ActionListener;
 import java.io.File;
-import java.nio.file.Files;
 import java.text.DecimalFormat;
-import java.awt.event.ActionEvent;
 
 public class LoadPage extends JPanel  {
+	private static final long serialVersionUID = -3622354925202477780L;
 	private Style style;
 	private JLabel lblCurrentmapfilename, lblCurrentmapfilesize, lblCurrentmapaddressesfound, lblCurrentmapbounds;
 	
@@ -70,7 +68,7 @@ public class LoadPage extends JPanel  {
         gbc_lblCurrentMap.gridy = 1;
         panelCenter.add(lblCurrentMap, gbc_lblCurrentMap);
 
-        lblCurrentmapfilename = new JLabel(Main.osmParser.getFileName());
+        lblCurrentmapfilename = new JLabel(Main.osmReader.getFileName());
         GridBagConstraints gbc_lblCurrentmapfilename = new GridBagConstraints();
         gbc_lblCurrentmapfilename.anchor = GridBagConstraints.WEST;
         gbc_lblCurrentmapfilename.insets = new Insets(0, 0, 5, 0);
@@ -86,7 +84,7 @@ public class LoadPage extends JPanel  {
         gbc_lblFilesize.gridy = 2;
         panelCenter.add(lblFilesize, gbc_lblFilesize);
         
-        long fileSize = Util.getFileSize(new File(Main.osmParser.getFileName()));
+        long fileSize = Util.getFileSize(new File(Main.osmReader.getFileName()));
         long kb = fileSize/1024;
 		long mb = kb/1024;
         
@@ -158,10 +156,8 @@ public class LoadPage extends JPanel  {
 			Main.window.revalidate();
 			Main.window.repaint();
 			Main.map.zoomToBounds();
-        } else {
         }
-
-	}
+    }
 	
 	private JFileChooser viewFileChooser(String dialogTitle, String approveBtnTxt){
 		JFileChooser fc = new JFileChooser();

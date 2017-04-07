@@ -1,6 +1,6 @@
 package dk.itu.n.danmarkskort.models;
 
-public class ParsedBounds extends ParsedObject {
+public class ParsedBounds {
 
 	public double minLat, minLong, maxLat, maxLong;
 	public final double CONST_X = 0.01;
@@ -12,13 +12,6 @@ public class ParsedBounds extends ParsedObject {
 		this.minLong = minLong;
 		this.maxLat = maxLat;
 		this.maxLong = maxLong;
-	}
-	
-	public void parseAttributes() {
-		minLat = Double.parseDouble(attributes.get("minlat"));
-		minLong = Double.parseDouble(attributes.get("minlon"));
-		maxLat = Double.parseDouble(attributes.get("maxlat"));
-		maxLong = Double.parseDouble(attributes.get("maxlon"));
 	}
 
 	public String toString() {

@@ -1,36 +1,29 @@
 package dk.itu.n.danmarkskort.gui;
 
+import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.address.Address;
 import dk.itu.n.danmarkskort.gui.menu.DropdownMenu;
 import dk.itu.n.danmarkskort.gui.menu.RoutePage;
 import dk.itu.n.danmarkskort.search.SearchController;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.text.AbstractDocument;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DocumentFilter;
 
-import com.sun.scenario.effect.DropShadow;
-
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 public class TopPanel extends JPanel {
-
-    private Style style;
+	private static final long serialVersionUID = -3413495967270668324L;
+	private Style style;
     private DropdownAddressSearch dropSuggestions;
     private DropdownMenu dropMenu;
     private JTextField input;
@@ -172,10 +165,11 @@ public class TopPanel extends JPanel {
     private void panZoomToCoordinates(float[] lonLat) {
 		// TODO Auto-generated method stub
     	System.out.println("Toppanel->panZoomToCoordinats (lon, lat): (" + lonLat[0] + ", " + lonLat[1] + ")");
+    	Main.map.panToPosition(new Point2D.Float(lonLat[0], lonLat[1]));
+    	Main.mainPanel.repaint();
 	}
 
 	public void populateSuggestions(List<String> list) {
-        dropSuggestions.setVisible(false);
         dropSuggestions.removeAll();
         for(String str : list){
             dropSuggestions.addElement(input, str);
@@ -238,10 +232,10 @@ public class TopPanel extends JPanel {
 ////            	}
 //            	
 //                populateSuggestions(dropSuggestionsList);
-            	dropSuggestionsList = SearchController.getInstance().getSearchFieldSuggestions(text);
-            	populateSuggestions(dropSuggestionsList);
+//            	dropSuggestionsList = SearchController.getInstance().getSearchFieldSuggestions(text);
+//            	populateSuggestions(dropSuggestionsList);
                 
-            		//swingSearch(text);
+            		swingSearch(text);
             } else {
                 dropSuggestions.setVisible(false);
             }

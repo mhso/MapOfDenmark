@@ -5,29 +5,29 @@ import java.awt.Toolkit;
 
 import javax.swing.*;
 
+import org.xml.sax.InputSource;
+
 import dk.itu.n.danmarkskort.backend.OSMParser;
-import dk.itu.n.danmarkskort.backend.TileController;
+import dk.itu.n.danmarkskort.backend.OSMReader;
 import dk.itu.n.danmarkskort.gui.WindowParsingLoadscreenNew;
 import dk.itu.n.danmarkskort.gui.map.MapCanvas;
-import dk.itu.n.danmarkskort.lightweight.LightWeightParser;
+import dk.itu.n.danmarkskort.gui.map.PinPointManager;
 import dk.itu.n.danmarkskort.mapgfx.GraphicRepresentation;
 
 public class Main {
 
 	public final static String APP_NAME = "Map";
-	public final static String APP_VERSION = "0.4";
+	public final static String APP_VERSION = "0.5";
 	public final static boolean debug = true;
 	public final static boolean production = false;
+	public final static boolean buffered = true;
 	
-	public static OSMParser osmParser;
-	public static TileController tileController;
+	public static OSMReader osmReader;
 	public static JFrame window;
-	public static LightWeightParser model;
+	public static OSMParser model;
 	public static MapCanvas map;
 	public static MainCanvas mainPanel;
-
-	public final static boolean lightweight = true;
-	public final static boolean buffered = false;
+	public static PinPointManager pinPointManager;
 	
 	public static void main(String[] args) {
         startup(args);
@@ -37,29 +37,18 @@ public class Main {
 
 	public static void startup(String[] args) {
 		if(window != null) window.getContentPane().removeAll();
-		if(lightweight) {
-			osmParser = new OSMParser();
-			model = new LightWeightParser(osmParser);
-			GraphicRepresentation.main(new String[]{"resources/ThemeBasic.XML"});
-			prepareParser(args);
-		} else {
-			osmParser = new OSMParser();
-			tileController = new TileController();
-			prepareParser(args);
-		}
-
+		osmReader = new OSMReader();
+		model = new OSMParser(osmReader);
+		GraphicRepresentation.parseData(new InputSource("resources/ThemeBasic.XML"));
+		prepareParser(args);
 	}
 
 	public static void prepareParser(String[] args) {
 		WindowParsingLoadscreenNew loadScreen = new WindowParsingLoadscreenNew();
 		LoadScreenThread loadScreenThread = new LoadScreenThread(loadScreen);
-		//osmParser.addListener(AddressController.getInstance());
-		osmParser.addListener(loadScreen);
-		if(!lightweight) {
-			osmParser.addListener(tileController);
-		}
+		osmReader.addListener(loadScreen);
 		loadScreenThread.setFilenameAndRun(args[0]);
-		osmParser.parseFile(args[0]);
+		osmReader.parseFile(args[0]);
 	}
 	
 	public static void main() {
@@ -85,21 +74,28 @@ public class Main {
         
         window.add(createFrameComponents());
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
+        window.setPreferredSize(new Dimension(DKConstants.WINDOW_WIDTH, DKConstants.WINDOW_HEIGHT));  
+        
         window.pack();
+        
         window.setLocationRelativeTo(null);
         window.setVisible(true);
         map.zoomToBounds();
+        
     }
     
     public static JPanel createFrameComponents() {
     	JPanel overlay = new JPanel();
         overlay.setLayout(new OverlayLayout(overlay));
         overlay.setPreferredSize(new Dimension(DKConstants.WINDOW_WIDTH, DKConstants.WINDOW_HEIGHT));
+
+        map = new MapCanvas();
+        pinPointManager = PinPointManager.load(map);
         mainPanel = new MainCanvas();
         
-    	map = new MapCanvas();
         map.setPreferredSize(new Dimension(DKConstants.WINDOW_WIDTH, DKConstants.WINDOW_HEIGHT));
-        
+        mainPanel = new MainCanvas();
         overlay.add(mainPanel);
     	overlay.add(map);
     	return overlay;

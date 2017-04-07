@@ -8,10 +8,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 
 import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 
 import javax.swing.SwingConstants;
 import javax.swing.JProgressBar;
@@ -22,16 +19,13 @@ import javax.swing.border.LineBorder;
 import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.Util;
 import dk.itu.n.danmarkskort.backend.OSMParserListener;
-import dk.itu.n.danmarkskort.lightweight.models.ParsedItem;
-import dk.itu.n.danmarkskort.models.ParsedObject;
-import dk.itu.n.danmarkskort.models.ParsedWay;
 
 import java.awt.Component;
 
 import javax.swing.Box;
 
 public class WindowParsingLoadscreen extends JFrame implements OSMParserListener {
-
+	private static final long serialVersionUID = -6160623215890001556L;
 	private JPanel contentPane;
 	private JProgressBar progressBar;
 	private JPanel panel;
@@ -42,7 +36,7 @@ public class WindowParsingLoadscreen extends JFrame implements OSMParserListener
 	private boolean showObjectString = true;
 	
 	public static void main(String[] args) {
-		WindowParsingLoadscreen frame = new WindowParsingLoadscreen();
+		new WindowParsingLoadscreen();
 	}
 	
 	public void initialize(String fileName) {
@@ -109,7 +103,7 @@ public class WindowParsingLoadscreen extends JFrame implements OSMParserListener
 	}
 
 	@Override
-	public void onLineCountHundred() {
+	public void onLineCountThousand() {
 		lineCountHundreds++;
 		setProgressPercent();
 		showObjectString = true;
@@ -118,12 +112,6 @@ public class WindowParsingLoadscreen extends JFrame implements OSMParserListener
 	@Override
 	public void onParsingFinished() {
 		dispose();
-	}
-
-	@Override
-	public void onWayLinked(ParsedWay way) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override

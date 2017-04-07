@@ -1,35 +1,52 @@
 package dk.itu.n.danmarkskort.models;
 
-public class ParsedAddress extends ParsedObject {
+public class ParsedAddress {
 
-	private String city, houseNumber, postCode, address;
-	
-	public ParsedAddress() {}
-	public ParsedAddress(ParsedObject object) {
-		super(object);
-	}
-	
-	public String getCity() {
-		return city;
-	}
+    private String city, street, housenumber, postcode;
+    private float[] coords;
+    private ParsedWay way;
+    private ParsedRelation relation;
 
-	public String getHouseNumber() {
-		return houseNumber;
-	}
+    public void setCity(String c) { city = c; }
+    public void setPostcode(String p) { postcode = p; }
+    public void setStreet(String s) { street = s; }
+    public void setHousenumber(String h) { housenumber = h; }
+    public void setWay(ParsedWay w) { way = w; }
+    public void setRelation(ParsedRelation r) { relation = r; }
+    public void setCoords(float[] c) { coords = c;}
 
-	public String getPostCode() {
-		return postCode;
-	}
+    public String getCity() { return city; }
+    public String getStreet() { return street; }
+    public String getHousenumber() { return housenumber; }
+    public String getPostcode() { return postcode; }
+    public float[] getCoords() { return coords; }
+    public ParsedWay getWay() { return way; }
+    public ParsedRelation getRelation() { return relation; }
 
-	public void parseAttributes() {
-		address = attributes.get("addr:street");
-		city = attributes.get("addr:city");
-		houseNumber = attributes.get("addr:housenumber");
-		postCode = attributes.get("addr:postcode");
-	}
-	
-	public String toString() {
-		return address + ", " + houseNumber + ", " + postCode + ", " + city;
-	}
-	
+    public float getFirstLon() {
+        if(coords != null) return coords[0];
+        else if (way != null) return way.getFirstNode().getLon();
+        else if(relation != null) return relation.getFirstNode().getLon();
+        return -1;
+    }
+
+    public float getFirstLat() {
+        if(coords != null) return coords[1];
+        else if (way != null) return way.getFirstNode().getLat();
+        else if(relation != null) return relation.getFirstNode().getLat();
+        return -1;
+    }
+    
+    public String toStringShort(){
+ 		StringBuilder sb = new StringBuilder();
+ 			if(street != null) sb.append(street +" ");
+ 			if(housenumber != null) sb.append(housenumber + " ");
+ 			if(postcode != null) sb.append(postcode + " ");
+ 			if(city != null) sb.append(city + " ");
+ 		return sb.toString().trim();
+ 	}
+    
+    public String toString(){
+    	return street +" "+housenumber+", "+postcode+" "+city;
+    }
 }

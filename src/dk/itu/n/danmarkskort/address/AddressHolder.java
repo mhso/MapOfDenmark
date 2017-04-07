@@ -1,212 +1,243 @@
 package dk.itu.n.danmarkskort.address;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
+
+import org.apache.commons.lang3.StringUtils;
 
 public class AddressHolder {
 	public static HashMap<String, Postcode> postcodes = new HashMap<String, Postcode>();
 	
 	public AddressHolder(){
+	
 	}
 	
 	public static Postcode getPostcode(String postcode) {
 		if(postcode == null) return null;
 		return postcodes.get(postcode.toLowerCase());
 	}
-
-	public static List<Postcode> postcodeContains(String postcode){
-		List<Postcode> list = new ArrayList<Postcode>();
+	
+	public static int count(){
+		int size = 0;
+		for(Postcode pc : postcodes.values()){
+			size += pc.count();
+		}
+		return size;
+	}
+	
+	public static int count(Map<String, Postcode> list){
+		int size = 0;
+		for(Postcode pc : list.values()){
+			size += pc.count();
+		}
+		return size;
+	}
+	
+	private static Map<String, Postcode> postcodeContains(Map<String, Postcode> inputList, String postcode){
+		Map<String, Postcode> list = new HashMap<String, Postcode>();
 		if(postcode == null) return list;
-		for(Entry<String, Postcode> entry : postcodes.entrySet()){
+		for(Entry<String, Postcode> entry : inputList.entrySet()){
 			if(entry.getKey().contains(postcode.toLowerCase())) {
-				list.add(entry.getValue());
+				list.put(entry.getKey(), entry.getValue());
 			}
 		}
 		return list;
 	}
 	
-	public static List<Postcode> postcodeStartsWith(String postcode){
-		List<Postcode> list = new ArrayList<Postcode>();
+	private static Map<String, Postcode> postcodeStartsWith(Map<String, Postcode> inputList, String postcode){
+		Map<String, Postcode> list = new HashMap<String, Postcode>();
 		if(postcode == null) return list;
-		for(Entry<String, Postcode> entry : postcodes.entrySet()){
+		for(Entry<String, Postcode> entry : inputList.entrySet()){
 			if(entry.getKey().startsWith(postcode.toLowerCase())) {
-				list.add(entry.getValue());
+				list.put(entry.getKey(), entry.getValue());
 			}
 		}
 		return list;
 	}
 	
-	public static List<Postcode> cityContains(String city){
-		List<Postcode> list = new ArrayList<Postcode>();
-		if(city == null) return list;
-		for(Entry<String, Postcode> entry : postcodes.entrySet()){
+	private static Map<String, Postcode> postcodeLevenshteinDistance(Map<String, Postcode> inputList, String postcode){
+		Map<String, Postcode> list = new HashMap<String, Postcode>();
+		int minValue = 0, maxValue = 3;
+		if(postcode == null) return list;
+		for(Entry<String, Postcode> entry : inputList.entrySet()){
+			if(StringUtils.getLevenshteinDistance(entry.getKey(), postcode.toLowerCase()) > minValue &&
+					StringUtils.getLevenshteinDistance(entry.getKey(), postcode.toLowerCase()) < maxValue) {
+				list.put(entry.getKey(), entry.getValue());
+			}
+		}
+		return list;
+	}
+	
+	private static Map<String, Postcode> cityContains(Map<String, Postcode> inputList, String city){
+		Map<String, Postcode> list = new HashMap<String, Postcode>();
+		if(inputList == null) return list;
+		for(Entry<String, Postcode> entry : inputList.entrySet()){
 			if(entry.getValue().getCity() != null && entry.getValue().getCity().contains(city.toLowerCase())) {
-				list.add(entry.getValue());
+				list.put(entry.getKey(), entry.getValue());
 			}
 		}
 		return list;
 	}
 	
-	public static List<Postcode> cityStartsWith(String city){
-		List<Postcode> list = new ArrayList<Postcode>();
-		if(city == null) return list;
-		for(Entry<String, Postcode> entry : postcodes.entrySet()){
+	private static Map<String, Postcode> cityStartsWith(Map<String, Postcode> inputList, String city){
+		Map<String, Postcode> list = new HashMap<String, Postcode>();
+		if(inputList == null) return list;
+		for(Entry<String, Postcode> entry : inputList.entrySet()){
 			if(entry.getValue().getCity() != null && entry.getValue().getCity().startsWith(city.toLowerCase())) {
-				list.add(entry.getValue());
+				list.put(entry.getKey(), entry.getValue());
 			}
 		}
 		return list;
 	}
 	
-	public static List<Postcode> cityEquals(String city){
-		List<Postcode> list = new ArrayList<Postcode>();
-		if(city == null) return list;
-		for(Entry<String, Postcode> entry : postcodes.entrySet()){
+	private static Map<String, Postcode> cityLevenshteinDistance(Map<String, Postcode> inputList, String city){
+		Map<String, Postcode> list = new HashMap<String, Postcode>();
+		int minValue = 0, maxValue = 3;
+		if(inputList == null) return list;
+		for(Entry<String, Postcode> entry : inputList.entrySet()){
+			if(StringUtils.getLevenshteinDistance(entry.getKey(), city.toLowerCase()) > minValue &&
+					StringUtils.getLevenshteinDistance(entry.getKey(), city.toLowerCase()) < maxValue) {
+				list.put(entry.getKey(), entry.getValue());
+			}
+		}
+		return list;
+	}
+	
+	private static Map<String, Postcode> cityEquals(Map<String, Postcode> inputList, String city){
+		Map<String, Postcode> list = new HashMap<String, Postcode>();
+		if(inputList == null) return list;
+		for(Entry<String, Postcode> entry : inputList.entrySet()){
 			if(entry.getValue().getCity() != null && entry.getValue().getCity().equalsIgnoreCase(city)) {
-				list.add(entry.getValue());
+				list.put(entry.getKey(), entry.getValue());
 			}
 		}
 		return list;
 	}
 	
-	public static List<Postcode> search(Address addr, Enums StreetType, Enums housenumberType, Enums postcodeType, Enums cityType){
-		
-		List<Postcode> searchPostcodes = new ArrayList<Postcode>();
-		List<Postcode> searchPostcodeWithStreets = new ArrayList<Postcode>();
-		
-		System.out.println("searchPostcodes size: " + searchPostcodes.size());
-		System.out.println("searchPostcodeWithStreets size: " + searchPostcodeWithStreets.size());
-		
-		if(postcodeType == Enums.NOT_IN_USE && cityType == Enums.NOT_IN_USE) {
-			for(Postcode postcode : postcodes.values()){
-				searchPostcodes.add(postcode);
-			}
-		}else{
-				switch(postcodeType){
-				case EQUALS:
-						if(getPostcode(addr.getPostcode()) != null) searchPostcodes.add(getPostcode(addr.getPostcode()));
-						System.out.println("postcodeType EQUALS");
-					break;
-				case STARTSWITH:
-						searchPostcodes.addAll(postcodeStartsWith(addr.getPostcode()));
-						System.out.println("postcodeType STARTSWITH");
-					break;
-				case CONTAINS:
-						searchPostcodes.addAll(postcodeContains(addr.getPostcode()));
-						System.out.println("postcodeType CONTAINS");
-					break;
-				case NOT_IN_USE:
-					break;
-				default:
-					break;
+	private static Map<String, Postcode> searchPostcode(Map<String, Postcode> inputList, Address addr, SearchEnum streetType, SearchEnum cityType){
+		Map<String, Postcode> list = new HashMap<String, Postcode>();
+			switch(streetType){
+			case CONTAINS:
+				list = postcodeContains(inputList, addr.getPostcode());
+				break;
+			case EQUALS:
+				if(getPostcode(addr.getPostcode()) != null){
+					Postcode pc = getPostcode(addr.getPostcode());
+					list.put(pc.getPostcode(), pc);
 				}
-				
-				switch(cityType){
-				case EQUALS:
-						searchPostcodes.addAll(cityEquals(addr.getPostcode()));
-						System.out.println("postcodeType EQUALS");
-					break;
-				case STARTSWITH:
-						searchPostcodes.addAll(cityStartsWith(addr.getPostcode()));
-						System.out.println("postcodeType STARTSWITH");
-					break;
-				case CONTAINS:
-						searchPostcodes.addAll(cityContains(addr.getPostcode()));
-						System.out.println("postcodeType CONTAINS");
-					break;
-				case NOT_IN_USE:
-					break;
-				default:
-					break;
-				}
-		}
-		
-		System.out.println("searchPostcodes size: " + searchPostcodes.size());
-		System.out.println("searchPostcodeWithStreets size: " + searchPostcodeWithStreets.size());
-		if(StreetType == Enums.NOT_IN_USE) {
-			for(Postcode postcode : searchPostcodes){
-				searchPostcodeWithStreets.add(postcode);
+				break;
+			case ANY:
+				list = inputList;
+				break;
+			case STARTSWITH:
+				list = postcodeStartsWith(inputList, addr.getPostcode());
+				break;
+			case LEVENSHTEIN:
+				list = postcodeLevenshteinDistance(inputList, addr.getPostcode());
+				break;
+			default:
+				break;
 			}
-		}else{
-			for(Postcode postcode : searchPostcodes){
-				if(StreetType == Enums.EQUALS){
-					if(postcode.getStreet(addr.getStreet()) != null){
-						Street street = postcode.getStreet(addr.getStreet());
-						Postcode pc = new Postcode(postcode.getPostcode(), postcode.getCity());
-						pc.getStreets().put(street.getStreet(), street);
-						searchPostcodeWithStreets.add(pc);
-						
-					break;
-				}else{
-					switch(StreetType){
-					case STARTSWITH:
-						for(Street street : postcode.streetStartsWith(addr.getStreet())){
-							Postcode pc = new Postcode(postcode.getPostcode(), postcode.getCity());
-							pc.getStreets().put(street.getStreet(), street);
-							searchPostcodeWithStreets.add(pc);
-						}
-						break;
-					case CONTAINS:
-						for(Street street : postcode.streetContains(addr.getStreet())){
-							Postcode pc = new Postcode(postcode.getPostcode(), postcode.getCity());
-							pc.getStreets().put(street.getStreet(), street);
-							searchPostcodeWithStreets.add(pc);
-						}
-						break;
-					case NOT_IN_USE:
-						break;
-					default:
-						break;
-					}
-				}
-			}
-		}
-			System.out.println("searchPostcodes size: " + searchPostcodes.size());
-			System.out.println("searchPostcodeWithStreets size: " + searchPostcodeWithStreets.size());
-			if(housenumberType == Enums.NOT_IN_USE) {
-
-			}else{
-				for(Postcode postcode : searchPostcodeWithStreets){
-					
-					for(Street street : postcode.getStreets().values()){
-						List<Housenumber> list = new  ArrayList<Housenumber>();	
-						if(housenumberType == Enums.EQUALS){
-							if(street.getHousenumber(addr.getHousenumber()) != null){
-								street.getHousenumbers().clear();	
-							break;
-						}else{
-							switch(housenumberType){
-							case STARTSWITH:
-								list.addAll(street.housenumberStartsWith(addr.getHousenumber()));
-								break;
-							case CONTAINS:
-								list.addAll(street.housenumberContains(addr.getHousenumber()));
-								break;
-							case NOT_IN_USE:
-								break;
-							default:
-								break;
-							}
-							
-							street.getHousenumbers().clear();
-							for(Housenumber hn : list){
-								street.getHousenumbers().put(hn.getHousenumber(), hn);
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-		return searchPostcodeWithStreets;
+			
+			list = searchCity(list, addr, cityType);
+			
+		return list;
 	}
 	
-	public enum Enums {
-		NOT_IN_USE, EQUALS, STARTSWITH, CONTAINS
+	private static Map<String, Postcode> searchCity(Map<String, Postcode> inputList, Address addr, SearchEnum cityType){
+		Map<String, Postcode> list = new HashMap<String, Postcode>();
+			switch(cityType){
+			case CONTAINS:
+				list = cityContains(inputList, addr.getPostcode());
+				break;
+			case EQUALS:
+				list = cityEquals(inputList, addr.getPostcode());
+				break;
+			case ANY:
+				list = inputList;
+				break;
+			case STARTSWITH:
+				list = cityStartsWith(inputList, addr.getPostcode());
+				break;
+			case LEVENSHTEIN:
+				list = cityLevenshteinDistance(inputList, addr.getPostcode());
+				break;
+			default:
+				break;
+		}
+		return list;
+	}
+	
+	public static Map<String, Postcode> search(Address addr,
+			SearchEnum streetType, SearchEnum housenumberType, SearchEnum postcodeType, SearchEnum cityType){
+			Map<String, Postcode> list = new HashMap<String, Postcode>();
+			for(Postcode pc : searchPostcode(postcodes, addr, postcodeType, cityType).values()){
+				for(Street st : pc.search(pc.getStreets(), addr, streetType).values()){
+					for(Housenumber hn : st.search(st.getHousenumbers(), addr, housenumberType).values()) {
+						//System.out.println(hn.toString());
+						searchToMap(list, hn);
+					}
+				}
+			}
+		return list;
+	}
+	
+	private static void searchToMap(Map<String, Postcode> inputList, Housenumber hn){
+		Postcode p = inputList.get(hn.getPostcode().getPostcode());
+		if(p == null) p = new Postcode(hn.getPostcode().getPostcode(), hn.getPostcode().getCity());
+			p.addAddress(hn.getStreet().getStreet(), hn.getHousenumber(), hn.getLonLat());
+			inputList.putIfAbsent(p.getPostcode(), p);
+	}
+	
+	public static Map<RegionFloat, Postcode> getRegions(){
+		Map<RegionFloat, Postcode> regions = new HashMap<RegionFloat, Postcode>();
+		for(Postcode pc : postcodes.values()) regions.put(pc.getRegion(), pc);
+		return regions;
+	}
+	
+	public static Map<RegionFloat, Postcode> searchRegionWithin(RegionFloat input){
+		Map<RegionFloat, Postcode> regions = new HashMap<RegionFloat, Postcode>();
+		for(Postcode pc : postcodes.values()) {
+			RegionFloat pcR = pc.getRegion();
+			if(pcR.isWithin(input)){
+				regions.put(pc.getRegion(), pc);
+				System.out.println("MATCH: ADD: " + pc.getPostcode());
+			}
+		}
+		return regions;
+	}
+	
+	public static Map<RegionFloat, Housenumber> searchRegionHousenumbers(RegionFloat input){	
+		Map<RegionFloat, Housenumber> regions = new HashMap<RegionFloat, Housenumber>();
+		for(Postcode pc : searchRegionWithin(input).values()) {
+			float expanVal = 0.0f;
+			for(int i=0; i<100; i++) {
+				RegionFloat r = new RegionFloat(input.x1 - expanVal, input.y1 - expanVal, input.x2 + expanVal, input.y2 + expanVal);
+				for(Street st : pc.searchRegionWithin(r).values()){
+					regions.putAll(st.searchRegionWithin(r));
+				}
+				expanVal = expanVal + 0.0000100f;
+//				System.out.println("searchRegionHousenumbers: " + r.toString() 
+//				+ " Size: " + pc.searchRegionWithin(r).values().size()
+//				+ " regions Size: " + regions.size());
+			}
+		}
+		return regions;
+	}
+	
+	public static Housenumber searchHousenumber(float[] lonLat){
+		RegionFloat input = new RegionFloat(lonLat[0], lonLat[1], lonLat[0], lonLat[1]);
+		for(Postcode pc : searchRegionWithin(input).values()) {
+			for(Street st : pc.searchRegionWithin(input).values()){
+				for(Housenumber hn : st.searchRegionWithin(input).values()){
+					float[] hnLonLat = hn.getLonLat();
+					if(hnLonLat[0] == lonLat[0] && hnLonLat[0] == lonLat[0]) {
+						return hn;
+					}
+				}
+			}
+		}
+		return null;
 	}
 }

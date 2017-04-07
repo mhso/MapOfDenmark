@@ -2,32 +2,28 @@ package dk.itu.n.danmarkskort.kdtree;
 
 import dk.itu.n.danmarkskort.DKConstants;
 import dk.itu.n.danmarkskort.gui.map.MapCanvas;
-import dk.itu.n.danmarkskort.lightweight.models.ParsedItem;
-import dk.itu.n.danmarkskort.lightweight.models.ParsedNode;
+import dk.itu.n.danmarkskort.models.ParsedItem;
+import dk.itu.n.danmarkskort.models.ParsedNode;
 import dk.itu.n.danmarkskort.models.Region;
 
 import java.util.ArrayList;
 
 public class KDTreeNode extends KDTree {
 
-    private transient final int maxData = 1000;
-
     private KDTree leftChild;
     private KDTree rightChild;
     private float leftSplit;
     private float rightSplit;
-    private KDTree parent; // should this just be deleted? At least now we can move both up and down
 
     public KDTreeNode(ArrayList<ParsedItem> list) {
-        this(listToArray(list), null, true);
+        this(listToArray(list), true);
     }
 
-    public KDTreeNode(ParsedItem[] array, KDTree parent, boolean sortByLon) {
-        this.parent = parent;
+    private KDTreeNode(ParsedItem[] array, boolean sortByLon) {
         createStructure(array, sortByLon);
     }
 
-    public void createStructure(ParsedItem[] array, boolean sortByLon) {
+    private void createStructure(ParsedItem[] array, boolean sortByLon) {
         //  finds the median of the given list, either by lon or lat values
         ParsedItem median = QuickSelect.quickSelect(array, (array.length + 1) / 2, sortByLon);
 
@@ -40,34 +36,35 @@ public class KDTreeNode extends KDTree {
         for(int i = 0; i < rightArray.length; i ++) {
             rightArray[i] = array[i + leftArray.length];
         }
+
         if(sortByLon) {
-            leftSplit = median.getFirstLon();
+            leftSplit = median.getFirstNode().getLon();
             for(ParsedItem item : leftArray) {
                 ArrayList<ParsedNode> nodes = item.getNodes();
                 for(ParsedNode node : nodes) leftSplit = node.getLon() > leftSplit ? node.getLon() : leftSplit; // til højre er værdierne størst
             }
-            rightSplit = median.getFirstLon();
+            rightSplit = median.getFirstNode().getLon();
             for(ParsedItem item : rightArray) {
                 ArrayList<ParsedNode> nodes = item.getNodes();
                 for(ParsedNode node : nodes) rightSplit = node.getLon() < rightSplit ? node.getLon(): rightSplit; // til højre er værdierne størst
             }
         } else {
-            leftSplit = median.getFirstLat();
+            leftSplit = median.getFirstNode().getLat();
             for(ParsedItem item : leftArray) {
                 ArrayList<ParsedNode> nodes = item.getNodes();
                 for(ParsedNode node : nodes) leftSplit = node.getLat() > leftSplit ? node.getLat() : leftSplit; // nederst er værdierne størst
             }
-            rightSplit = median.getFirstLat();
+            rightSplit = median.getFirstNode().getLat();
             for(ParsedItem item : rightArray) {
                 ArrayList<ParsedNode> nodes = item.getNodes();
                 for(ParsedNode node : nodes) rightSplit = node.getLat() < rightSplit ? node.getLat() : rightSplit; // nederst er værdierne størst
             }
         }
-        if(leftArray.length > DKConstants.KD_SIZE) leftChild = new KDTreeNode(leftArray, this, !sortByLon);
-        else leftChild = new KDTreeLeaf(leftArray, this);
+        if(leftArray.length > DKConstants.KD_SIZE) leftChild = new KDTreeNode(leftArray, !sortByLon);
+        else leftChild = new KDTreeLeaf(leftArray);
 
-        if(rightArray.length > DKConstants.KD_SIZE) rightChild = new KDTreeNode(rightArray, this, !sortByLon);
-        else rightChild = new KDTreeLeaf(rightArray, this);
+        if(rightArray.length > DKConstants.KD_SIZE) rightChild = new KDTreeNode(rightArray, !sortByLon);
+        else rightChild = new KDTreeLeaf(rightArray);
     }
 
     public KDTree getRightChild() { return rightChild; }
@@ -94,8 +91,22 @@ public class KDTreeNode extends KDTree {
         rightChild.makeShapes();
     }
     @Override
-    public KDTree getParent() { return parent; }
-    @Override
     public int size() { return leftChild.size() + rightChild.size(); }
+    
+    public int size(Region reg) {
+    	return size(reg, true);
+    }
+    public int size(Region reg, boolean sortByLon) {
+    	int size = 0;
+    	if(sortByLon) {
+            if(reg.x1 < leftSplit) size += leftChild.size(reg, !sortByLon);
+            if(reg.x2 > rightSplit) size += rightChild.size(reg, !sortByLon);
+        }
+        else {
+            if(reg.y1 < leftSplit) size += leftChild.size(reg, !sortByLon);
+            if(reg.y2 > rightSplit) size += rightChild.size(reg, !sortByLon);
+        }
+    	return size;
+    }
 
 }
