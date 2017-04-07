@@ -14,67 +14,44 @@ import org.xml.sax.SAXException;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.HashMap;
 
-public class OSMParser extends SAXAdapter {
+public class OSMParser extends SAXAdapter implements Serializable {
+	private static final long serialVersionUID = 8120338349077111532L;
 
-    public float minLatBoundary, minLonBoundary, maxLatBoundary, maxLonBoundary, lonFactor;
+	public float minLatBoundary, minLonBoundary, maxLatBoundary, maxLonBoundary, lonFactor;
 
-    private NodeMap nodeMap;
-    private HashMap<Long, ParsedWay> wayMap;
-    private HashMap<Long, ParsedRelation> relationMap;
-    private HashMap<Long, ParsedItem> temporaryWayReferences;
-    private HashMap<Long, ParsedItem> temporaryRelationReferences;
-    private HashMap<ParsedNode, ParsedItem> coastlineMap;
+    private transient NodeMap nodeMap;
+    private transient HashMap<Long, ParsedWay> wayMap;
+    private transient HashMap<Long, ParsedRelation> relationMap;
+    private transient HashMap<Long, ParsedItem> temporaryWayReferences;
+    private transient HashMap<Long, ParsedItem> temporaryRelationReferences;
+    private transient HashMap<ParsedNode, ParsedItem> coastlineMap;
 
-    public EnumMap<WayType, ArrayList<ParsedItem>> enumMap;
+    public transient EnumMap<WayType, ArrayList<ParsedItem>> enumMap;
     public EnumMap<WayType, KDTree> enumMapKD;
 
-    private ParsedWay way;
-    private ParsedRelation relation;
-    private ParsedNode node;
-    private ParsedAddress address;
+    private transient ParsedWay way;
+    private transient ParsedRelation relation;
+    private transient ParsedNode node;
+    private transient ParsedAddress address;
 
-    private WayType waytype;
-    private String name;
-    private Integer maxSpeed;
-    private boolean oneWay;
+    private transient WayType waytype;
+    private transient String name;
+    private transient Integer maxSpeed;
+    private transient boolean oneWay;
 
-    private boolean finished = false;
-    private long fileSize;
-    private int byteCount;
-    private OSMReader parser;
-    private InputStream inputStream;
-    private Locator locator;
+    private transient boolean finished = false;
+    private transient OSMReader parser;
     
     public OSMParser(OSMReader parser) {
     	this.parser = parser;
     }
     
-    private void incrementLineCount() {
-		if(locator.getLineNumber() % 1000 != 0) return;
-		int currentCount = 0;
-		try {
-			currentCount = (int)((((double)fileSize-(double)inputStream.available())/(double)fileSize)*100);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		if(currentCount == byteCount) return;
-		byteCount = currentCount;
-		
-		for(OSMParserListener listener : parser.parserListeners) listener.onLineCountThousand();
-	}
-	
-	public void setDocumentLocator(Locator locator) {
-		this.locator = locator;
-	}
-    
     public void startDocument() throws SAXException {
-    	fileSize = Util.getFileSize(new File(parser.getFileName()));
-    	inputStream = parser.getInputStream();
         nodeMap = new NodeMap();
         wayMap = new HashMap<>();
         relationMap = new HashMap<>();
@@ -102,6 +79,8 @@ public class OSMParser extends SAXAdapter {
         temporaryClean();
         enumMapKD = new EnumMap<>(WayType.class);
 
+        for(OSMParserListener listener : parser.parserListeners) listener.onParsingFinished();
+        
         for(WayType wt : WayType.values()) {
             ArrayList<ParsedItem> current = enumMap.get(wt);
             KDTree tree;
@@ -127,15 +106,12 @@ public class OSMParser extends SAXAdapter {
             enumMap.remove(wt);
             enumMapKD.put(wt, tree);
         }
-
-        for(OSMParserListener listener : parser.parserListeners) listener.onParsingFinished();
         AddressController.getInstance().onLWParsingFinished();
         finalClean();
         finished = true;
     }
 
     public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
-        incrementLineCount();
     	switch(qName) {
             case "bounds":
                 minLatBoundary = Float.parseFloat(atts.getValue("minlat"));
@@ -232,7 +208,6 @@ public class OSMParser extends SAXAdapter {
     }
 
     public void endElement(String uri, String localName, String qName) throws SAXException {
-        incrementLineCount();
     	switch(qName) {
             case "relation":
             case "way":
@@ -269,7 +244,7 @@ public class OSMParser extends SAXAdapter {
             if(node != null) address.setCoords(node.getPoint());
             else if (way != null) address.setWay(way);
             else if (relation != null) address.setRelation(relation);
-            //AddressController.getInstance().addressParsed(address);
+            AddressController.getInstance().addressParsed(address);
             for(OSMParserListener listener : parser.parserListeners) listener.onParsingGotItem(address);
         }
         cleanUp();

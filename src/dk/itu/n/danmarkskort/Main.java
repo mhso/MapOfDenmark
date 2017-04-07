@@ -5,14 +5,13 @@ import java.awt.Toolkit;
 
 import javax.swing.*;
 
-import org.xml.sax.InputSource;
-
 import dk.itu.n.danmarkskort.backend.OSMParser;
 import dk.itu.n.danmarkskort.backend.OSMReader;
 import dk.itu.n.danmarkskort.gui.WindowParsingLoadscreenNew;
 import dk.itu.n.danmarkskort.gui.map.MapCanvas;
 import dk.itu.n.danmarkskort.gui.map.PinPointManager;
 import dk.itu.n.danmarkskort.mapgfx.GraphicRepresentation;
+import dk.itu.n.danmarkskort.models.UserPreferences;
 
 public class Main {
 
@@ -28,6 +27,7 @@ public class Main {
 	public static MapCanvas map;
 	public static MainCanvas mainPanel;
 	public static PinPointManager pinPointManager;
+	public static UserPreferences userPreferences;
 	
 	public static void main(String[] args) {
         startup(args);
@@ -38,14 +38,21 @@ public class Main {
 	public static void startup(String[] args) {
 		if(window != null) window.getContentPane().removeAll();
 		osmReader = new OSMReader();
-		model = new OSMParser(osmReader);
-		GraphicRepresentation.parseData(new InputSource("resources/ThemeBasic.XML"));
+		model = new OSMParser(osmReader);	
 		prepareParser(args);
+		if(userPreferences.getCurrentMapTheme() != null) {
+			GraphicRepresentation.parseData("resources/Theme" + userPreferences.getCurrentMapTheme() + ".XML");
+		}
+		else {
+			GraphicRepresentation.parseData("resources/Theme" + userPreferences.getDefaultTheme() + ".XML");
+			userPreferences.setCurrentMapTheme(userPreferences.getDefaultTheme());
+		}	
 	}
 
 	public static void prepareParser(String[] args) {
 		WindowParsingLoadscreenNew loadScreen = new WindowParsingLoadscreenNew(args[0]);
-		osmReader.addListener(loadScreen);
+		osmReader.addOSMListener(loadScreen);
+		osmReader.addInputListener(loadScreen);
 		loadScreen.run();
 		osmReader.parseFile(args[0]);
 	}
