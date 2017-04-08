@@ -9,7 +9,8 @@ import java.util.ArrayList;
 
 public class KDTreeLeaf extends KDTree {
 
-    private ParsedItem[] data;
+	private static final long serialVersionUID = 1522369879614832796L;
+	private ParsedItem[] data;
     private Shape[] shapes;
 
     public KDTreeLeaf(ParsedItem[] array) {

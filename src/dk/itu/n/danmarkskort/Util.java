@@ -11,7 +11,11 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 import java.util.Map;
+
+import dk.itu.n.danmarkskort.backend.InputMonitor;
+import dk.itu.n.danmarkskort.backend.InputStreamListener;
 
 import java.awt.MouseInfo;
 import java.awt.Point;
@@ -121,6 +125,13 @@ public class Util {
 		return new Point2D.Float((float)fakeCoords.getX()/Main.model.lonFactor, (float)-fakeCoords.getY());
 	}
 	
+	public static String getBinaryFilePath() {
+		File file = new File(Main.osmReader.getFileName());
+		String simpleFileName = file.getName().substring(0, file.getName().length()-4);
+		return "parsedOSMFiles/"+Main.osmReader.getChecksum()+"/" + 
+				simpleFileName + ".bin";
+	}
+	
 	public static boolean writeObjectToFile(Object object, String filename) {
 		try {
 			FileOutputStream fout = new FileOutputStream(filename);
@@ -131,6 +142,21 @@ public class Util {
 		} catch(Exception e) {
 			e.printStackTrace();
 			return false;
+		}
+	}
+	
+	public static Object readObjectFromFile(String fileName, List<InputStreamListener> listeners) {		
+		try {
+			FileInputStream fout = new FileInputStream(fileName);
+			InputMonitor monitor = new InputMonitor(fout, fileName);
+			ObjectInputStream oos = new ObjectInputStream(monitor);
+			for(InputStreamListener listener : listeners) monitor.addListener(listener);
+			Object object = oos.readObject();
+			oos.close();
+			return object;
+		} catch(Exception e) {
+			Main.log("Could not find file: " + fileName);
+			return null;
 		}
 	}
 	
@@ -146,5 +172,4 @@ public class Util {
 			return null;
 		}
 	}
-	
 }

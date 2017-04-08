@@ -21,6 +21,7 @@ public class GraphicRepresentation {
 	private static ArrayList<WaytypeGraphicSpec>[] zoomLevelArr = new ArrayList[20];
 	private static List<WaytypeGraphicSpec> overriddenSpecs = new ArrayList<>();
 	private static EnumMap<WayType, Integer> zoomMap = new EnumMap<>(WayType.class);
+	private static String currentTheme;
 	
 	/**
 	 * Get a list of Graphic Specification objects matching the inputed zoom level. 
@@ -145,11 +146,13 @@ public class GraphicRepresentation {
 	 * 
 	 * @param source The InputSource of the XML file.
 	 */
-	public static void parseData(InputSource source) {
+	public static void parseData(String themeFile) {
+		currentTheme = themeFile;
 		for(int i = 0; i < zoomLevelArr.length; i++) {
 			zoomLevelArr[i] = new ArrayList<WaytypeGraphicSpec>();
 		}
 		try {
+			InputSource source = new InputSource(themeFile);
 			XMLReader reader = XMLReaderFactory.createXMLReader();
 			reader.setContentHandler(new ZoomHandler());
 			reader.parse(new InputSource("resources/ZoomValues.XML"));
@@ -161,6 +164,10 @@ public class GraphicRepresentation {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public static String getCurrentTheme() {
+		return currentTheme.substring(10, currentTheme.length()-4);
 	}
 	
 	/**

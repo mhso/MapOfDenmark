@@ -37,21 +37,21 @@
 			<layer layer="3"/>
 		</line>
 		<line>
-			<type name="WAY_UNDEFINED"/>
+			<type name="HIGHWAY_UNDEFINED"/>
 			<innercolor color="E8DDC0"/>
 			<outercolor color="A19B8D"/>
 			<lineproperties linewidth="60"/>
 			<layer layer="3"/>
 		</line>
 		<line>
-			<type name="HIGHWAY_RESIDENTAL"/>
+			<type name="HIGHWAY_RESIDENTIAL"/>
 			<innercolor color="E8DDC0"/>
 			<outercolor color="A19B8D"/>
 			<lineproperties linewidth="40"/>
 			<layer layer="3"/>
 		</line>
 		<line>
-			<type name="WAY_SERVICE"/>
+			<type name="HIGHWAY_SERVICE"/>
 			<innercolor color="E8DDC0"/>
 			<outercolor color="A19B8D"/>
 			<lineproperties linewidth="20"/>
@@ -73,6 +73,11 @@
 		</line>
 	</lines>
 	<areas>
+		<area>
+			<type name="COASTLINE"/>
+			<innercolor color="F0F0E6"/>
+			<layer layer="1"/>
+		</area>
 		<area>
 			<type name="BUILDING"/>
 			<innercolor color="C0C0C0"/>
