@@ -11,9 +11,6 @@ public class PostcodeCityCombination {
 	private static Map<String, Integer> combinations = new HashMap<String, Integer>();
 	private static Map<String, String> bestMatches = new HashMap<String, String>();
 	private final static String SPLIT_VALUE = "<%>";
-	private static ArrayL
-	private PostcodeCityCombination(){
-	}
 	
 	public static void add(String postcode, String city){
 		String key = postcode+SPLIT_VALUE+city;
@@ -76,16 +73,6 @@ public class PostcodeCityCombination {
 	public static void printBestMaches(){
 		for(Entry<String, String> entry : bestMatches.entrySet()){
 			System.out.println("Post nr.: "+entry.getKey()+" City: "+entry.getValue());
-		}
-	}
-	
-	public class Combination{
-		StringObj postcode, city;
-		int count;
-		
-		public Combination(String postcode, String city){
-			this.postcode = StringHolder.make(postcode);
-			this.city = StringHolder.make(city);
 		}
 	}
 }
