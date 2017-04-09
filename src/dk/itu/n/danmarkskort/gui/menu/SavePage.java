@@ -2,7 +2,11 @@ package dk.itu.n.danmarkskort.gui.menu;
 
 import javax.swing.*;
 
+import dk.itu.n.danmarkskort.Main;
+import dk.itu.n.danmarkskort.Util;
+import dk.itu.n.danmarkskort.backend.BinaryWrapper;
 import dk.itu.n.danmarkskort.gui.Style;
+import dk.itu.n.danmarkskort.models.UserPreferences;
 
 import java.awt.*;
 import javax.swing.border.TitledBorder;
@@ -64,17 +68,10 @@ public class SavePage extends JPanel  {
     }
     
     private void saveCurrentMap(){
-		JFileChooser fc = viewFileChooser("Save Map To File", "Save");
-		int fcVal = fc.showOpenDialog(this);
-		
-		if (fcVal == JFileChooser.APPROVE_OPTION) {
-			File file = fc.getSelectedFile();
-			if(!file.getAbsolutePath().endsWith(".bin")){
-				file = new File(file + ".bin");
-			}
-			//model.save(file.getAbsolutePath());
-			System.out.println("Save Current Map to bin: "+file.getAbsolutePath());
-        }
+    	BinaryWrapper binary = new BinaryWrapper();
+    	binary.setModel(Main.model);
+    	binary.setUserPreferences(Main.userPreferences);
+    	Util.writeObjectToFile(binary, Util.getBinaryFilePath());
 	}
 	
 	private JFileChooser viewFileChooser(String dialogTitle, String approveBtnTxt){
@@ -83,7 +80,7 @@ public class SavePage extends JPanel  {
 		fc.setApproveButtonText(approveBtnTxt);
 		fc.setAcceptAllFileFilterUsed(false);
 		fc.setFileSelectionMode(JFileChooser.APPROVE_OPTION);
-		fc.addChoosableFileFilter(new FileNameExtensionFilter("*.bin", "bin"));
+		fc.addChoosableFileFilter(new FileNameExtensionFilter("Bin Files", "bin"));
 		fc.setCurrentDirectory(new File(System.getProperty("user.home")));
 		return fc;
 	}

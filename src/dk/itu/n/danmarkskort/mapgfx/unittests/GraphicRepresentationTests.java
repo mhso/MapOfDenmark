@@ -16,7 +16,7 @@ public class GraphicRepresentationTests {
 	@Before
 	public void parseGraphicData() {
 		if(!setupDone) {
-			GraphicRepresentation.parseData(new InputSource("resources/ThemeTest.XML"));
+			GraphicRepresentation.parseData("resources/ThemeTest.XML");
 			setupDone = true;
 		}
 	}

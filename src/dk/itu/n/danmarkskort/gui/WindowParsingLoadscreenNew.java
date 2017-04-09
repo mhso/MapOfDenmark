@@ -19,11 +19,12 @@ import java.awt.Dimension;
 
 import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.Util;
+import dk.itu.n.danmarkskort.backend.InputStreamListener;
 import dk.itu.n.danmarkskort.backend.OSMParserListener;
 
 import javax.imageio.ImageIO;
 
-public class WindowParsingLoadscreenNew extends JFrame implements OSMParserListener {
+public class WindowParsingLoadscreenNew extends JFrame implements OSMParserListener, InputStreamListener, Runnable {
 	private static final long serialVersionUID = 4049548769311961507L;
 	private static final Color BAR_STATIC_COLOR = Color.LIGHT_GRAY;
 	private static final Color BAR_LOADING_COLOR = new Color(0, 153, 0);
@@ -36,9 +37,13 @@ public class WindowParsingLoadscreenNew extends JFrame implements OSMParserListe
 	private double currentPercent;
 	private JLabel labelPercent;
 	private int objectCount = 1000;
+	private String fileName;
 	
-	public void initialize(String fileName) {
-		getFileSize(fileName);
+	public WindowParsingLoadscreenNew(String fileName) {
+		this.fileName = fileName;
+	}
+	
+	public void initialize() {
 		setTitle("Parsing Data");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
@@ -85,6 +90,11 @@ public class WindowParsingLoadscreenNew extends JFrame implements OSMParserListe
 		setVisible(true);
 	}
 	
+	public void run() {
+		getFileSize(fileName);
+		initialize();
+	}
+	
 	private void getFileSize(String fileName) {
 		File file = new File(fileName);
 		fileSize = Util.getFileSize(file);
@@ -103,6 +113,11 @@ public class WindowParsingLoadscreenNew extends JFrame implements OSMParserListe
 	public void onParsingStarted() {
 		
 	}
+	
+	@Override
+	public void onStreamStarted() {
+		labelStatus.setText("Parsing File...");
+	}
 
 	@Override
 	public void onParsingGotItem(Object parsedItem) {
@@ -112,16 +127,26 @@ public class WindowParsingLoadscreenNew extends JFrame implements OSMParserListe
 			objectCount = 0;
 		}
 	}
-
+	
 	@Override
-	public void onLineCountThousand() {
-		currentPercent++;
+	public void onPercent(int percentAmounth) {
+		currentPercent += percentAmounth;
 		setProgressPercent();
+	}
+	
+	@Override
+	public void onStreamEnded() {
+		labelStatus.setText("Saving Data To Binary Format...");
+	}
+	
+	@Override
+	public void onSetupDone() {
+		dispose();
 	}
 
 	@Override
 	public void onParsingFinished() {
-		dispose();
+		labelStatus.setText("Converting Data To KD-Trees...");
 	}
 	
 	private class BGImage extends JPanel {

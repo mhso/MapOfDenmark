@@ -10,7 +10,8 @@ import java.util.ArrayList;
 
 public class KDTreeNode extends KDTree {
 
-    private KDTree leftChild;
+	private static final long serialVersionUID = 242589004649413322L;
+	private KDTree leftChild;
     private KDTree rightChild;
     private float leftSplit;
     private float rightSplit;
