@@ -72,57 +72,65 @@ public class OSMReader {
 		parseTimer.on();
 		parseMemory.on();
 		
-		try {
-			currentChecksum = Util.getFileChecksumMD5(new File(fileName));
-		} catch (NoSuchAlgorithmException | IOException e1) {
-			e1.printStackTrace();
-		}
-		
-		if(checkSumExists(currentChecksum)) {
-			fileName = Util.getBinaryFilePath();
+		if(fileName.endsWith(".bin")) {
 			BinaryWrapper binary = (BinaryWrapper) Util.readObjectFromFile(fileName, inputListeners);
 			Main.model = binary.getModel();
 			Main.userPreferences = binary.getUserPreferences();
 			for(InputStreamListener listener : inputListeners) listener.onSetupDone();
 		}
 		else {
-			if (fileName.endsWith(".osm")) {
-				try {
-					inputStream = new FileInputStream(fileName);
-					InputMonitor monitor = new InputMonitor(inputStream, fileName);
-					for(InputStreamListener inListener : inputListeners) monitor.addListener(inListener);
-					loadOSM(new InputSource(monitor), fileName);
-				} catch (FileNotFoundException e) {
-					e.printStackTrace();
+			try {
+				currentChecksum = Util.getFileChecksumMD5(new File(fileName));
+			} catch (NoSuchAlgorithmException | IOException e1) {
+				e1.printStackTrace();
+			}
+			
+			if(checkSumExists(currentChecksum)) {
+				fileName = Util.getBinaryFilePath();
+				BinaryWrapper binary = (BinaryWrapper) Util.readObjectFromFile(fileName, inputListeners);
+				Main.model = binary.getModel();
+				Main.userPreferences = binary.getUserPreferences();
+				for(InputStreamListener listener : inputListeners) listener.onSetupDone();
+			}
+			else {
+				if (fileName.endsWith(".osm")) {
+					try {
+						inputStream = new FileInputStream(fileName);
+						InputMonitor monitor = new InputMonitor(inputStream, fileName);
+						for(InputStreamListener inListener : inputListeners) monitor.addListener(inListener);
+						loadOSM(new InputSource(monitor), fileName);
+					} catch (FileNotFoundException e) {
+						e.printStackTrace();
+					}
+					
+				} else if (fileName.endsWith(".zip")) {
+					try {
+						inputStream = new FileInputStream(fileName);
+						InputMonitor monitor = new InputMonitor(inputStream, fileName);
+						ZipInputStream zip = new ZipInputStream(new BufferedInputStream(monitor));
+						zip.getNextEntry();
+						for(InputStreamListener inListener : inputListeners) monitor.addListener(inListener);
+						loadOSM(new InputSource(zip), fileName);
+					} catch (FileNotFoundException e) {
+						e.printStackTrace();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
 				}
-				
-			} else if (fileName.endsWith(".zip")) {
+				String path = "parsedOSMFiles/"+currentChecksum+"/";
 				try {
-					inputStream = new FileInputStream(fileName);
-					InputMonitor monitor = new InputMonitor(inputStream, fileName);
-					ZipInputStream zip = new ZipInputStream(new BufferedInputStream(monitor));
-					zip.getNextEntry();
-					for(InputStreamListener inListener : inputListeners) monitor.addListener(inListener);
-					loadOSM(new InputSource(zip), fileName);
-				} catch (FileNotFoundException e) {
-					e.printStackTrace();
+					Files.createDirectory(Paths.get(path));
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
+				BinaryWrapper binary = new BinaryWrapper();
+				binary.setModel(Main.model);
+				Main.userPreferences = new UserPreferences();
+				binary.setUserPreferences(Main.userPreferences);
+					
+				Util.writeObjectToFile(binary, Util.getBinaryFilePath());
+				for(InputStreamListener listener : inputListeners) listener.onSetupDone();
 			}
-			String path = "parsedOSMFiles/"+currentChecksum+"/";
-			try {
-				Files.createDirectory(Paths.get(path));
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			BinaryWrapper binary = new BinaryWrapper();
-			binary.setModel(Main.model);
-			Main.userPreferences = new UserPreferences();
-			binary.setUserPreferences(Main.userPreferences);
-				
-			Util.writeObjectToFile(binary, Util.getBinaryFilePath());
-			for(InputStreamListener listener : inputListeners) listener.onSetupDone();
 		}
 		
 		parseTimer.off();
