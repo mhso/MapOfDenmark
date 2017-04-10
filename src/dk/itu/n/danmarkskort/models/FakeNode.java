@@ -18,4 +18,9 @@ class FakeNode extends ParsedNode{
     }
 
     int getSide() { return side; }
+
+    @Override
+    public String toString() {
+        return "lon: " + getLon() + ", lat: " + getLat() + ", side: " + getSide();
+    }
 }
