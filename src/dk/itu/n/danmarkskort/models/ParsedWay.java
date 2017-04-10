@@ -2,13 +2,14 @@ package dk.itu.n.danmarkskort.models;
 
 import java.awt.*;
 import java.awt.geom.Path2D;
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class ParsedWay extends ParsedItem{
+public class ParsedWay extends ParsedItem implements Serializable{
 
     private long id;
-    private ArrayList<ParsedNode> nodes;
-    private Shape shape;
+    ArrayList<ParsedNode> nodes;
+    Shape shape;
 
     public ParsedWay() {
         nodes = new ArrayList<>();
@@ -21,7 +22,11 @@ public class ParsedWay extends ParsedItem{
 
     public void addNode(ParsedNode node) { nodes.add(node); }
 
-    public void addNodes(ArrayList<ParsedNode> nodes) { this.nodes.addAll(nodes); }
+    void addNodes(ArrayList<ParsedNode> nodes) { this.nodes.addAll(nodes); }
+
+    public void setFirstNode(ParsedNode node) { nodes.set(0, node); }
+
+    public void setLastNode(ParsedNode node) { if(nodes.size() > 0) nodes.set(nodes.size() - 1, node); }
 
     public ArrayList<ParsedNode> getNodes() { return nodes; }
 
@@ -33,6 +38,21 @@ public class ParsedWay extends ParsedItem{
 
     public Path2D getReversedPath() {
         return getPath(false);
+    }
+
+    @Override
+    public void deleteOldRefs() {
+        nodes = null;
+    }
+
+    @Override
+    public void makeShape() {
+        shape = getPath();
+    }
+
+    @Override
+    public Shape getShape() {
+        return shape;
     }
 
     private Path2D getPath(boolean rightWay) {
@@ -54,13 +74,22 @@ public class ParsedWay extends ParsedItem{
 
     @Override
     public ParsedNode getFirstNode() {
-        if(nodes.size() > 0) return nodes.get(0);
+        if(nodes != null && nodes.size() > 0) return nodes.get(0);
         return null;
     }
 
-    @Override
     public ParsedNode getLastNode() {
         if(nodes.size() > 0) return nodes.get(nodes.size() - 1);
+        return null;
+    }
+
+    public ParsedNode getSecondNode() {
+        if(nodes != null && nodes.size() > 3) return nodes.get(1);
+        return null;
+    }
+
+    public ParsedNode getSecondToLastNode() {
+        if(nodes != null && nodes.size() > 3) return nodes.get(nodes.size() - 2);
         return null;
     }
     
