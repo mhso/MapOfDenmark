@@ -248,15 +248,14 @@ public class OSMParser extends SAXAdapter implements Serializable {
         if(coastlineMap.size() > 0) {
             coastlineMap.forEach((firstNode, item) -> {
                 //if(item.getLastNode() != item.getFirstNode()) item.addNode(item.getFirstNode());
-                combined.add(item);
-                //if(item.getFirstNode() == item.getLastNode()) connected.add(item);
-                //else if(item.getFirstNode() != item.getLastNode()) unconnected.add(item);
+                //combined.add(item);
+                if(item.getFirstNode() == item.getLastNode()) connected.add(item);
+                else if(item.getFirstNode() != item.getLastNode()) unconnected.add(item);
             });
 
-            //HashSet<ParsedWay> fixed = CoastlineUtil.fixUnconnectedCoastlines(unconnected);
-            //combined.addAll(connected);
-
-            //combined.addAll(fixed);
+            HashSet<ParsedWay> fixed = CoastlineUtil.fixUnconnectedCoastlines(unconnected);
+            combined.addAll(connected);
+            combined.addAll(fixed);
             tree = new KDTreeLeaf(combined);
         }
         else tree = null;

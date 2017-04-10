@@ -39,15 +39,16 @@ public class CoastlineUtil {
 
             ParsedWay newWay = new ParsedWay();
 
+            newWay.addNodes(way.getNodes());
 
-            way.setFirstNode(newFirst);
-            way.setLastNode(newLast);
+            newWay.setFirstNode(newFirst);
+            newWay.setLastNode(newLast);
 
             starts[newFirst.getSide()].add(newFirst);
             ends[newLast.getSide()].add(newLast);
 
-            unconnectedStarts.put(newFirst, way);
-            unconnectedEnds.put(newLast, way);
+            unconnectedStarts.put(newFirst, newWay);
+            unconnectedEnds.put(newLast, newWay);
         }
 
         sortSides(starts);
@@ -61,9 +62,7 @@ public class CoastlineUtil {
             for(int j = 0; j < ends[i].size(); j++) {
                 endNode = ends[i].get(j);
                 endWay = unconnectedEnds.get(endNode);
-                Main.log("looking for a match");
                 startNode = findMatch(starts, endNode, endWay, i);
-                Main.log("found a match");
                 startWay = unconnectedStarts.get(startNode);
 
                 unconnectedEnds.remove(endWay.getLastNode());
@@ -193,17 +192,19 @@ public class CoastlineUtil {
         });
     }
 
-    // returns a float[] with index 0 as the slope, and index 1 as the constant
+    // returns a double[] with index 0 as the slope, and index 1 as the constant
     private double[] getLinearEquation(ParsedNode node1, ParsedNode node2) {
         double m = calculateSlope(node1, node2);
         double b = calculateConstant(node1, m);
         return new double[]{m, b};
     }
 
+    // calculates the constant in a linear function, given a coordinate and a slope
     private double calculateConstant(ParsedNode node, double m) {
         return (double) node.getLat() - (m * (double) node.getLon());
     }
 
+    // calculates the slope for a line, between two coordinates
     private double calculateSlope(ParsedNode node1, ParsedNode node2) {
         return ((double) node2.getLat() - (double) node1.getLat()) / (double) (node2.getLon() - (double) node1.getLon());
     }
@@ -212,8 +213,11 @@ public class CoastlineUtil {
         float xvsmin = Math.abs(node.getLon() - Main.model.getMinLon());
         float xvsmax = Math.abs(node.getLon() - Main.model.getMaxLon());
 
-        float yvsmin = Math.abs(node.getLat() + (-Main.model.getMinLat()));
-        float yvsmax = Math.abs(node.getLat() + (-Main.model.getMaxLat()));
+        float yvsmin = Math.abs(node.getLat() - Main.model.getMinLat());
+        float yvsmax = Math.abs(node.getLat() - Main.model.getMaxLat());
+
+        System.out.println(xvsmin + " " + xvsmax + " " + yvsmin + " " + yvsmax);
+        System.out.println("adjustning end or startenode");
 
         if(xvsmin < xvsmax) { // left-aligned
             if(yvsmin < yvsmax) { // top-aligned
