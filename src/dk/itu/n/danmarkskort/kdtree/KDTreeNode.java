@@ -6,6 +6,7 @@ import dk.itu.n.danmarkskort.models.ParsedItem;
 import dk.itu.n.danmarkskort.models.ParsedNode;
 import dk.itu.n.danmarkskort.models.Region;
 
+import java.awt.*;
 import java.util.ArrayList;
 
 public class KDTreeNode extends KDTree {
@@ -15,6 +16,7 @@ public class KDTreeNode extends KDTree {
     private KDTree rightChild;
     private float leftSplit;
     private float rightSplit;
+    private int size;
 
     public KDTreeNode(ArrayList<ParsedItem> list) {
         this(listToArray(list), true);
@@ -22,6 +24,7 @@ public class KDTreeNode extends KDTree {
 
     private KDTreeNode(ParsedItem[] array, boolean sortByLon) {
         createStructure(array, sortByLon);
+        size = array.length;
     }
 
     private void createStructure(ParsedItem[] array, boolean sortByLon) {
@@ -74,29 +77,38 @@ public class KDTreeNode extends KDTree {
     public float getRightSplit() { return rightSplit; }
 
     @Override
-    public void getShapes(Region reg, MapCanvas map) { getShapes(reg, map, true); }
+    public ArrayList<Shape> getShapes(Region reg) { return getShapes(reg, true); }
     @Override
-    public void getShapes(Region reg, MapCanvas map,  boolean sortByLon) {
+    public ArrayList<Shape> getShapes(Region reg,  boolean sortByLon) {
+        ArrayList<Shape> shapes = new ArrayList<>(size);
         if(sortByLon) {
-            if(reg.x1 < leftSplit) leftChild.getShapes(reg, map, !sortByLon);
-            if(reg.x2 > rightSplit) rightChild.getShapes(reg, map, !sortByLon);
+            if(reg.x1 < leftSplit) shapes.addAll(leftChild.getShapes(reg, !sortByLon));
+            if(reg.x2 > rightSplit) shapes.addAll(rightChild.getShapes(reg, !sortByLon));
         }
         else {
-            if(reg.y1 < leftSplit) leftChild.getShapes(reg, map, !sortByLon);
-            if(reg.y2 > rightSplit) rightChild.getShapes(reg, map, !sortByLon);
+            if(reg.y1 < leftSplit) shapes.addAll(leftChild.getShapes(reg, !sortByLon));
+            if(reg.y2 > rightSplit) shapes.addAll(rightChild.getShapes(reg, !sortByLon));
         }
+        return shapes;
     }
+
     @Override
     public void makeShapes() {
         leftChild.makeShapes();
         rightChild.makeShapes();
     }
+
     @Override
-    public int size() { return leftChild.size() + rightChild.size(); }
-    
-    public int size(Region reg) {
-    	return size(reg, true);
+    public void deleteOldRefs() {
+        leftChild.deleteOldRefs();
+        rightChild.deleteOldRefs();
     }
+
+    @Override
+    public int size() { return size; }
+
+    /*
+    @Override
     public int size(Region reg, boolean sortByLon) {
     	int size = 0;
     	if(sortByLon) {
@@ -108,6 +120,6 @@ public class KDTreeNode extends KDTree {
             if(reg.y2 > rightSplit) size += rightChild.size(reg, !sortByLon);
         }
     	return size;
-    }
+    }*/
 
 }

@@ -15,23 +15,19 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.HashMap;
+import java.util.*;
 
 public class OSMParser extends SAXAdapter implements Serializable {
 	private static final long serialVersionUID = 8120338349077111532L;
 
-	public float minLatBoundary, minLonBoundary, maxLatBoundary, maxLonBoundary, lonFactor;
+	private float minLatBoundary, minLonBoundary, maxLatBoundary, maxLonBoundary, lonFactor;
 
     private transient NodeMap nodeMap;
-    private transient HashMap<Long, ParsedWay> wayMap;
-    private transient HashMap<Long, ParsedRelation> relationMap;
-    private transient HashMap<Long, ParsedItem> temporaryWayReferences;
-    private transient HashMap<Long, ParsedItem> temporaryRelationReferences;
-    private transient HashMap<ParsedNode, ParsedItem> coastlineMap;
+    private transient HashMap<Long, ParsedWay> temporaryWayReferences;
+    private transient HashMap<Long, ParsedRelation> temporaryRelationReferences;
+    private transient IdentityHashMap<ParsedNode, ParsedWay> coastlineMap;
 
-    public transient EnumMap<WayType, ArrayList<ParsedItem>> enumMap;
+    private transient EnumMap<WayType, ArrayList<ParsedItem>> enumMap;
     public EnumMap<WayType, KDTree> enumMapKD;
 
     private transient ParsedWay way;
@@ -53,12 +49,9 @@ public class OSMParser extends SAXAdapter implements Serializable {
     
     public void startDocument() throws SAXException {
         nodeMap = new NodeMap();
-        wayMap = new HashMap<>();
-        relationMap = new HashMap<>();
         temporaryWayReferences = new HashMap<>();
         temporaryRelationReferences = new HashMap<>();
-        coastlineMap = new HashMap<>();
-
+        coastlineMap = new IdentityHashMap<>();
         enumMap = new EnumMap<>(WayType.class);
         for(WayType waytype : WayType.values()) enumMap.put(waytype, new ArrayList<>());
 
@@ -68,7 +61,6 @@ public class OSMParser extends SAXAdapter implements Serializable {
 
     public void endDocument() throws SAXException {
         Main.log("Parsing finished.");
-        Main.log("Max lon: " + maxLonBoundary + ", " + "Min lon: " + minLonBoundary);
 
         int numItemsSaved = 0;
         for(WayType wt : WayType.values()) numItemsSaved += enumMap.get(wt).size();
@@ -82,30 +74,25 @@ public class OSMParser extends SAXAdapter implements Serializable {
         for(OSMParserListener listener : parser.parserListeners) listener.onParsingFinished();
         
         for(WayType wt : WayType.values()) {
-            ArrayList<ParsedItem> current = enumMap.get(wt);
             KDTree tree;
-
-            if(wt == WayType.COASTLINE) {
-                if(coastlineMap.size() > 0) {
-                    coastlineMap.forEach((firstNode, item) -> {
-                        if (firstNode == item.getFirstNode()) {
-                            current.add(item);
-                        }
-                    });
-                    tree = new KDTreeLeaf(current);
-                }
-                else tree = null;
-            }
+            if(wt == WayType.COASTLINE) tree = getCoastlines();
             else {
+                ArrayList<ParsedItem> current = enumMap.get(wt);
                 if (current.isEmpty()) tree = null;
                 else if (current.size() < DKConstants.KD_SIZE) tree = new KDTreeLeaf(current);
                 else tree = new KDTreeNode(current);
             }
-
-            if (tree != null) tree.makeShapes();
             enumMap.remove(wt);
+            if(tree != null) tree.makeShapes();
             enumMapKD.put(wt, tree);
         }
+
+        for(Map.Entry<WayType, KDTree> entry : enumMapKD.entrySet()) {
+            KDTree current = entry.getValue();
+            if(current != null) current.deleteOldRefs();
+        }
+
+        for(OSMParserListener listener : parser.parserListeners) listener.onParsingFinished();
         AddressController.getInstance().onLWParsingFinished();
         finalClean();
         finished = true;
@@ -250,6 +237,33 @@ public class OSMParser extends SAXAdapter implements Serializable {
         cleanUp();
     }
 
+    private KDTree getCoastlines() {
+        KDTree tree = null;
+        HashSet<ParsedWay> connected = new HashSet<>();
+        HashSet<ParsedWay> unconnected = new HashSet<>();
+        ArrayList<ParsedItem> combined = new ArrayList<>();
+
+        // I'm not entirely sure, but I think that coastlineMap (and thus also connected)
+        // contains 2 of each way
+        if(coastlineMap.size() > 0) {
+            coastlineMap.forEach((firstNode, item) -> {
+                //if(item.getLastNode() != item.getFirstNode()) item.addNode(item.getFirstNode());
+                combined.add(item);
+                //if(item.getFirstNode() == item.getLastNode()) connected.add(item);
+                //else if(item.getFirstNode() != item.getLastNode()) unconnected.add(item);
+            });
+
+            //HashSet<ParsedWay> fixed = CoastlineUtil.fixUnconnectedCoastlines(unconnected);
+            //combined.addAll(connected);
+
+            //combined.addAll(fixed);
+            tree = new KDTreeLeaf(combined);
+        }
+        else tree = null;
+
+        return tree;
+    }
+
     private void cleanUp() {
         way = null;
         relation = null;
@@ -299,5 +313,9 @@ public class OSMParser extends SAXAdapter implements Serializable {
     	float x2 = getMaxLon();
     	float y2 = getMaxLat();
     	return new Region(x1, y1, x2, y2);
+    }
+
+    public float getLonFactor() {
+        return lonFactor;
     }
 }

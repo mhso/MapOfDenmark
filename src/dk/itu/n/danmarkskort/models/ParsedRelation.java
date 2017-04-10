@@ -5,40 +5,45 @@ import java.awt.geom.Path2D;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class ParsedRelation extends ParsedItem {
+public class ParsedRelation extends ParsedWay {
 
     private long id;
-    private ArrayList<ParsedNode> nodes;
-    private ArrayList<ParsedItem> inners;
-    private ArrayList<ParsedItem> outers;
-    private Shape shape;
+    private ArrayList<ParsedWay> inners;
+    private ArrayList<ParsedWay> outers;
 
     public ParsedRelation(long id) {
         this.id = id;
-        nodes = new ArrayList<>();
         inners = new ArrayList<>();
         outers = new ArrayList<>();
     }
 
-    public void addNode(ParsedNode node) { nodes.add(node); }
-    public void addNodes(ArrayList<ParsedNode> nodes) { this.nodes.addAll(nodes); }
-    public void addMember(ParsedItem item, String role) {
+    public void addMember(ParsedWay item, String role) {
         if(role.equals("outer")) {
             outers.add(item);
         }
         else inners.add(item);
     }
 
+    public void deleteOldRefs() {
+        super.deleteOldRefs();
+        inners = null;
+        outers = null;
+    }
+
+    public void makeShape() {
+        shape = getPath();
+    }
+
     public long getID() { return id; }
 
-    public ArrayList<ParsedItem> getInners() { return inners; }
-    public ArrayList<ParsedItem> getOuters() { return outers; }
+    public ArrayList<ParsedWay> getInners() { return inners; }
+    public ArrayList<ParsedWay> getOuters() { return outers; }
 
     public ArrayList<ParsedNode> getNodes() {
         ArrayList<ParsedNode> nodeList = new ArrayList<>();
         if(inners.size() > 0 || outers.size() > 0) {
-            for(ParsedItem inner  : inners) nodeList.addAll(inner.getNodes());
-            for(ParsedItem outer : outers) nodeList.addAll(outer.getNodes());
+            for(ParsedWay inner  : inners) nodeList.addAll(inner.getNodes());
+            for(ParsedWay outer : outers) nodeList.addAll(outer.getNodes());
         } else if(nodes != null) {
             return nodes;
         }
@@ -49,7 +54,7 @@ public class ParsedRelation extends ParsedItem {
     public Path2D getPath() {
         Path2D path = new Path2D.Float(Path2D.WIND_EVEN_ODD);
         if(inners.size() > 0) {
-            for(ParsedItem item : inners) path.append(item.getPath(), false);
+            for(ParsedWay item : inners) path.append(item.getPath(), false);
         }
         if(outers.size() > 0) path.append(connectItems(outers), false);
         return path;
@@ -63,7 +68,7 @@ public class ParsedRelation extends ParsedItem {
         // and that's not something we are displaying at the moment, and probably never will
     }
 
-    private Path2D connectItems(ArrayList<ParsedItem> list) {
+    private Path2D connectItems(ArrayList<ParsedWay> list) {
         Path2D path = new Path2D.Float();
         path.append(list.get(0).getPath(), false);
         ParsedNode lastNode = list.get(0).getLastNode();

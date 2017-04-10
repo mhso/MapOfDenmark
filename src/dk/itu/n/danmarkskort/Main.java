@@ -20,7 +20,8 @@ public class Main {
 	public final static boolean debug = true;
 	public final static boolean production = false;
 	public final static boolean buffered = true;
-	
+	public static final boolean binaryfile = false;
+
 	public static OSMReader osmReader;
 	public static JFrame window;
 	public static OSMParser model;

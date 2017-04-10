@@ -7,10 +7,15 @@ public class ParsedNode {
     private long key;
     private float lon, lat;
 
-    // Total memory usage of a Node is 32 bytes.
     public ParsedNode(long key, ParsedNode next, float lon, float lat) {
         this.key = key;
         this.next = next;
+        this.lon = lon;
+        this.lat = lat;
+    }
+
+    // used to create a Node on-the-go. Specifically so a parsedAdress can use a KDTree
+    public ParsedNode(float lon, float lat) {
         this.lon = lon;
         this.lat = lat;
     }

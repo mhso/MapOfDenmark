@@ -1,6 +1,12 @@
 package dk.itu.n.danmarkskort.address;
 
-public class Housenumber {
+import dk.itu.n.danmarkskort.models.ParsedItem;
+import dk.itu.n.danmarkskort.models.ParsedNode;
+
+import java.awt.*;
+import java.util.ArrayList;
+
+public class Housenumber extends ParsedItem {
 	private float[] lonLat;
 	//private String housenumber;
 	private StringObj housenumberObj;
@@ -25,4 +31,29 @@ public class Housenumber {
 	public String toString(){
 		return street.getStreet() + " " + getHousenumber() + ", " + postcode.getPostcode() + " " + postcode.getCity();
 	}
+
+	private ParsedNode coordsToNode() {
+	    return new ParsedNode(lonLat[0], lonLat[1]);
+    }
+
+	@Override
+	public ParsedNode getFirstNode() {
+	    return coordsToNode();
+	}
+
+	@Override
+	public ArrayList<ParsedNode> getNodes() {
+		ArrayList<ParsedNode> nodes = new ArrayList<>();
+		nodes.add(coordsToNode());
+		return nodes;
+	}
+
+	@Override
+	public void makeShape() {}
+
+	@Override
+	public Shape getShape() { return null;}
+
+	@Override
+	public void deleteOldRefs() {}
 }

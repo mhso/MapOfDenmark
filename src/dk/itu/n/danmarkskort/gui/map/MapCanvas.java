@@ -45,10 +45,8 @@ public class MapCanvas extends JPanel implements ActionListener {
 	private final int MAX_ZOOM = 20;
 
 	private WaytypeGraphicSpec currentWTGSpec;
-	private boolean outline;
 	private boolean zoomChanged;
-	private Graphics2D currentGraphics;
-	
+
 	private BufferedMapManager imageManager = null;
 	private Point2D zero;
 
@@ -114,7 +112,6 @@ public class MapCanvas extends JPanel implements ActionListener {
 		drawMapRegion(g2d);
 		if(zoomChanged) wayTypesVisible = getOnScreenGraphicsForCurrentZoom();
 		shapesDrawn = 0;
-		currentGraphics = g2d;
 
 		if(wayTypesVisible == null) return;
 
@@ -122,18 +119,20 @@ public class MapCanvas extends JPanel implements ActionListener {
 		else setBackground(Color.LIGHT_GRAY);
 		setOpaque(true);
 
-        //drawBackground(g2d);
+        drawBackground(g2d);
 
         // drawing all the outlines, if the current WayTypeGraphicSpec has one
 		for (WaytypeGraphicSpec wayTypeGraphic : wayTypesVisible) {
 			currentWTGSpec = wayTypeGraphic;
 			if (currentWTGSpec.getOuterColor() != null) {
 				KDTree kdTree = Main.model.enumMapKD.get(wayTypeGraphic.getWayType());
-				if (kdTree == null) {
-					continue;
+				if (kdTree == null) continue;
+				ArrayList<Shape> shapes = kdTree.getShapes(getGeographicalRegion());
+				for(Shape shape : shapes) {
+					currentWTGSpec.transformOutline(g2d);
+					if (currentWTGSpec instanceof GraphicSpecLine) g2d.draw(shape);
+					else if (currentWTGSpec instanceof GraphicSpecArea) g2d.fill(shape);
 				}
-				outline = true;
-				kdTree.getShapes(getGeographicalRegion(), this);
 			}
 		}
 
@@ -141,31 +140,18 @@ public class MapCanvas extends JPanel implements ActionListener {
 		for(WaytypeGraphicSpec wayTypeGraphic : wayTypesVisible) {
 			currentWTGSpec = wayTypeGraphic;
 			KDTree kdTree = Main.model.enumMapKD.get(wayTypeGraphic.getWayType());
-			if(kdTree == null) {
-				continue;
-			}
-			outline = false;
-			kdTree.getShapes(getGeographicalRegion(), this);
-		}
-	}
-
-	public void drawShapes(Shape[] shapes) {
-		if(outline) {
+			if(kdTree == null) continue;
+			ArrayList<Shape> shapes = kdTree.getShapes(getGeographicalRegion());
 			for(Shape shape : shapes) {
-				currentWTGSpec.transformOutline(currentGraphics);
-				if (currentWTGSpec instanceof GraphicSpecLine) currentGraphics.draw(shape);
-				else if (currentWTGSpec instanceof GraphicSpecArea) currentGraphics.fill(shape);
-			}
-		} else {
-			for(Shape shape : shapes) {
-				currentWTGSpec.transformPrimary(currentGraphics);
-				if (currentWTGSpec instanceof GraphicSpecLine) currentGraphics.draw(shape);
-				else if (currentWTGSpec instanceof GraphicSpecArea) currentGraphics.fill(shape);
+				currentWTGSpec.transformPrimary(g2d);
+				if (currentWTGSpec instanceof GraphicSpecLine) g2d.draw(shape);
+				else if (currentWTGSpec instanceof GraphicSpecArea) g2d.fill(shape);
 				shapesDrawn++;
 			}
 		}
 	}
-/*
+
+
 	private void drawBackground(Graphics2D g2d) {
         Region region = Main.model.getMapRegion();
         Path2D background = new Path2D.Double();
@@ -177,12 +163,12 @@ public class MapCanvas extends JPanel implements ActionListener {
 
         // backgroundcolor for the map. If there's a coastline use the water innercolor, otherwise use the coastline innercolor
         if(Main.model.enumMapKD.containsKey(WayType.COASTLINE) && Main.model.enumMapKD.get(WayType.COASTLINE).size() > 0) {
-            g2d.setColor(new Color(110, 192, 255));
+        	g2d.setColor(new Color(110, 192, 255));
         }
         else g2d.setColor(new Color(240, 240, 230));
 
         g2d.fill(background);
-    }*/
+    }
 
 	public List<WaytypeGraphicSpec> getOnScreenGraphicsForCurrentZoom() {
 		List<WaytypeGraphicSpec> wayTypeSpecs = GraphicRepresentation.getGraphicSpecs((int)getZoom());

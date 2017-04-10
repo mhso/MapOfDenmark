@@ -122,7 +122,7 @@ public class Util {
 	}
 	
 	public static Point2D toRealCoords(Point2D fakeCoords) {
-		return new Point2D.Float((float)fakeCoords.getX()/Main.model.lonFactor, (float)-fakeCoords.getY());
+		return new Point2D.Float((float)fakeCoords.getX()/Main.model.getLonFactor(), (float)-fakeCoords.getY());
 	}
 	
 	public static String getBinaryFilePath() {
