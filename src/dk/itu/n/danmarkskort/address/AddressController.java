@@ -15,32 +15,14 @@ import java.util.stream.Collectors;
 
 public class AddressController{
 	private int addressesNotAcceptedCount;
-	private static AddressController instance;
-	private final static Lock lock = new ReentrantLock();
 	TimerUtil timerUtilA = new TimerUtil();
 	TimerUtil timerUtilB = new TimerUtil();
 	PostcodeCityBestMatch postcodeCityBestMatch;
 	
-	private AddressController(){
+	public AddressController(){
 		postcodeCityBestMatch = new PostcodeCityBestMatch();
 	}
 	int count = 0; 
-
-	public static AddressController getInstance(){
-        if (instance == null) {
-            lock.lock();
-            try {
-                if (instance == null) {
-                	AddressController tmpInstance = new AddressController();
-                    instance = tmpInstance;
-                }
-            }
-            finally {
-                lock.unlock();
-            }
-        }
-        return instance;
-    }
 	
 	public List<String> getSearchSuggestions(String find, long limitAmountOfResults){ return searchSuggestions(find, limitAmountOfResults); }
 	

@@ -5,6 +5,7 @@ import java.awt.Toolkit;
 
 import javax.swing.*;
 
+import dk.itu.n.danmarkskort.address.AddressController;
 import dk.itu.n.danmarkskort.backend.OSMParser;
 import dk.itu.n.danmarkskort.backend.OSMReader;
 import dk.itu.n.danmarkskort.gui.WindowParsingLoadscreenNew;
@@ -25,6 +26,7 @@ public class Main {
 	public static OSMReader osmReader;
 	public static JFrame window;
 	public static OSMParser model;
+	public static AddressController addressController;
 	public static MapCanvas map;
 	public static MainCanvas mainPanel;
 	public static PinPointManager pinPointManager;
@@ -39,7 +41,8 @@ public class Main {
 	public static void startup(String[] args) {
 		if(window != null) window.getContentPane().removeAll();
 		osmReader = new OSMReader();
-		model = new OSMParser(osmReader);	
+		model = new OSMParser(osmReader);
+		addressController  =  new AddressController();
 		prepareParser(args);
 		if(userPreferences.getCurrentMapTheme() != null) {
 			GraphicRepresentation.parseData("resources/Theme" + userPreferences.getCurrentMapTheme() + ".XML");
