@@ -80,6 +80,10 @@ public class AddressController{
 		TimerUtil timerUtil = new TimerUtil();
 		timerUtil.on();
 		Address addrBuild = AddressParser.parse(find, true);
+		
+		System.out.println(find);
+		System.out.println(addrBuild.toString());
+		
 		List<String> result = new ArrayList<String>();
 		
 			Map<String, Postcode> list; 
@@ -124,7 +128,7 @@ public class AddressController{
 		Collections.sort(result, String.CASE_INSENSITIVE_ORDER);
 		// Remove duplicates and return
 		timerUtil.off();
-		Main.log("Addresse Suggestion time: " + timerUtil.toString());
+		//Main.log("Addresse Suggestion time: " + timerUtil.toString());
 		return result.parallelStream().distinct().limit(limitAmountOfResults).collect(Collectors.toList());
 	}
 	
@@ -134,7 +138,7 @@ public class AddressController{
 	}
 	
 	public Address getNearstSearchResult(RegionFloat input){
-		Address addr =  getSearchResult(input.centerPoint());
+		Address addr =  getSearchResult(input.getMiddlePoint());
 		if (addr == null) {
 			Collection<Housenumber> hns = AddressHolder.searchRegionHousenumbers(input).values();
 			Housenumber hn = regionRecursiveLookup(input);
@@ -191,16 +195,16 @@ public class AddressController{
 				} else {
 					addAddress(lonLat, addr.getStreet(), addr.getHousenumber(), addr.getPostcode(), null);
 				}
-				if(addr.getStreet().matches(".*[0-9].*")) System.out.println("lvl1 " + addr.toStringShort());
+				//if(addr.getStreet().matches(".*[0-9].*")) System.out.println("lvl1 " + addr.toStringShort());
 				acceptLvl1++;
-//			}else if(AddressValidator.isAddressMinimum(
-//        				AddressValidator.prepStreetname(addr.getStreet()),
-//        				AddressValidator.prepHousenumber(addr.getHousenumber()),
-//        				AddressValidator.prepPostcode(addr.getPostcode())
-//        				)) {
-//        	addAddress(lonLat, addr.getStreet(), addr.getHousenumber(), addr.getPostcode(), null);
-//        	System.out.println("lvl2: " + addr.toString());
-//        	acceptLvl2++;
+			}else if(AddressValidator.isAddressMinimum(
+        				AddressValidator.prepStreetname(addr.getStreet()),
+        				AddressValidator.prepHousenumber(addr.getHousenumber()),
+        				AddressValidator.prepPostcode(addr.getPostcode())
+        				)) {
+        	addAddress(lonLat, addr.getStreet(), addr.getHousenumber(), addr.getPostcode(), null);
+        	//System.out.println("lvl2: " + addr.toString());
+        	acceptLvl2++;
 			} else {
 				Address addrParsed = AddressParser.parse(addr.toStringShort(), false);
 				if(addrParsed != null 
