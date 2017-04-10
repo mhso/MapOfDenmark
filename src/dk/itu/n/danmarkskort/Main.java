@@ -54,6 +54,7 @@ public class Main {
 		WindowParsingLoadscreenNew loadScreen = new WindowParsingLoadscreenNew(args[0]);
 		osmReader.addOSMListener(loadScreen);
 		osmReader.addInputListener(loadScreen);
+		System.out.println(loadScreen.hashCode());
 		loadScreen.run();
 		osmReader.parseFile(args[0]);
 	}

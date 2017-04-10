@@ -332,11 +332,11 @@ public class MapCanvas extends JPanel implements ActionListener {
 		zoom(getWidth() / (mapRegion.x2 - mapRegion.x1));
 	}
 	
-	public void setupDone() {
+	public void setupDone() {	
 		zoomToBounds();
 		if(Main.buffered) {
 			zero = new Point2D.Double(transform.getTranslateX(), transform.getTranslateY());
-			imageManager = new BufferedMapManager();	
+			imageManager = new BufferedMapManager();
 			imageManager.forceFullRepaint();
 		}
 		for(CanvasListener listener : listeners) listener.onSetupDone();

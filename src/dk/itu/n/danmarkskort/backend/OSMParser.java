@@ -231,7 +231,7 @@ public class OSMParser extends SAXAdapter implements Serializable {
             if(node != null) address.setCoords(node.getPoint());
             else if (way != null) address.setWay(way);
             else if (relation != null) address.setRelation(relation);
-            //AddressController.getInstance().addressParsed(address);
+            AddressController.getInstance().addressParsed(address);
             for(OSMParserListener listener : parser.parserListeners) listener.onParsingGotItem(address);
         }
         cleanUp();
@@ -248,16 +248,15 @@ public class OSMParser extends SAXAdapter implements Serializable {
         if(coastlineMap.size() > 0) {
             coastlineMap.forEach((firstNode, item) -> {
                 //if(item.getLastNode() != item.getFirstNode()) item.addNode(item.getFirstNode());
-                //combined.add(item);
-                if(item.getFirstNode() == item.getLastNode()) connected.add(item);
-                else if(item.getFirstNode() != item.getLastNode()) unconnected.add(item);
-                else Main.log("what is happening!!!");
+                combined.add(item);
+                //if(item.getFirstNode() == item.getLastNode()) connected.add(item);
+                //else if(item.getFirstNode() != item.getLastNode()) unconnected.add(item);
             });
 
-            HashSet<ParsedWay> fixed = CoastlineUtil.fixUnconnectedCoastlines(unconnected);
-            combined.addAll(connected);
+            //HashSet<ParsedWay> fixed = CoastlineUtil.fixUnconnectedCoastlines(unconnected);
+            //combined.addAll(connected);
 
-            combined.addAll(fixed);
+            //combined.addAll(fixed);
             tree = new KDTreeLeaf(combined);
         }
         else tree = null;

@@ -37,6 +37,9 @@ public class CoastlineUtil {
             FakeNode newFirst = adjustNodeToBounds(way.getFirstNode());
             FakeNode newLast = adjustNodeToBounds(way.getLastNode());
 
+            ParsedWay newWay = new ParsedWay();
+
+
             way.setFirstNode(newFirst);
             way.setLastNode(newLast);
 
