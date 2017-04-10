@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.address.Address;
 import dk.itu.n.danmarkskort.address.AddressController;
 import dk.itu.n.danmarkskort.address.RegionFloat;
@@ -45,16 +46,16 @@ public class SearchController{
 			String[] strArr = inputStr.replaceAll(";", ",").split(", ");
 			float[] cord = new float[strArr.length];
 			for(int i=0; i<cord.length; i++) cord[i] = Float.parseFloat(strArr[i]);
-			return AddressController.getInstance().searchSuggestions(
+			return Main.addressController.searchSuggestions(
 					new RegionFloat(cord[0], cord[1], cord[2], cord[3]), limitAmountOfResults);
 		}else if(inputStr.matches(cordsRegex)) {
 			String[] strArr = inputStr.split(", ");
 			float[] cord = new float[strArr.length];
 			for(int i=0; i<cord.length; i++) cord[i] = Float.parseFloat(strArr[i]);
-			return AddressController.getInstance().searchSuggestions(
+			return Main.addressController.searchSuggestions(
 					new RegionFloat(cord[0], cord[1], cord[0], cord[1]), limitAmountOfResults);
 		} else {
-			return AddressController.getInstance().getSearchSuggestions(inputStr, limitAmountOfResults);
+			return Main.addressController.getSearchSuggestions(inputStr, limitAmountOfResults);
 		}
 	}
 	
@@ -67,14 +68,14 @@ public class SearchController{
 			String[] strArr = inputStr.replaceAll(";", ",").split(", ");
 			float[] cord = new float[strArr.length];
 			for(int i=0; i<cord.length; i++) cord[i] = Float.parseFloat(strArr[i]);
-			return AddressController.getInstance().getNearstSearchResult(new RegionFloat(cord[0], cord[1], cord[2], cord[3]));
+			return Main.addressController.getNearstSearchResult(new RegionFloat(cord[0], cord[1], cord[2], cord[3]));
 		}else if(inputStr.matches(cordsRegex)) {
 			String[] strArr = inputStr.split(", ");
 			float[] cord = new float[strArr.length];
 			for(int i=0; i<cord.length; i++) cord[i] = Float.parseFloat(strArr[i]);
-			return AddressController.getInstance().getSearchResult(cord);
+			return Main.addressController.getSearchResult(cord);
 		} else {
-			return AddressController.getInstance().getSearchResult(inputStr);
+			return Main.addressController.getSearchResult(inputStr);
 		}
 	} 
 }

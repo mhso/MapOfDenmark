@@ -151,19 +151,19 @@ public class AddressHolder implements Serializable {
 		Map<String, Postcode> list = new HashMap<String, Postcode>();
 			switch(cityType){
 			case CONTAINS:
-				list = cityContains(inputList, addr.getPostcode());
+				list = cityContains(inputList, addr.getCity());
 				break;
 			case EQUALS:
-				list = cityEquals(inputList, addr.getPostcode());
+				list = cityEquals(inputList, addr.getCity());
 				break;
 			case ANY:
 				list = inputList;
 				break;
 			case STARTSWITH:
-				list = cityStartsWith(inputList, addr.getPostcode());
+				list = cityStartsWith(inputList, addr.getCity());
 				break;
 			case LEVENSHTEIN:
-				list = cityLevenshteinDistance(inputList, addr.getPostcode());
+				list = cityLevenshteinDistance(inputList, addr.getCity());
 				break;
 			default:
 				break;

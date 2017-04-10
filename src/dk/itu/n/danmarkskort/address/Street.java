@@ -21,6 +21,11 @@ public class Street {
 		housenumbers = new HashMap<String, Housenumber>();
 		region = null;
 	}
+	
+	public int count(){ return housenumbers.size(); }
+	
+	public String getStreet() { return streetObj.toString(); }
+	
 	public RegionFloat getRegion(){
 		if(region == null) region = genRegion();
 		return region;
@@ -58,8 +63,6 @@ public class Street {
 		}
 		return regions;
 	}
-	
-	public int count(){ return housenumbers.size(); }
 
 	public Map<String, Housenumber> getHousenumbers() { return housenumbers; }
 	
@@ -75,8 +78,6 @@ public class Street {
 		if(housenumber == null) return null;
 		return housenumbers.get(housenumber.toLowerCase());
 	}
-
-	public String getStreet() { return streetObj.toString(); }
 
 	
 	private Map<String, Housenumber> housenumberContains(Map<String, Housenumber> inputList, String housenumber){
@@ -141,5 +142,4 @@ public class Street {
 		}
 		return list;
 	}
-
 }
