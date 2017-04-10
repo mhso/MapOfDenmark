@@ -15,29 +15,14 @@ import java.util.stream.Collectors;
 
 public class AddressController{
 	private int addressesNotAcceptedCount;
-	private static AddressController instance;
-	private final static Lock lock = new ReentrantLock();
+	TimerUtil timerUtilA = new TimerUtil();
+	TimerUtil timerUtilB = new TimerUtil();
+	PostcodeCityBestMatch postcodeCityBestMatch;
 	
-	private AddressController(){
-//		addresses =  new HashMap<float[], Address>();
+	public AddressController(){
+		postcodeCityBestMatch = new PostcodeCityBestMatch();
 	}
 	int count = 0; 
-
-	public static AddressController getInstance(){
-        if (instance == null) {
-            lock.lock();
-            try {
-                if (instance == null) {
-                	AddressController tmpInstance = new AddressController();
-                    instance = tmpInstance;
-                }
-            }
-            finally {
-                lock.unlock();
-            }
-        }
-        return instance;
-    }
 	
 	public List<String> getSearchSuggestions(String find, long limitAmountOfResults){ return searchSuggestions(find, limitAmountOfResults); }
 	
@@ -77,6 +62,10 @@ public class AddressController{
 		TimerUtil timerUtil = new TimerUtil();
 		timerUtil.on();
 		Address addrBuild = AddressParser.parse(find, true);
+		
+		System.out.println(find);
+		System.out.println(addrBuild.toString());
+		
 		List<String> result = new ArrayList<String>();
 		
 			Map<String, Postcode> list; 
@@ -121,7 +110,7 @@ public class AddressController{
 		Collections.sort(result, String.CASE_INSENSITIVE_ORDER);
 		// Remove duplicates and return
 		timerUtil.off();
-		Main.log("Addresse Suggestion time: " + timerUtil.toString());
+		//Main.log("Addresse Suggestion time: " + timerUtil.toString());
 		return result.parallelStream().distinct().limit(limitAmountOfResults).collect(Collectors.toList());
 	}
 	
@@ -131,7 +120,7 @@ public class AddressController{
 	}
 	
 	public Address getNearstSearchResult(RegionFloat input){
-		Address addr =  getSearchResult(input.centerPoint());
+		Address addr =  getSearchResult(input.getMiddlePoint());
 		if (addr == null) {
 			Collection<Housenumber> hns = AddressHolder.searchRegionHousenumbers(input).values();
 			Housenumber hn = regionRecursiveLookup(input);
@@ -167,54 +156,78 @@ public class AddressController{
 		return result.parallelStream().distinct().limit(limitAmountOfResults).collect(Collectors.toList());
 	}
 	
-	public void addressParsed(dk.itu.n.danmarkskort.models.ParsedAddress address) {
-        
-        if(address != null) {	
-			float[] lonLat = new float[] {address.getFirstLon(), address.getFirstLat()};
-			Address addrParsed = AddressParser.parse(address.toStringShort(), false);
-			if(addrParsed != null 
-					&& addrParsed.getStreet() != null && addrParsed.getStreet().length() > 0
-					&& addrParsed.getHousenumber() != null && addrParsed.getHousenumber().length() > 0
-					&& addrParsed.getPostcode() != null && addrParsed.getPostcode().length() == 4) {
-				addrParsed.setLonLat(lonLat);
-				Postcode postcode = AddressHolder.postcodes.get(addrParsed.getPostcode());
-				if(postcode == null) postcode = new Postcode(addrParsed.getPostcode(), addrParsed.getCity());
-				postcode.addAddress(addrParsed.getStreet(), addrParsed.getHousenumber(), lonLat);
-				
-				AddressHolder.postcodes.put(addrParsed.getPostcode(), postcode);
-				PostcodeCityCombination.add(addrParsed.getPostcode(), addrParsed.getCity());
-			} else {
-				addressesNotAcceptedCount++;
-			}
-        }	
-    }
-	
-	private void testRegionSearch(){
-		
-		System.out.println("Regions search found: ");
-		for(RegionFloat r : AddressHolder.getRegions().keySet()){
-			System.out.println(r.toString());
-		}
-		
-//		Map<Region, Housenumber> hnR = AddressHolder.searchCoordinats(new Region(12.60597000d, 55.67397000d, 12.60597000d, 55.67397000d));
-//		System.out.println("Regions search found: " + hnR.size());
-//		for(Housenumber hn : hnR.values()){
-//			System.out.println(hn.toString());
-//		}
-//		System.out.println("Regions search found: " + hnR.size());
+	public void addAddress(float[] lonLat, String street, String housenumber, String postcode, String city){
+		Postcode pc = AddressHolder.postcodes.get(postcode);
+		if(pc == null) pc = new Postcode(postcode, city);
+		pc.addAddress(street, housenumber, lonLat);
+		AddressHolder.postcodes.put(postcode, pc);
+		postcodeCityBestMatch.add(postcode,  city);
 	}
+	
+	private int acceptLvl1 = 0, acceptLvl2 = 0, acceptLvl3 = 0, acceptNot = 0;
+	public void addressParsed(dk.itu.n.danmarkskort.models.ParsedAddress addr) {
+		
+		timerUtilA.on();
+        if(addr != null) {
+			float[] lonLat = new float[] {addr.getFirstLon(), addr.getFirstLat()};
+			
+			if(AddressValidator.isAddressMinimum(addr.getStreet(), addr.getHousenumber(), addr.getPostcode())){
+				if(AddressValidator.isCityname(addr.getCity())) {
+					addAddress(lonLat, addr.getStreet(), addr.getHousenumber(), addr.getPostcode(), addr.getCity());
+				} else {
+					addAddress(lonLat, addr.getStreet(), addr.getHousenumber(), addr.getPostcode(), null);
+				}
+				//if(addr.getStreet().matches(".*[0-9].*")) System.out.println("lvl1 " + addr.toStringShort());
+				acceptLvl1++;
+			}else if(AddressValidator.isAddressMinimum(
+        				AddressValidator.prepStreetname(addr.getStreet()),
+        				AddressValidator.prepHousenumber(addr.getHousenumber()),
+        				AddressValidator.prepPostcode(addr.getPostcode())
+        				)) {
+        	addAddress(lonLat, addr.getStreet(), addr.getHousenumber(), addr.getPostcode(), null);
+        	//System.out.println("lvl2: " + addr.toString());
+        	acceptLvl2++;
+			} else {
+				Address addrParsed = AddressParser.parse(addr.toStringShort(), false);
+				if(addrParsed != null 
+						&& addrParsed.getStreet() != null && addrParsed.getStreet().length() > 0
+						&& addrParsed.getHousenumber() != null && addrParsed.getHousenumber().length() > 0
+						&& addrParsed.getPostcode() != null && addrParsed.getPostcode().length() == 4) {
+					addrParsed.setLonLat(lonLat);
+					
+					if(AddressValidator.isAddressMinimum(addr.getStreet(), addr.getHousenumber(), addr.getPostcode())){
+						if(AddressValidator.isCityname(addrParsed.getCity())) {
+							addAddress(lonLat, addrParsed.getStreet(), addrParsed.getHousenumber(), addrParsed.getPostcode(), addrParsed.getCity());
+						} else {
+							addAddress(lonLat, addrParsed.getStreet(), addrParsed.getHousenumber(), addrParsed.getPostcode(), null);
+						}
+						acceptLvl3++;
+					}
+					if(addr.getStreet().matches("[0-9]+")) System.out.println("lvl3 " + addr.toStringShort());
+					//System.out.println("lvl3: " + addr.toStringShort());
+				} else {
+					//System.out.println("Not: " + addr.toString());
+					acceptNot++;
+					addressesNotAcceptedCount++;
+				}
+         }        	
+			lonLat = null;
+        }
+    }
 
 	public void onLWParsingFinished() {
-		
+		timerUtilA.off();
+		System.out.print("acceptLvl1: " + acceptLvl1 + ", acceptLvl2: " + acceptLvl2 + ", acceptLvl3: " + acceptLvl3 + ", acceptNot: " + acceptNot);
+		Main.log("Addresses parse first to last time: " + timerUtilA.toString());
+		timerUtilB.on();
 		for(Entry<String, Postcode> entry : AddressHolder.postcodes.entrySet()){
-			entry.getValue().setCity(PostcodeCityCombination.getCity(entry.getKey()));
+			entry.getValue().setCity(postcodeCityBestMatch.getMatch(entry.getKey()));
 		}
-		PostcodeCityCombination.clearBestMatches();
+		timerUtilB.off();
+		Main.log("Addresses PostcodeCityCombination time: " + timerUtilB.toString());
 		
 		Main.log("Addresses (accepted): " + getAddressSize());
-		Main.log("Addresses (not accepted): " + addressesNotAcceptedCount);
-		
-		
+		Main.log("Addresses (not accepted): " + addressesNotAcceptedCount);		
 	}
 	
 	public int getAddressSize() {
