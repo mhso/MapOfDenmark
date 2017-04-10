@@ -14,7 +14,7 @@ public class Region {
 	}
 	
 	public Point2D getMiddlePoint() {
-		return new Point2D.Double(x1 + (x2 - x1), y1 + (y2 - y1));
+		return new Point2D.Double(((x1 + x2) / 2), ((y1 + y2) / 2));
 	}
 	
 	public Point2D getPointFrom() {
