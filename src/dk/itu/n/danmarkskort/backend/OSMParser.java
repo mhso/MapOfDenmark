@@ -14,75 +14,44 @@ import org.xml.sax.SAXException;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.Map;
+import java.io.Serializable;
+import java.util.*;
 
-public class OSMParser extends SAXAdapter {
+public class OSMParser extends SAXAdapter implements Serializable {
+	private static final long serialVersionUID = 8120338349077111532L;
 
-    public float minLatBoundary, minLonBoundary, maxLatBoundary, maxLonBoundary, lonFactor;
+	private float minLatBoundary, minLonBoundary, maxLatBoundary, maxLonBoundary, lonFactor;
 
-    private NodeMap nodeMap;
-    private HashMap<Long, ParsedWay> wayMap;
-    private HashMap<Long, ParsedRelation> relationMap;
-    private HashMap<Long, ParsedWay> temporaryWayReferences;
-    private HashMap<Long, ParsedRelation> temporaryRelationReferences;
-    private HashMap<ParsedNode, ParsedWay> coastlineMap;
+    private transient NodeMap nodeMap;
+    private transient HashMap<Long, ParsedWay> temporaryWayReferences;
+    private transient HashMap<Long, ParsedRelation> temporaryRelationReferences;
+    private transient IdentityHashMap<ParsedNode, ParsedWay> coastlineMap;
 
-    public EnumMap<WayType, ArrayList<ParsedItem>> enumMap;
+    private transient EnumMap<WayType, ArrayList<ParsedItem>> enumMap;
     public EnumMap<WayType, KDTree> enumMapKD;
 
-    private ParsedWay way;
-    private ParsedRelation relation;
-    private ParsedNode node;
-    private ParsedAddress address;
+    private transient ParsedWay way;
+    private transient ParsedRelation relation;
+    private transient ParsedNode node;
+    private transient ParsedAddress address;
 
-    private WayType waytype;
-    private String name;
-    private Integer maxSpeed;
-    private boolean oneWay;
+    private transient WayType waytype;
+    private transient String name;
+    private transient Integer maxSpeed;
+    private transient boolean oneWay;
 
-    private boolean finished = false;
-    private long fileSize;
-    private int byteCount;
-    private OSMReader parser;
-    private InputStream inputStream;
-    private Locator locator;
+    private transient boolean finished = false;
+    private transient OSMReader parser;
     
     public OSMParser(OSMReader parser) {
     	this.parser = parser;
     }
     
-    private void incrementLineCount() {
-		if(locator.getLineNumber() % 1000 != 0) return;
-		int currentCount = 0;
-		try {
-			currentCount = (int)((((double)fileSize-(double)inputStream.available())/(double)fileSize)*100);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		if(currentCount == byteCount) return;
-		byteCount = currentCount;
-		
-		for(OSMParserListener listener : parser.parserListeners) listener.onLineCountThousand();
-	}
-	
-	public void setDocumentLocator(Locator locator) {
-		this.locator = locator;
-	}
-    
     public void startDocument() throws SAXException {
-    	fileSize = Util.getFileSize(new File(parser.getFileName()));
-    	inputStream = parser.getInputStream();
         nodeMap = new NodeMap();
-        wayMap = new HashMap<>();
-        relationMap = new HashMap<>();
         temporaryWayReferences = new HashMap<>();
         temporaryRelationReferences = new HashMap<>();
-        coastlineMap = new HashMap<>();
-
+        coastlineMap = new IdentityHashMap<>();
         enumMap = new EnumMap<>(WayType.class);
         for(WayType waytype : WayType.values()) enumMap.put(waytype, new ArrayList<>());
 
@@ -92,7 +61,6 @@ public class OSMParser extends SAXAdapter {
 
     public void endDocument() throws SAXException {
         Main.log("Parsing finished.");
-        Main.log("Max lon: " + maxLonBoundary + ", " + "Min lon: " + minLonBoundary);
 
         int numItemsSaved = 0;
         for(WayType wt : WayType.values()) numItemsSaved += enumMap.get(wt).size();
@@ -103,25 +71,13 @@ public class OSMParser extends SAXAdapter {
         temporaryClean();
         enumMapKD = new EnumMap<>(WayType.class);
 
+        for(OSMParserListener listener : parser.parserListeners) listener.onParsingFinished();
+        
         for(WayType wt : WayType.values()) {
-            ArrayList<ParsedItem> current = enumMap.get(wt);
             KDTree tree;
-
-            if(wt == WayType.COASTLINE) {
-                if(coastlineMap.size() > 0) {
-                    coastlineMap.forEach((firstNode, item) -> {
-                        if (firstNode == item.getFirstNode()) {
-                            current.add(item);
-                        }
-                    });
-                    CoastlineUtil.fixUnfinishedCoastlines(coastlineMap);
-                    Main.log("minlat: "+minLatBoundary+", minlon"+
-                            minLonBoundary +", maxlat: "+maxLatBoundary + ", maxlon: "+maxLonBoundary);
-                    tree = new KDTreeLeaf(current);
-                }
-                else tree = null;
-            }
+            if(wt == WayType.COASTLINE) tree = getCoastlines();
             else {
+                ArrayList<ParsedItem> current = enumMap.get(wt);
                 if (current.isEmpty()) tree = null;
                 else if (current.size() < DKConstants.KD_SIZE) tree = new KDTreeLeaf(current);
                 else tree = new KDTreeNode(current);
@@ -143,7 +99,6 @@ public class OSMParser extends SAXAdapter {
     }
 
     public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
-        incrementLineCount();
     	switch(qName) {
             case "bounds":
                 minLatBoundary = Float.parseFloat(atts.getValue("minlat"));
@@ -240,7 +195,6 @@ public class OSMParser extends SAXAdapter {
     }
 
     public void endElement(String uri, String localName, String qName) throws SAXException {
-        incrementLineCount();
     	switch(qName) {
             case "relation":
             case "way":
@@ -281,6 +235,34 @@ public class OSMParser extends SAXAdapter {
             for(OSMParserListener listener : parser.parserListeners) listener.onParsingGotItem(address);
         }
         cleanUp();
+    }
+
+    private KDTree getCoastlines() {
+        KDTree tree = null;
+        HashSet<ParsedWay> connected = new HashSet<>();
+        HashSet<ParsedWay> unconnected = new HashSet<>();
+        ArrayList<ParsedItem> combined = new ArrayList<>();
+
+        // I'm not entirely sure, but I think that coastlineMap (and thus also connected)
+        // contains 2 of each way
+        if(coastlineMap.size() > 0) {
+            coastlineMap.forEach((firstNode, item) -> {
+                //if(item.getLastNode() != item.getFirstNode()) item.addNode(item.getFirstNode());
+                //combined.add(item);
+                if(item.getFirstNode() == item.getLastNode()) connected.add(item);
+                else if(item.getFirstNode() != item.getLastNode()) unconnected.add(item);
+                else Main.log("what is happening!!!");
+            });
+
+            HashSet<ParsedWay> fixed = CoastlineUtil.fixUnconnectedCoastlines(unconnected);
+            combined.addAll(connected);
+
+            combined.addAll(fixed);
+            tree = new KDTreeLeaf(combined);
+        }
+        else tree = null;
+
+        return tree;
     }
 
     private void cleanUp() {
@@ -332,5 +314,9 @@ public class OSMParser extends SAXAdapter {
     	float x2 = getMaxLon();
     	float y2 = getMaxLat();
     	return new Region(x1, y1, x2, y2);
+    }
+
+    public float getLonFactor() {
+        return lonFactor;
     }
 }

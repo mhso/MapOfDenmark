@@ -2,9 +2,10 @@ package dk.itu.n.danmarkskort.models;
 
 import java.awt.*;
 import java.awt.geom.Path2D;
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class ParsedWay extends ParsedItem{
+public class ParsedWay extends ParsedItem implements Serializable{
 
     private long id;
     ArrayList<ParsedNode> nodes;
@@ -21,11 +22,11 @@ public class ParsedWay extends ParsedItem{
 
     public void addNode(ParsedNode node) { nodes.add(node); }
 
+    void addNodes(ArrayList<ParsedNode> nodes) { this.nodes.addAll(nodes); }
+
     public void setFirstNode(ParsedNode node) { nodes.set(0, node); }
 
     public void setLastNode(ParsedNode node) { if(nodes.size() > 0) nodes.set(nodes.size() - 1, node); }
-
-    void addNodes(ArrayList<ParsedNode> nodes) { this.nodes.addAll(nodes); }
 
     public ArrayList<ParsedNode> getNodes() { return nodes; }
 
@@ -79,6 +80,16 @@ public class ParsedWay extends ParsedItem{
 
     public ParsedNode getLastNode() {
         if(nodes.size() > 0) return nodes.get(nodes.size() - 1);
+        return null;
+    }
+
+    public ParsedNode getSecondNode() {
+        if(nodes != null && nodes.size() > 3) return nodes.get(1);
+        return null;
+    }
+
+    public ParsedNode getSecondToLastNode() {
+        if(nodes != null && nodes.size() > 3) return nodes.get(nodes.size() - 2);
         return null;
     }
     

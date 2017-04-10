@@ -10,6 +10,7 @@ import java.util.Arrays;
 
 public class KDTreeLeaf extends KDTree {
 
+    private static final long serialVersionUID = 1522369879614832796L;
     private ParsedItem[] data;
     private int size;
 

@@ -13,6 +13,10 @@ public class Region {
 		this.y2 = y2;
 	}
 	
+	public Point2D getMiddlePoint() {
+		return new Point2D.Double(x1 + (x2 - x1), y1 + (y2 - y1));
+	}
+	
 	public Point2D getPointFrom() {
 		return new Point2D.Double(x1, y1);
 	}

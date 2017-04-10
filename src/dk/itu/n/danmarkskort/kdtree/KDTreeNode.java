@@ -11,7 +11,8 @@ import java.util.ArrayList;
 
 public class KDTreeNode extends KDTree {
 
-    private KDTree leftChild;
+	private static final long serialVersionUID = 242589004649413322L;
+	private KDTree leftChild;
     private KDTree rightChild;
     private float leftSplit;
     private float rightSplit;
@@ -105,12 +106,8 @@ public class KDTreeNode extends KDTree {
 
     @Override
     public int size() { return size; }
-    /*
-    @Override
-    public int size(Region reg) {
-    	return size(reg, true);
-    }
 
+    /*
     @Override
     public int size(Region reg, boolean sortByLon) {
     	int size = 0;

@@ -1,12 +1,14 @@
 package dk.itu.n.danmarkskort.address;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.commons.lang3.StringUtils;
 
-public class AddressHolder {
+public class AddressHolder implements Serializable {
+	private static final long serialVersionUID = 4946666884688610616L;
 	public static HashMap<String, Postcode> postcodes = new HashMap<String, Postcode>();
 	
 	public AddressHolder(){

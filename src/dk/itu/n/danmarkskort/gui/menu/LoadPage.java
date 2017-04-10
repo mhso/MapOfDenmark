@@ -5,6 +5,8 @@ import javax.swing.*;
 import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.Util;
 import dk.itu.n.danmarkskort.address.AddressController;
+import dk.itu.n.danmarkskort.backend.BinaryWrapper;
+import dk.itu.n.danmarkskort.backend.OSMParser;
 import dk.itu.n.danmarkskort.gui.Style;
 import dk.itu.n.danmarkskort.models.Region;
 
@@ -151,7 +153,13 @@ public class LoadPage extends JPanel  {
 		
 		if (fcVal == JFileChooser.APPROVE_OPTION) {
 			File file = fc.getSelectedFile();
-			Main.startup(new String[]{file.getAbsolutePath()});
+			if(file.getAbsolutePath().endsWith(".bin")) {
+				BinaryWrapper binary = (BinaryWrapper) Util.readObjectFromFile(Util.getBinaryFilePath());
+				Main.model = binary.getModel();
+				Main.userPreferences = binary.getUserPreferences();
+				Main.window.getContentPane().removeAll();
+			}
+			else Main.startup(new String[]{file.getAbsolutePath()});
 			Main.window.add(Main.createFrameComponents());
 			Main.window.revalidate();
 			Main.window.repaint();

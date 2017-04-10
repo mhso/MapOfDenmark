@@ -4,6 +4,5 @@ public interface OSMParserListener {
 	
 	void onParsingStarted();
 	void onParsingGotItem(Object parsedItem);
-	void onLineCountThousand();
 	void onParsingFinished();
 }	

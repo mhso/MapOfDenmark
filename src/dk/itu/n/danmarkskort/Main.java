@@ -5,14 +5,13 @@ import java.awt.Toolkit;
 
 import javax.swing.*;
 
-import org.xml.sax.InputSource;
-
 import dk.itu.n.danmarkskort.backend.OSMParser;
 import dk.itu.n.danmarkskort.backend.OSMReader;
 import dk.itu.n.danmarkskort.gui.WindowParsingLoadscreenNew;
 import dk.itu.n.danmarkskort.gui.map.MapCanvas;
 import dk.itu.n.danmarkskort.gui.map.PinPointManager;
 import dk.itu.n.danmarkskort.mapgfx.GraphicRepresentation;
+import dk.itu.n.danmarkskort.models.UserPreferences;
 
 public class Main {
 
@@ -21,13 +20,15 @@ public class Main {
 	public final static boolean debug = true;
 	public final static boolean production = false;
 	public final static boolean buffered = true;
-	
+	public static final boolean binaryfile = false;
+
 	public static OSMReader osmReader;
 	public static JFrame window;
 	public static OSMParser model;
 	public static MapCanvas map;
 	public static MainCanvas mainPanel;
 	public static PinPointManager pinPointManager;
+	public static UserPreferences userPreferences;
 	
 	public static void main(String[] args) {
         startup(args);
@@ -38,16 +39,22 @@ public class Main {
 	public static void startup(String[] args) {
 		if(window != null) window.getContentPane().removeAll();
 		osmReader = new OSMReader();
-		model = new OSMParser(osmReader);
-		GraphicRepresentation.parseData(new InputSource("resources/ThemeBasic.XML"));
+		model = new OSMParser(osmReader);	
 		prepareParser(args);
+		if(userPreferences.getCurrentMapTheme() != null) {
+			GraphicRepresentation.parseData("resources/Theme" + userPreferences.getCurrentMapTheme() + ".XML");
+		}
+		else {
+			GraphicRepresentation.parseData("resources/Theme" + userPreferences.getDefaultTheme() + ".XML");
+			userPreferences.setCurrentMapTheme(userPreferences.getDefaultTheme());
+		}	
 	}
 
 	public static void prepareParser(String[] args) {
-		WindowParsingLoadscreenNew loadScreen = new WindowParsingLoadscreenNew();
-		LoadScreenThread loadScreenThread = new LoadScreenThread(loadScreen);
-		osmReader.addListener(loadScreen);
-		loadScreenThread.setFilenameAndRun(args[0]);
+		WindowParsingLoadscreenNew loadScreen = new WindowParsingLoadscreenNew(args[0]);
+		osmReader.addOSMListener(loadScreen);
+		osmReader.addInputListener(loadScreen);
+		loadScreen.run();
 		osmReader.parseFile(args[0]);
 	}
 	
@@ -81,8 +88,7 @@ public class Main {
         
         window.setLocationRelativeTo(null);
         window.setVisible(true);
-        map.zoomToBounds();
-        
+        map.setupDone();
     }
     
     public static JPanel createFrameComponents() {
@@ -99,25 +105,5 @@ public class Main {
         overlay.add(mainPanel);
     	overlay.add(map);
     	return overlay;
-    }
-    
-    private static class LoadScreenThread implements Runnable {
-    	private WindowParsingLoadscreenNew loadScreen;
-    	private String fileName;
-    	
-    	public LoadScreenThread(WindowParsingLoadscreenNew loadScreen) {
-    		this.loadScreen = loadScreen;
-    	}
-    	
-    	public void setFilenameAndRun(String fileName) {
-    		this.fileName = fileName;
-    		run();
-    	}
-    	
-		@Override
-		public void run() {
-			loadScreen.initialize(fileName);
-		}
-    	
     }
 }

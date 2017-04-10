@@ -1,6 +1,9 @@
 package dk.itu.n.danmarkskort.address;
 
-public class Address{
+import java.io.Serializable;
+
+public class Address implements Serializable {
+	private static final long serialVersionUID = -6971711928646521469L;
 	private float[] lonLat;
 	private String street, housenumber, city, postcode;
 

@@ -163,7 +163,7 @@ public class MapCanvas extends JPanel implements ActionListener {
 
         // backgroundcolor for the map. If there's a coastline use the water innercolor, otherwise use the coastline innercolor
         if(Main.model.enumMapKD.containsKey(WayType.COASTLINE) && Main.model.enumMapKD.get(WayType.COASTLINE).size() > 0) {
-            g2d.setColor(new Color(110, 192, 255));
+        	g2d.setColor(new Color(110, 192, 255));
         }
         else g2d.setColor(new Color(240, 240, 230));
 
@@ -330,6 +330,10 @@ public class MapCanvas extends JPanel implements ActionListener {
 		Region mapRegion = Main.model.getMapRegion();
 		pan(-mapRegion.x1, -mapRegion.y2);
 		zoom(getWidth() / (mapRegion.x2 - mapRegion.x1));
+	}
+	
+	public void setupDone() {
+		zoomToBounds();
 		if(Main.buffered) {
 			zero = new Point2D.Double(transform.getTranslateX(), transform.getTranslateY());
 			imageManager = new BufferedMapManager();	

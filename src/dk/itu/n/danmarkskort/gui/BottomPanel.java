@@ -15,8 +15,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 import javax.swing.border.EtchedBorder;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 public class BottomPanel extends JPanel implements CanvasListener {
 
@@ -99,16 +97,16 @@ public class BottomPanel extends JPanel implements CanvasListener {
 
     private void addRight() {
         JPanel rightParent = new JPanel();
-        rightParent.setBackground(style.panelBG());
+        rightParent.setOpaque(false);
 
         add(rightParent, BorderLayout.EAST);
-        rightParent.setLayout(new BorderLayout(0, 0));
+        rightParent.setLayout(new BorderLayout(0, 2));
         
         zoomSlider = new JSlider();
         zoomSlider.setBorder(new EtchedBorder(EtchedBorder.RAISED, BORDER_HIGHTLIGHT, BORDER_SHADOW));
         zoomSlider.setOrientation(SwingConstants.VERTICAL);
         zoomSlider.setForeground(Color.LIGHT_GRAY);
-        zoomSlider.setOpaque(false);
+        zoomSlider.setBackground(style.panelBG());
         zoomSlider.setPaintLabels(true);
         zoomSlider.setPaintTicks(true);
         zoomSlider.setSnapToTicks(true);
@@ -119,6 +117,16 @@ public class BottomPanel extends JPanel implements CanvasListener {
         zoomSlider.addMouseListener(new SliderListener());
         
         rightParent.add(zoomSlider, BorderLayout.SOUTH);
+        
+        JButton buttonCentreView = style.centerViewButton();
+        buttonCentreView.addActionListener(e -> {
+            Point2D point = new Point2D.Double(Main.model.getMaxLon(), Main.model.getMinLat());
+            Main.map.zoomToBounds();
+        	Main.map.panToPosition(Main.model.getMapRegion().getMiddlePoint());
+        	Main.map.repaint();
+        });
+        buttonCentreView.setFocusPainted(false);
+        rightParent.add(buttonCentreView, BorderLayout.NORTH);
     }
 
     private void setScale() {
@@ -168,7 +176,10 @@ public class BottomPanel extends JPanel implements CanvasListener {
 		public void mouseReleased(MouseEvent e) {
 			if(zoomSlider.getValue() == currentZoom) return;
 			currentZoom = zoomSlider.getValue();
+			Point canvasCenter = new Point(Main.map.getWidth()/2, Main.map.getHeight()/2);
+			Main.map.pan(-canvasCenter.getX(), -canvasCenter.getY());
 			Main.map.snapToZoom(currentZoom);
+			Main.map.pan(canvasCenter.getX(), canvasCenter.getY());
 		}	
 	}
 }
