@@ -67,49 +67,31 @@ public class AddressController{
 		return null;
 	}
 	
-	private Address parseUserInput(String find){
-		Address addr = new Address();
-		find = AddressValidator.removeAllButAlphaNum(find);
-		System.out.println("removeAllButAlphaNum: " + find);
-		find = AddressValidator.cleanExcessSpaces(find);
-		System.out.println("cleanExcessSpaces: " + find);
-		
-		String streetNum = find;
-		String street = find;
-		String postcode = AddressValidator.findPostcode(find);
-		String housenumber = AddressValidator.findHousenumber(find);
-		String city = null;
-		
-		if(postcode != null){
-			String[] strArr = find.split(postcode);
-			streetNum = strArr[0].trim();
-			city = strArr[1].trim();
+	private void continueSearchSuggestions(String find){
+		if(lastSearchInput != null && find != null){
+			String part;
+			try {
+				part = find.substring(0, lastSearchInput.length());
+				
+				if(part.equals(lastSearchInput)){
+					System.out.println("Lets continue the search., lock this part: " + part);
+					//return lastSearchAddress;
+				} else {
+					//lastSearchInput = null;
+					//lastSearchAddress = null;
+					System.out.println("lets start af new search.");
+					//return new Address();
+				}
+				
+			} catch (StringIndexOutOfBoundsException e) {
+				// TODO Auto-generated catch block
+				//e.printStackTrace();
+			}
 		}
 		
-		System.out.println("street: " + street);
-		System.out.println("housenumber: " + housenumber);
-		System.out.println("streetNum: " + streetNum);
-		System.out.println("postcode: " + postcode);
-		System.out.println("city: " + city);
-		
-		return addr;
-	}	
-	
-	private Address continueSearchSuggestions(String find){
-		
-		String part = find.substring(0, lastSearchInput.length());
-		if(part.equals(find)){
-			System.out.println("Lets continue the search., lock this part: " + part);
-			return lastSearchAddress;
-		} else {
-			lastSearchInput = null;
-			lastSearchAddress = null;
-			System.out.println("lets start af new search.");
-			return new Address();
-		}
 	}
 	
-	private void analyzeUserinput(String find, long limitAmountOfResults){
+	private List<String> analyzeUserinput(String find, long limitAmountOfResults){
 		Address addr = new Address();
 		
 		continueSearchSuggestions(find);
@@ -119,148 +101,204 @@ public class AddressController{
 		String postcode = null;
 		String housenumber = null;
 		String city = null;
-		Map<String, Postcode> list = new HashMap<String, Postcode>(); 
 		List<String> result = new ArrayList<String>();
 		
 		postcode = AddressValidator.findPostcode(find);
 		
-		SearchEnum postcodeEnum = SearchEnum.ANY;
-		
 		if(postcode != null){
+			System.out.println("findPostcode: " + postcode);
 			String[] strArr = find.split(postcode);
-			streetNum = strArr[0].trim();
-			city = strArr[1].trim();
-			postcodeEnum = SearchEnum.EQUALS;
+			if(strArr.length>0) streetNum = strArr[0].trim();
+			if(strArr.length>1) city = strArr[1].trim();
+			addr.setPostcode(postcode);
+			addr.setCity(AddressHolder.getPostcode(postcode).getCity());
 		}
 		
 		//Find street
-		boolean streetLock = false;
 		for(int i=streetNum.length(); i>0; i--){
 			String part = streetNum.substring(0, i).trim();
-			System.out.println("Analize S: " + part);
+			
 			addr.setStreet(part);
 			if(AddressHolder.search(addr, SearchEnum.EQUALS, SearchEnum.ANY, SearchEnum.ANY, SearchEnum.ANY).size() > 0) {
 				street = part;
+				System.out.println("Analysed S, found: " + part);
 				streetNum = streetNum.substring(part.length());
-				streetLock = true;
 				break;
+			} else {
+				addr.setStreet(null);
 			}
 		}
-		
 		//Find number
-		if(streetLock){
+		if(addr.getStreet() != null){
 			for(int i=streetNum.length(); i>0; i--){
 				String part = streetNum.substring(0, i).trim();
-				System.out.println("Analize N: " + part);
 				addr.setHousenumber(part);
 				if(AddressHolder.search(addr, SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.ANY, SearchEnum.ANY).size() > 0){
 					housenumber = part;
+					System.out.println("Analysed N, found: " + part);
 					break;
+				} else {
+					addr.setHousenumber(null);
 				}
 			}
 		}
 		//Find city
 		
-		System.out.println("Analyzed street: " + street);
-		System.out.println("Analyzed housenumber: " + housenumber);
-		System.out.println("Analyzed postcode: " + postcode);
-		System.out.println("Analyzed city: " + city);
+//		System.out.println("Analyzed street: " + street);
+//		System.out.println("Analyzed housenumber: " + housenumber);
+//		System.out.println("Analyzed postcode: " + postcode);
+//		System.out.println("Analyzed city: " + city);
 		System.out.println("Analyzed addr: " + addr.toString());
 		
 		lastSearchInput = find;
 		lastSearchAddress = addr;
 		
-		if(addr.getStreet() != null && addr.getHousenumber() != null && addr.getPostcode() != null && addr.getCity() != null){
-			System.out.println("Analyzed: finished. ");
-		}else if(addr.getStreet() != null && addr.getHousenumber() != null && addr.getPostcode() != null){
-			// Suggest city
-		}else if(addr.getStreet() != null && addr.getHousenumber() != null){
-			// Suggest postcode
-		}else if(addr.getStreet() != null){
-			// Suggest housenumber
-		} else {
-			// Suggest street
-			if(list.size() < 1) { list.putAll(AddressHolder.search(addr,
-					SearchEnum.STARTSWITH, SearchEnum.ANY, SearchEnum.ANY, SearchEnum.ANY));
-			}
+		result.addAll(resizeSearcResult(AddressHolder.search(addr, SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.EQUALS), 5, 3, 10l));
+		
+		if(result.size() != 1 && result.size() < limitAmountOfResults) {
+		result.addAll(resizeSearcResult(AddressHolder.search(addr, SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.ANY), 5, 3, 10l));
+			System.out.println("Search 1, list size: " + result.size());
+		}
+		if(result.size() != 1 && result.size() < limitAmountOfResults) {
+		result.addAll(resizeSearcResult(AddressHolder.search(addr, SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.ANY, SearchEnum.ANY), 5, 3, 10l));
+			System.out.println("Search 2, list size: " + result.size());
+		}
+		if(result.size() < limitAmountOfResults) {
+			result.addAll(resizeSearcResult(AddressHolder.search(addr, SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.STARTSWITH, SearchEnum.ANY), 5, 3, 10l));
+			System.out.println("Search 3, list size: " + result.size());
+		}
+		if(result.size() < limitAmountOfResults) {
+			result.addAll(resizeSearcResult(AddressHolder.search(addr, SearchEnum.EQUALS, SearchEnum.STARTSWITH, SearchEnum.ANY, SearchEnum.ANY), 5, 3, 10l));
+			System.out.println("Search 4, list size: " + result.size());
+		}
+		if(result.size() < 1 && result.size() < limitAmountOfResults) { 
+			result.addAll(resizeSearcResult(AddressHolder.search(addr,SearchEnum.EQUALS, SearchEnum.ANY, SearchEnum.ANY, SearchEnum.ANY), 5, 3, 10l));
+			System.out.println("Search 5, list size: " + result.size());
+		}
+		if(result.size() != 1 && result.size() < limitAmountOfResults) {
+			result.addAll(resizeSearcResult(AddressHolder.search(addr,SearchEnum.ANY, SearchEnum.ANY, SearchEnum.EQUALS, SearchEnum.ANY), 5, 3, 10l));
+			System.out.println("Search 6, list size: " + result.size());
+		}
+		if(result.size() != 1 && result.size() < limitAmountOfResults) {
+			result.addAll(resizeSearcResult(
+				AddressHolder.search(addr, SearchEnum.ANY, SearchEnum.ANY, SearchEnum.ANY, SearchEnum.EQUALS), 5, 3, 10l));
+			System.out.println("Search 7, list size: " + result.size());
 		}
 		
-		for(Postcode pc : list.values()){
-			for(Street st : pc.getStreets().values()){
-				for(Housenumber hn : st.getHousenumbers().values()){
-					result.add(hn.toString());
-				}
-			}
+		
+		
+		Address tempAddr = new Address();
+		tempAddr.setStreet(find);
+		if(result.size() != 1 && result.size() < limitAmountOfResults) {
+		result.addAll(resizeSearcResult(AddressHolder.search(tempAddr, SearchEnum.STARTSWITH, SearchEnum.ANY, SearchEnum.ANY, SearchEnum.ANY), 5, 3, 10l));
+		System.out.println("Search 10, list size: " + result.size());
 		}
 		
-		Collections.sort(result, String.CASE_INSENSITIVE_ORDER);
-		// Remove duplicates and return
-		//Main.log("Addresse Suggestion time: " + timerUtil.toString());
-		result.parallelStream().distinct().limit(limitAmountOfResults).collect(Collectors.toList());
+		if(result.size() < 1) {
+			result.addAll(resizeSearcResult(AddressHolder.search(addr, SearchEnum.LEVENSHTEIN, SearchEnum.ANY, SearchEnum.ANY, SearchEnum.ANY), 5, 3, 10l));
+			System.out.println("Search 8, list size: " + result.size());
+		}
+		if(result.size() < 1) {
+			result.addAll(resizeSearcResult(AddressHolder.search(addr, SearchEnum.ANY, SearchEnum.ANY, SearchEnum.ANY, SearchEnum.LEVENSHTEIN), 5, 3, 10l));
+		System.out.println("Search 9, list size: " + result.size());
+		}
+		
+//		for(Postcode pc : list.values()){
+//			for(Street st : pc.getStreets().values()){
+//				for(Housenumber hn : st.getHousenumbers().values()){
+//					result.add(hn.toString());
+//				}
+//			}
+//		}
+		
+		//Collections.sort(result, String.CASE_INSENSITIVE_ORDER);
+//		// Remove duplicates and return
+//		//Main.log("Addresse Suggestion time: " + timerUtil.toString());
+		result = result.parallelStream().distinct().limit(limitAmountOfResults).collect(Collectors.toList());
 		
 		for(String str : result){
 			System.out.println(str);
 		}
+		System.out.println("Count Results: " + result.size());
+		return result;
+	}
+	
+	private List<String> resizeSearcResult(Map<String, Postcode> list, int cutOfToStreet, int limitHousenumbers, long limitAmountOfResults){
+		List<String> result = new ArrayList<String>();
+		
+		for(Postcode pc : list.values()){
+			for(Street st : pc.getStreets().values()){
+				result.add(st.getStreet());
+				if(pc.getStreets().size() <= cutOfToStreet){
+					int i = 0;
+					for(Housenumber hn : st.getHousenumbers().values()){
+						result.add(hn.toString());
+						if(++i > limitHousenumbers) break;
+					}
+				}
+			}
+		}
+		Collections.sort(result, String.CASE_INSENSITIVE_ORDER);
+		result = result.parallelStream().distinct().limit(limitAmountOfResults).collect(Collectors.toList());
+		return result;
 	}
 	
 	private List<String> searchSuggestions(String find, long limitAmountOfResults){
 		TimerUtil timerUtil = new TimerUtil();
 		timerUtil.on();
+		Map<String, Postcode> list = new HashMap<String, Postcode>();
+		List<String> result = new ArrayList<String>();
 		
 		//parseUserInput(find);
-		analyzeUserinput(find, limitAmountOfResults);
+		return analyzeUserinput(find, limitAmountOfResults);
 		
-		Address addrBuild = AddressParser.parse(find, true);
+		//Address addrBuild = AddressParser.parse(find, true);
 		
 		//System.out.println(find);
 		//System.out.println(addrBuild.toString());
-		
-		List<String> result = new ArrayList<String>();
-		
-			Map<String, Postcode> list; 
-			list = AddressHolder.search(addrBuild,
-					SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.EQUALS);
-			if(list.size() != 1 && list.size() < limitAmountOfResults) { list.putAll(AddressHolder.search(addrBuild,
-					SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.ANY));
-			}
-			if(list.size() != 1 && list.size() < limitAmountOfResults) { list.putAll(AddressHolder.search(addrBuild,
-					SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.ANY, SearchEnum.ANY));
-			}
-			if(list.size() != 1 && list.size() < limitAmountOfResults) { list.putAll(AddressHolder.search(addrBuild,
-					SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.STARTSWITH, SearchEnum.ANY));
-			}
-			if(list.size() != 1 && list.size() < limitAmountOfResults) { list.putAll(AddressHolder.search(addrBuild,
-					SearchEnum.EQUALS, SearchEnum.STARTSWITH, SearchEnum.ANY, SearchEnum.ANY));
-			}
-			if(list.size() != 1 && list.size() < limitAmountOfResults) { list.putAll(AddressHolder.search(addrBuild,
-					SearchEnum.ANY, SearchEnum.ANY, SearchEnum.EQUALS, SearchEnum.ANY));
-			}
-			if(list.size() != 1 && list.size() < limitAmountOfResults) { list.putAll(AddressHolder.search(addrBuild,
-					SearchEnum.ANY, SearchEnum.ANY, SearchEnum.ANY, SearchEnum.EQUALS));
-			}
-			if(list.size() < 1) { list.putAll(AddressHolder.search(addrBuild,
-					SearchEnum.STARTSWITH, SearchEnum.ANY, SearchEnum.ANY, SearchEnum.ANY));
-			}
-			if(list.size() < 1) { list.putAll(AddressHolder.search(addrBuild,
-					SearchEnum.LEVENSHTEIN, SearchEnum.ANY, SearchEnum.ANY, SearchEnum.ANY));
-			}
-			if(list.size() < 1) { list.putAll(AddressHolder.search(addrBuild,
-					SearchEnum.ANY, SearchEnum.ANY, SearchEnum.ANY, SearchEnum.LEVENSHTEIN));
-			}
-			System.out.println("Address results: " + AddressHolder.count(list));
-			for(Postcode pc : list.values()){
-				for(Street st : pc.getStreets().values()){
-					for(Housenumber hn : st.getHousenumbers().values()){
-						result.add(hn.toString());
-					}
-				}
-			}
-
-		Collections.sort(result, String.CASE_INSENSITIVE_ORDER);
-		// Remove duplicates and return
-		timerUtil.off();
-		//Main.log("Addresse Suggestion time: " + timerUtil.toString());
-		return result.parallelStream().distinct().limit(limitAmountOfResults).collect(Collectors.toList());
+//			list = AddressHolder.search(addrBuild,
+//					SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.EQUALS);
+//			if(list.size() != 1 && list.size() < limitAmountOfResults) { list.putAll(AddressHolder.search(addrBuild,
+//					SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.ANY));
+//			}
+//			if(list.size() != 1 && list.size() < limitAmountOfResults) { list.putAll(AddressHolder.search(addrBuild,
+//					SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.ANY, SearchEnum.ANY));
+//			}
+//			if(list.size() != 1 && list.size() < limitAmountOfResults) { list.putAll(AddressHolder.search(addrBuild,
+//					SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.STARTSWITH, SearchEnum.ANY));
+//			}
+//			if(list.size() != 1 && list.size() < limitAmountOfResults) { list.putAll(AddressHolder.search(addrBuild,
+//					SearchEnum.EQUALS, SearchEnum.STARTSWITH, SearchEnum.ANY, SearchEnum.ANY));
+//			}
+//			if(list.size() != 1 && list.size() < limitAmountOfResults) { list.putAll(AddressHolder.search(addrBuild,
+//					SearchEnum.ANY, SearchEnum.ANY, SearchEnum.EQUALS, SearchEnum.ANY));
+//			}
+//			if(list.size() != 1 && list.size() < limitAmountOfResults) { list.putAll(AddressHolder.search(addrBuild,
+//					SearchEnum.ANY, SearchEnum.ANY, SearchEnum.ANY, SearchEnum.EQUALS));
+//			}
+//			if(list.size() < 1) { list.putAll(AddressHolder.search(addrBuild,
+//					SearchEnum.STARTSWITH, SearchEnum.ANY, SearchEnum.ANY, SearchEnum.ANY));
+//			}
+//			if(list.size() < 1) { list.putAll(AddressHolder.search(addrBuild,
+//					SearchEnum.LEVENSHTEIN, SearchEnum.ANY, SearchEnum.ANY, SearchEnum.ANY));
+//			}
+//			if(list.size() < 1) { list.putAll(AddressHolder.search(addrBuild,
+//					SearchEnum.ANY, SearchEnum.ANY, SearchEnum.ANY, SearchEnum.LEVENSHTEIN));
+//			}
+			//System.out.println("Address results: " + AddressHolder.count(list));
+//			for(Postcode pc : list.values()){
+//				for(Street st : pc.getStreets().values()){
+//					for(Housenumber hn : st.getHousenumbers().values()){
+//						result.add(hn.toString());
+//					}
+//				}
+//			}
+//
+//		Collections.sort(result, String.CASE_INSENSITIVE_ORDER);
+//		// Remove duplicates and return
+//		timerUtil.off();
+//		//Main.log("Addresse Suggestion time: " + timerUtil.toString());
+//		return result.parallelStream().distinct().limit(limitAmountOfResults).collect(Collectors.toList());
 	}
 	
 	public List<String> searchSuggestionsStreet(String find, long limitAmountOfResults){

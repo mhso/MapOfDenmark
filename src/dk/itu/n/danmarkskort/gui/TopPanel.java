@@ -232,10 +232,10 @@ public class TopPanel extends JPanel {
 ////            	}
 //            	
 //                populateSuggestions(dropSuggestionsList);
-//            	dropSuggestionsList = SearchController.getInstance().getSearchFieldSuggestions(text);
-//            	populateSuggestions(dropSuggestionsList);
+              	dropSuggestionsList = SearchController.getInstance().getSearchFieldSuggestions(text);
+            	populateSuggestions(dropSuggestionsList);
                 
-            		swingSearch(text);
+            		//swingSearch(text);
             } else {
                 dropSuggestions.setVisible(false);
             }

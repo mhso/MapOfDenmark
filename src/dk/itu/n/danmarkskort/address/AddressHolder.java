@@ -98,7 +98,7 @@ public class AddressHolder implements Serializable {
 		int minValue = 0, maxValue = 3;
 		if(inputList == null) return list;
 		for(Entry<String, Postcode> entry : inputList.entrySet()){
-			if(entry.getKey() != null && StringUtils.getLevenshteinDistance(entry.getKey(), city.toLowerCase()) > minValue &&
+			if(entry.getKey() != null && city != null && StringUtils.getLevenshteinDistance(entry.getKey(), city.toLowerCase()) > minValue &&
 					StringUtils.getLevenshteinDistance(entry.getKey(), city.toLowerCase()) < maxValue) {
 				list.put(entry.getKey(), entry.getValue());
 			}

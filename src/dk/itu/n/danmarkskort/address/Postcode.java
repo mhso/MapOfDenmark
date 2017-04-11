@@ -106,10 +106,15 @@ public class Postcode {
 		int minValue = 0, maxValue = 3;
 		if(street == null) return list;
 		for(Entry<String, Street> entry : inputList.entrySet()){
-			String matchKey = entry.getKey().substring(0, street.length());
-			if(StringUtils.getLevenshteinDistance(matchKey, street.toLowerCase()) > minValue &&
-					StringUtils.getLevenshteinDistance(matchKey, street.toLowerCase()) < maxValue) {
-				list.put(entry.getKey(), entry.getValue());
+			try {
+				String matchKey = entry.getKey().substring(0, street.length());
+				if(StringUtils.getLevenshteinDistance(matchKey, street.toLowerCase()) > minValue &&
+						StringUtils.getLevenshteinDistance(matchKey, street.toLowerCase()) < maxValue) {
+					list.put(entry.getKey(), entry.getValue());
+				}
+			} catch (StringIndexOutOfBoundsException e) {
+				// TODO Auto-generated catch block
+				//e.printStackTrace();
 			}
 		}
 		return list;
