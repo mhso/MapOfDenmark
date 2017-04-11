@@ -7,7 +7,7 @@ import java.util.Map.Entry;
 import org.apache.commons.lang3.StringUtils;
 
 public class Street {
-	private StringObj streetObj;
+	private String street;
 	private Map<String, Housenumber> housenumbers;
 	private Postcode postcode;
 	private RegionFloat region;
@@ -17,14 +17,14 @@ public class Street {
 	
 	Street(Postcode postcode, String street){
 		this.setPostcode(postcode);
-		this.streetObj = StringHolder.make(street);
+		this.street = ReuseStringObj.make(street);
 		housenumbers = new HashMap<String, Housenumber>();
 		region = null;
 	}
 	
 	public int count(){ return housenumbers.size(); }
 	
-	public String getStreet() { return streetObj.toString(); }
+	public String getStreet() { return street.toString(); }
 	
 	public RegionFloat getRegion(){
 		if(region == null) region = genRegion();

@@ -107,9 +107,39 @@ public class AddressValidator {
 				.replaceAll("([0-9]{1,2})+(\\. sal) ","");
 	}
 	
+	public static String removeAllButAlphaNum(String inputStr){
+		return inputStr.replaceAll("[^0-9"+allowedAlphaSet+"\\-]", " ");
+	}
+	
 	public static final Pattern PAT_EXTRACTPOSTCODE = Pattern.compile("(.*)(RGX_POSTCODE)(.*)");
 	public static String extractPostcode(String inputStr){
 		return PAT_EXTRACTPOSTCODE.matcher(inputStr).replaceAll("$2");
+	}
+	
+	public static final Pattern PAT_FINDPOSTCODE = Pattern.compile("(.*)(?<postcode>[0-9]{4})(.*)");
+	public static String findPostcode(String inputStr){
+		Matcher matcher = PAT_FINDPOSTCODE.matcher(inputStr);
+		String postcode = null;
+		while(matcher.find()){
+			postcode = matcher.group("postcode");
+		}
+		return postcode;
+	}
+	
+	
+	private static String rxHousenumber123 = ".*\\s[0-9]{1,3}";
+	private static String rxHousenumber123AB = rxHousenumber123 + "[A-Z]{0,2}";
+	private static String rxHousenumber123AB_123AB = rxHousenumber123AB + "-" + rxHousenumber123AB;
+	private static String rxHousenumberAll = "(rxHousenumber123)|(rxHousenumber123AB)|(rxHousenumber123AB_123AB)";
+	
+	public static final Pattern PAT_FINDHOUSENUMBER = Pattern.compile("(.*)(?<housenumber>"+rxHousenumber123+"\\s)(.*)");
+	public static String findHousenumber(String inputStr){
+		Matcher matcher = PAT_FINDHOUSENUMBER.matcher(inputStr);
+		String housenumber = null;
+		while(matcher.find()){
+			housenumber = matcher.group("housenumber");
+		}
+		return housenumber;
 	}
 	
 	public static String capitalizeFully(String inputStr){

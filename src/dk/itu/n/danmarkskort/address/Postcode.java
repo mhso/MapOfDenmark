@@ -7,18 +7,18 @@ import java.util.Map.Entry;
 import org.apache.commons.lang3.StringUtils;
 
 public class Postcode {
-	private StringObj postcodeObj, cityObj;
+	private String postcode, city;
 	private Map<String, Street> streets;
 	private RegionFloat region;
 	
 	Postcode(String postcode, String city){
-		this.postcodeObj = StringHolder.make(postcode);
+		this.postcode = ReuseStringObj.make(postcode);
 		setCity(city);
 		streets = new HashMap<String, Street>();
 	}
 
-	public String getCity() { return cityObj.toString(); }
-	public void setCity(String city) { this.cityObj = StringHolder.make(city);; }
+	public String getCity() { return city.toString(); }
+	public void setCity(String city) { this.city = ReuseStringObj.make(city);; }
 	
 	public RegionFloat getRegion(){
 		if(region == null) region = genRegion();
@@ -77,7 +77,7 @@ public class Postcode {
 		return streets.get(street.toLowerCase());
 	}
 
-	public String getPostcode() { return postcodeObj.toString(); }
+	public String getPostcode() { return postcode.toString(); }
 	
 	private Map<String, Street> streetContains(Map<String, Street> inputList, String street){
 		Map<String, Street> list = new HashMap<String, Street>();

@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 
 public class AddressController{
@@ -64,9 +65,40 @@ public class AddressController{
 		return null;
 	}
 	
+	private Address parseUserInput(String find){
+		Address addr = new Address();
+		find = AddressValidator.removeAllButAlphaNum(find);
+		System.out.println("removeAllButAlphaNum: " + find);
+		find = AddressValidator.cleanExcessSpaces(find);
+		System.out.println("cleanExcessSpaces: " + find);
+		
+		String streetNum = find;
+		String street = find;
+		String postcode = AddressValidator.findPostcode(find);
+		String housenumber = AddressValidator.findHousenumber(find);
+		String city = null;
+		
+		if(postcode != null){
+			String[] strArr = find.split(postcode);
+			streetNum = strArr[0].trim();
+			city = strArr[1].trim();
+		}
+		
+		System.out.println("street" + street);
+		System.out.println("housenumber: " + housenumber);
+		System.out.println("streetNum: " + streetNum);
+		System.out.println("postcode: " + postcode);
+		System.out.println("city: " + city);
+		
+		return addr;
+	}
+	
 	private List<String> searchSuggestions(String find, long limitAmountOfResults){
 		TimerUtil timerUtil = new TimerUtil();
 		timerUtil.on();
+		
+		parseUserInput(find);
+		
 		Address addrBuild = AddressParser.parse(find, true);
 		
 		System.out.println(find);

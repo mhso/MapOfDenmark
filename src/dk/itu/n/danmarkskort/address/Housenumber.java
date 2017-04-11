@@ -7,21 +7,23 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class Housenumber extends ParsedItem {
-	private float[] lonLat;
-	private StringObj housenumberObj;
+	private float lon;
+	private float lat;
+	private String housenumber;
 	private Street street;
 	
 	public Housenumber(Postcode postcode, Street street, String housenumber, float[] lonLat){
 		this.street = street;
-		this.housenumberObj = StringHolder.make(housenumber);
-		this.lonLat = lonLat;
+		this.housenumber = ReuseStringObj.make(housenumber);
+		this.lon = lonLat[0];
+		this.lat = lonLat[1];
 	}
 
-	public float[] getLonLat() { return lonLat; }
+	public float[] getLonLat() { return new float[] {lon, lat}; }
 
 	public Street getStreet() { return street; }
 	
-	public String getHousenumber() { return housenumberObj.toString(); }
+	public String getHousenumber() { return housenumber.toString(); }
 
 	public Postcode getPostcode() { return street.getPostcode(); }
 	
@@ -30,7 +32,7 @@ public class Housenumber extends ParsedItem {
 	}
 
 	private ParsedNode coordsToNode() {
-	    return new ParsedNode(lonLat[0], lonLat[1]);
+	    return new ParsedNode(lon, lat);
     }
 
 	@Override

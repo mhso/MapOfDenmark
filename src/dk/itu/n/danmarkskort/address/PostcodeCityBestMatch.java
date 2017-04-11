@@ -54,12 +54,12 @@ public class PostcodeCityBestMatch {
 	}
 	
 	private class Combine{
-		private StringObj postcode, city;
+		private String postcode, city;
 		private int count;
 		
 		public Combine(String postcode, String city){
-			this.postcode = StringHolder.make(postcode);
-			this.city = StringHolder.make(city);
+			this.postcode = ReuseStringObj.make(postcode);
+			this.city = ReuseStringObj.make(city);
 			count = 1;
 		}
 		
