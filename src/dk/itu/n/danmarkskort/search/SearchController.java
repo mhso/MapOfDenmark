@@ -34,7 +34,7 @@ public class SearchController{
     }
 	
 	public List<String> getSearchFieldSuggestions(String inputStr){
-		long limitAmountOfResults = 5;
+		long limitAmountOfResults = 10;
 		
 		if(inputStr == null || inputStr.isEmpty()) return null;
 		String cordRegex = "((\\-{0,1})([0-9]{1,3})(\\.)(\\-{0,1})([0-9]{5,7}))";

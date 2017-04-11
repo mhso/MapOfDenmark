@@ -18,8 +18,8 @@ public class AddressValidator {
 	private final static String RGX_MULTIPLEHOUSENUMBER = "([0-9]{1,3}[A-Z]{1}\\-[0-9]{1,3}[A-Z]{1})|([0-9]{1,3}[A-Z]{1}\\-[A-Z]{1})|([0-9]{1,3}\\-[0-9]{1,3})";
 	private final static String RGX_HOUSENUMBER = RGX_MULTIPLEHOUSENUMBER + "|([0-9]{1,3}[A-Z]{1})|([0-9]{1,3})";
 	
-	private final static String RGX_POSTCODE = "([0-9]{4})";
-	private final static String RGX_CITY = "(["+RGX_ALPHA+"]{1,34})";
+	private final static String RGX_POSTCODE = "(^[0-9]{4}$)";
+	private final static String RGX_CITY = "(^(["+RGX_ALPHA+"]{1,34})$)";
 	
 	private final static Pattern PAT_STREET = Pattern.compile(RGX_STREET);
 	private final static Pattern PAT_HOUSENUMBER = Pattern.compile(RGX_HOUSENUMBER);
@@ -182,13 +182,16 @@ public class AddressValidator {
 	public static boolean isPostcode(String postcode){
 		if(postcode != null && !postcode.isEmpty()) {
 			Matcher matcher = PAT_POSTCODE.matcher(postcode);
-			if(matcher.matches()) return true;
+			if(matcher.matches()) { 
+				//System.out.println(postcode);
+				return true; }
+			System.out.println("IsNotPostcode: " + postcode);
 		}
 		return false;
 	}
 	
 	public static boolean isCityname(String city){
-		if(city != null && !city.isEmpty() && city.matches(RGX_CITY)){
+		if(city != null && !city.isEmpty()){
 			Matcher matcher = PAT_CITY.matcher(city);
 			if(matcher.matches()) return true;
 		} 
