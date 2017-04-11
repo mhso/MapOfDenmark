@@ -30,7 +30,6 @@ import dk.itu.n.danmarkskort.mapgfx.GraphicRepresentation;
 import dk.itu.n.danmarkskort.mapgfx.GraphicSpecArea;
 import dk.itu.n.danmarkskort.mapgfx.GraphicSpecLine;
 import dk.itu.n.danmarkskort.mapgfx.WaytypeGraphicSpec;
-import dk.itu.n.danmarkskort.models.ParsedBounds;
 import dk.itu.n.danmarkskort.models.Region;
 import dk.itu.n.danmarkskort.models.WayType;
 
@@ -312,8 +311,8 @@ public class MapCanvas extends JPanel implements ActionListener {
 	}
 
 	public double getZoom() {
-		ParsedBounds denmark = DKConstants.BOUNDS_DENMARK;
-		double denmarkWidth = denmark.maxLong - denmark.minLong;
+		Region denmark = DKConstants.BOUNDS_DENMARK;
+		double denmarkWidth = denmark.getWidth();
 		Region view = getGeographicalRegion();
 		return Math.floor(Math.log(denmarkWidth/view.getWidth())*2.5);
 	}

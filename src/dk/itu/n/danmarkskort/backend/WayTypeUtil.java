@@ -1,10 +1,12 @@
 package dk.itu.n.danmarkskort.backend;
 
+import dk.itu.n.danmarkskort.models.ParsedWay;
 import dk.itu.n.danmarkskort.models.WayType;
 
 public class WayTypeUtil {
 
-    public static WayType tagToType(String k, String v, WayType oldtype) {
+    public static WayType tagToType(String k, String v, WayType oldtype, ParsedWay way) {
+        if(oldtype != null && oldtype == WayType.COASTLINE) return oldtype; // otherwise we could change a coastline to a different type
         switch (k) {
             case "highway":
                 switch(v) {
