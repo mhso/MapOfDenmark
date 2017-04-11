@@ -6,7 +6,6 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.address.Address;
-import dk.itu.n.danmarkskort.address.AddressController;
 import dk.itu.n.danmarkskort.address.RegionFloat;
 
 public class SearchController{

@@ -16,7 +16,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 
 public class AddressController{
@@ -25,6 +24,8 @@ public class AddressController{
 	private TimerUtil timerUtilB = new TimerUtil();
 	private PostcodeCityBestMatch postcodeCityBestMatch;
 	private List<ParsedAddress> parsedAddresses = new ArrayList<ParsedAddress>();
+	private String lastSearchInput = null;
+	private Address lastSearchAddress = null;
 	
 	public AddressController(){
 		postcodeCityBestMatch = new PostcodeCityBestMatch();
@@ -34,6 +35,7 @@ public class AddressController{
 	public List<String> getSearchSuggestions(String find, long limitAmountOfResults){ return searchSuggestions(find, limitAmountOfResults); }
 	
 	public Address getSearchResult(String find){
+		
 		Address addrBuild = AddressParser.parse(find, false);
 		Map<String, Postcode> list;
 		list = AddressHolder.search(addrBuild,
@@ -84,25 +86,134 @@ public class AddressController{
 			city = strArr[1].trim();
 		}
 		
-		System.out.println("street" + street);
+		System.out.println("street: " + street);
 		System.out.println("housenumber: " + housenumber);
 		System.out.println("streetNum: " + streetNum);
 		System.out.println("postcode: " + postcode);
 		System.out.println("city: " + city);
 		
 		return addr;
+	}	
+	
+	private Address continueSearchSuggestions(String find){
+		
+		String part = find.substring(0, lastSearchInput.length());
+		if(part.equals(find)){
+			System.out.println("Lets continue the search., lock this part: " + part);
+			return lastSearchAddress;
+		} else {
+			lastSearchInput = null;
+			lastSearchAddress = null;
+			System.out.println("lets start af new search.");
+			return new Address();
+		}
+	}
+	
+	private void analyzeUserinput(String find, long limitAmountOfResults){
+		Address addr = new Address();
+		
+		continueSearchSuggestions(find);
+		
+		String streetNum = find;
+		String street = null;
+		String postcode = null;
+		String housenumber = null;
+		String city = null;
+		Map<String, Postcode> list = new HashMap<String, Postcode>(); 
+		List<String> result = new ArrayList<String>();
+		
+		postcode = AddressValidator.findPostcode(find);
+		
+		SearchEnum postcodeEnum = SearchEnum.ANY;
+		
+		if(postcode != null){
+			String[] strArr = find.split(postcode);
+			streetNum = strArr[0].trim();
+			city = strArr[1].trim();
+			postcodeEnum = SearchEnum.EQUALS;
+		}
+		
+		//Find street
+		boolean streetLock = false;
+		for(int i=streetNum.length(); i>0; i--){
+			String part = streetNum.substring(0, i).trim();
+			System.out.println("Analize S: " + part);
+			addr.setStreet(part);
+			if(AddressHolder.search(addr, SearchEnum.EQUALS, SearchEnum.ANY, SearchEnum.ANY, SearchEnum.ANY).size() > 0) {
+				street = part;
+				streetNum = streetNum.substring(part.length());
+				streetLock = true;
+				break;
+			}
+		}
+		
+		//Find number
+		if(streetLock){
+			for(int i=streetNum.length(); i>0; i--){
+				String part = streetNum.substring(0, i).trim();
+				System.out.println("Analize N: " + part);
+				addr.setHousenumber(part);
+				if(AddressHolder.search(addr, SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.ANY, SearchEnum.ANY).size() > 0){
+					housenumber = part;
+					break;
+				}
+			}
+		}
+		//Find city
+		
+		System.out.println("Analyzed street: " + street);
+		System.out.println("Analyzed housenumber: " + housenumber);
+		System.out.println("Analyzed postcode: " + postcode);
+		System.out.println("Analyzed city: " + city);
+		System.out.println("Analyzed addr: " + addr.toString());
+		
+		lastSearchInput = find;
+		lastSearchAddress = addr;
+		
+		if(addr.getStreet() != null && addr.getHousenumber() != null && addr.getPostcode() != null && addr.getCity() != null){
+			System.out.println("Analyzed: finished. ");
+		}else if(addr.getStreet() != null && addr.getHousenumber() != null && addr.getPostcode() != null){
+			// Suggest city
+		}else if(addr.getStreet() != null && addr.getHousenumber() != null){
+			// Suggest postcode
+		}else if(addr.getStreet() != null){
+			// Suggest housenumber
+		} else {
+			// Suggest street
+			if(list.size() < 1) { list.putAll(AddressHolder.search(addr,
+					SearchEnum.STARTSWITH, SearchEnum.ANY, SearchEnum.ANY, SearchEnum.ANY));
+			}
+		}
+		
+		for(Postcode pc : list.values()){
+			for(Street st : pc.getStreets().values()){
+				for(Housenumber hn : st.getHousenumbers().values()){
+					result.add(hn.toString());
+				}
+			}
+		}
+		
+		Collections.sort(result, String.CASE_INSENSITIVE_ORDER);
+		// Remove duplicates and return
+		//Main.log("Addresse Suggestion time: " + timerUtil.toString());
+		result.parallelStream().distinct().limit(limitAmountOfResults).collect(Collectors.toList());
+		
+		for(String str : result){
+			System.out.println(str);
+		}
 	}
 	
 	private List<String> searchSuggestions(String find, long limitAmountOfResults){
 		TimerUtil timerUtil = new TimerUtil();
 		timerUtil.on();
 		
-		parseUserInput(find);
+		//parseUserInput(find);
+		analyzeUserinput(find, limitAmountOfResults);
 		
 		Address addrBuild = AddressParser.parse(find, true);
 		
-		System.out.println(find);
-		System.out.println(addrBuild.toString());
+		//System.out.println(find);
+		//System.out.println(addrBuild.toString());
 		
 		List<String> result = new ArrayList<String>();
 		
@@ -149,6 +260,29 @@ public class AddressController{
 		// Remove duplicates and return
 		timerUtil.off();
 		//Main.log("Addresse Suggestion time: " + timerUtil.toString());
+		return result.parallelStream().distinct().limit(limitAmountOfResults).collect(Collectors.toList());
+	}
+	
+	public List<String> searchSuggestionsStreet(String find, long limitAmountOfResults){
+		Address addrBuild = AddressParser.parse(find, true);
+		
+		List<String> result = new ArrayList<String>();
+		
+			Map<String, Postcode> list; 
+			list = AddressHolder.search(addrBuild,
+					SearchEnum.STARTSWITH, SearchEnum.ANY, SearchEnum.ANY, SearchEnum.ANY);
+			if(list.size() < 1) { list.putAll(AddressHolder.search(addrBuild,
+					SearchEnum.LEVENSHTEIN, SearchEnum.ANY, SearchEnum.ANY, SearchEnum.ANY));
+			}
+			System.out.println("Address results: " + AddressHolder.count(list));
+			for(Postcode pc : list.values()){
+				for(Street st : pc.getStreets().values()){
+					result.add(st.getStreet());
+				}
+			}
+
+		Collections.sort(result, String.CASE_INSENSITIVE_ORDER);
+		// Remove duplicates and return
 		return result.parallelStream().distinct().limit(limitAmountOfResults).collect(Collectors.toList());
 	}
 	
@@ -209,7 +343,7 @@ public class AddressController{
         	parsedAddresses.add(addr);
 			float[] lonLat = new float[] {addr.getFirstLon(), addr.getFirstLat()};
 			
-			if(addr.getPostcode() != null && !addr.getPostcode().matches("(^[0-9]{4}$)")) System.out.println("Postcode sucks: " + addr.toString());
+			//if(addr.getPostcode() != null && !addr.getPostcode().matches("(^[0-9]{4}$)")) System.out.println("Postcode sucks: " + addr.toString());
 			
 			if(AddressValidator.isAddressMinimum(addr.getStreet(), addr.getHousenumber(), addr.getPostcode())){
 				if(AddressValidator.isCityname(addr.getCity())) {

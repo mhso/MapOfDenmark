@@ -5,8 +5,6 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.text.WordUtils;
 
-import com.sun.corba.se.spi.orbutil.fsm.Input;
-
 public class AddressValidator {
 	private final static String allowedAlphaSet = "a-zA-ZæøåÆØÅáÁéÉèÈöÖüÜëËÿŸäÄ";
 	private final static String allowedCharSet = "\\u002D\\u0027\\u002F"+allowedAlphaSet;
@@ -215,7 +213,7 @@ public class AddressValidator {
 			if(matcher.matches()) { 
 				//System.out.println(postcode);
 				return true; }
-			System.out.println("IsNotPostcode: " + postcode);
+			//System.out.println("IsNotPostcode: " + postcode);
 		}
 		return false;
 	}

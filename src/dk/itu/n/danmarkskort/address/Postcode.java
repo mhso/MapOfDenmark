@@ -18,7 +18,7 @@ public class Postcode {
 	}
 
 	public String getCity() { return city.toString(); }
-	public void setCity(String city) { this.city = ReuseStringObj.make(city);; }
+	public void setCity(String city) { this.city = ReuseStringObj.make(city); }
 	
 	public RegionFloat getRegion(){
 		if(region == null) region = genRegion();
@@ -106,8 +106,9 @@ public class Postcode {
 		int minValue = 0, maxValue = 3;
 		if(street == null) return list;
 		for(Entry<String, Street> entry : inputList.entrySet()){
-			if(StringUtils.getLevenshteinDistance(entry.getKey(), street.toLowerCase()) > minValue &&
-					StringUtils.getLevenshteinDistance(entry.getKey(), street.toLowerCase()) < maxValue) {
+			String matchKey = entry.getKey().substring(0, street.length());
+			if(StringUtils.getLevenshteinDistance(matchKey, street.toLowerCase()) > minValue &&
+					StringUtils.getLevenshteinDistance(matchKey, street.toLowerCase()) < maxValue) {
 				list.put(entry.getKey(), entry.getValue());
 			}
 		}
