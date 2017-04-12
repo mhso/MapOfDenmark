@@ -21,7 +21,7 @@ public class Main {
 	public final static boolean debug = true;
 	public final static boolean production = false;
 	public final static boolean buffered = true;
-	public final static boolean binaryfile = true;
+	public final static boolean binaryfile = false;
 	public final static boolean saveParsedAddresses = true;
 
 	public static OSMReader osmReader;
