@@ -39,7 +39,6 @@ public class DropdownAddressSearch extends CustomDropdown {
 			@Override
 			public void mouseEntered(MouseEvent e) {
 				int index = getComponentIndex(menuItem);
-				System.out.println("index: " + index);
 				setSelectedElement(index);
 				
 			}
