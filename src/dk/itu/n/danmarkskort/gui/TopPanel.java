@@ -150,7 +150,7 @@ public class TopPanel extends JPanel {
     // Skal nok flyttes senere, for at overholde MVC
     public void searchForAddress(String address) {
     	if(!address.trim().isEmpty()) {
-    		Address addr = SearchController.getInstance().getSearchFieldAddressObj(address);
+    		Address addr = SearchController.getSearchFieldAddressObj(address);
         	if(addr != null ) { 
         		System.out.println("Toppanel->searchForAddress: "+addr.toString());
         		panZoomToCoordinates(addr.getLonLat());
@@ -217,43 +217,26 @@ public class TopPanel extends JPanel {
         public void dropdownSuggestions(int offset, String text) {
         	
             if(offset > 1 && text.length() > 1) {
-            	
-//            	char charAtEnd = text.charAt(text.length()-1);
-//            	int countSameCharAtPos = 0;
-//            	for(String str : dropSuggestionsList) {
-//            		if(str.charAt(text.length()-1) == charAtEnd) countSameCharAtPos++;
-////            		System.out.println("Char compare: " + str.charAt(text.length()-1) + " = " + charAtEnd);
-//            	}
-//            	
-//            	
-//            	if(countSameCharAtPos == 0) {
-////            		dropSuggestionsList = SearchController.getInstance().getSearchFieldSuggestions(text);
-////            		System.out.println("refresh list");
-////            	}
-//            	
-//                populateSuggestions(dropSuggestionsList);
-//            	dropSuggestionsList = SearchController.getInstance().getSearchFieldSuggestions(text);
-//            	populateSuggestions(dropSuggestionsList);
-                
-            		swingSearch(text);
+              	dropSuggestionsList = SearchController.getSearchFieldSuggestions(text);
+            	populateSuggestions(dropSuggestionsList);
             } else {
                 dropSuggestions.setVisible(false);
             }
         }
     }
     
-    private void swingSearch(String text){
-	    SwingWorker worker = new SwingWorker<List<String>, Void>() {
-	        @Override
-	        public List<String> doInBackground() {
-	            return dropSuggestionsList = SearchController.getInstance().getSearchFieldSuggestions(text);
-	        }
-	
-	        @Override
-	        public void done() {
-	        	populateSuggestions(dropSuggestionsList);
-	        }
-	    };
-	    worker.execute();
-    }
+//    private void swingSearch(String text){
+//	    SwingWorker worker = new SwingWorker<List<String>, Void>() {
+//	        @Override
+//	        public List<String> doInBackground() {
+//	            return dropSuggestionsList = SearchController.getSearchFieldSuggestions(text);
+//	        }
+//	
+//	        @Override
+//	        public void done() {
+//	        	populateSuggestions(dropSuggestionsList);
+//	        }
+//	    };
+//	    worker.execute();
+//    }
 }
