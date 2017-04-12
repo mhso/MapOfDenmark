@@ -216,11 +216,11 @@ public class OSMParser extends SAXAdapter implements Serializable {
             } 
         }
 
-        if(address != null) {
+        if(address != null && Main.saveParsedAddresses) {
             if(node != null) address.setCoords(node.getPoint());
             else if (way != null) address.setWay(way);
             else if (relation != null) address.setRelation(relation);
-            //Main.addressController.addressParsed(address);
+            Main.addressController.addressParsed(address);
             for(OSMParserListener listener : parser.parserListeners) listener.onParsingGotItem(address);
         }
         cleanUp();
