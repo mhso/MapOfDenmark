@@ -39,7 +39,9 @@ public class DropdownAddressSearch extends CustomDropdown {
 			@Override
 			public void mouseEntered(MouseEvent e) {
 				int index = getComponentIndex(menuItem);
+				System.out.println("index: " + index);
 				setSelectedElement(index);
+				
 			}
 		});
 		menuItem.setBorderPainted(false);
@@ -77,6 +79,7 @@ public class DropdownAddressSearch extends CustomDropdown {
 	 * @param source The component under which this menu should be shown.
 	 */
 	public void showDropdown(Component source) {
+		selectedIndex = -1;
 		show(source, 0, source.getHeight());
 	}
 
