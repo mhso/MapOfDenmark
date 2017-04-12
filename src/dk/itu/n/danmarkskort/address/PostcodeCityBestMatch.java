@@ -6,10 +6,22 @@ import java.util.List;
 import java.util.Map;
 
 public class PostcodeCityBestMatch {
-	private List<Combine> combinations = new ArrayList<Combine>();
-	private Map<String, Combine> objMatches = new HashMap<String, Combine>();
+	private List<Combine> combinations;
+	private Map<String, Combine> objMatches;
+	
+	public PostcodeCityBestMatch(){
+		init();
+	}
+	
+	private void init(){
+		combinations = new ArrayList<Combine>();
+		objMatches = new HashMap<String, Combine>();
+	}
 	
 	public void add(String postcode, String city){
+		
+		if(combinations == null  || objMatches == null) init();
+		
 		if(isValidPostcode(postcode) && isValidCity(city)){
 			if(!incrementCountIfExists(postcode, city)){
 				addIfNew(postcode, city);
@@ -51,6 +63,12 @@ public class PostcodeCityBestMatch {
 		if(objMatches.isEmpty()) genMatches();
 		if(objMatches.containsKey(postcode)) return objMatches.get(postcode).getCity();
 		return null;
+	}
+	
+	public void cleanup(){
+		combinations = null;
+		objMatches = null;
+		
 	}
 	
 	private class Combine{

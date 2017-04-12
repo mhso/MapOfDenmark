@@ -17,7 +17,6 @@ public class AddressController{
 	private TimerUtil timerUtilA = new TimerUtil();
 	private TimerUtil timerUtilB = new TimerUtil();
 	private PostcodeCityBestMatch postcodeCityBestMatch;
-	private List<ParsedAddress> parsedAddresses = new ArrayList<ParsedAddress>();
 	AddressSuggestion addressSuggestion = new AddressSuggestion();
 	AddressRegionSearch addressRegionSearch = new AddressRegionSearch();
 	
@@ -84,7 +83,6 @@ public class AddressController{
 	public void addressParsed(ParsedAddress addr) {
 		timerUtilA.on();
         if(addr != null) {
-        	parsedAddresses.add(addr);
 			float[] lonLat = new float[] {addr.getFirstLon(), addr.getFirstLat()};
 			
 			//if(addr.getPostcode() != null && !addr.getPostcode().matches("(^[0-9]{4}$)")) System.out.println("Postcode sucks: " + addr.toString());
@@ -141,6 +139,7 @@ public class AddressController{
 		for(Entry<String, Postcode> entry : AddressHolder.postcodes.entrySet()){
 			entry.getValue().setCity(postcodeCityBestMatch.getMatch(entry.getKey()));
 		}
+		postcodeCityBestMatch.cleanup();
 		timerUtilB.off();
 		Main.log("Addresses PostcodeCityCombination time: " + timerUtilB.toString());
 		Main.log("Addresses (accepted): " + getAddressSize());
