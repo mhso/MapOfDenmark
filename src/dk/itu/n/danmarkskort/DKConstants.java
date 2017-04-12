@@ -1,6 +1,6 @@
 package dk.itu.n.danmarkskort;
 
-import dk.itu.n.danmarkskort.models.ParsedBounds;
+import dk.itu.n.danmarkskort.models.Region;
 
 public class DKConstants {
 	/**
@@ -21,9 +21,9 @@ public class DKConstants {
 	/**
 	 * Longitude and Latitude bounds for the full Denmark .OSM file.
 	 */
-	public static ParsedBounds BOUNDS_DENMARK = new ParsedBounds(54.44065D, 7.7011D, 58.06239D, 15.65449D);
+	public static Region BOUNDS_DENMARK = new Region(7.7011D, 58.06239D, 15.65449D, 54.44065D);
 	/**
 	 * The factor that longitude coordinates gets multiplied by. This is because the world is spherical.
 	 */
-	public static final float FACTOR_LON_DENMARK = (float)(Math.cos((BOUNDS_DENMARK.minLat + (BOUNDS_DENMARK.maxLat - BOUNDS_DENMARK.minLat) / 2)) / 180 * Math.PI); 
+	public static final float FACTOR_LON_DENMARK = (float)(Math.cos((BOUNDS_DENMARK.y1 + (BOUNDS_DENMARK.y2 - BOUNDS_DENMARK.y1) / 2)) / 180 * Math.PI);
 }

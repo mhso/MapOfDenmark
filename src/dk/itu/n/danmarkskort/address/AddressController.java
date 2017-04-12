@@ -81,7 +81,7 @@ public class AddressController{
 	}
 	
 	private int acceptLvl1 = 0, acceptLvl2 = 0, acceptLvl3 = 0, acceptNot = 0;
-	public void addressParsed(dk.itu.n.danmarkskort.models.ParsedAddress addr) {
+	public void addressParsed(ParsedAddress addr) {
 		timerUtilA.on();
         if(addr != null) {
         	parsedAddresses.add(addr);

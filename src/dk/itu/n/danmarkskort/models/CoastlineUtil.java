@@ -4,17 +4,34 @@ import dk.itu.n.danmarkskort.Main;
 
 import java.util.*;
 
-
 public class CoastlineUtil {
 
-    public static void connectCoastline(IdentityHashMap<ParsedNode, ParsedWay> coastlineMap, ParsedWay current) {
-        ParsedWay prev = coastlineMap.remove(current.getFirstNode());
-        ParsedWay next = coastlineMap.remove(current.getLastNode());
-        ParsedWay merged = new ParsedWay();
+    private static final int TOP = 0,
+                             LEFT = 1,
+                             BOTTOM = 2,
+                             RIGHT = 3;
 
-        if(prev != null) merged.addNodes(prev.getNodes());
+    public static void connectCoastline(HashMap<ParsedNode, ParsedWay> coastlineMap, ParsedWay current) {
+        ParsedWay prev = coastlineMap.remove(current.getFirstNode());
+        if(prev != null && coastlineMap.containsKey(prev.getFirstNode())) {
+            coastlineMap.remove(prev.getFirstNode());
+        }
+        ParsedWay next = coastlineMap.remove(current.getLastNode());
+        if(next != null && coastlineMap.containsKey(next.getLastNode())) {
+            coastlineMap.remove(next.getLastNode());
+        }
+
+        ParsedWay merged = new ParsedWay(current.getID());
+
+        if(prev != null) {
+            merged.setID(prev.getID());
+            coastlineMap.remove(prev.getFirstNode());
+            merged.addNodes(prev.getNodes().subList(0, prev.getNodes().size()));
+        }
         merged.addNodes(current.getNodes());
-        if(next != null) merged.addNodes(next.getNodes());
+        if(next != null) {
+            merged.addNodes(next.getNodes().subList(1, next.getNodes().size()));
+        }
 
         coastlineMap.put(merged.getFirstNode(), merged);
         coastlineMap.put(merged.getLastNode(), merged);
@@ -24,46 +41,42 @@ public class CoastlineUtil {
         HashMap<ParsedNode, ParsedWay> unconnectedEnds = new HashMap<>();
         HashMap<ParsedNode, ParsedWay> unconnectedStarts = new HashMap<>();
 
-        // ArrayLists to contain the fixed-to-the-boundary end- and startnodes
         // index 0 for the top-aligned, 1: left-aligned, 2: bottom-aligned, and 3: right-aligned
         ArrayList<ParsedNode>[] starts = new ArrayList[4];
         ArrayList<ParsedNode>[] ends = new ArrayList[4];
         for(int i = 0; i < starts.length; i++) starts[i] = new ArrayList<>();
         for(int i = 0; i < ends.length; i++) ends[i] = new ArrayList<>();
 
-        // adjust all ends and start nodes to bounds of the parsed map, and add them to the relevant arraylists
-        // and hashmaps
         for(ParsedWay way : unconnected) {
-            FakeNode newFirst = adjustNodeToBounds(way.getFirstNode());
-            FakeNode newLast = adjustNodeToBounds(way.getLastNode());
+            int firstSide = findSide(way.getFirstNode());
+            Main.log("firstnode side: " + firstSide);
+            int lastSide = findSide(way.getLastNode());
+            Main.log("lastnode side: " + lastSide);
 
-            ParsedWay newWay = new ParsedWay();
+            ParsedWay clone = new ParsedWay();
 
+            clone.addNodes(way.getNodes());
 
-            way.setFirstNode(newFirst);
-            way.setLastNode(newLast);
+            starts[firstSide].add(clone.getFirstNode());
+            ends[lastSide].add(clone.getLastNode());
 
-            starts[newFirst.getSide()].add(newFirst);
-            ends[newLast.getSide()].add(newLast);
-
-            unconnectedStarts.put(newFirst, way);
-            unconnectedEnds.put(newLast, way);
+            unconnectedStarts.put(clone.getFirstNode(), clone);
+            unconnectedEnds.put(clone.getLastNode(), clone);
         }
 
         sortSides(starts);
         sortSides(ends);
 
-        ParsedNode endNode = null, startNode = null;
-        ParsedWay endWay = null, startWay = null;
+        ParsedNode endNode, startNode;
+        ParsedWay endWay, startWay;
+
         HashSet<ParsedWay> connectedSet = new HashSet<>();
 
         for(int i = 0; i < ends.length; i++) {
             for(int j = 0; j < ends[i].size(); j++) {
                 endNode = ends[i].get(j);
                 endWay = unconnectedEnds.get(endNode);
-                Main.log("looking for a match");
                 startNode = findMatch(starts, endNode, endWay, i);
-                Main.log("found a match");
                 startWay = unconnectedStarts.get(startNode);
 
                 unconnectedEnds.remove(endWay.getLastNode());
@@ -71,8 +84,15 @@ public class CoastlineUtil {
                 unconnectedEnds.remove(startWay.getLastNode());
                 unconnectedStarts.remove(startWay.getFirstNode());
 
-                if(endWay == startWay) connectedSet.add(endWay);
+                if(endWay == startWay) {
+                    Main.log("this happened");
+                    Main.log(endNode);
+                    Main.log(endWay.getLastNode().getLon() + " " + endWay.getLastNode().getLat());
+                    endWay.addNode(startWay.getFirstNode());
+                    connectedSet.add(endWay);
+                }
                 else {
+                    Main.log("not same!!!!!!!!!!!!!!!!!QW#%%#/(RTYGJSDTFG");
                     endWay.addNodes(startWay.getNodes());
                     unconnectedEnds.put(endWay.getLastNode(), endWay);
                     unconnectedStarts.put(endWay.getFirstNode(), endWay);
@@ -87,8 +107,11 @@ public class CoastlineUtil {
         int runs = 0;
         for(int i = startSide; i < starts.length; ) {
             runs++;
+            Main.log("going to " + i);
             if(starts[i].size() > 0) {
+                Main.log(i +" side is big enough:=)");
                 for(int j = 0; j < starts[i].size(); j++) {
+                    Main.log("j currently " + j);
                     ParsedNode currentCheck = starts[i].get(j);
                     if(currentCheck != null) {
                         if(runs > 1) {
@@ -118,25 +141,40 @@ public class CoastlineUtil {
                             }
                         }
                     }
-                    if(j == starts[i].size() - 1) {
+                    else if(j == starts[i].size() - 1) {
+                        Main.log("creating fake corner node, fro mthe inside loop");
                         if (i == 0) {
-                            currentEnd = new FakeNode(Main.model.getMinLon(), Main.model.getMinLat());
+                            currentEnd = new ParsedNode(Main.model.getMinLon(), Main.model.getMinLat());
+                            Main.log(currentWay.getLastNode());
                             currentWay.addNode(currentEnd);
+                            Main.log(currentWay.getLastNode());
+
                             i++;
                             break; // without a break we have potential for endless loop
                         } else if (i == 1) {
-                            currentEnd = new FakeNode(Main.model.getMinLon(), Main.model.getMaxLat());
+                            currentEnd = new ParsedNode(Main.model.getMinLon(), Main.model.getMaxLat());
+                            Main.log(currentWay.getLastNode());
+
                             currentWay.addNode(currentEnd);
+                            Main.log(currentWay.getLastNode());
+
                             i++;
                             break;
                         } else if (i == 2) {
-                            currentEnd = new FakeNode(Main.model.getMaxLon(), Main.model.getMaxLat());
+                            currentEnd = new ParsedNode(Main.model.getMaxLon(), Main.model.getMaxLat());
+                            Main.log(currentWay.getLastNode());
+
+
                             currentWay.addNode(currentEnd);
+                            Main.log(currentWay.getLastNode());
+
                             i++;
                             break;
                         } else if (i == 3) {
-                            currentEnd = new FakeNode(Main.model.getMaxLon(), Main.model.getMinLat());
+                            currentEnd = new ParsedNode(Main.model.getMaxLon(), Main.model.getMinLat());
+                            Main.log(currentWay.getLastNode());
                             currentWay.addNode(currentEnd);
+                            Main.log(currentWay.getLastNode());
                             i = 0;
                             break;
                         }
@@ -145,20 +183,35 @@ public class CoastlineUtil {
             }
             else {
                 if (i == 0) {
-                    currentEnd = new FakeNode(Main.model.getMinLon(), Main.model.getMinLat());
+                    Main.log("creating fake corner node from the outside loop, side: " + i);
+                    Main.log(currentWay.getLastNode());
+
+                    currentEnd = new ParsedNode(Main.model.getMinLon(), Main.model.getMinLat());
                     currentWay.addNode(currentEnd);
+                    Main.log(currentWay.getLastNode());
+                    Main.log(Main.model.getMinLat());
                     i++;
                 } else if (i == 1) {
-                    currentEnd = new FakeNode(Main.model.getMinLon(), Main.model.getMaxLat());
+                    Main.log("creating fake corner node from the outside loop, side: " + i);
+
+                    currentEnd = new ParsedNode(Main.model.getMinLon(), Main.model.getMaxLat());
                     currentWay.addNode(currentEnd);
                     i++;
                 } else if (i == 2) {
-                    currentEnd = new FakeNode(Main.model.getMaxLon(), Main.model.getMaxLat());
+                    Main.log("creating fake corner node from the outside loop, side: " + i);
+                    Main.log(currentWay.getLastNode());
+
+                    currentEnd = new ParsedNode(Main.model.getMaxLon(), Main.model.getMaxLat());
                     currentWay.addNode(currentEnd);
+                    Main.log(currentWay.getLastNode());
                     i++;
                 } else if (i == 3) {
-                    currentEnd = new FakeNode(Main.model.getMaxLon(), Main.model.getMinLat());
+                    Main.log("creating fake corner node from the outside loop, side: " + i);
+                    Main.log(currentWay.getLastNode());
+
+                    currentEnd = new ParsedNode(Main.model.getMaxLon(), Main.model.getMinLat());
                     currentWay.addNode(currentEnd);
+                    Main.log(currentWay.getLastNode());
                     i = 0;
                 }
             }
@@ -193,47 +246,39 @@ public class CoastlineUtil {
         });
     }
 
-    // returns a float[] with index 0 as the slope, and index 1 as the constant
-    private double[] getLinearEquation(ParsedNode node1, ParsedNode node2) {
-        double m = calculateSlope(node1, node2);
-        double b = calculateConstant(node1, m);
-        return new double[]{m, b};
-    }
+    private static int findSide(ParsedNode node) {
+        int side;
 
-    private double calculateConstant(ParsedNode node, double m) {
-        return (double) node.getLat() - (m * (double) node.getLon());
-    }
+        float distanceToLeft = Math.abs(node.getLon() - Main.model.getMinLon());
+        float distanceToRight = Math.abs(node.getLon() - Main.model.getMaxLon());
+        float distanceToBottom = Math.abs(node.getLat() - Main.model.getMinLat());
+        float distanceToTop = Math.abs(node.getLat() - Main.model.getMaxLat());
 
-    private double calculateSlope(ParsedNode node1, ParsedNode node2) {
-        return ((double) node2.getLat() - (double) node1.getLat()) / (double) (node2.getLon() - (double) node1.getLon());
-    }
+        float midLon = Main.model.getMinLon() + ((Main.model.getMaxLon() - Main.model.getMinLon()) / 2);
+        float midLat = Main.model.getMinLat() + ((Main.model.getMaxLat() - Main.model.getMinLat()) / 2);
 
-    private static FakeNode adjustNodeToBounds(ParsedNode node) {
-        float xvsmin = Math.abs(node.getLon() - Main.model.getMinLon());
-        float xvsmax = Math.abs(node.getLon() - Main.model.getMaxLon());
+        boolean top, left;
+        left = (node.getLon() < midLon);
+        top = (node.getLat() < midLat);
 
-        float yvsmin = Math.abs(node.getLat() + (-Main.model.getMinLat()));
-        float yvsmax = Math.abs(node.getLat() + (-Main.model.getMaxLat()));
-
-        if(xvsmin < xvsmax) { // left-aligned
-            if(yvsmin < yvsmax) { // top-aligned
-                if(xvsmin < yvsmin) return new FakeNode(Main.model.getMinLon(), node.getLat(), FakeNode.LEFT); // closest to left
-                else return new FakeNode(node.getLon(), Main.model.getMinLat(), FakeNode.TOP); // closest to top
-            }
-            else { // bottom-aligned
-                if(xvsmin < yvsmax) return new FakeNode(Main.model.getMinLon(), node.getLat(), FakeNode.LEFT); // closes to left
-                else return new FakeNode(node.getLon(), Main.model.getMaxLat(), FakeNode.BOTTOM); // closest to bottom
-            }
+        if (top && left) { // top or left
+            if (distanceToTop < distanceToLeft) side = TOP;
+            else side = LEFT;
         }
-        else { // right-aligned
-            if(yvsmin < yvsmax) { // top-aligned
-                if(xvsmax < yvsmin) return new FakeNode(Main.model.getMaxLon(), node.getLat(), FakeNode.RIGHT); // closest to right
-                else return new FakeNode(node.getLon(), Main.model.getMinLat(), FakeNode.TOP); // closest to top
-            }
-            else { // bottom-aligned
-                if(xvsmax < yvsmax) return new FakeNode(Main.model.getMaxLon(), node.getLat(), FakeNode.RIGHT); // closest to right
-                else return new FakeNode(node.getLon(), Main.model.getMaxLat(), FakeNode.BOTTOM); // closest to bottom
-            }
+        else if (left) { // left or bottom
+            if (distanceToLeft < distanceToBottom) side = LEFT;
+            else side = BOTTOM;
         }
+        else if (!top) { // bottom or right
+            if (distanceToBottom < distanceToRight) side = BOTTOM;
+            else side = RIGHT;
+        }
+        else { // right or top
+            if (distanceToRight < distanceToTop) side = RIGHT;
+            else side = TOP;
+        }
+        Main.log(top + " " + left + ", distances: " + distanceToTop + " " + distanceToLeft + " " + distanceToBottom + " " + distanceToRight);
+        Main.log(node.getKey() + " side: " + side);
+        return side;
     }
 }
