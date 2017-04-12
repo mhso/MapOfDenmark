@@ -2,18 +2,12 @@ package dk.itu.n.danmarkskort.backend;
 
 import dk.itu.n.danmarkskort.DKConstants;
 import dk.itu.n.danmarkskort.Main;
-import dk.itu.n.danmarkskort.Util;
-import dk.itu.n.danmarkskort.address.AddressController;
 import dk.itu.n.danmarkskort.models.*;
 import dk.itu.n.danmarkskort.kdtree.*;
 
 import org.xml.sax.Attributes;
-import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.Serializable;
 import java.util.*;
 
@@ -25,7 +19,7 @@ public class OSMParser extends SAXAdapter implements Serializable {
     private transient NodeMap nodeMap;
     private transient HashMap<Long, ParsedWay> temporaryWayReferences;
     private transient HashMap<Long, ParsedRelation> temporaryRelationReferences;
-    private transient IdentityHashMap<ParsedNode, ParsedWay> coastlineMap;
+    private transient HashMap<ParsedNode, ParsedWay> coastlineMap;
 
     private transient EnumMap<WayType, ArrayList<ParsedItem>> enumMap;
     public EnumMap<WayType, KDTree> enumMapKD;
@@ -51,7 +45,7 @@ public class OSMParser extends SAXAdapter implements Serializable {
         nodeMap = new NodeMap();
         temporaryWayReferences = new HashMap<>();
         temporaryRelationReferences = new HashMap<>();
-        coastlineMap = new IdentityHashMap<>();
+        coastlineMap = new HashMap<>();
         enumMap = new EnumMap<>(WayType.class);
         for(WayType waytype : WayType.values()) enumMap.put(waytype, new ArrayList<>());
 
@@ -72,7 +66,7 @@ public class OSMParser extends SAXAdapter implements Serializable {
         enumMapKD = new EnumMap<>(WayType.class);
 
         for(OSMParserListener listener : parser.parserListeners) listener.onParsingFinished();
-        
+
         for(WayType wt : WayType.values()) {
             KDTree tree;
             if(wt == WayType.COASTLINE) tree = getCoastlines();
@@ -172,7 +166,7 @@ public class OSMParser extends SAXAdapter implements Serializable {
                     break;
                 }
                 else {
-                    waytype = WayTypeUtil.tagToType(k, v, waytype);
+                    waytype = WayTypeUtil.tagToType(k, v, waytype, way);
                     switch (k) {
                         case "name":
                             name = v;
@@ -206,13 +200,8 @@ public class OSMParser extends SAXAdapter implements Serializable {
 
     private void addCurrent() {
         if(waytype != null) {
-            if(waytype == WayType.COASTLINE) {
-                if(way != null) CoastlineUtil.connectCoastline(coastlineMap, way);
-                if(relation != null) {
-                    Main.log("does this really happen????");
-                    Main.log(relation.getID());
-                    CoastlineUtil.connectCoastline(coastlineMap, relation);
-                }
+            if(waytype == WayType.COASTLINE && way != null) {
+                CoastlineUtil.connectCoastline(coastlineMap, way);
             }
             else if(way != null) {
             	enumMap.get(waytype).add(way);
@@ -231,31 +220,32 @@ public class OSMParser extends SAXAdapter implements Serializable {
             if(node != null) address.setCoords(node.getPoint());
             else if (way != null) address.setWay(way);
             else if (relation != null) address.setRelation(relation);
-            Main.addressController.addressParsed(address);
+            //Main.addressController.addressParsed(address);
             for(OSMParserListener listener : parser.parserListeners) listener.onParsingGotItem(address);
         }
         cleanUp();
     }
 
     private KDTree getCoastlines() {
-        KDTree tree = null;
+        KDTree tree;
         HashSet<ParsedWay> connected = new HashSet<>();
         HashSet<ParsedWay> unconnected = new HashSet<>();
         ArrayList<ParsedItem> combined = new ArrayList<>();
-
-        // I'm not entirely sure, but I think that coastlineMap (and thus also connected)
-        // contains 2 of each way
         if(coastlineMap.size() > 0) {
             coastlineMap.forEach((firstNode, item) -> {
-                //if(item.getLastNode() != item.getFirstNode()) item.addNode(item.getFirstNode());
-                combined.add(item);
-                //if(item.getFirstNode() == item.getLastNode()) connected.add(item);
-                //else if(item.getFirstNode() != item.getLastNode()) unconnected.add(item);
+                if(item.getFirstNode() == item.getLastNode()) {
+                    connected.add(item);
+                }
+                else if(item.getFirstNode() != item.getLastNode()) {
+                    if(!connected.contains(item)) {
+                        //Lige nu gøres der ikke noget specielt ved unconnected
+                        //unconnected.add(item);
+                        connected.add(item);
+                    }
+                }
             });
-
+            combined.addAll(connected);
             //HashSet<ParsedWay> fixed = CoastlineUtil.fixUnconnectedCoastlines(unconnected);
-            //combined.addAll(connected);
-
             //combined.addAll(fixed);
             tree = new KDTreeLeaf(combined);
         }
@@ -277,12 +267,12 @@ public class OSMParser extends SAXAdapter implements Serializable {
     }
 
     private void temporaryClean() {
+        nodeMap = null;
         temporaryWayReferences = null;
         temporaryRelationReferences = null;
     }
 
     private void finalClean() {
-        nodeMap = null;
         coastlineMap = null;
         System.gc();
     }

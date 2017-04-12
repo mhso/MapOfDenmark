@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.geom.Path2D;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 public class ParsedWay extends ParsedItem implements Serializable{
 
@@ -12,7 +13,7 @@ public class ParsedWay extends ParsedItem implements Serializable{
     Shape shape;
 
     public ParsedWay() {
-        nodes = new ArrayList<>();
+        this(0);
     }
 
     public ParsedWay(long id) {
@@ -22,7 +23,7 @@ public class ParsedWay extends ParsedItem implements Serializable{
 
     public void addNode(ParsedNode node) { nodes.add(node); }
 
-    void addNodes(ArrayList<ParsedNode> nodes) { this.nodes.addAll(nodes); }
+    void addNodes(List<ParsedNode> nodeList) { nodes.addAll(nodeList); }
 
     public void setFirstNode(ParsedNode node) { nodes.set(0, node); }
 
@@ -95,5 +96,9 @@ public class ParsedWay extends ParsedItem implements Serializable{
     
     public String toString() {
     	return "ParsedWay [" + "id=" + id + ", firstLon=" + getFirstNode().getLon() + ", firstLat=" + getFirstNode().getLat() + ", nodeAmount=" + nodes.size() + "]";
+    }
+
+    public void setID(long id) {
+        this.id = id;
     }
 }
