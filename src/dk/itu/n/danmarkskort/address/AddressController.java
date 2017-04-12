@@ -19,6 +19,7 @@ public class AddressController{
 	private PostcodeCityBestMatch postcodeCityBestMatch;
 	private List<ParsedAddress> parsedAddresses = new ArrayList<ParsedAddress>();
 	AddressSuggestion addressSuggestion = new AddressSuggestion();
+	AddressRegionSearch addressRegionSearch = new AddressRegionSearch();
 	
 	public AddressController(){
 		postcodeCityBestMatch = new PostcodeCityBestMatch();
@@ -60,45 +61,15 @@ public class AddressController{
 	}
 	
 	public Address getSearchResult(float[] lonLat){
-		Housenumber hn = AddressHolder.searchHousenumber(lonLat);
-		return new Address(hn.getLonLat(), hn.getStreet().getStreet(), hn.getHousenumber(), hn.getPostcode().getPostcode(), hn.getPostcode().getCity());
+		return addressRegionSearch.getSearchResult(lonLat);
 	}
 	
 	public Address getNearstSearchResult(RegionFloat input){
-		Address addr =  getSearchResult(input.getMiddlePoint());
-		if (addr == null) {
-			Collection<Housenumber> hns = AddressHolder.searchRegionHousenumbers(input).values();
-			Housenumber hn = regionRecursiveLookup(input);
-			addr = new Address(hn.getLonLat(), hn.getStreet().getStreet(), hn.getHousenumber(), hn.getPostcode().getPostcode(), hn.getPostcode().getCity());
-		}
-		return addr;
-	}
-	
-	public Housenumber regionRecursiveLookup(RegionFloat input){
-		Map<RegionFloat, Housenumber> hns = AddressHolder.searchRegionHousenumbers(input);
-		Housenumber house = null;
-		if(hns.size() == 1){ 
-			for(Housenumber hn : hns.values()) house = hn;
-		} else {
-			RegionFloat r = new RegionFloat(input.x1 - 0.000001f, input.y1 + 0.000001f, input.x2 + 0.000001f, input.y2 - 0.000001f);
-			house = regionRecursiveLookup(r);
-		}
-		return house;
+		return addressRegionSearch.getNearstSearchResult(input);
 	}
 	
 	public List<String> searchSuggestions(RegionFloat input, long limitAmountOfResults){
-		TimerUtil timerUtil = new TimerUtil();
-		timerUtil.on();
-		List<String> result = new ArrayList<String>();
-		Collection<Housenumber> hns = AddressHolder.searchRegionHousenumbers(input).values();
-		for(Housenumber hn : hns){
-			result.add(hn.toString());
-		}
-		Collections.sort(result, String.CASE_INSENSITIVE_ORDER);
-		// Remove duplicates and return
-		timerUtil.off();
-		Main.log("Lon/lat Suggestion time: " + timerUtil.toString());
-		return result.parallelStream().distinct().limit(limitAmountOfResults).collect(Collectors.toList());
+		 return addressRegionSearch.searchSuggestions(input, limitAmountOfResults);
 	}
 	
 	public void addAddress(float[] lonLat, String street, String housenumber, String postcode, String city){

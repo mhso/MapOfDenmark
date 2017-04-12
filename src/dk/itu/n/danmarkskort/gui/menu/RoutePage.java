@@ -262,7 +262,7 @@ public class RoutePage extends JPanel {
     private boolean updateValidInputAddrTo(JTextField field, JLabel labelName){
     	boolean valid = false;
     	Address addr = null;
-    	if(!field.getText().isEmpty()) addr = SearchController.getInstance().getSearchFieldAddressObj(field.getText());
+    	if(!field.getText().isEmpty()) addr = SearchController.getSearchFieldAddressObj(field.getText());
     	if(addr != null) valid = true;
     	changeValidAddrIcon(labelName, valid);
     	return valid;
@@ -343,7 +343,7 @@ public class RoutePage extends JPanel {
         
         public void dropdownSuggestions(int offset, String text) {
             if(offset > 1) {
-                populateSuggestions(das, input, SearchController.getInstance().getSearchFieldSuggestions(text));
+                populateSuggestions(das, input, SearchController.getSearchFieldSuggestions(text));
                 revalidate();
                 repaint();
             } else {
