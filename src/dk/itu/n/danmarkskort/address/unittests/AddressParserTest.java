@@ -13,7 +13,6 @@ public class AddressParserTest {
 	AddressParser ap;
 	@Before
 	public void setUp() throws Exception {
-		AddressParser ap = new AddressParser();
 	}
 
 	@After

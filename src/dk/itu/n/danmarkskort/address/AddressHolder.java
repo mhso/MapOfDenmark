@@ -63,7 +63,7 @@ public class AddressHolder implements Serializable {
 		int minValue = 0, maxValue = 3;
 		if(postcode == null) return list;
 		for(Entry<String, Postcode> entry : inputList.entrySet()){
-			if(StringUtils.getLevenshteinDistance(entry.getKey(), postcode.toLowerCase()) > minValue &&
+			if(entry.getKey() != null && StringUtils.getLevenshteinDistance(entry.getKey(), postcode.toLowerCase()) > minValue &&
 					StringUtils.getLevenshteinDistance(entry.getKey(), postcode.toLowerCase()) < maxValue) {
 				list.put(entry.getKey(), entry.getValue());
 			}
@@ -98,7 +98,7 @@ public class AddressHolder implements Serializable {
 		int minValue = 0, maxValue = 3;
 		if(inputList == null) return list;
 		for(Entry<String, Postcode> entry : inputList.entrySet()){
-			if(StringUtils.getLevenshteinDistance(entry.getKey(), city.toLowerCase()) > minValue &&
+			if(entry.getKey() != null && city != null && StringUtils.getLevenshteinDistance(entry.getKey(), city.toLowerCase()) > minValue &&
 					StringUtils.getLevenshteinDistance(entry.getKey(), city.toLowerCase()) < maxValue) {
 				list.put(entry.getKey(), entry.getValue());
 			}
@@ -117,9 +117,9 @@ public class AddressHolder implements Serializable {
 		return list;
 	}
 	
-	private static Map<String, Postcode> searchPostcode(Map<String, Postcode> inputList, Address addr, SearchEnum streetType, SearchEnum cityType){
+	private static Map<String, Postcode> searchPostcode(Map<String, Postcode> inputList, Address addr, SearchEnum postcodeType, SearchEnum cityType){
 		Map<String, Postcode> list = new HashMap<String, Postcode>();
-			switch(streetType){
+			switch(postcodeType){
 			case CONTAINS:
 				list = postcodeContains(inputList, addr.getPostcode());
 				break;
@@ -220,9 +220,6 @@ public class AddressHolder implements Serializable {
 					regions.putAll(st.searchRegionWithin(r));
 				}
 				expanVal = expanVal + 0.0000100f;
-//				System.out.println("searchRegionHousenumbers: " + r.toString() 
-//				+ " Size: " + pc.searchRegionWithin(r).values().size()
-//				+ " regions Size: " + regions.size());
 			}
 		}
 		return regions;

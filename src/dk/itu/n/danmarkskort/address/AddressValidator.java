@@ -5,8 +5,6 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.text.WordUtils;
 
-import com.sun.corba.se.spi.orbutil.fsm.Input;
-
 public class AddressValidator {
 	private final static String allowedAlphaSet = "a-zA-ZæøåÆØÅáÁéÉèÈöÖüÜëËÿŸäÄ";
 	private final static String allowedCharSet = "\\u002D\\u0027\\u002F"+allowedAlphaSet;
@@ -18,8 +16,8 @@ public class AddressValidator {
 	private final static String RGX_MULTIPLEHOUSENUMBER = "([0-9]{1,3}[A-Z]{1}\\-[0-9]{1,3}[A-Z]{1})|([0-9]{1,3}[A-Z]{1}\\-[A-Z]{1})|([0-9]{1,3}\\-[0-9]{1,3})";
 	private final static String RGX_HOUSENUMBER = RGX_MULTIPLEHOUSENUMBER + "|([0-9]{1,3}[A-Z]{1})|([0-9]{1,3})";
 	
-	private final static String RGX_POSTCODE = "([0-9]{4})";
-	private final static String RGX_CITY = "(["+RGX_ALPHA+"]{1,34})";
+	private final static String RGX_POSTCODE = "(^[0-9]{4}$)";
+	private final static String RGX_CITY = "(^(["+RGX_ALPHA+"]{1,34})$)";
 	
 	private final static Pattern PAT_STREET = Pattern.compile(RGX_STREET);
 	private final static Pattern PAT_HOUSENUMBER = Pattern.compile(RGX_HOUSENUMBER);
@@ -107,9 +105,39 @@ public class AddressValidator {
 				.replaceAll("([0-9]{1,2})+(\\. sal) ","");
 	}
 	
+	public static String removeAllButAlphaNum(String inputStr){
+		return inputStr.replaceAll("[^0-9"+allowedAlphaSet+"\\-]", " ");
+	}
+	
 	public static final Pattern PAT_EXTRACTPOSTCODE = Pattern.compile("(.*)(RGX_POSTCODE)(.*)");
 	public static String extractPostcode(String inputStr){
 		return PAT_EXTRACTPOSTCODE.matcher(inputStr).replaceAll("$2");
+	}
+	
+	public static final Pattern PAT_FINDPOSTCODE = Pattern.compile("(.*)(?<postcode>[0-9]{4})(.*)");
+	public static String findPostcode(String inputStr){
+		Matcher matcher = PAT_FINDPOSTCODE.matcher(inputStr);
+		String postcode = null;
+		while(matcher.find()){
+			postcode = matcher.group("postcode");
+		}
+		return postcode;
+	}
+	
+	
+	private static String rxHousenumber123 = ".*\\s[0-9]{1,3}";
+	private static String rxHousenumber123AB = rxHousenumber123 + "[A-Z]{0,2}";
+	private static String rxHousenumber123AB_123AB = rxHousenumber123AB + "-" + rxHousenumber123AB;
+	private static String rxHousenumberAll = "(rxHousenumber123)|(rxHousenumber123AB)|(rxHousenumber123AB_123AB)";
+	
+	public static final Pattern PAT_FINDHOUSENUMBER = Pattern.compile("(.*)(?<housenumber>"+rxHousenumber123+"\\s)(.*)");
+	public static String findHousenumber(String inputStr){
+		Matcher matcher = PAT_FINDHOUSENUMBER.matcher(inputStr);
+		String housenumber = null;
+		while(matcher.find()){
+			housenumber = matcher.group("housenumber");
+		}
+		return housenumber;
 	}
 	
 	public static String capitalizeFully(String inputStr){
@@ -182,13 +210,16 @@ public class AddressValidator {
 	public static boolean isPostcode(String postcode){
 		if(postcode != null && !postcode.isEmpty()) {
 			Matcher matcher = PAT_POSTCODE.matcher(postcode);
-			if(matcher.matches()) return true;
+			if(matcher.matches()) { 
+				//System.out.println(postcode);
+				return true; }
+			//System.out.println("IsNotPostcode: " + postcode);
 		}
 		return false;
 	}
 	
 	public static boolean isCityname(String city){
-		if(city != null && !city.isEmpty() && city.matches(RGX_CITY)){
+		if(city != null && !city.isEmpty()){
 			Matcher matcher = PAT_CITY.matcher(city);
 			if(matcher.matches()) return true;
 		} 

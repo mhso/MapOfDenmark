@@ -12,7 +12,7 @@ public class AddressParser {
 	
 	private final static String RGX_ALPHA = "[\\.\\u002D\\u0027a-zA-ZæøåÆØÅáÁéÉèÈöÖüÜëË ]";
 	private final static String RGX_POSTCODE = "(?<postcode>[0-9]{4})";
-	private final static String RGX_MULTIPLEHOUSENUMBER = "([0-9]{1,3}[a-zA-Z]{1}\\-[0-9]{1,3}[a-zA-Z]{1})|([0-9]{1,3}\\-[0-9]{1,3})";
+	private final static String RGX_MULTIPLEHOUSENUMBER = "([0-9]{1,3}[A-Z]{1}\\-[0-9]{1,3}[A-Z]{1})|([0-9]{1,3}[A-Z]{1}\\-[A-Z]{1})|([0-9]{1,3}\\-[0-9]{1,3})";
 	private final static String RGX_HOUSENUMBER = RGX_MULTIPLEHOUSENUMBER + "|([0-9]{1,3}[a-zA-Z]{1})|([0-9]{1,3})";
 	
 	private final static String PAT_POSTCODE = RGX_POSTCODE;
