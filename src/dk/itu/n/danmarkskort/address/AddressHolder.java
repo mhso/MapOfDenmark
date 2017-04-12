@@ -220,9 +220,6 @@ public class AddressHolder implements Serializable {
 					regions.putAll(st.searchRegionWithin(r));
 				}
 				expanVal = expanVal + 0.0000100f;
-//				System.out.println("searchRegionHousenumbers: " + r.toString() 
-//				+ " Size: " + pc.searchRegionWithin(r).values().size()
-//				+ " regions Size: " + regions.size());
 			}
 		}
 		return regions;
