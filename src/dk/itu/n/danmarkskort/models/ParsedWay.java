@@ -23,7 +23,7 @@ public class ParsedWay extends ParsedItem implements Serializable{
 
     public void addNode(ParsedNode node) { nodes.add(node); }
 
-    void addNodes(List<ParsedNode> nodeList) { nodes.addAll(nodeList); }
+    public void addNodes(List<ParsedNode> nodeList) { nodes.addAll(nodeList); }
 
     public void setFirstNode(ParsedNode node) { nodes.set(0, node); }
 
@@ -33,12 +33,13 @@ public class ParsedWay extends ParsedItem implements Serializable{
 
     public long getID() { return id; }
 
-    public Path2D getPath() {
+    public Shape getPath() {
         return getPath(true);
     }
 
-    public Path2D getReversedPath() {
-        return getPath(false);
+    public Shape getReversedPath() {
+        return getPath(true);
+        //return getPath(false);
     }
 
     @Override
@@ -49,6 +50,7 @@ public class ParsedWay extends ParsedItem implements Serializable{
     @Override
     public void makeShape() {
         shape = getPath();
+
     }
 
     @Override
@@ -56,21 +58,24 @@ public class ParsedWay extends ParsedItem implements Serializable{
         return shape;
     }
 
-    private Path2D getPath(boolean rightWay) {
-        Path2D path = new Path2D.Float();
-        if(rightWay) {
-            path.moveTo(nodes.get(0).getLon(), nodes.get(0).getLat());
-            for (int i = 1; i < nodes.size(); i++) {
-                path.lineTo(nodes.get(i).getLon(), nodes.get(i).getLat());
-            }
-        }
+    private Shape getPath(boolean rightWay) {
+        if(shape != null) return shape;
         else {
-            path.moveTo(nodes.get(nodes.size() - 1).getLon(), nodes.get(nodes.size() - 1).getLat());
-            for (int i = nodes.size() - 2; i >= 0; i--) {
-                path.lineTo(nodes.get(i).getLon(), nodes.get(i).getLat());
+            Path2D path = new Path2D.Float();
+            if (rightWay) {
+                path.moveTo(nodes.get(0).getLon(), nodes.get(0).getLat());
+                for (int i = 1; i < nodes.size(); i++) {
+                    path.lineTo(nodes.get(i).getLon(), nodes.get(i).getLat());
+                }
+            } else {
+                path.moveTo(nodes.get(nodes.size() - 1).getLon(), nodes.get(nodes.size() - 1).getLat());
+                for (int i = nodes.size() - 2; i >= 0; i--) {
+                    path.lineTo(nodes.get(i).getLon(), nodes.get(i).getLat());
+                }
             }
+            shape = path;
+            return shape;
         }
-        return path;
     }
 
     @Override
