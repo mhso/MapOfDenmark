@@ -3,14 +3,12 @@ package dk.itu.n.danmarkskort.backend;
 import dk.itu.n.danmarkskort.DKConstants;
 import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.MemoryUtil;
-import dk.itu.n.danmarkskort.Util;
 import dk.itu.n.danmarkskort.models.*;
 import dk.itu.n.danmarkskort.kdtree.*;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-import javax.swing.text.html.parser.Parser;
 import java.io.Serializable;
 import java.util.*;
 
@@ -38,11 +36,11 @@ public class OSMParser extends SAXAdapter implements Serializable {
     private transient boolean oneWay;
 
     private transient boolean finished = false;
-    private transient OSMReader parser;
+    private transient OSMReader reader;
     MemoryUtil mem = new MemoryUtil();
 
-    public OSMParser(OSMReader parser) {
-    	this.parser = parser;
+    public OSMParser(OSMReader reader) {
+    	this.reader = reader;
     }
     
     public void startDocument() throws SAXException {
@@ -62,23 +60,20 @@ public class OSMParser extends SAXAdapter implements Serializable {
     public void endDocument() throws SAXException {
         Main.log("Parsing finished.");
 
+        for(OSMParserListener listener : reader.parserListeners) listener.onParsingFinished();
+
         int numItemsSaved = 0;
         for(WayType wt : WayType.values()) numItemsSaved += enumMap.get(wt).size();
         Main.log("Ways and Relations saved: " + numItemsSaved);
 
-        Main.log("Splitting data into KDTrees");
-        System.gc();
         temporaryClean();
         enumMapKD = new EnumMap<>(WayType.class);
-
-        for(OSMParserListener listener : parser.parserListeners) listener.onParsingFinished();
+        Main.log("Splitting data into KDTrees");
 
         for(WayType wt : WayType.values()) {
-            Main.log("KD: " + wt);
-            mem.off();
-            Main.log("before:" + mem.differenceMegabytes());
-
+            Main.log("Creating KDTree and shapes for " + wt);
             KDTree tree;
+
             if(wt == WayType.COASTLINE) tree = getCoastlines();
             else {
                 ArrayList<ParsedItem> current = enumMap.get(wt);
@@ -86,25 +81,19 @@ public class OSMParser extends SAXAdapter implements Serializable {
                 else if (current.size() < DKConstants.KD_SIZE) tree = new KDTreeLeaf(current);
                 else tree = new KDTreeNode(current);
             }
-            mem.off();
-            Main.log("after KD:" + mem.differenceMegabytes());
-            Main.log("Creating shapes");
+
             enumMap.remove(wt);
             if(tree != null) tree.makeShapes();
             enumMapKD.put(wt, tree);
-            mem.off();
-            Main.log("after shapes:" + mem.differenceMegabytes());
-            Main.log("---------------------------------");
         }
-        Main.log("Deleting ALL old refs");
+
+        Main.log("Deleting old references");
         for(Map.Entry<WayType, KDTree> entry : enumMapKD.entrySet()) {
             KDTree current = entry.getValue();
             if(current != null) current.deleteOldRefs();
         }
-        mem.off();
-        Main.log("after deleting refs: " + mem.differenceMegabytes());
 
-        for(OSMParserListener listener : parser.parserListeners) listener.onParsingFinished();
+        for(OSMParserListener listener : reader.parserListeners) listener.onParsingFinished();
         Main.addressController.onLWParsingFinished();
         finalClean();
         finished = true;
@@ -223,14 +212,14 @@ public class OSMParser extends SAXAdapter implements Serializable {
             }
             else if(way != null) {
             	enumMap.get(waytype).add(way);
-            	for(OSMParserListener listener : parser.parserListeners) listener.onParsingGotItem(way);
+            	for(OSMParserListener listener : reader.parserListeners) listener.onParsingGotItem(way);
             }
             else if(relation != null) {
                 enumMap.get(waytype).add(relation);
-                for(OSMParserListener listener : parser.parserListeners) listener.onParsingGotItem(relation);
+                for(OSMParserListener listener : reader.parserListeners) listener.onParsingGotItem(relation);
             }
             else if(node != null) {
-            	for(OSMParserListener listener : parser.parserListeners) listener.onParsingGotItem(node);
+            	for(OSMParserListener listener : reader.parserListeners) listener.onParsingGotItem(node);
             } 
         }
 
@@ -239,7 +228,7 @@ public class OSMParser extends SAXAdapter implements Serializable {
             else if (way != null) address.setWay(way);
             else if (relation != null) address.setRelation(relation);
             Main.addressController.addressParsed(address);
-            for(OSMParserListener listener : parser.parserListeners) listener.onParsingGotItem(address);
+            for(OSMParserListener listener : reader.parserListeners) listener.onParsingGotItem(address);
         }
         cleanUp();
     }
@@ -256,9 +245,7 @@ public class OSMParser extends SAXAdapter implements Serializable {
                 }
                 else if(item.getFirstNode() != item.getLastNode()) {
                     if(!connected.contains(item)) {
-                        //Lige nu gøres der ikke noget specielt ved unconnected
                         unconnected.add(item);
-                        //connected.add(item);
                     }
                 }
             });
@@ -268,7 +255,7 @@ public class OSMParser extends SAXAdapter implements Serializable {
             tree = new KDTreeLeaf(combined);
         }
         else tree = null;
-
+        coastlineMap = null;
         return tree;
     }
 

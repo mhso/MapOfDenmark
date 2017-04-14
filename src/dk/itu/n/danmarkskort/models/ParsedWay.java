@@ -9,7 +9,7 @@ import java.util.List;
 public class ParsedWay extends ParsedItem implements Serializable{
 
     private long id;
-    ArrayList<ParsedNode> nodes;
+    //ArrayList<ParsedNode> nodes;
     Shape shape;
 
     public ParsedWay() {
@@ -18,18 +18,18 @@ public class ParsedWay extends ParsedItem implements Serializable{
 
     public ParsedWay(long id) {
         this.id = id;
-        nodes = new ArrayList<>();
+        //nodes = new ArrayList<>();
     }
 
-    public void addNode(ParsedNode node) { nodes.add(node); }
+    public void addNode(ParsedNode node) { add(node); }
 
-    public void addNodes(List<ParsedNode> nodeList) { nodes.addAll(nodeList); }
+    public void addNodes(List<ParsedNode> nodeList) { addAll(nodeList); }
 
-    public void setFirstNode(ParsedNode node) { nodes.set(0, node); }
+    public void setFirstNode(ParsedNode node) { set(0, node); }
 
-    public void setLastNode(ParsedNode node) { if(nodes.size() > 0) nodes.set(nodes.size() - 1, node); }
+    public void setLastNode(ParsedNode node) { if(size() > 0) set(size() - 1, node); }
 
-    public ArrayList<ParsedNode> getNodes() { return nodes; }
+    public ArrayList<ParsedNode> getNodes() { return this; }
 
     public long getID() { return id; }
 
@@ -44,7 +44,7 @@ public class ParsedWay extends ParsedItem implements Serializable{
 
     @Override
     public void deleteOldRefs() {
-        nodes = null;
+        clear();
     }
 
     @Override
@@ -63,14 +63,14 @@ public class ParsedWay extends ParsedItem implements Serializable{
         else {
             Path2D path = new Path2D.Float();
             if (rightWay) {
-                path.moveTo(nodes.get(0).getLon(), nodes.get(0).getLat());
-                for (int i = 1; i < nodes.size(); i++) {
-                    path.lineTo(nodes.get(i).getLon(), nodes.get(i).getLat());
+                path.moveTo(get(0).getLon(), get(0).getLat());
+                for (int i = 1; i < size(); i++) {
+                    path.lineTo(get(i).getLon(), get(i).getLat());
                 }
             } else {
-                path.moveTo(nodes.get(nodes.size() - 1).getLon(), nodes.get(nodes.size() - 1).getLat());
-                for (int i = nodes.size() - 2; i >= 0; i--) {
-                    path.lineTo(nodes.get(i).getLon(), nodes.get(i).getLat());
+                path.moveTo(get(size() - 1).getLon(), get(size() - 1).getLat());
+                for (int i = size() - 2; i >= 0; i--) {
+                    path.lineTo(get(i).getLon(), get(i).getLat());
                 }
             }
             shape = path;
@@ -80,27 +80,27 @@ public class ParsedWay extends ParsedItem implements Serializable{
 
     @Override
     public ParsedNode getFirstNode() {
-        if(nodes != null && nodes.size() > 0) return nodes.get(0);
+        if(size() > 0) return get(0);
         return null;
     }
 
     public ParsedNode getLastNode() {
-        if(nodes.size() > 0) return nodes.get(nodes.size() - 1);
+        if(size() > 0) return get(size() - 1);
         return null;
     }
 
     public ParsedNode getSecondNode() {
-        if(nodes != null && nodes.size() > 3) return nodes.get(1);
+        if(size() > 3) return get(1);
         return null;
     }
 
     public ParsedNode getSecondToLastNode() {
-        if(nodes != null && nodes.size() > 3) return nodes.get(nodes.size() - 2);
+        if(size() > 3) return get(size() - 2);
         return null;
     }
     
     public String toString() {
-    	return "ParsedWay [" + "id=" + id + ", firstLon=" + getFirstNode().getLon() + ", firstLat=" + getFirstNode().getLat() + ", nodeAmount=" + nodes.size() + "]";
+    	return "ParsedWay [" + "id=" + id + ", firstLon=" + getFirstNode().getLon() + ", firstLat=" + getFirstNode().getLat() + ", nodeAmount=" + size() + "]";
     }
 
     public void setID(long id) {

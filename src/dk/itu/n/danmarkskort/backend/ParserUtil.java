@@ -52,9 +52,7 @@ public class ParserUtil {
 
         for(ParsedWay way : unconnected) {
             int firstSide = findSide(way.getFirstNode());
-            Main.log("firstnode side: " + firstSide);
             int lastSide = findSide(way.getLastNode());
-            Main.log("lastnode side: " + lastSide);
 
             ParsedWay clone = new ParsedWay();
 
@@ -88,14 +86,10 @@ public class ParserUtil {
                 unconnectedStarts.remove(startWay.getFirstNode());
 
                 if(endWay == startWay) {
-                    Main.log("this happened");
-                    Main.log(endNode);
-                    Main.log(endWay.getLastNode().getLon() + " " + endWay.getLastNode().getLat());
                     endWay.addNode(startWay.getFirstNode());
                     connectedSet.add(endWay);
                 }
                 else {
-                    Main.log("not same!!!!!!!!!!!!!!!!!QW#%%#/(RTYGJSDTFG");
                     endWay.addNodes(startWay.getNodes());
                     unconnectedEnds.put(endWay.getLastNode(), endWay);
                     unconnectedStarts.put(endWay.getFirstNode(), endWay);
@@ -110,11 +104,8 @@ public class ParserUtil {
         int runs = 0;
         for(int i = startSide; i < starts.length; ) {
             runs++;
-            Main.log("going to " + i);
             if(starts[i].size() > 0) {
-                Main.log(i +" side is big enough:=)");
                 for(int j = 0; j < starts[i].size(); j++) {
-                    Main.log("j currently " + j);
                     ParsedNode currentCheck = starts[i].get(j);
                     if(currentCheck != null) {
                         if(runs > 1) {
@@ -145,39 +136,24 @@ public class ParserUtil {
                         }
                     }
                     else if(j == starts[i].size() - 1) {
-                        Main.log("creating fake corner node, fro mthe inside loop");
                         if (i == 0) {
                             currentEnd = new ParsedNode(Main.model.getMinLon(), Main.model.getMinLat());
-                            Main.log(currentWay.getLastNode());
                             currentWay.addNode(currentEnd);
-                            Main.log(currentWay.getLastNode());
-
                             i++;
                             break; // without a break we have potential for endless loop
                         } else if (i == 1) {
                             currentEnd = new ParsedNode(Main.model.getMinLon(), Main.model.getMaxLat());
-                            Main.log(currentWay.getLastNode());
-
                             currentWay.addNode(currentEnd);
-                            Main.log(currentWay.getLastNode());
-
                             i++;
                             break;
                         } else if (i == 2) {
                             currentEnd = new ParsedNode(Main.model.getMaxLon(), Main.model.getMaxLat());
-                            Main.log(currentWay.getLastNode());
-
-
                             currentWay.addNode(currentEnd);
-                            Main.log(currentWay.getLastNode());
-
                             i++;
                             break;
                         } else if (i == 3) {
                             currentEnd = new ParsedNode(Main.model.getMaxLon(), Main.model.getMinLat());
-                            Main.log(currentWay.getLastNode());
                             currentWay.addNode(currentEnd);
-                            Main.log(currentWay.getLastNode());
                             i = 0;
                             break;
                         }
@@ -186,35 +162,20 @@ public class ParserUtil {
             }
             else {
                 if (i == 0) {
-                    Main.log("creating fake corner node from the outside loop, side: " + i);
-                    Main.log(currentWay.getLastNode());
-
                     currentEnd = new ParsedNode(Main.model.getMinLon(), Main.model.getMaxLat());
                     currentWay.addNode(currentEnd);
-                    Main.log(currentWay.getLastNode());
-                    Main.log(Main.model.getMinLat());
                     i++;
                 } else if (i == 1) {
-                    Main.log("creating fake corner node from the outside loop, side: " + i);
-
                     currentEnd = new ParsedNode(Main.model.getMinLon(), Main.model.getMinLat());
                     currentWay.addNode(currentEnd);
                     i++;
                 } else if (i == 2) {
-                    Main.log("creating fake corner node from the outside loop, side: " + i);
-                    Main.log(currentWay.getLastNode());
-
                     currentEnd = new ParsedNode(Main.model.getMaxLon(), Main.model.getMinLat());
                     currentWay.addNode(currentEnd);
-                    Main.log(currentWay.getLastNode());
                     i++;
                 } else if (i == 3) {
-                    Main.log("creating fake corner node from the outside loop, side: " + i);
-                    Main.log(currentWay.getLastNode());
-
                     currentEnd = new ParsedNode(Main.model.getMaxLon(), Main.model.getMaxLat());
                     currentWay.addNode(currentEnd);
-                    Main.log(currentWay.getLastNode());
                     i = 0;
                 }
             }
@@ -280,8 +241,6 @@ public class ParserUtil {
             if (distanceToRight < distanceToTop) side = RIGHT;
             else side = TOP;
         }
-        Main.log(top + " " + left + ", distances: " + distanceToTop + " " + distanceToLeft + " " + distanceToBottom + " " + distanceToRight);
-        Main.log(node.getKey() + " side: " + side);
         return side;
     }
 

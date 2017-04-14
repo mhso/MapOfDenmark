@@ -1,6 +1,5 @@
 package dk.itu.n.danmarkskort.models;
 
-import java.awt.*;
 import java.awt.geom.Path2D;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -44,8 +43,8 @@ public class ParsedRelation extends ParsedWay {
         if(inners.size() > 0 || outers.size() > 0) {
             for(ParsedWay inner  : inners) nodeList.addAll(inner.getNodes());
             for(ParsedWay outer : outers) nodeList.addAll(outer.getNodes());
-        } else if(nodes != null) {
-            return nodes;
+        } else if(size() > 0) {
+            return this;
         }
         return nodeList;
     }
@@ -99,7 +98,7 @@ public class ParsedRelation extends ParsedWay {
 
     @Override
     public ParsedNode getFirstNode() {
-        if(nodes.size() > 0) return nodes.get(0);
+        if(size() > 0) return get(0);
         else if(outers.size() > 0) return outers.get(0).getFirstNode();
         else if(inners.size() > 0) return inners.get(0).getFirstNode();
         return null;
@@ -107,7 +106,7 @@ public class ParsedRelation extends ParsedWay {
 
     @Override
     public ParsedNode getLastNode() {
-        if(nodes.size() > 0) return nodes.get(nodes.size() - 1);
+        if(size() > 0) return get(size() - 1);
         else if(outers.size() > 0) return outers.get(outers.size() - 1).getLastNode();
         else if(inners.size() > 0) return inners.get(inners.size() - 1).getLastNode();
         return null;
@@ -115,7 +114,7 @@ public class ParsedRelation extends ParsedWay {
     
     public String toString() {
     	int nodeAmount = 0;
-    	if(nodes != null) nodeAmount = nodes.size();
+    	if(size() > 0) nodeAmount = size();
 
     	return "ParsedRelation [" + "id=" + id 	+ ", firstLon=" + getFirstNode().getLon() + ", firstLat="
                 + getFirstNode().getLat() + ", nodeAmount=" + nodeAmount
