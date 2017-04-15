@@ -3,7 +3,7 @@ package dk.itu.n.danmarkskort.models;
 import java.awt.*;
 import java.util.ArrayList;
 
-public abstract class ParsedItem {
+public abstract class ParsedItem extends ArrayList<ParsedNode> {
 
     public int compareLon(ParsedItem item) {
         float a = getFirstNode().getLon();

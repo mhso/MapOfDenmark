@@ -123,14 +123,25 @@ public class MapCanvas extends JPanel implements ActionListener {
         // drawing all the outlines, if the current WayTypeGraphicSpec has one
 		for (WaytypeGraphicSpec wayTypeGraphic : wayTypesVisible) {
 			currentWTGSpec = wayTypeGraphic;
+			KDTree kdTree = Main.model.enumMapKD.get(wayTypeGraphic.getWayType());
+			if (kdTree == null) continue;
 			if (currentWTGSpec.getOuterColor() != null) {
-				KDTree kdTree = Main.model.enumMapKD.get(wayTypeGraphic.getWayType());
-				if (kdTree == null) continue;
+				ArrayList<Shape> shapes = kdTree.getShapes(getGeographicalRegion());
+				currentWTGSpec.transformOutline(g2d);
+				for(Shape shape : shapes) {
+					if (currentWTGSpec instanceof GraphicSpecLine) g2d.draw(shape);
+					else if (currentWTGSpec instanceof GraphicSpecArea) g2d.fill(shape);
+					shapesDrawn++;
+				}
+			}
+			else if(currentWTGSpec instanceof GraphicSpecArea) {
+				currentWTGSpec.transformPrimary(g2d);
 				ArrayList<Shape> shapes = kdTree.getShapes(getGeographicalRegion());
 				for(Shape shape : shapes) {
 					currentWTGSpec.transformOutline(g2d);
 					if (currentWTGSpec instanceof GraphicSpecLine) g2d.draw(shape);
 					else if (currentWTGSpec instanceof GraphicSpecArea) g2d.fill(shape);
+					shapesDrawn++;
 				}
 			}
 		}
@@ -144,13 +155,13 @@ public class MapCanvas extends JPanel implements ActionListener {
 			for(Shape shape : shapes) {
 				currentWTGSpec.transformPrimary(g2d);
 				if (currentWTGSpec instanceof GraphicSpecLine) g2d.draw(shape);
-				else if (currentWTGSpec instanceof GraphicSpecArea) g2d.fill(shape);
+				//else if (currentWTGSpec instanceof GraphicSpecArea) g2d.fill(shape);
 				shapesDrawn++;
 			}
 		}
 	}
 
-
+	// This method is probably not the best. We should "just" change the entire background for et mapcanvas instead, if possible
 	private void drawBackground(Graphics2D g2d) {
         Region region = Main.model.getMapRegion();
         Path2D background = new Path2D.Double();

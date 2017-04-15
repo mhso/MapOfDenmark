@@ -28,18 +28,19 @@
 			<innercolor color="F5FCBE"/>
 			<outercolor color="798B25"/>
 			<lineproperties linewidth="90"/>
-			<layer layer="3"/>
+			<layer layer="4"/>
 		</line>
 		<line>
 			<type name="HIGHWAY_TERTIARY"/>
 			<innercolor color="FFFFFF"/>
 			<outercolor color="ABABAB"/>
 			<lineproperties linewidth="90"/>
-			<layer layer="3"/>
+			<layer layer="4"/>
 		</line>
 		<line>
 			<type name="HIGHWAY_UNDEFINED"/>
 			<innercolor color="FFFFFF"/>
+			<outercolor color="C3C3C3"/>
 			<lineproperties linewidth="60"/>
 			<layer layer="3"/>
 		</line>
@@ -53,6 +54,7 @@
 		<line>
 			<type name="HIGHWAY_SERVICE"/>
 			<innercolor color="FFFFFF"/>
+			<outercolor color="C3C3C3"/>
 			<lineproperties linewidth="20"/>
 			<layer layer="3"/>
 		</line>
