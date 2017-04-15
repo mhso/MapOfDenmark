@@ -98,7 +98,7 @@ public class AddressSuggestion {
 				}
 			}
 		}
-		System.out.println("Analyzed addr: " + addr.toString());
+		if(debug) System.out.println("Analyzed addr: " + addr.toString());
 		
 		lastSearchInput = find;
 		lastSearchAddress = addr;

@@ -23,7 +23,8 @@ public class AddressValidator {
 	private final static Pattern PAT_HOUSENUMBER = Pattern.compile(RGX_HOUSENUMBER);
 	private final static Pattern PAT_POSTCODE = Pattern.compile(RGX_POSTCODE);
 	private final static Pattern PAT_CITY = Pattern.compile(RGX_CITY);
-
+	private static boolean debug = true;
+	
 	public AddressValidator(){
 	}
 
@@ -61,6 +62,16 @@ public class AddressValidator {
 	
 	public static String replaceDashSpaces(String inputStr){
 		return inputStr = inputStr.replaceAll("([\\s]*\\-[\\s]*)","-");
+	}
+	
+	public static String replaceContractNumAlpha(String inputStr){
+		return inputStr
+				.replaceAll("([0-9]{1,3})([\\s]*)([A-Z\\-]{1})", "$1$3"); //Remove spaces, etc. "4 A" -> "4A"
+	}
+	
+	public static String removeEverythingAfterFirstSpace(String inputStr){
+		if(inputStr.contains(" ")) inputStr = inputStr.substring(0,  inputStr.indexOf(" "));
+		return inputStr;
 	}
 	
 	public static String replaceSpaceInHouseNumber(String inputStr){
@@ -156,20 +167,39 @@ public class AddressValidator {
 	}
 	
 	public static String prepHousenumber(String number){
-		if(number != null && !number.isEmpty()) {
-			number = cleanExcessSpaces(number.toUpperCase());
-			number = number.replaceAll("[^0-9A-Z\\s\\-]", "");
-			number = replaceDashSpaces(number);
-			number = cleanExcessSpaces(number);
-			number = parseAddressFloor(number);
-			number = cleanAddressFloor(number);
-			number = parseAddressSide(number);
-			number = cleanAddressSide(number);
-			number = removeSpaces(number);
-			return splitUppercaseLetters(number);
+		String prepStr = number;
+		if(number != null){
+			prepStr = prepStr.toUpperCase();
+			if(prepStr.matches("[0-9]{1,3}[A-Z]{0,1}")){
+				return prepStr;
+			}
+		
+			if(prepStr != null && !prepStr.isEmpty()) {
+				prepStr = prepStr.toUpperCase();
+				prepStr = prepStr.replaceAll("[^0-9A-Z\\s\\-]", " ");
+				prepStr = cleanExcessSpaces(prepStr);
+				
+				prepStr = parseAddressSide(prepStr);
+				prepStr = cleanAddressSide(prepStr);
+				prepStr = parseAddressFloor(prepStr);
+				prepStr = cleanAddressFloor(prepStr);
+				
+				//if(debug) System.out.println("prepHousenumber2, before: " + number + " after: " + prepStr);
+				prepStr = replaceContractNumAlpha(prepStr);
+				//if(debug) System.out.println("prepHousenumber2, before: " + number + " after: " + prepStr);
+				prepStr = removeEverythingAfterFirstSpace(prepStr);
+				//if(debug) System.out.println("prepHousenumber2, before: " + number + " after: " + prepStr);
+	//			prepStr = replaceDashSpaces(prepStr);
+	//			prepStr = cleanExcessSpaces(prepStr);
+	//			//prepStr = removeSpaces(prepStr);
+				if(debug) System.out.println("prepHousenumber2, before: " + number + " after: " + prepStr);
+				return splitUppercaseLetters(prepStr);
+			}
 		}
 		return null;
 	}
+	
+	
 	
 	public static String prepPostcode(String postcode){
 		if(postcode != null && !postcode.isEmpty()) return removeSpaces(extractPostcode(postcode));

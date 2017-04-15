@@ -47,6 +47,10 @@ public class ParsedAddress {
  	}
     
     public String toString(){
-    	return street +" "+housenumber+", "+postcode+" "+city;
+    	return street +" " + housenumber + ", " + postcode + " "+city;
+    }
+    
+    public String toStringParted(){
+    	return street + " | " + housenumber + " | "+ postcode + " | " + city;
     }
 }

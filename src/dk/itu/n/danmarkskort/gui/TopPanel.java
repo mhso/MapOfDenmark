@@ -2,6 +2,7 @@ package dk.itu.n.danmarkskort.gui;
 
 import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.address.Address;
+import dk.itu.n.danmarkskort.gui.map.PinPoint;
 import dk.itu.n.danmarkskort.gui.menu.DropdownMenu;
 import dk.itu.n.danmarkskort.gui.menu.RoutePage;
 import dk.itu.n.danmarkskort.search.SearchController;
@@ -165,6 +166,8 @@ public class TopPanel extends JPanel {
     private void panZoomToCoordinates(float[] lonLat) {
 		// TODO Auto-generated method stub
     	System.out.println("Toppanel->panZoomToCoordinats (lon, lat): (" + lonLat[0] + ", " + lonLat[1] + ")");
+    	String pinPointName = "SearchLocation - (" + lonLat[0] + ", " + lonLat[1] + ")";
+    	Main.pinPointManager.addPinPoint(pinPointName, new PinPoint(Main.map.toScreenCoords(new Point2D.Float(lonLat[0], lonLat[1])), pinPointName));
     	Main.map.panToPosition(new Point2D.Float(lonLat[0], lonLat[1]));
     	Main.mainPanel.repaint();
 	}
