@@ -1,6 +1,7 @@
 package dk.itu.n.danmarkskort;
 
 import java.awt.Dimension;
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -42,7 +43,7 @@ public class Util {
 	}
 	
 	public static String getFileChecksum(MessageDigest digest, File file) throws IOException {
-		FileInputStream fis = new FileInputStream(file);
+		BufferedInputStream fis = new BufferedInputStream(new FileInputStream(file));
 
 		byte[] byteArray = new byte[1024];
 		int bytesCount = 0;
@@ -147,7 +148,7 @@ public class Util {
 	
 	public static Object readObjectFromFile(String fileName, List<InputStreamListener> listeners) {		
 		try {
-			FileInputStream fout = new FileInputStream(fileName);
+			BufferedInputStream fout = new BufferedInputStream(new FileInputStream(fileName));
 			InputMonitor monitor = new InputMonitor(fout, fileName);
 			ObjectInputStream oos = new ObjectInputStream(monitor);
 			for(InputStreamListener listener : listeners) monitor.addListener(listener);
@@ -162,7 +163,7 @@ public class Util {
 	
 	public static Object readObjectFromFile(String filename) {
 		try {
-			FileInputStream fout = new FileInputStream(filename);
+			BufferedInputStream fout = new BufferedInputStream(new FileInputStream(filename));
 			ObjectInputStream oos = new ObjectInputStream(fout);
 			Object object = oos.readObject();
 			oos.close();
