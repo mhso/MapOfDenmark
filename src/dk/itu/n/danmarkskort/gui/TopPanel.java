@@ -1,44 +1,39 @@
 package dk.itu.n.danmarkskort.gui;
 
+import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.address.Address;
+import dk.itu.n.danmarkskort.gui.map.PinPoint;
 import dk.itu.n.danmarkskort.gui.menu.DropdownMenu;
 import dk.itu.n.danmarkskort.gui.menu.RoutePage;
 import dk.itu.n.danmarkskort.search.SearchController;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.text.AbstractDocument;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DocumentFilter;
 
-import com.sun.scenario.effect.DropShadow;
-
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 public class TopPanel extends JPanel {
-
-    private Style style;
+	private static final long serialVersionUID = -3413495967270668324L;
+	private Style style;
     private DropdownAddressSearch dropSuggestions;
     private DropdownMenu dropMenu;
     private JTextField input;
     private JPanel searchInputWrapper, topParent;
     private JButton menu;
+    private List<String> dropSuggestionsList;
 
     public TopPanel(Style style) {
-
+    	dropSuggestionsList = new ArrayList<String>();
         this.style = style;
         setOpaque(false);
 
@@ -155,17 +150,32 @@ public class TopPanel extends JPanel {
 
     // Skal nok flyttes senere, for at overholde MVC
     public void searchForAddress(String address) {
-        Address addr = SearchController.getInstance().getSearchFieldAddressObj(address);
-        if(addr != null )System.out.println("Toppanel->searchForAddress: "+addr.toString());
+    	if(!address.trim().isEmpty()) {
+    		Address addr = SearchController.getSearchFieldAddressObj(address);
+        	if(addr != null ) { 
+        		System.out.println("Toppanel->searchForAddress: "+addr.toString());
+        		panZoomToCoordinates(addr.getLonLat());
+        	} else {
+        		JOptionPane.showMessageDialog(null, "No match found.", "Missing information", JOptionPane.INFORMATION_MESSAGE);
+        	}
+    	} else {
+    		JOptionPane.showMessageDialog(null, "Search field can't be empty.", "Missing information", JOptionPane.INFORMATION_MESSAGE);
+    	}
     }
 
-    public void populateSuggestions(List<String> list) {
-        dropSuggestions.setVisible(false);
+    private void panZoomToCoordinates(float[] lonLat) {
+		// TODO Auto-generated method stub
+    	System.out.println("Toppanel->panZoomToCoordinats (lon, lat): (" + lonLat[0] + ", " + lonLat[1] + ")");
+    	String pinPointName = "SearchLocation - (" + lonLat[0] + ", " + lonLat[1] + ")";
+    	Main.pinPointManager.addPinPoint(pinPointName, new PinPoint(Main.map.toScreenCoords(new Point2D.Float(lonLat[0], lonLat[1])), pinPointName));
+    	Main.map.panToPosition(new Point2D.Float(lonLat[0], lonLat[1]));
+    	Main.mainPanel.repaint();
+	}
+
+	public void populateSuggestions(List<String> list) {
         dropSuggestions.removeAll();
-        int i = 0;
-        for(String st : list){
-            dropSuggestions.addElement(input, st);
-            if(++i > 10) break;
+        for(String str : list){
+            dropSuggestions.addElement(input, str);
         }
         dropSuggestions.showDropdown(input);
     }
@@ -208,13 +218,28 @@ public class TopPanel extends JPanel {
         }
 
         public void dropdownSuggestions(int offset, String text) {
-            if(offset > 1) {
-                populateSuggestions(SearchController.getInstance().getSearchFieldSuggestions(text));
-                revalidate();
-                repaint();
+        	
+            if(offset > 1 && text.length() > 1) {
+              	dropSuggestionsList = SearchController.getSearchFieldSuggestions(text);
+            	populateSuggestions(dropSuggestionsList);
             } else {
                 dropSuggestions.setVisible(false);
             }
         }
     }
+    
+//    private void swingSearch(String text){
+//	    SwingWorker worker = new SwingWorker<List<String>, Void>() {
+//	        @Override
+//	        public List<String> doInBackground() {
+//	            return dropSuggestionsList = SearchController.getSearchFieldSuggestions(text);
+//	        }
+//	
+//	        @Override
+//	        public void done() {
+//	        	populateSuggestions(dropSuggestionsList);
+//	        }
+//	    };
+//	    worker.execute();
+//    }
 }

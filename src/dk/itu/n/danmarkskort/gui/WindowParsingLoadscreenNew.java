@@ -19,26 +19,31 @@ import java.awt.Dimension;
 
 import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.Util;
+import dk.itu.n.danmarkskort.backend.InputStreamListener;
 import dk.itu.n.danmarkskort.backend.OSMParserListener;
-import dk.itu.n.danmarkskort.lightweight.models.ParsedItem;
-import dk.itu.n.danmarkskort.models.ParsedObject;
-import dk.itu.n.danmarkskort.models.ParsedWay;
 
 import javax.imageio.ImageIO;
 
-public class WindowParsingLoadscreenNew extends JFrame implements OSMParserListener {
-
+public class WindowParsingLoadscreenNew extends JFrame implements OSMParserListener, InputStreamListener, Runnable {
+	private static final long serialVersionUID = 4049548769311961507L;
+	private static final Color BAR_STATIC_COLOR = Color.LIGHT_GRAY;
+	private static final Color BAR_LOADING_COLOR = new Color(0, 153, 0);
+	
 	private JPanel contentPane;
 	private JPanel panel;
 	private JLabel labelStatus;
 	private BufferedImage mainImage;
 	private long fileSize;
-	private boolean showObjectString = true;
 	private double currentPercent;
 	private JLabel labelPercent;
+	private int objectCount = 1000;
+	private String fileName;
 	
-	public void initialize(String fileName) {
-		getFileSize(fileName);
+	public WindowParsingLoadscreenNew(String fileName) {
+		this.fileName = fileName;
+	}
+	
+	public void initialize() {
 		setTitle("Parsing Data");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
@@ -85,6 +90,11 @@ public class WindowParsingLoadscreenNew extends JFrame implements OSMParserListe
 		setVisible(true);
 	}
 	
+	public void run() {
+		getFileSize(fileName);
+		initialize();
+	}
+	
 	private void getFileSize(String fileName) {
 		File file = new File(fileName);
 		fileSize = Util.getFileSize(file);
@@ -103,29 +113,44 @@ public class WindowParsingLoadscreenNew extends JFrame implements OSMParserListe
 	public void onParsingStarted() {
 		
 	}
-
+	
 	@Override
-	public void onParsingGotItem(Object parsedItem) {
-		if(showObjectString) {
-			labelStatus.setText(parsedItem.toString());
-			showObjectString = false;
-		}
+	public void onStreamStarted() {
+		labelStatus.setText("Parsing File...");
 	}
 
 	@Override
-	public void onLineCountHundred() {
-		currentPercent++;
+	public void onParsingGotItem(Object parsedItem) {
+		objectCount++;
+		if(objectCount >= 1000) {
+			labelStatus.setText(parsedItem.toString());
+			objectCount = 0;
+		}
+	}
+	
+	@Override
+	public void onPercent(int percentAmounth) {
+		currentPercent += percentAmounth;
 		setProgressPercent();
-		showObjectString = true;
+	}
+	
+	@Override
+	public void onStreamEnded() {
+		labelStatus.setText("Saving Data To Binary Format...");
+	}
+	
+	@Override
+	public void onSetupDone() {
+		dispose();
 	}
 
 	@Override
 	public void onParsingFinished() {
-		dispose();
+		labelStatus.setText("Converting Data To KD-Trees...");
 	}
 	
 	private class BGImage extends JPanel {
-		private BufferedImage[] subImagesBlue = new BufferedImage[74];
+		private BufferedImage[] subImages = new BufferedImage[74];
 		private BufferedImage[] subImagesRed = new BufferedImage[74];
 		
 		public BGImage() {
@@ -142,17 +167,22 @@ public class WindowParsingLoadscreenNew extends JFrame implements OSMParserListe
 			catch (IOException e) {
 				e.printStackTrace();
 			}
-			subImagesBlue[0] = mainImage.getSubimage(0, 0, 
+			subImages[0] = mainImage.getSubimage(0, 0, 
 					mainImage.getWidth(), 3);
 			int y = mainImage.getHeight()-4;
 			for(int i = 73; i >= 0; i--) {
-				subImagesBlue[i] = mainImage.getSubimage(0, y, 
+				subImages[i] = mainImage.getSubimage(0, y, 
 						mainImage.getWidth(), 4);
+				for(int j = 0; j < subImages[i].getWidth(); j++) {
+					for(int k = 0; k < subImages[i].getHeight(); k++) {
+						if(subImages[i].getRGB(j, k) != Color.WHITE.getRGB()) subImages[i].setRGB(j, k, BAR_STATIC_COLOR.getRGB());
+					}
+				}
 				BufferedImage redImage = copyImage.getSubimage(0, y, 
 						mainImage.getWidth(), 4);
 				for(int j = 0; j < redImage.getWidth(); j++) {
 					for(int k = 0; k < redImage.getHeight(); k++) {
-						if(redImage.getRGB(j, k) != Color.WHITE.getRGB()) redImage.setRGB(j, k, Color.RED.getRGB());
+						if(redImage.getRGB(j, k) != Color.WHITE.getRGB()) redImage.setRGB(j, k, BAR_LOADING_COLOR.getRGB());
 					}
 				}
 				subImagesRed[i] = redImage;
@@ -171,7 +201,5 @@ public class WindowParsingLoadscreenNew extends JFrame implements OSMParserListe
 			}
 		}
 	}
-
-	public void onWayLinked(ParsedWay way) {}
 }
 

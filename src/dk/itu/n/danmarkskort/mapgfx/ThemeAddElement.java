@@ -32,10 +32,11 @@ import javax.swing.border.MatteBorder;
 
 import dk.itu.n.danmarkskort.gui.CustomButton;
 import dk.itu.n.danmarkskort.models.WayType;
+
 import javax.swing.JSlider;
 
 public class ThemeAddElement extends JFrame {
-
+	private static final long serialVersionUID = 880226387273529455L;
 	private JPanel contentPane;
 	private JTextField fieldName;
 	private JTextField fieldLayer;
@@ -86,7 +87,7 @@ public class ThemeAddElement extends JFrame {
 		panelType.add(labelType, BorderLayout.NORTH);
 		labelType.setHorizontalAlignment(SwingConstants.CENTER);
 		
-		JComboBox comboBoxType = new JComboBox(new String[]{"Line", "Area", "Label", "Icon"});
+		JComboBox<String> comboBoxType = new JComboBox<>(new String[]{"Line", "Area", "Label", "Icon"});
 		comboBoxType.setSelectedItem(null);
 		comboBoxType.addActionListener(e -> {
 			elementType = (String)comboBoxType.getSelectedItem();

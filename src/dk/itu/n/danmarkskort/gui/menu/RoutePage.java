@@ -6,35 +6,21 @@ import javax.swing.text.AbstractDocument;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DocumentFilter;
-import javax.swing.text.DocumentFilter.FilterBypass;
 
 import dk.itu.n.danmarkskort.address.Address;
 import dk.itu.n.danmarkskort.gui.DropdownAddressSearch;
 import dk.itu.n.danmarkskort.gui.Style;
-import dk.itu.n.danmarkskort.gui.TopPanel;
 import dk.itu.n.danmarkskort.routeplanner.RoutePlannerMain;
 import dk.itu.n.danmarkskort.search.SearchController;
 
 import java.awt.*;
-import java.awt.event.ActionListener;
-import java.awt.event.FocusListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
 import java.util.List;
-import java.awt.event.ActionEvent;
-import java.awt.event.ItemListener;
-import java.awt.event.ItemEvent;
-import javax.swing.event.PopupMenuListener;
-import javax.swing.event.PopupMenuEvent;
-import java.awt.event.InputMethodListener;
-import java.awt.event.InputMethodEvent;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
 
 public class RoutePage extends JPanel {
-
-    Style style;
+	private static final long serialVersionUID = 6134418299293182669L;
+	Style style;
     private JTextField txtAddrFrom;
     private JTextField txtAddrTo;
     JLabel lblAddrFromConfirmed, lblAddrToConfirmed;
@@ -275,7 +261,8 @@ public class RoutePage extends JPanel {
     
     private boolean updateValidInputAddrTo(JTextField field, JLabel labelName){
     	boolean valid = false;
-    	Address addr = SearchController.getInstance().getSearchFieldAddressObj(field.getText());
+    	Address addr = null;
+    	if(!field.getText().isEmpty()) addr = SearchController.getSearchFieldAddressObj(field.getText());
     	if(addr != null) valid = true;
     	changeValidAddrIcon(labelName, valid);
     	return valid;
@@ -290,6 +277,12 @@ public class RoutePage extends JPanel {
     private void openFindRoute(){
     	if(validateToFromFields()){
     		RoutePlannerMain routePlannerMain =  new RoutePlannerMain(txtAddrFrom.getText(), txtAddrTo.getText());
+    	} else if(!txtAddrFrom.getText().trim().isEmpty() && !txtAddrTo.getText().trim().isEmpty()) {
+    		menu.blockVisibility(true);
+    		JOptionPane.showMessageDialog(this, "To/From fields can't be empty.", "Missing information", JOptionPane.INFORMATION_MESSAGE);
+    	} else {
+    		menu.blockVisibility(true);
+    		JOptionPane.showMessageDialog(this, "The address input not found,\n please refere to the smilyes.", "Wrong information", JOptionPane.INFORMATION_MESSAGE);
     	}
     }
 
@@ -350,7 +343,7 @@ public class RoutePage extends JPanel {
         
         public void dropdownSuggestions(int offset, String text) {
             if(offset > 1) {
-                populateSuggestions(das, input, SearchController.getInstance().getSearchFieldSuggestions(text));
+                populateSuggestions(das, input, SearchController.getSearchFieldSuggestions(text));
                 revalidate();
                 repaint();
             } else {

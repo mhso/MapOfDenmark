@@ -1,7 +1,6 @@
 package dk.itu.n.danmarkskort.gui;
 
 import javax.swing.*;
-import javax.swing.plaf.ColorUIResource;
 import java.awt.*;
 
 public class DropdownMenu extends JPopupMenu{
@@ -39,28 +38,8 @@ public class DropdownMenu extends JPopupMenu{
         menuItems.setBackground(style.menuItemsBG());
         menuItems.setBorder(BorderFactory.createEmptyBorder(style.menuItemInsets(), style.menuItemInsets(), style.menuItemInsets(), style.menuItemInsets()));
 
-        // route
-        menuItems.add(style.menuRouteButton(), gbcMenuItems);
 
-        // open
-        gbcMenuItems.gridy = 1;
-        menuItems.add(style.menuOpenButton(), gbcMenuItems);
-
-        // save
-        gbcMenuItems.gridy = 2;
-        menuItems.add(style.menuSaveButton(), gbcMenuItems);
-
-        // layers/filters
-        gbcMenuItems.gridy = 3;
-        menuItems.add(style.menuLayerButton(), gbcMenuItems);
-
-        // settings
-        gbcMenuItems.gridy = 4;
-        menuItems.add(style.menuSettingsButton(), gbcMenuItems);
-
-        // about us
-        gbcMenuItems.gridy = 5;
-        menuItems.add(style.menuInfoButton(), gbcMenuItems);
+        
         menuItems.setPreferredSize(new Dimension(topPanel.getMenuWidth(), menuItems.getPreferredSize().height));
         gbcContainer.gridx = 0;
         wrapper.add(menuItems, gbcContainer);

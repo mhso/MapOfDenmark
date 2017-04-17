@@ -2,7 +2,6 @@ package dk.itu.n.danmarkskort.gui.map;
 
 
 import java.awt.Dimension;
-import java.awt.MouseInfo;
 import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -37,10 +36,11 @@ public class MapMouseController extends MouseAdapter {
 		lastMousePosition = e.getPoint();
 	}
 
-	public void mouseReleased(MouseEvent e) {
-
+	public void mouseMoved(MouseEvent e) {
+		if(Main.pinPointManager != null) Main.pinPointManager.checkHover();
+		canvas.mouseMoved();
 	}
-
+	
 	public void mouseDragged(MouseEvent e) {
 		Point2D currentMousePosition = e.getPoint();
 		double dx = currentMousePosition.getX() - lastMousePosition.getX();
@@ -57,8 +57,6 @@ public class MapMouseController extends MouseAdapter {
 		} else if(warp == 3) {
 			dy += screenSize.getHeight();
 		}
-		
-		if(warp != -1) Main.log(warp + "");
 		
 		canvas.pan(dx, dy);
 		lastMousePosition = currentMousePosition;

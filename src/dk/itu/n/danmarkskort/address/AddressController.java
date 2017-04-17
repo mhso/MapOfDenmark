@@ -1,190 +1,141 @@
 package dk.itu.n.danmarkskort.address;
 
 import dk.itu.n.danmarkskort.Main;
+import dk.itu.n.danmarkskort.TimerUtil;
+import dk.itu.n.danmarkskort.models.ParsedAddress;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
+import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 public class AddressController{
-	private Map<float[], Address> addresses;
-	private Map<float[], String> addressesNotAccepted;
-
-	private static AddressController instance;
-	private HashMap<String, HashMap> addressDatabase;
-
-	private final static Lock lock = new ReentrantLock();
-
-	private int numAddresses;
+	private int addressesNotAcceptedCount;
+	private TimerUtil timerUtilA = new TimerUtil();
+	private TimerUtil timerUtilB = new TimerUtil();
+	private PostcodeCityBestMatch postcodeCityBestMatch;
+	AddressSuggestion addressSuggestion = new AddressSuggestion();
+	AddressRegionSearch addressRegionSearch = new AddressRegionSearch();
+	private boolean debug = true;
 	
-	private AddressController(){
-		addresses =  new HashMap<float[], Address>();
-		addressesNotAccepted =  new HashMap<float[], String>();
-		addressDatabase = new HashMap<>();
+	public AddressController(){
+		postcodeCityBestMatch = new PostcodeCityBestMatch();
 	}
-	int count = 0; 
-
-	public static AddressController getInstance(){
-        if (instance == null) {
-            lock.lock();
-            try {
-                if (instance == null) {
-                	AddressController tmpInstance = new AddressController();
-                    instance = tmpInstance;
-                }
-            }
-            finally {
-                lock.unlock();
-            }
-        }
-        return instance;
-    }
 	
-	public Address getAddressFromNodeId(long nodeId){ return addresses.get(nodeId); }
-	
-	public List<String> getSearchSuggestions(String find){ return searchSuggestions(find); }
+	public List<String> getSearchSuggestions(String find, long limitAmountOfResults){ return addressSuggestion.searchSuggestions(find, limitAmountOfResults); }
 	
 	public Address getSearchResult(String find){
-		Address addrBuild = AddressSearchPredicates.addressEquals(addresses, AddressParser.parse(find, false));
-		return addrBuild;
-	}
-	
-	private List<String> searchSuggestions(String find){
-		//System.out.println("Addr: looking for suggestions ");
-
-		Address addrBuild = AddressParser.parse(find, true);
-		List<String> result = new ArrayList<String>();
-		//System.out.println("searchSuggestions: "+addrBuild.toString());
-
-		// Find suggestion from street
-		if(addrBuild.getStreet() != null){
-			result.addAll(AddressSearchPredicates.filterToStringShort(addresses, 
-							AddressSearchPredicates.streetStartsWith(addrBuild.getStreet()) , 5l));
-			// Find suggestion from street, accept 0-1 mistakes in street input
-			if (result.size() == 0) {
-				result.addAll(AddressSearchPredicates.filterToStringShort(addresses, 
-						AddressSearchPredicates.streetLevenshteinDistance(addrBuild.getStreet(),-1,2) , 5l));
-				// Find suggestion from street, accept 0-3  mistakes in street input
-				if (result.size() == 0) {
-					result.addAll(AddressSearchPredicates.filterToStringShort(addresses, 
-							AddressSearchPredicates.streetLevenshteinDistance(addrBuild.getStreet(),-1,4) , 5l));
-				}
-			}
+		
+		Address addrBuild = AddressParser.parse(find, false);
+		Map<String, Postcode> list;
+		list = AddressHolder.search(addrBuild,
+				SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.EQUALS);
+		if(list.size() < 1) { list = AddressHolder.search(addrBuild,
+				SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.ANY);
+		}
+		if(list.size() < 1) { list = AddressHolder.search(addrBuild,
+				SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.ANY, SearchEnum.EQUALS);
+		}
+		if(list.size() < 1) { list = AddressHolder.search(addrBuild,
+				SearchEnum.LEVENSHTEIN, SearchEnum.EQUALS, SearchEnum.ANY, SearchEnum.EQUALS);
+		}
+		if(list.size() < 1) { list = AddressHolder.search(addrBuild,
+				SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.ANY, SearchEnum.LEVENSHTEIN);
 		}
 		
-		// Find suggestion from street and housenumber
-		if(addrBuild.getStreet() != null && addrBuild.getHousenumber() != null){
-			result = (AddressSearchPredicates.filterToStringShort(addresses, 
-					AddressSearchPredicates.streetEqualsHousenumberStartsWith(addrBuild) , 5l));
-			// Find suggestion from street and housenumber, accept 0-1 mistakes in street and housenumber input
-			if (result.size() == 0) {
-				result.addAll(AddressSearchPredicates.filterToStringShort(addresses, 
-						AddressSearchPredicates.streetHousenumberLevenshteinDistance(addrBuild,-1,2,-1,2) , 5l));
-				// Find suggestion from street and housenumber, accept 0-3 mistakes in street
-				// and 0-1 mistakes in housenumber input
-				if (result.size() == 0) {
-					result.addAll(AddressSearchPredicates.filterToStringShort(addresses, 
-							AddressSearchPredicates.streetHousenumberLevenshteinDistance(addrBuild,-1,4,-1,2) , 5l));
+		if(list.size() == 1) {
+			for(Postcode pc : list.values()){
+				for(Street st : pc.getStreets().values()){
+					for(Housenumber hn : st.getHousenumbers().values()){
+						Address addr = AddressParser.parse(hn.toString(), false);
+						addr.setLonLat(hn.getLonLat());
+						return addr;
+					}
 				}
 			}
-		}
-		
-		if(result.size() == 0 && addrBuild.getPostcode() != null){
-			result.addAll(AddressSearchPredicates.filterToStringShort(addresses, 
-					AddressSearchPredicates.postcodeEquals(addrBuild.getPostcode()) , 5l));
-		}
-		// Remove duplicates and return
-		return result.parallelStream().distinct().collect(Collectors.toList());
-	}
-	
-	public Address createOsmAddress(float[] lonLat, Map<String, String> attributes){
-		if(lonLat != null){
-			Address addr = addresses.get(lonLat);
-			if (addr == null) addr = new Address(lonLat);
-			AddressOsmParser aop = new AddressOsmParser(addr);
-			aop.parseKeyAddr(attributes);
-			if(addr.getPostcode() != null && addr.getCity() != null){
-				PostcodeCityCombination.getInstance().add(addr.getPostcode(), addr.getCity());
-			}
-			return addr;
 		}
 		return null;
 	}
 	
-	public void addressParsed(dk.itu.n.danmarkskort.lightweight.models.ParsedAddress address) {
-        HashMap<String, HashMap<String, Float[]>> postcode;
-        HashMap<String, Float[]> street;
-
-//        if(addressDatabase.containsKey(address.getPostcode())) {
-//        	postcode = addressDatabase.get(address.getPostcode());
-//		} else {
-//            postcode = new HashMap<>();
-//            addressDatabase.put(address.getPostcode(), postcode);
-//        }
-//
-//        if(postcode.containsKey(address.getStreet())) {
-//        	street = postcode.get(address.getStreet());
-//		} else {
-//            street = new HashMap<>();
-//            postcode.put(address.getStreet(), street);
-//        }
-//
-//        if(!street.containsKey(address.getHousenumber())) {
-//        	Float[] coords = new Float[]{address.getFirstLon(), address.getFirstLat()};
-//            street.put(address.getHousenumber(), coords);
-//            numAddresses++;
-//        }
-        
-        if(address != null) {
-	        float lon = address.getFirstLon();
-			float lat = address.getFirstLat();			
-			float[] lonLat = new float[] {lon,lat};
-			//Address addrParsed = ap.parse(address.getStreet() +" "+address.getHousenumber()+" "+address.getPostcode()+" "+address.getCity());
-			Address addrParsed = AddressParser.parse(address.toStringShort(), false);
-			if(addrParsed != null) {
-				addrParsed.setLonLat(lonLat);
-				//System.out.println("OSM: "+address.toString());
-				//System.out.println("ADC: "+addrParsed.toStringShort());
-//				if(!address.toStringShort().equals(addrParsed.toStringShort())) {
-//					System.out.println("--- ALARM NOT MATCHING ALARM ---\n --> OSM: "+address.toStringShort()
-//						+"\n --> ADC: "+addrParsed.toStringShort()
-//						+"\n --> ADC: "+addrParsed.toString());
-//				}
-				addresses.put(lonLat, addrParsed);
-				PostcodeCityCombination.getInstance().add(addrParsed.getPostcode(), addrParsed.getCity());
+	public Address getSearchResult(float[] lonLat){
+		return addressRegionSearch.getSearchResult(lonLat);
+	}
+	
+	public Address getNearstSearchResult(RegionFloat input){
+		return addressRegionSearch.getNearstSearchResult(input);
+	}
+	
+	public List<String> searchSuggestions(RegionFloat input, long limitAmountOfResults){
+		 return addressRegionSearch.searchSuggestions(input, limitAmountOfResults);
+	}
+	
+	public void addAddress(float[] lonLat, String street, String housenumber, String postcode, String city){
+		Postcode pc = AddressHolder.postcodes.get(postcode);
+		if(pc == null) pc = new Postcode(postcode, city);
+		pc.addAddress(street, housenumber, lonLat);
+		AddressHolder.postcodes.put(postcode, pc);
+		postcodeCityBestMatch.add(postcode,  city);
+	}
+	
+	private int acceptLvl1 = 0, acceptLvl2 = 0, acceptLvl3 = 0, acceptNot = 0;
+	public void addressParsed(ParsedAddress addr) {
+		timerUtilA.on();
+        if(addr != null) {
+			float[] lonLat = new float[] {addr.getFirstLon(), addr.getFirstLat()};
+			
+			//if(debug) if(addr.getPostcode() != null && !addr.getPostcode().matches("(^[0-9]{4}$)")) System.out.println("Postcode sucks: " + addr.toStringParted());
+			
+			if(AddressValidator.isAddressMinimum(addr.getStreet(), addr.getHousenumber(), addr.getPostcode())){
+				if(AddressValidator.isCityname(addr.getCity())) {
+					addAddress(lonLat, addr.getStreet(), addr.getHousenumber(), addr.getPostcode(), addr.getCity());
+				} else {
+					addAddress(lonLat, addr.getStreet(), addr.getHousenumber(), addr.getPostcode(), null);
+				}
+				//if(debug) if(addr.getStreet().matches(".*[0-9].*")) System.out.println("lvl1 " + addr.toStringParted());
+				acceptLvl1++;
+			}else if(AddressValidator.isAddressMinimum(
+        				AddressValidator.prepStreetname(addr.getStreet()),
+        				AddressValidator.prepHousenumber(addr.getHousenumber()),
+        				AddressValidator.prepPostcode(addr.getPostcode())
+        				)) {
+        	addAddress(lonLat, AddressValidator.prepStreetname(addr.getStreet()),
+    				AddressValidator.prepHousenumber(addr.getHousenumber()),
+    				AddressValidator.prepPostcode(addr.getPostcode()), null);
+//        	if(debug) System.out.println("lvl2 input: " + addr.toStringParted());
+//        	if(debug) System.out.println("lvl2 save: " + 
+//        			AddressValidator.prepStreetname(addr.getStreet()) + 
+//        			" | " + AddressValidator.prepHousenumber(addr.getHousenumber()) + 
+//    				" | " + AddressValidator.prepPostcode(addr.getPostcode()));
+        	
+        	acceptLvl2++;
 			} else {
-				addressesNotAccepted.put(lonLat, address.toStringShort());
-			}
-        }	
+				//if(debug) System.out.println("acceptNot: " + addr.toStringParted());
+					acceptNot++;
+					addressesNotAcceptedCount++;
+         }        	
+			lonLat = null;
+        }
     }
 
 	public void onLWParsingFinished() {
-		PostcodeCityCombination.getInstance().compileBestMatches();
-		//PostcodeCityCombination.getInstance().printBestMaches();
-		PostcodeCityCombination.getInstance().clearCombinations();
-		//System.out.println("PostcodeCityCombination:"+PostcodeCityCombination.getInstance().sizeBestMatches());
-		System.out.println("Accepted Addresses:"+addresses.size());
-		System.out.println("Not Accepted Addresses:"+addressesNotAccepted.size());
-//		int i=0;
-//		for(Address addr : addresses.values()){
-//			if(addr.toStringShort().contains("'")) System.out.println(i+": "+addr.toString());
-//			if(++i > 250) break;
-//		}
-//		System.out.println("Not Accepted Addresses:");
-//		i=0;
-//		for(String addr : addressesNotAccepted.values()){
-//			//if(addr.contains("'")) 
-//				System.out.println(i+": "+addr);
-//			if(++i > 300) break;
-//		}
-		Main.log("Addresses: " + numAddresses);
+		timerUtilA.off();
+		if(debug) System.out.print("acceptLvl1: " + acceptLvl1 + ", acceptLvl2: " + acceptLvl2 + ", acceptNot: " + acceptNot);
+		Main.log("Addresses parse first to last time: " + timerUtilA.toString());
+		timerUtilB.on();
+		for(Entry<String, Postcode> entry : AddressHolder.postcodes.entrySet()){
+			entry.getValue().setCity(postcodeCityBestMatch.getMatch(entry.getKey()));
+		}
+		postcodeCityBestMatch.cleanup();
+		timerUtilB.off();
+		Main.log("Addresses PostcodeCityCombination time: " + timerUtilB.toString());
+		Main.log("Addresses (accepted): " + getAddressSize());
+		Main.log("Addresses (not accepted): " + addressesNotAcceptedCount);		
 	}
 	
 	public int getAddressSize() {
-		return addresses.size();
+		return AddressHolder.count();
 	}
 }

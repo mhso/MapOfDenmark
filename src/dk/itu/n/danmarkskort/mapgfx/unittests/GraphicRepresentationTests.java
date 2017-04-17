@@ -2,15 +2,13 @@ package dk.itu.n.danmarkskort.mapgfx.unittests;
 
 import static org.junit.Assert.*;
 
-import java.util.List;
-
 import org.junit.Before;
 import org.junit.Test;
+import org.xml.sax.InputSource;
 
 import dk.itu.n.danmarkskort.mapgfx.GraphicRepresentation;
 import dk.itu.n.danmarkskort.mapgfx.GraphicSpecArea;
 import dk.itu.n.danmarkskort.mapgfx.GraphicSpecLine;
-import dk.itu.n.danmarkskort.mapgfx.WaytypeGraphicSpec;
 
 public class GraphicRepresentationTests {
 	private boolean setupDone = false;
@@ -18,7 +16,7 @@ public class GraphicRepresentationTests {
 	@Before
 	public void parseGraphicData() {
 		if(!setupDone) {
-			GraphicRepresentation.main(new String[]{"resources/ThemeTest.XML"});
+			GraphicRepresentation.parseData("resources/ThemeTest.XML");
 			setupDone = true;
 		}
 	}

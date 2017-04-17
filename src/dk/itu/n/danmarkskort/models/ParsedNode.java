@@ -1,22 +1,32 @@
 package dk.itu.n.danmarkskort.models;
 
-public class ParsedNode extends ParsedObject{
+public class ParsedNode {
 
-	private long id;
-	private float lat, lon;
-	
-	public void parseAttributes() {
-		id = Long.parseLong(attributes.get("id"));
-		lat = Float.parseFloat(attributes.get("lat"));
-		lon = Float.parseFloat(attributes.get("lon"));
-	}
-	
-	public long getId() { return id; }
-	
-	public float getLat() { return lat; }
-	
-	public float getLon() { return lon;	}
-	
-	public Coordinate getPosition() { return new Coordinate(lat, lon); }
-	
+    public static final long serialVersionUID = 20170322L;
+    private ParsedNode next;
+    private long key;
+    private float lon, lat;
+
+    public ParsedNode(long key, ParsedNode next, float lon, float lat) {
+        this.key = key;
+        this.next = next;
+        this.lon = lon;
+        this.lat = lat;
+    }
+
+    // used to create a Node on-the-go. Specifically so a parsedAdress can use a KDTree
+    public ParsedNode(float lon, float lat) {
+        this.lon = lon;
+        this.lat = lat;
+    }
+
+    public ParsedNode getNext() { return next; }
+    public long getKey() { return key; }
+    public float getLon() { return lon; }
+    public float getLat() { return lat; }
+    public float[] getPoint() { return new float[]{lon, lat}; }
+    
+    public String toString() {
+    	return "ParsedNode [" + "key=" + key + ", lon=" + lon + ", lat=" + lat + "]";
+    }
 }

@@ -9,10 +9,11 @@ public class Style {
     private float alphaFloat, alphaHover, menuAlpha, menuAlphaHover;
     private Color panelBG, inputFieldBG, panelTextColor, zoomButtonBG, menuContentBG, menuItemsBG, scrollBarThumb, scrollBarThumbActive,
                 dropdownItemBG, dropdownItemBGActive, dropdowItemTextColor, dropdownItemTextColorActive;
-    private CustomButton searchButton, menuButton,routeButton, zoomInButton, zoomOutButton,
-            menuLayerButton, menuSaveButton, menuOpenButton, menuSettingsButton, menuRouteButton, menuInfoButton;
-    private ImageIcon scaleIndicator, arrowUpDownButton;
-
+    private CustomButton searchButton, menuButton, routeButton, centerViewButton, zoomInButton, zoomOutButton,
+            menuLayerButton, menuSaveButton, menuOpenButton, menuSettingsButton, menuRouteButton, menuInfoButton, 
+            menuPinPointButton;
+    private ImageIcon scaleIndicator, arrowUpDownButton, basicThemePreview;
+    
     public Style() {
         // top panel
         margin = 10;
@@ -37,21 +38,24 @@ public class Style {
         dropdowItemTextColor = new Color(0,0,0);
         dropdownItemTextColorActive = new Color(255, 255, 255);
 
-
         searchButton = new CustomButton("resources/icons/search.png", alphaFloat, alphaHover);
         menuButton = new CustomButton("resources/icons/menu.png", alphaFloat, alphaHover);
         routeButton = new CustomButton("resources/icons/route.png", alphaFloat, alphaHover);
-
+        
         menuLayerButton = new CustomButton("resources/icons/layers.png", menuAlpha, menuAlphaHover);
         menuSaveButton = new CustomButton("resources/icons/save.png", menuAlpha, menuAlphaHover);
         menuOpenButton = new CustomButton("resources/icons/open.png", menuAlpha, menuAlphaHover);
         menuSettingsButton = new CustomButton("resources/icons/settings.png", menuAlpha, menuAlphaHover);
         menuRouteButton = new CustomButton("resources/icons/menuroute.png", menuAlpha, menuAlphaHover);
         menuInfoButton = new CustomButton("resources/icons/info.png", menuAlpha, menuAlphaHover);
-
+        menuPinPointButton = new CustomButton("resources/icons/info.png", menuAlpha, menuAlphaHover);
+        
+        centerViewButton = new CustomButton("resources/icons/target.png", alphaFloat, alphaHover, zoomButtonBG);
         zoomInButton = new CustomButton("resources/icons/zoomin.png", alphaFloat, alphaHover, zoomButtonBG);
         zoomOutButton = new CustomButton("resources/icons/zoomout.png", alphaFloat, alphaHover, zoomButtonBG);
 
+        basicThemePreview = new ImageIcon("resources/icons/previewthemebasic.png");
+        
         scaleIndicator = new ImageIcon("resources/scale.png");
         
         arrowUpDownButton = new ImageIcon("resources/icons/arrowupdown.png");
@@ -81,6 +85,7 @@ public class Style {
     public CustomButton searchButton() { return searchButton; }
     public CustomButton menuButton() { return menuButton; }
     public CustomButton routeButton() { return routeButton; }
+    public CustomButton centerViewButton() { return centerViewButton; }
     public CustomButton zoomInButton() { return zoomInButton; }
     public CustomButton zoomOutButton() { return zoomOutButton; }
     public CustomButton menuLayerButton() { return menuLayerButton; }
@@ -89,8 +94,11 @@ public class Style {
     public CustomButton menuSettingsButton() { return menuSettingsButton; }
     public CustomButton menuRouteButton() { return menuRouteButton; }
     public CustomButton menuInfoButton() { return menuInfoButton; }
-
+    public CustomButton menuPinPointButton() { return menuPinPointButton; }
+    
+    public CustomToggleButton toggleButton() { return new CustomToggleButton(1.0f, 0.8f); }
+    
+    public ImageIcon basicThemePreview() { return basicThemePreview; }
     public ImageIcon scaleIndicator() { return scaleIndicator; }
     public ImageIcon arrowUpDownButton() { return arrowUpDownButton; }
-
 }

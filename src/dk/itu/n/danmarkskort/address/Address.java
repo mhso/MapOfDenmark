@@ -1,6 +1,9 @@
 package dk.itu.n.danmarkskort.address;
 
-public class Address{
+import java.io.Serializable;
+
+public class Address implements Serializable {
+	private static final long serialVersionUID = -6971711928646521469L;
 	private float[] lonLat;
 	private String street, housenumber, city, postcode;
 
@@ -39,12 +42,7 @@ public class Address{
  	public void setPostcode(String postcode) { this.postcode = postcode; }
 
  	public void setCity(String city) { this.city = city; }
- 	public String getCity() {
- 		if(city != null) { 
- 			return city;
- 		};
- 		return PostcodeCityCombination.getInstance().getCity(postcode);
- 	}
+ 	public String getCity() { return city; }
  	
  	public String toStringShort(){
  		StringBuilder sb = new StringBuilder();
@@ -58,6 +56,6 @@ public class Address{
 	@Override
 	public String toString() {
 		return "Address [lon=" + lonLat[0] + ", lat=" + lonLat[1] + ", street=" + street + ", housenumber="
-				+ housenumber + ", postcode=" + postcode + ", city=" + getCity() + "]";
+				+ housenumber + ", postcode=" + postcode + ", city=" + city + "]";
 	}
 }

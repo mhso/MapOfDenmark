@@ -11,7 +11,7 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
 import dk.itu.n.danmarkskort.DKConstants;
-import dk.itu.n.danmarkskort.SAXAdapter;
+import dk.itu.n.danmarkskort.backend.SAXAdapter;
 import dk.itu.n.danmarkskort.models.WayType;
 
 import org.xml.sax.Attributes;
@@ -21,6 +21,7 @@ public class GraphicRepresentation {
 	private static ArrayList<WaytypeGraphicSpec>[] zoomLevelArr = new ArrayList[20];
 	private static List<WaytypeGraphicSpec> overriddenSpecs = new ArrayList<>();
 	private static EnumMap<WayType, Integer> zoomMap = new EnumMap<>(WayType.class);
+	private static String currentTheme;
 	
 	/**
 	 * Get a list of Graphic Specification objects matching the inputed zoom level. 
@@ -39,19 +40,12 @@ public class GraphicRepresentation {
 		cummulativeList.addAll(overriddenSpecs);
 		for(int i = zoomLevel; i >= 0; i--) {
 			for(WaytypeGraphicSpec wgs : zoomLevelArr[i]) {
+
 				if(!wgs.isFiltered() && !overriddenSpecs.contains(wgs)) cummulativeList.add(wgs);
 			}
 		}
 		cummulativeList.sort(null);
 		return cummulativeList;
-	}
-	
-	/**
-	 * Test main method.
-	 * @param args Arguments.
-	 */
-	public static void main(String[] args) {
-		if(args.length > 0) parseData(new InputSource(args[0]));
 	}
 	
 	/**
@@ -152,11 +146,13 @@ public class GraphicRepresentation {
 	 * 
 	 * @param source The InputSource of the XML file.
 	 */
-	public static void parseData(InputSource source) {
+	public static void parseData(String themeFile) {
+		currentTheme = themeFile;
 		for(int i = 0; i < zoomLevelArr.length; i++) {
 			zoomLevelArr[i] = new ArrayList<WaytypeGraphicSpec>();
 		}
 		try {
+			InputSource source = new InputSource(themeFile);
 			XMLReader reader = XMLReaderFactory.createXMLReader();
 			reader.setContentHandler(new ZoomHandler());
 			reader.parse(new InputSource("resources/ZoomValues.XML"));
@@ -168,6 +164,10 @@ public class GraphicRepresentation {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public static String getCurrentTheme() {
+		return currentTheme.substring(10, currentTheme.length()-4);
 	}
 	
 	/**

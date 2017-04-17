@@ -4,15 +4,13 @@ import dk.itu.n.danmarkskort.gui.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 public class DropdownMenu extends CustomDropdown {
-
+	
+	private static final long serialVersionUID = 8481689365025322045L;
     private JPanel menuItems, wrapper;
-    private JPanel routePage, aboutUsPage, settingsPage, mapLayersPage, loadPage, savePage;
+    private JPanel routePage, aboutUsPage, settingsPage, mapLayersPage, loadPage, savePage, pinPointPage;
+
     private GridBagConstraints gbcContainer;
     private JScrollPane contentPane;
     private TopPanel topPanel;
@@ -30,7 +28,8 @@ public class DropdownMenu extends CustomDropdown {
         settingsPage = new SettingsPage();
         mapLayersPage = new MapLayersPage(this);
         aboutUsPage = new AboutUsPage();
-
+        pinPointPage = new PinPointPage();
+        
         wrapper = new JPanel(new GridBagLayout());
         gbcContainer = new GridBagConstraints();
 
@@ -79,6 +78,12 @@ public class DropdownMenu extends CustomDropdown {
         aboutUsButton.addActionListener(e -> addToContentPane(aboutUsPage));
         menuItems.add(aboutUsButton, gbcMenuItems);
 
+        // pinpoint
+        gbcMenuItems.gridy = 6;
+        CustomButton pinPointButton = style.menuPinPointButton();
+        pinPointButton.addActionListener(e -> addToContentPane(pinPointPage));
+        menuItems.add(pinPointButton, gbcMenuItems);
+        
         menuItems.setPreferredSize(new Dimension(topPanel.getMenuWidth(), menuItems.getPreferredSize().height));
         gbcContainer.gridx = 0;
         wrapper.add(menuItems, gbcContainer);
@@ -129,4 +134,7 @@ public class DropdownMenu extends CustomDropdown {
                 loc.x - style.topPanelBorderWidth() - 6,
                 loc.y + source.getHeight() + style.topPanelBorderWidth() + 1);
     }
+
+	protected void onClick(String text) {
+	}
 }

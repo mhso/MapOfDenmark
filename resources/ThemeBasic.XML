@@ -28,18 +28,19 @@
 			<innercolor color="F5FCBE"/>
 			<outercolor color="798B25"/>
 			<lineproperties linewidth="90"/>
-			<layer layer="3"/>
+			<layer layer="4"/>
 		</line>
 		<line>
 			<type name="HIGHWAY_TERTIARY"/>
 			<innercolor color="FFFFFF"/>
 			<outercolor color="ABABAB"/>
 			<lineproperties linewidth="90"/>
-			<layer layer="3"/>
+			<layer layer="4"/>
 		</line>
 		<line>
 			<type name="HIGHWAY_UNDEFINED"/>
 			<innercolor color="FFFFFF"/>
+			<outercolor color="C3C3C3"/>
 			<lineproperties linewidth="60"/>
 			<layer layer="3"/>
 		</line>
@@ -53,6 +54,7 @@
 		<line>
 			<type name="HIGHWAY_SERVICE"/>
 			<innercolor color="FFFFFF"/>
+			<outercolor color="C3C3C3"/>
 			<lineproperties linewidth="20"/>
 			<layer layer="3"/>
 		</line>
@@ -81,26 +83,17 @@
 			<lineproperties linewidth="8"/>
 			<layer layer="2"/>
 		</line>
-		<line>
-			<type name="COASTLINE"/>
-			<innercolor color="000000"/>
-			<lineproperties linewidth="20"/>
-			<layer layer="5"/>
-		</line>
-		<!-- Lige nu er den smækket sammen med HIGHWAY_FOOTWAY
-		<line>
-			<type name="HIGHWAY_PATH"/>
-			<innercolor color="FFCC33"/>
-			<outercolor color="333300"/>
-			<lineproperties linedash="5, 5" linewidth="10"/>
-			<layer layer="3"/>
-		</line>-->
 	</lines>
 	<areas>
 		<area>
+			<type name="COASTLINE"/>
+			<innercolor color="F0F0E6"/>
+			<layer layer="1"/>
+		</area>
+		<area>
 			<type name="WATER"/>
 			<innercolor color="6EC0FF"/>
-			<layer layer="1"/>
+			<layer layer="2"/>
 		</area>
 		<area>
 			<type name="RESIDENTIAL"/>
@@ -154,7 +147,7 @@
 		</area>
 		<area>
 			<type name="FARMLAND"/>
-			<innercolor color="FFECAA"/>
+			<innercolor color="FFF1C2"/>
 			<layer layer="2"/>
 		</area>
 		<area>
@@ -165,7 +158,7 @@
 		<area>
 			<type name="RAILWAY"/>
 			<innercolor color="EBDBE8"/>
-			<layer layer="1"/>
+			<layer layer="2"/>
 		</area>
 		<area>
 			<type name="PARK"/>
