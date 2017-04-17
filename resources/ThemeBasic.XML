@@ -83,20 +83,6 @@
 			<lineproperties linewidth="8"/>
 			<layer layer="2"/>
 		</line>
-		<!--<line>
-			<type name="COASTLINE"/>
-			<innercolor color="000000"/>
-			<lineproperties linewidth="20"/>
-			<layer layer="1"/>	
-		</line>-->
-		<!-- Lige nu er den smækket sammen med HIGHWAY_FOOTWAY
-		<line>
-			<type name="HIGHWAY_PATH"/>
-			<innercolor color="FFCC33"/>
-			<outercolor color="333300"/>
-			<lineproperties linedash="5, 5" linewidth="10"/>
-			<layer layer="3"/>
-		</line>-->
 	</lines>
 	<areas>
 		<area>
@@ -172,7 +158,7 @@
 		<area>
 			<type name="RAILWAY"/>
 			<innercolor color="EBDBE8"/>
-			<layer layer="1"/>
+			<layer layer="2"/>
 		</area>
 		<area>
 			<type name="PARK"/>

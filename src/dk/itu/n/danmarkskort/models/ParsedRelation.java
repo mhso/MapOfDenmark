@@ -1,5 +1,7 @@
 package dk.itu.n.danmarkskort.models;
 
+import dk.itu.n.danmarkskort.Main;
+
 import java.awt.geom.Path2D;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -61,6 +63,7 @@ public class ParsedRelation extends ParsedWay {
 
     @Override
     public Path2D getReversedPath() {
+        Main.log("first time reversedpath happens for a relation!");
         return getPath();
         // This is not correct, but I don't think its an issue.
         // relations in relations is only something we have with busroutes and the likes
