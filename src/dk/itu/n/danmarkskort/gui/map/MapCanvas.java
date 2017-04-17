@@ -113,11 +113,6 @@ public class MapCanvas extends JPanel implements ActionListener {
 		shapesDrawn = 0;
 
 		if(wayTypesVisible == null) return;
-
-		if(Main.model.enumMapKD.get(WayType.COASTLINE).size() > 0) setBackground(Color.BLUE);
-		else setBackground(Color.LIGHT_GRAY);
-		setOpaque(true);
-
         drawBackground(g2d);
 
         // drawing all the outlines, if the current WayTypeGraphicSpec has one

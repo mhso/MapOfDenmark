@@ -71,7 +71,6 @@ public class OSMParser extends SAXAdapter implements Serializable {
         Main.log("Splitting data into KDTrees");
 
         for(WayType wt : WayType.values()) {
-            Main.log("Creating KDTree and shapes for " + wt);
             KDTree tree;
 
             if(wt == WayType.COASTLINE) tree = getCoastlines();

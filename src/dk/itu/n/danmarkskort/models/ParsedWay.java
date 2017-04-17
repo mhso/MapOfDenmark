@@ -38,8 +38,7 @@ public class ParsedWay extends ParsedItem implements Serializable{
     }
 
     public Shape getReversedPath() {
-        return getPath(true);
-        //return getPath(false);
+        return getPath(false);
     }
 
     @Override
