@@ -16,25 +16,12 @@ public class ParserUtil {
 
     public static void connectCoastline(HashMap<ParsedNode, ParsedWay> coastlineMap, ParsedWay current) {
         ParsedWay prev = coastlineMap.remove(current.getFirstNode());
-        if(prev != null && coastlineMap.containsKey(prev.getFirstNode())) {
-            coastlineMap.remove(prev.getFirstNode());
-        }
         ParsedWay next = coastlineMap.remove(current.getLastNode());
-        if(next != null && coastlineMap.containsKey(next.getLastNode())) {
-            coastlineMap.remove(next.getLastNode());
-        }
+        ParsedWay merged = new ParsedWay();
 
-        ParsedWay merged = new ParsedWay(current.getID());
-
-        if(prev != null) {
-            merged.setID(prev.getID());
-            coastlineMap.remove(prev.getFirstNode());
-            merged.addNodes(prev.getNodes().subList(0, prev.getNodes().size()));
-        }
+        if(prev != null) merged.addNodes(prev.getNodes());
         merged.addNodes(current.getNodes());
-        if(next != null) {
-            merged.addNodes(next.getNodes().subList(1, next.getNodes().size()));
-        }
+        if(next != null && next != prev) merged.addNodes(next.getNodes());
 
         coastlineMap.put(merged.getFirstNode(), merged);
         coastlineMap.put(merged.getLastNode(), merged);
