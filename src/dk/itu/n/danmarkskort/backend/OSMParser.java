@@ -34,10 +34,10 @@ public class OSMParser extends SAXAdapter implements Serializable {
     private transient String name;
     private transient Integer maxSpeed;
     private transient boolean oneWay;
+    private ArrayList<ParsedNode> currentNodes;
 
     private transient boolean finished = false;
     private transient OSMReader reader;
-    MemoryUtil mem = new MemoryUtil();
 
     public OSMParser(OSMReader reader) {
     	this.reader = reader;
@@ -48,13 +48,14 @@ public class OSMParser extends SAXAdapter implements Serializable {
         temporaryWayReferences = new HashMap<>();
         temporaryRelationReferences = new HashMap<>();
         coastlineMap = new HashMap<>();
+        currentNodes = new ArrayList<>();
         enumMap = new EnumMap<>(WayType.class);
+
         for(WayType waytype : WayType.values()) enumMap.put(waytype, new ArrayList<>());
 
         finished = false;
         Main.log("Parsing started.");
-
-        mem.on();
+        if(Main.debug) System.gc();
     }
 
     public void endDocument() throws SAXException {
@@ -129,7 +130,7 @@ public class OSMParser extends SAXAdapter implements Serializable {
                 temporaryRelationReferences.put(relation.getID(), relation);
                 break;
             case "nd":
-                way.addNode(nodeMap.get(Long.parseLong(atts.getValue("ref"))));
+                currentNodes.add(nodeMap.get(Long.parseLong(atts.getValue("ref"))));
                 break;
             case "member":
                 long ref = Long.parseLong(atts.getValue("ref"));
@@ -137,7 +138,7 @@ public class OSMParser extends SAXAdapter implements Serializable {
                 String role = atts.getValue("role");
                 switch(type) {
                     case "node":
-                        if(nodeMap.get(ref) != null) relation.addNode(nodeMap.get(ref));
+                        if(nodeMap.get(ref) != null) currentNodes.add(nodeMap.get(ref));
                         break;
                     case "way":
                         if(temporaryWayReferences.containsKey(ref)) relation.addMember(temporaryWayReferences.get(ref), role);
@@ -205,13 +206,14 @@ public class OSMParser extends SAXAdapter implements Serializable {
     }
 
     private void addCurrent() {
+        if(way != null) way.addNodes(currentNodes);
+        else if(relation != null && currentNodes.size() > 0) relation.addNodes(currentNodes);
+
         if(waytype != null) {
-            if(waytype == WayType.COASTLINE && way != null) {
-                ParserUtil.connectCoastline(coastlineMap, way);
-            }
-            else if(way != null) {
-            	enumMap.get(waytype).add(way);
-            	for(OSMParserListener listener : reader.parserListeners) listener.onParsingGotItem(way);
+            if(way != null) {
+                if(waytype == WayType.COASTLINE) ParserUtil.connectCoastline(coastlineMap, way);
+                else enumMap.get(waytype).add(way);
+                for(OSMParserListener listener : reader.parserListeners) listener.onParsingGotItem(way);
             }
             else if(relation != null) {
                 enumMap.get(waytype).add(relation);
@@ -268,6 +270,8 @@ public class OSMParser extends SAXAdapter implements Serializable {
         name = null;
         oneWay = false;
         maxSpeed = null;
+
+        currentNodes = new ArrayList<>();
     }
 
     private void temporaryClean() {
