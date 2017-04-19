@@ -4,6 +4,7 @@ import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.TimerUtil;
 import dk.itu.n.danmarkskort.models.ParsedAddress;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -12,7 +13,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
-public class AddressController{
+public class AddressController  implements Serializable {
+	private static final long serialVersionUID = -8850830543220358398L;
 	private int addressesNotAcceptedCount;
 	private TimerUtil timerUtilA = new TimerUtil();
 	private TimerUtil timerUtilB = new TimerUtil();
@@ -104,15 +106,8 @@ public class AddressController{
         	addAddress(lonLat, AddressValidator.prepStreetname(addr.getStreet()),
     				AddressValidator.prepHousenumber(addr.getHousenumber()),
     				AddressValidator.prepPostcode(addr.getPostcode()), null);
-//        	if(debug) System.out.println("lvl2 input: " + addr.toStringParted());
-//        	if(debug) System.out.println("lvl2 save: " + 
-//        			AddressValidator.prepStreetname(addr.getStreet()) + 
-//        			" | " + AddressValidator.prepHousenumber(addr.getHousenumber()) + 
-//    				" | " + AddressValidator.prepPostcode(addr.getPostcode()));
-        	
         	acceptLvl2++;
 			} else {
-				//if(debug) System.out.println("acceptNot: " + addr.toStringParted());
 					acceptNot++;
 					addressesNotAcceptedCount++;
          }        	

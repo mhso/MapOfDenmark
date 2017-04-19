@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import dk.itu.n.danmarkskort.models.ReuseStringObj;
+
 public class PostcodeCityBestMatch {
 	private List<Combine> combinations;
 	private Map<String, Combine> objMatches;

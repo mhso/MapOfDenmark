@@ -1,15 +1,20 @@
 package dk.itu.n.danmarkskort.address;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.commons.lang3.StringUtils;
 
-public class Postcode {
+import dk.itu.n.danmarkskort.models.ReuseStringObj;
+
+public class Postcode implements Serializable {
+	private static final long serialVersionUID = 2217407726502936291L;
 	private String postcode, city;
 	private Map<String, Street> streets;
 	private RegionFloat region;
+	private boolean debug = false;
 	
 	Postcode(String postcode, String city){
 		this.postcode = ReuseStringObj.make(postcode);
@@ -43,7 +48,7 @@ public class Postcode {
 			RegionFloat stR = st.getRegion();
 			if(stR.isWithin(input)){
 				regions.put(st.getRegion(), st);
-				System.out.println("MATCH: ADD: " + st.getStreet());
+				if(debug) System.out.println("MATCH: ADD: " + st.getStreet());
 			}
 		}
 		return regions;
@@ -113,7 +118,6 @@ public class Postcode {
 					list.put(entry.getKey(), entry.getValue());
 				}
 			} catch (StringIndexOutOfBoundsException e) {
-				// TODO Auto-generated catch block
 				//e.printStackTrace();
 			}
 		}

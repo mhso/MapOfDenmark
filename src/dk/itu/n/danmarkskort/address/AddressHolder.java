@@ -22,17 +22,13 @@ public class AddressHolder implements Serializable {
 	
 	public static int count(){
 		int size = 0;
-		for(Postcode pc : postcodes.values()){
-			size += pc.count();
-		}
+		for(Postcode pc : postcodes.values()) size += pc.count();
 		return size;
 	}
 	
 	public static int count(Map<String, Postcode> list){
 		int size = 0;
-		for(Postcode pc : list.values()){
-			size += pc.count();
-		}
+		for(Postcode pc : list.values()) size += pc.count();
 		return size;
 	}
 	
@@ -141,9 +137,7 @@ public class AddressHolder implements Serializable {
 			default:
 				break;
 			}
-			
 			list = searchCity(list, addr, cityType);
-			
 		return list;
 	}
 	

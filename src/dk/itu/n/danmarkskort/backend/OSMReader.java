@@ -24,6 +24,7 @@ import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.MemoryUtil;
 import dk.itu.n.danmarkskort.TimerUtil;
 import dk.itu.n.danmarkskort.Util;
+import dk.itu.n.danmarkskort.address.AddressHolder;
 import dk.itu.n.danmarkskort.models.UserPreferences;
 
 // This class can parse an OSM file, and turn it into tile files. 
@@ -76,6 +77,7 @@ public class OSMReader {
 			BinaryWrapper binary = (BinaryWrapper) Util.readObjectFromFile(fileName, inputListeners);
 			Main.model = binary.getModel();
 			Main.userPreferences = binary.getUserPreferences();
+			Main.addressController = binary.getAddressController();
 			for(InputStreamListener listener : inputListeners) listener.onSetupDone();
 		}
 		else {
@@ -91,6 +93,7 @@ public class OSMReader {
                     BinaryWrapper binary = (BinaryWrapper) Util.readObjectFromFile(fileName, inputListeners);
                     Main.model = binary.getModel();
                     Main.userPreferences = binary.getUserPreferences();
+                    Main.addressController = binary.getAddressController();
                     for (InputStreamListener listener : inputListeners) listener.onSetupDone();
                 }
             } else if (fileName.endsWith(".osm")) {
@@ -130,6 +133,7 @@ public class OSMReader {
                 BinaryWrapper binary = new BinaryWrapper();
                 binary.setModel(Main.model);
                 binary.setUserPreferences(Main.userPreferences);
+                binary.setAddressController(Main.addressController);
                 Util.writeObjectToFile(binary, Util.getBinaryFilePath());
             }
 

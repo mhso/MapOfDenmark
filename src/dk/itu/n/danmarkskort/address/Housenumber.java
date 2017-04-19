@@ -2,11 +2,13 @@ package dk.itu.n.danmarkskort.address;
 
 import dk.itu.n.danmarkskort.models.ParsedItem;
 import dk.itu.n.danmarkskort.models.ParsedNode;
+import dk.itu.n.danmarkskort.models.ReuseStringObj;
 
 import java.awt.*;
 import java.util.ArrayList;
 
 public class Housenumber extends ParsedItem {
+	private static final long serialVersionUID = -8400619618776493401L;
 	private float lon;
 	private float lat;
 	private String housenumber;
