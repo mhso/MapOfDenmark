@@ -19,7 +19,7 @@ public class Main {
 	public final static String APP_NAME = "Map";
 	public final static String APP_VERSION = "0.5";
 	public final static boolean debug = true;
-	public final static boolean production = false;
+	public final static boolean production = true;
 	public final static boolean buffered = true;
 	public final static boolean binaryfile = false;
 	public final static boolean saveParsedAddresses = false;
@@ -44,7 +44,8 @@ public class Main {
 		osmReader = new OSMReader();
 		model = new OSMParser(osmReader);
 		addressController  =  new AddressController();
-		prepareParser(args);
+		if(args.length > 0) prepareParser(args);
+		else prepareParser(new String[]{"map.zip"});
 		if(userPreferences.getCurrentMapTheme() != null) {
 			GraphicRepresentation.parseData("resources/Theme" + userPreferences.getCurrentMapTheme() + ".XML");
 		}
@@ -58,7 +59,6 @@ public class Main {
 		WindowParsingLoadscreenNew loadScreen = new WindowParsingLoadscreenNew(args[0]);
 		osmReader.addOSMListener(loadScreen);
 		osmReader.addInputListener(loadScreen);
-		System.out.println(loadScreen.hashCode());
 		loadScreen.run();
 		osmReader.parseFile(args[0]);
 	}

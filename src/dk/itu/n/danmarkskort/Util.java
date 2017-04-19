@@ -8,6 +8,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.LineNumberReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -45,8 +46,10 @@ public class Util {
 		return Util.getCurrentDirectoryPath() + "/parsedOSMFiles/" + Main.osmReader.getChecksum();
 	}
 	
-	public static String getFileChecksum(MessageDigest digest, File file) throws IOException {
-		BufferedInputStream fis = new BufferedInputStream(new FileInputStream(file));
+	public static String getFileChecksum(MessageDigest digest, String filename) throws IOException {
+		BufferedInputStream fis;
+		if(Main.production) fis = new BufferedInputStream(new FileInputStream(Util.class.getResource("/"+filename).toString()));
+		else fis = new BufferedInputStream(new FileInputStream(filename));
 
 		byte[] byteArray = new byte[1024];
 		int bytesCount = 0;
@@ -66,8 +69,8 @@ public class Util {
 		return sb.toString();
 	}
 	
-	public static String getFileChecksumMD5(File file) throws NoSuchAlgorithmException, IOException {
-		return getFileChecksum(MessageDigest.getInstance("MD5"), file);
+	public static String getFileChecksumMD5(String filename) throws NoSuchAlgorithmException, IOException {
+		return getFileChecksum(MessageDigest.getInstance("MD5"), filename);
 	}
 
 	public static void printMap(Map<?,?> map) {
@@ -151,7 +154,9 @@ public class Util {
 	
 	public static Object readObjectFromFile(String fileName, List<InputStreamListener> listeners) {		
 		try {
-			BufferedInputStream fout = new BufferedInputStream(new FileInputStream(fileName));
+			BufferedInputStream fout;
+			if(Main.production) fout = new BufferedInputStream(new FileInputStream(Util.class.getResource("/"+fileName).toString()));
+			else fout = new BufferedInputStream(new FileInputStream(fileName));
 			InputMonitor monitor = new InputMonitor(fout, fileName);
 			ObjectInputStream oos = new ObjectInputStream(monitor);
 			for(InputStreamListener listener : listeners) monitor.addListener(listener);
@@ -166,7 +171,9 @@ public class Util {
 	
 	public static Object readObjectFromFile(String filename) {
 		try {
-			BufferedInputStream fout = new BufferedInputStream(new FileInputStream(filename));
+			BufferedInputStream fout;
+			if(Main.production) fout = new BufferedInputStream(new FileInputStream(Util.class.getResource("/"+filename).toString()));
+			else fout = new BufferedInputStream(new FileInputStream(filename));
 			ObjectInputStream oos = new ObjectInputStream(fout);
 			Object object = oos.readObject();
 			oos.close();
