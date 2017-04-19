@@ -69,10 +69,6 @@ public class RoutePlannerMain {
 		JPanel panelHeadline = new JPanel();
 		frmRouteplanner.getContentPane().add(panelHeadline, BorderLayout.NORTH);
 		
-		JLabel lblRoutePlannerResult = new JLabel("Route planner result");
-		lblRoutePlannerResult.setFont(new Font("Tahoma", Font.BOLD, 24));
-		panelHeadline.add(lblRoutePlannerResult);
-		
 		JPanel panelWest = new JPanel();
 		frmRouteplanner.getContentPane().add(panelWest, BorderLayout.WEST);
 		
@@ -181,15 +177,15 @@ public class RoutePlannerMain {
 		
 		panelRouteDescription.add(new RoutePartBasic(pos++, routeFrom, routeTo, "101Km"));
 		
-		partList.add(new RoutePartStep(pos++, "Kør mod Roskildevej", "600m"));
-		partList.add(new RoutePartStep(pos++, "Kør mod Roskildevej", "600m"));
-		partList.add(new RoutePartStep(pos++, "Kør mod Sverigesvej", "250m"));
-		partList.add(new RoutePartStep(pos++, "Kør mod Sverigesvej", "250m"));
-		partList.add(new RoutePartStep(pos++, "Kør mod Sverigesvej", "250m"));
-		partList.add(new RoutePartStep(pos++, "Kør mod Sverigesvej", "250m"));
+		partList.add(new RoutePartStep(pos++, RouteEnum.CONTINUE_ON, "Kør mod Roskildevej", "600m"));
+		partList.add(new RoutePartStep(pos++, RouteEnum.TURN_LEFT, "Kør mod Roskildevej", "600m"));
+		partList.add(new RoutePartStep(pos++, RouteEnum.CONTINUE_ON, "Kør mod Sverigesvej", "250m"));
+		partList.add(new RoutePartStep(pos++, RouteEnum.TURN_RIGHT, "Kør mod Sverigesvej", "250m"));
+		partList.add(new RoutePartStep(pos++, RouteEnum.TURN_RIGHT, "Kør mod Sverigesvej", "250m"));
+		partList.add(new RoutePartStep(pos++, RouteEnum.CONTINUE_ON, "Kør mod Sverigesvej", "250m"));
 		
-		partList.add(new RoutePartStep(pos++, "Kør mod Amagerbrogade", "1,5Km"));
-		partList.add(new RoutePartStep(pos++, "Ankommet ved distination Rosenhave", ""));
+		partList.add(new RoutePartStep(pos++, RouteEnum.TURN_RIGHT, "Kør mod Amagerbrogade", "1,5Km"));
+		partList.add(new RoutePartStep(pos++, RouteEnum.AT_DESTINATION, "Ankommet ved distination Rosenhave", ""));
 		
 		for(JPanel part : partList){
 			panelRouteDescription.add(part);

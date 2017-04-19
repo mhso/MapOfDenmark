@@ -2,6 +2,8 @@ package dk.itu.n.danmarkskort.routeplanner;
 
 import javax.swing.JPanel;
 import java.awt.GridBagLayout;
+
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
@@ -24,7 +26,8 @@ public class RoutePartBasic extends JPanel {
 		gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		setLayout(gridBagLayout);
 		
-		JLabel lblRouteIcon = new JLabel("Icon");
+		JLabel lblRouteIcon = new JLabel();
+		lblRouteIcon.setIcon(new ImageIcon("resources/routeplanner/map_64.png"));
 		GridBagConstraints gbc_lblRouteIcon = new GridBagConstraints();
 		gbc_lblRouteIcon.insets = new Insets(0, 0, 5, 5);
 		gbc_lblRouteIcon.gridx = 0;
