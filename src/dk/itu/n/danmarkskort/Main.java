@@ -40,6 +40,7 @@ public class Main {
 	}
 
 	public static void startup(String[] args) {
+		Util.dontTellYourMotherYouHaveSeenThis();
 		if(window != null) window.getContentPane().removeAll();
 		osmReader = new OSMReader();
 		model = new OSMParser(osmReader);

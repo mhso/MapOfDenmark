@@ -11,6 +11,7 @@ public class DropdownRightClick extends CustomDropdown {
 	public DropdownRightClick() {
 		super();
 		addItem("Create point of interest here");
+		addItem("Create temporary pinpoint here");
 	}
 	
 	public void onClick(String text) {
@@ -18,6 +19,13 @@ public class DropdownRightClick extends CustomDropdown {
 			String pinPointName = JOptionPane.showInputDialog("What should the name of the point of interest be?");
 			if(pinPointName == null || pinPointName.length() == 0) return;
 			Main.pinPointManager.addPinPoint(pinPointName, new PinPoint(getGeographical(), pinPointName));
+		}
+		
+		if(text.equals("Create temporary pinpoint here")) {
+			int iconIndex = 5;
+			PinPoint systemPinPoint = new PinPoint(getGeographical(), "");
+			systemPinPoint.setIconIndex(iconIndex);
+			Main.pinPointManager.addSystemPinPoint("", systemPinPoint);
 		}
 	}
 }
