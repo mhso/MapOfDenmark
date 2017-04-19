@@ -1,9 +1,11 @@
 package dk.itu.n.danmarkskort.models;
 
+import dk.itu.n.danmarkskort.Main;
+
 import java.awt.*;
 import java.util.ArrayList;
 
-public abstract class ParsedItem extends ArrayList<ParsedNode> {
+public abstract class ParsedItem {
 
     public int compareLon(ParsedItem item) {
         float a = getFirstNode().getLon();
@@ -22,7 +24,7 @@ public abstract class ParsedItem extends ArrayList<ParsedNode> {
     }
 
     public abstract ParsedNode getFirstNode();
-    public abstract ArrayList<ParsedNode> getNodes();
+    public abstract ParsedNode[] getNodes();
     public abstract void makeShape();
     public abstract Shape getShape();
     public abstract void deleteOldRefs();

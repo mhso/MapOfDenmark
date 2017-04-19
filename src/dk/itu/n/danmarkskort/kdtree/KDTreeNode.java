@@ -44,23 +44,23 @@ public class KDTreeNode extends KDTree {
         if(sortByLon) {
             leftSplit = median.getFirstNode().getLon();
             for(ParsedItem item : leftArray) {
-                ArrayList<ParsedNode> nodes = item.getNodes();
+                ParsedNode[] nodes = item.getNodes();
                 for(ParsedNode node : nodes) leftSplit = node.getLon() > leftSplit ? node.getLon() : leftSplit; // til højre er værdierne størst
             }
             rightSplit = median.getFirstNode().getLon();
             for(ParsedItem item : rightArray) {
-                ArrayList<ParsedNode> nodes = item.getNodes();
+                ParsedNode[] nodes = item.getNodes();
                 for(ParsedNode node : nodes) rightSplit = node.getLon() < rightSplit ? node.getLon(): rightSplit; // til højre er værdierne størst
             }
         } else {
             leftSplit = median.getFirstNode().getLat();
             for(ParsedItem item : leftArray) {
-                ArrayList<ParsedNode> nodes = item.getNodes();
+                ParsedNode[] nodes = item.getNodes();
                 for(ParsedNode node : nodes) leftSplit = node.getLat() > leftSplit ? node.getLat() : leftSplit; // nederst er værdierne størst
             }
             rightSplit = median.getFirstNode().getLat();
             for(ParsedItem item : rightArray) {
-                ArrayList<ParsedNode> nodes = item.getNodes();
+                ParsedNode[] nodes = item.getNodes();
                 for(ParsedNode node : nodes) rightSplit = node.getLat() < rightSplit ? node.getLat() : rightSplit; // nederst er værdierne størst
             }
         }

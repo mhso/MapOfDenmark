@@ -5,6 +5,7 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
+import java.awt.image.BufferedImage;
 import java.io.Serializable;
 
 import dk.itu.n.danmarkskort.Main;
@@ -56,7 +57,12 @@ public class PinPoint implements Serializable {
 		Point2D screenPos = Main.map.toScreenCoords(location);
 		g.setTransform(new AffineTransform());
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		g.drawImage(Main.pinPointManager.getIcon(), (int)screenPos.getX() - 12, (int)screenPos.getY() - 24, null);
+		
+		BufferedImage icon;
+		if(iconIndex == 0) icon = Main.pinPointManager.getIcon();
+		else icon = Main.pinPointManager.getSystemIcon(getIconIndex());
+		
+		g.drawImage(icon, (int)screenPos.getX() - 12, (int)screenPos.getY() - 24, null);
 		if(mouseIsOver()) {
 			int width = g.getFontMetrics().stringWidth(name);
 			int height = g.getFontMetrics().getHeight();
