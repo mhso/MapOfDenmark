@@ -6,6 +6,7 @@ import java.util.Map.Entry;
 
 import org.apache.commons.lang3.StringUtils;
 
+import dk.itu.n.danmarkskort.models.RegionFloat;
 import dk.itu.n.danmarkskort.models.ReuseStringObj;
 
 public class Street {
@@ -82,66 +83,66 @@ public class Street {
 	}
 
 	
-	private Map<String, Housenumber> housenumberContains(Map<String, Housenumber> inputList, String housenumber){
-		Map<String, Housenumber> list = new HashMap<String, Housenumber>();
-		if(housenumber == null) return list;
-		for(Entry<String, Housenumber> entry : inputList.entrySet()){
+	private Map<String, Housenumber> housenumberContains(Map<String, Housenumber> input, String housenumber){
+		Map<String, Housenumber> result = new HashMap<String, Housenumber>();
+		if(housenumber == null) return result;
+		for(Entry<String, Housenumber> entry : input.entrySet()){
 			if(entry.getKey().contains(housenumber.toLowerCase())) {
-				list.put(entry.getKey(), entry.getValue());
+				result.put(entry.getKey(), entry.getValue());
 			}
 		}
-		return list;
+		return result;
 	}
 	
-	private Map<String, Housenumber> housenumberStartsWith(Map<String, Housenumber> inputList, String housenumber){
-		Map<String, Housenumber> list = new HashMap<String, Housenumber>();
-		if(housenumber == null) return list;
-		for(Entry<String, Housenumber> entry : inputList.entrySet()){
+	private Map<String, Housenumber> housenumberStartsWith(Map<String, Housenumber> input, String housenumber){
+		Map<String, Housenumber> result = new HashMap<String, Housenumber>();
+		if(housenumber == null) return result;
+		for(Entry<String, Housenumber> entry : input.entrySet()){
 			if(entry.getKey().startsWith(housenumber.toLowerCase())) {
-				list.put(entry.getKey(), entry.getValue());
+				result.put(entry.getKey(), entry.getValue());
 			}
 		}
-		return list;
+		return result;
 	}
 	
-	private Map<String, Housenumber> housenumberLevenshteinDistance(Map<String, Housenumber> inputList, String housenumber){
-		Map<String, Housenumber> list = new HashMap<String, Housenumber>();
+	private Map<String, Housenumber> housenumberLevenshteinDistance(Map<String, Housenumber> input, String housenumber){
+		Map<String, Housenumber> result = new HashMap<String, Housenumber>();
 		int minValue = 0, maxValue = 3;
-		if(housenumber == null) return list;
-		for(Entry<String, Housenumber> entry : inputList.entrySet()){
+		if(housenumber == null) return result;
+		for(Entry<String, Housenumber> entry : input.entrySet()){
 			if(StringUtils.getLevenshteinDistance(entry.getKey(), housenumber.toLowerCase()) > minValue &&
 					StringUtils.getLevenshteinDistance(entry.getKey(), housenumber.toLowerCase()) < maxValue) {
-				list.put(entry.getKey(), entry.getValue());
+				result.put(entry.getKey(), entry.getValue());
 			}
 		}
-		return list;
+		return result;
 	}
 	
-	public Map<String, Housenumber> search(Map<String, Housenumber> inputList, Address addr, SearchEnum housenumberType){
-		Map<String, Housenumber> list = new HashMap<String, Housenumber>();
+	public Map<String, Housenumber> search(Map<String, Housenumber> input, Address addr, SearchEnum housenumberType){
+		Map<String, Housenumber> result = new HashMap<String, Housenumber>();
 			switch(housenumberType){
 			case CONTAINS:
-				list = housenumberContains(inputList, addr.getHousenumber());
+				result = housenumberContains(input, addr.getHousenumber());
 				break;
 			case EQUALS:
 				if(getHousenumber(addr.getHousenumber()) != null){
 					Housenumber hn = getHousenumber(addr.getHousenumber());
-					list.put(hn.getHousenumber(), hn);
+					result.put(hn.getHousenumber(), hn);
 				}
 				break;
 			case ANY:
-				list = inputList;
+				result = input;
 				break;
 			case STARTSWITH:
-				list = housenumberStartsWith(inputList, addr.getHousenumber());
+				result = housenumberStartsWith(input, addr.getHousenumber());
 				break;
 			case LEVENSHTEIN:
-				list = housenumberLevenshteinDistance(inputList, addr.getHousenumber());
+				result = housenumberLevenshteinDistance(input, addr.getHousenumber());
 				break;
 			default:
 				break;
 			
 		}
-		return list;
+		return result;
 	}
 }

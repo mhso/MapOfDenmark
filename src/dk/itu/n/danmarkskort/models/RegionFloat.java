@@ -1,4 +1,4 @@
-package dk.itu.n.danmarkskort.address;
+package dk.itu.n.danmarkskort.models;
 
 public class RegionFloat{
 	public float x1, x2, y1, y2;

@@ -7,6 +7,7 @@ import java.util.Map.Entry;
 
 import org.apache.commons.lang3.StringUtils;
 
+import dk.itu.n.danmarkskort.models.RegionFloat;
 import dk.itu.n.danmarkskort.models.ReuseStringObj;
 
 public class Postcode implements Serializable {
@@ -84,70 +85,70 @@ public class Postcode implements Serializable {
 
 	public String getPostcode() { return postcode.toString(); }
 	
-	private Map<String, Street> streetContains(Map<String, Street> inputList, String street){
-		Map<String, Street> list = new HashMap<String, Street>();
-		if(street == null) return list;
-		for(Entry<String, Street> entry : inputList.entrySet()){
+	private Map<String, Street> streetContains(Map<String, Street> input, String street){
+		Map<String, Street> result = new HashMap<String, Street>();
+		if(street == null) return result;
+		for(Entry<String, Street> entry : input.entrySet()){
 			if(entry.getKey().contains(street.toLowerCase())) {
-				list.put(entry.getKey(), entry.getValue());
+				result.put(entry.getKey(), entry.getValue());
 			}
 		}
-		return list;
+		return result;
 	}
 	
-	private Map<String, Street> streetStartsWith(Map<String, Street> inputList, String street){
-		Map<String, Street> list = new HashMap<String, Street>();
-		if(street == null) return list;
-		for(Entry<String, Street> entry : inputList.entrySet()){
+	private Map<String, Street> streetStartsWith(Map<String, Street> input, String street){
+		Map<String, Street> result = new HashMap<String, Street>();
+		if(street == null) return result;
+		for(Entry<String, Street> entry : input.entrySet()){
 			if(entry.getKey().startsWith(street.toLowerCase())) {
-				list.put(entry.getKey(), entry.getValue());
+				result.put(entry.getKey(), entry.getValue());
 			}
 		}
-		return list;
+		return result;
 	}
 	
-	private Map<String, Street> streetLevenshteinDistance(Map<String, Street> inputList, String street){
-		Map<String, Street> list = new HashMap<String, Street>();
+	private Map<String, Street> streetLevenshteinDistance(Map<String, Street> input, String street){
+		Map<String, Street> result = new HashMap<String, Street>();
 		int minValue = 0, maxValue = 3;
-		if(street == null) return list;
-		for(Entry<String, Street> entry : inputList.entrySet()){
+		if(street == null) return result;
+		for(Entry<String, Street> entry : input.entrySet()){
 			try {
 				String matchKey = entry.getKey().substring(0, street.length());
 				if(StringUtils.getLevenshteinDistance(matchKey, street.toLowerCase()) > minValue &&
 						StringUtils.getLevenshteinDistance(matchKey, street.toLowerCase()) < maxValue) {
-					list.put(entry.getKey(), entry.getValue());
+					result.put(entry.getKey(), entry.getValue());
 				}
 			} catch (StringIndexOutOfBoundsException e) {
 				//e.printStackTrace();
 			}
 		}
-		return list;
+		return result;
 	}
 	
-	public Map<String, Street> search(Map<String, Street> inputList, Address addr, SearchEnum streetType){
-		Map<String, Street> list = new HashMap<String, Street>();
+	public Map<String, Street> search(Map<String, Street> input, Address addr, SearchEnum streetType){
+		Map<String, Street> result = new HashMap<String, Street>();
 			switch(streetType){
 			case CONTAINS:
-				list = streetContains(inputList, addr.getStreet());
+				result = streetContains(input, addr.getStreet());
 				break;
 			case EQUALS:
 				if(getStreet(addr.getStreet()) != null){
 					Street st = getStreet(addr.getStreet());
-					list.put(st.getStreet(), st);
+					result.put(st.getStreet(), st);
 				}
 				break;
 			case ANY:
-				list = inputList;
+				result = input;
 				break;
 			case STARTSWITH:
-				list = streetStartsWith(inputList, addr.getStreet());
+				result = streetStartsWith(input, addr.getStreet());
 				break;
 			case LEVENSHTEIN:
-				list = streetLevenshteinDistance(inputList, addr.getStreet());
+				result = streetLevenshteinDistance(input, addr.getStreet());
 				break;
 			default:
 				break;
 		}
-		return list;
+		return result;
 	}
 }
