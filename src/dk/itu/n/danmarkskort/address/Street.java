@@ -6,6 +6,8 @@ import java.util.Map.Entry;
 
 import org.apache.commons.lang3.StringUtils;
 
+import dk.itu.n.danmarkskort.models.ReuseStringObj;
+
 public class Street {
 	private String street;
 	private Map<String, Housenumber> housenumbers;
