@@ -311,6 +311,10 @@ public class MapCanvas extends JPanel implements ActionListener {
 		return transform.transform(coordinates, null);
 	}
 	
+	public Point2D toActualScreenCoords(Point2D coordinates) {
+		return actualTransform.transform(coordinates, null);
+	}
+	
 	public void toggleAA() {
 		antiAlias = !antiAlias;
 		repaint();

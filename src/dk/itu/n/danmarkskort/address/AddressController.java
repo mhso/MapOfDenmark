@@ -20,12 +20,14 @@ public class AddressController {
 	private TimerUtil timerUtilA = new TimerUtil();
 	private TimerUtil timerUtilB = new TimerUtil();
 	private PostcodeCityBestMatch postcodeCityBestMatch;
-	private AddressSuggestion addressSuggestion = new AddressSuggestion();
-	private AddressRegionSearch addressRegionSearch = new AddressRegionSearch();
-	private boolean debug = true;
+	private AddressSuggestion addressSuggestion;
+	private AddressRegionSearch addressRegionSearch;
+	private boolean debug = false;
 	
 	public AddressController(){
 		postcodeCityBestMatch = new PostcodeCityBestMatch();
+		addressSuggestion = new AddressSuggestion();
+		addressRegionSearch = new AddressRegionSearch();
 	}
 	
 	public AddressHolder getAddressHolder() {
