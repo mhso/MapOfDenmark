@@ -1,6 +1,6 @@
-package dk.itu.n.danmarkskort.routeplanner;
+package dk.itu.n.danmarkskort.models;
 
 public enum RouteEnum {
-	CONTINUE_ON, TAKE, TURN_LEFT, TURN_RIGHT, AT_DESTINATION,
+	CONTINUE_ON, START_AT, TURN_LEFT, TURN_RIGHT, AT_DESTINATION,
 	ROUNDABOUND_1_ROAD, ROUNDABOUND_2_ROAD, ROUNDABOUND_3_ROAD, ROUNDABOUND_4_ROAD, ROUNDABOUND_5_ROAD
 }

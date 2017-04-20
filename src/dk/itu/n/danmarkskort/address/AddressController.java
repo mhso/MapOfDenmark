@@ -22,7 +22,7 @@ public class AddressController  implements Serializable {
 	private PostcodeCityBestMatch postcodeCityBestMatch;
 	private AddressSuggestion addressSuggestion;
 	private AddressRegionSearch addressRegionSearch;
-	private boolean debug = true;
+	private boolean debug = false;
 	
 	public AddressController(){
 		postcodeCityBestMatch = new PostcodeCityBestMatch();
