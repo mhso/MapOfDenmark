@@ -20,12 +20,14 @@ public class AddressController  implements Serializable {
 	private TimerUtil timerUtilA = new TimerUtil();
 	private TimerUtil timerUtilB = new TimerUtil();
 	private PostcodeCityBestMatch postcodeCityBestMatch;
-	AddressSuggestion addressSuggestion = new AddressSuggestion();
-	AddressRegionSearch addressRegionSearch = new AddressRegionSearch();
-	private boolean debug = true;
+	private AddressSuggestion addressSuggestion;
+	private AddressRegionSearch addressRegionSearch;
+	private boolean debug = false;
 	
 	public AddressController(){
 		postcodeCityBestMatch = new PostcodeCityBestMatch();
+		addressSuggestion = new AddressSuggestion();
+		addressRegionSearch = new AddressRegionSearch();
 	}
 	
 	public List<String> getSearchSuggestions(String find, long limitAmountOfResults){ return addressSuggestion.searchSuggestions(find, limitAmountOfResults); }
