@@ -18,7 +18,7 @@ import dk.itu.n.danmarkskort.models.UserPreferences;
 public class Main {
 
 	public final static String APP_NAME = "Map";
-	public final static String APP_VERSION = "0.5";
+	public final static String APP_VERSION = "0.6";
 	public final static boolean debug = true;
 	public final static boolean production = false;
 	public final static boolean buffered = true;
@@ -42,24 +42,24 @@ public class Main {
 
 	public static void startup(String[] args) {
 		if(window != null) window.getContentPane().removeAll();
+		addressController  =  new AddressController();
 		osmReader = new OSMReader();
 		model = new OSMParser(osmReader);
-		addressController  =  new AddressController();
-		prepareParser(args);
+		if(args.length > 0) prepareParser(args);
+		else prepareParser(new String[]{userPreferences.getDefaultMapFile()});
 		if(userPreferences.getCurrentMapTheme() != null) {
 			GraphicRepresentation.parseData("resources/Theme" + userPreferences.getCurrentMapTheme() + ".XML");
 		}
 		else {
 			GraphicRepresentation.parseData("resources/Theme" + userPreferences.getDefaultTheme() + ".XML");
 			userPreferences.setCurrentMapTheme(userPreferences.getDefaultTheme());
-		}	
+		}
 	}
 
 	public static void prepareParser(String[] args) {
 		WindowParsingLoadscreenNew loadScreen = new WindowParsingLoadscreenNew(args[0]);
 		osmReader.addOSMListener(loadScreen);
 		osmReader.addInputListener(loadScreen);
-		System.out.println(loadScreen.hashCode());
 		loadScreen.run();
 		osmReader.parseFile(args[0]);
 	}

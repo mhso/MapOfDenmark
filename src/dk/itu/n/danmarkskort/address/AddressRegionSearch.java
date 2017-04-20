@@ -13,14 +13,14 @@ import dk.itu.n.danmarkskort.models.RegionFloat;
 
 public class AddressRegionSearch {
 	public Address getSearchResult(float[] lonLat){
-		Housenumber hn = AddressHolder.searchHousenumber(lonLat);
+		Housenumber hn = Main.addressController.getAddressHolder().searchHousenumber(lonLat);
 		return new Address(hn.getLonLat(), hn.getStreet().getStreet(), hn.getHousenumber(), hn.getPostcode().getPostcode(), hn.getPostcode().getCity());
 	}
 	
 	public Address getNearstSearchResult(RegionFloat input){
 		Address addr =  getSearchResult(input.getMiddlePoint());
 		if (addr == null) {
-			Collection<Housenumber> hns = AddressHolder.searchRegionHousenumbers(input).values();
+			Collection<Housenumber> hns = Main.addressController.getAddressHolder().searchRegionHousenumbers(input).values();
 			Housenumber hn = regionRecursiveLookup(input);
 			addr = new Address(hn.getLonLat(), hn.getStreet().getStreet(), hn.getHousenumber(), hn.getPostcode().getPostcode(), hn.getPostcode().getCity());
 		}
@@ -28,7 +28,7 @@ public class AddressRegionSearch {
 	}
 	
 	private Housenumber regionRecursiveLookup(RegionFloat input){
-		Map<RegionFloat, Housenumber> hns = AddressHolder.searchRegionHousenumbers(input);
+		Map<RegionFloat, Housenumber> hns = Main.addressController.getAddressHolder().searchRegionHousenumbers(input);
 		Housenumber house = null;
 		if(hns.size() == 1){ 
 			for(Housenumber hn : hns.values()) house = hn;
@@ -43,7 +43,7 @@ public class AddressRegionSearch {
 		TimerUtil timerUtil = new TimerUtil();
 		timerUtil.on();
 		List<String> result = new ArrayList<String>();
-		Collection<Housenumber> hns = AddressHolder.searchRegionHousenumbers(input).values();
+		Collection<Housenumber> hns = Main.addressController.getAddressHolder().searchRegionHousenumbers(input).values();
 		for(Housenumber hn : hns){
 			result.add(hn.toString());
 		}

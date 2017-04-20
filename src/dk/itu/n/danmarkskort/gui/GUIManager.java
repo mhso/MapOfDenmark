@@ -6,6 +6,7 @@ import java.awt.*;
 public class GUIManager extends JPanel{
 	private static final long serialVersionUID = 8887124630631749354L;
 	Style style;
+	private TopPanel topPanel;
 
     /**
      *
@@ -14,8 +15,13 @@ public class GUIManager extends JPanel{
         style = new Style();
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createEmptyBorder(style.margin(), style.margin(), style.margin(), style.margin()));
-        add(new TopPanel(style), BorderLayout.NORTH);
+        topPanel = new TopPanel(style);
+        add(topPanel, BorderLayout.NORTH);
         add(new BottomPanel(style), BorderLayout.SOUTH);
         setOpaque(false);
+    }
+    
+    public TopPanel getTopPanel() {
+    	return topPanel;
     }
 }
