@@ -1,4 +1,4 @@
-package dk.itu.n.danmarkskort.routeplanner;
+package dk.itu.n.danmarkskort.gui.routeplanner;
 
 import java.awt.EventQueue;
 
@@ -12,6 +12,10 @@ import java.awt.Font;
 import java.awt.Image;
 
 import javax.swing.JScrollPane;
+
+import dk.itu.n.danmarkskort.models.RouteEnum;
+import dk.itu.n.danmarkskort.models.RouteModel;
+
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import java.awt.Toolkit;
@@ -19,15 +23,16 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JCheckBox;
 import java.awt.event.ItemListener;
+import java.awt.image.BufferedImage;
 import java.awt.event.ItemEvent;
 
 public class RoutePlannerMain {
 
 	private JFrame frmRouteplanner;
 	private JPanel panelRouteImage, panelRouteDescription;
-	private final ImageIcon ROUTE_IMAGE;
 	private JLabel lblRouteimage;
-	String routeTo, routeFrom;
+	private final String ROUTE_FROM, ROUTE_TO;
+	private RouteImageSplit routeImageSplit;
 
 	/**
 	 * Launch the application.
@@ -36,7 +41,7 @@ public class RoutePlannerMain {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					RoutePlannerMain window = new RoutePlannerMain("","");
+					RoutePlannerMain window = new RoutePlannerMain(null, "","", "", demo());
 					window.frmRouteplanner.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -48,11 +53,18 @@ public class RoutePlannerMain {
 	/**
 	 * Create the application.
 	 */
-	public RoutePlannerMain(String routeFrom, String routeTo) {
-		ROUTE_IMAGE = new ImageIcon("resources/routeplanner/demo_routeplanner.PNG");
-		this.routeTo = routeTo;
-		this.routeFrom = routeFrom;
+	public RoutePlannerMain(BufferedImage routeImage, String routeFrom, String routeTo, String routeDistance,  List<RouteModel> routeModels) {
+		routeImageSplit = new RouteImageSplit();
+		ROUTE_FROM = routeFrom;
+		ROUTE_TO = routeTo;
 		initialize();
+		
+		makeRoute(ROUTE_FROM, ROUTE_TO, routeDistance, routeModels);
+		
+		frmRouteplanner.setVisible(true);
+		
+		routeImage(routeImage);
+		
 	}
 
 	/**
@@ -69,10 +81,6 @@ public class RoutePlannerMain {
 		JPanel panelHeadline = new JPanel();
 		frmRouteplanner.getContentPane().add(panelHeadline, BorderLayout.NORTH);
 		
-		JLabel lblRoutePlannerResult = new JLabel("Route planner result");
-		lblRoutePlannerResult.setFont(new Font("Tahoma", Font.BOLD, 24));
-		panelHeadline.add(lblRoutePlannerResult);
-		
 		JPanel panelWest = new JPanel();
 		frmRouteplanner.getContentPane().add(panelWest, BorderLayout.WEST);
 		
@@ -88,6 +96,7 @@ public class RoutePlannerMain {
 		panelRoute.add(panelRouteMenu, BorderLayout.NORTH);
 		
 		JCheckBox chckbxShowImage = new JCheckBox("Show Image");
+		chckbxShowImage.setSelected(true);
 		chckbxShowImage.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent arg0) {
 				toggleShowHideRouteImage();
@@ -96,6 +105,7 @@ public class RoutePlannerMain {
 		panelRouteMenu.add(chckbxShowImage);
 		
 		JCheckBox chckbxShowDescription = new JCheckBox("Show Description");
+		chckbxShowDescription.setSelected(true);
 		chckbxShowDescription.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				toggleShowHideRouteDescription();
@@ -122,7 +132,6 @@ public class RoutePlannerMain {
 		panelRouteImage = new JPanel();
 		
 		lblRouteimage = new JLabel("");
-		lblRouteimage.setIcon(ROUTE_IMAGE);
 		lblRouteimage.setVisible(true);
 		panelRouteImage.add(lblRouteimage, BorderLayout.NORTH);
 
@@ -139,22 +148,17 @@ public class RoutePlannerMain {
 		
 		JPanel panelSouth = new JPanel();
 		frmRouteplanner.getContentPane().add(panelSouth, BorderLayout.SOUTH);
-		
-		RoutePart();
-		
-		frmRouteplanner.setVisible(true);
-		routeImage();
 	}
 	
-	private void routeImage(){
+	
+	private void routeImage(BufferedImage bufferedImage){
 		int newWidth = panelRouteImage.getWidth()-30;
-		int oldWidth = ROUTE_IMAGE.getIconWidth();
-		int oldHeight = ROUTE_IMAGE.getIconHeight();
+		int oldWidth = bufferedImage.getWidth();
+		int oldHeight = bufferedImage.getHeight();
 		
 		double diff = (double)newWidth / (double) oldWidth;
 		int newHeight = (int)(oldHeight * diff);
-		
-		ImageIcon routeImageScaled = new ImageIcon(new ImageIcon("resources/routeplanner/demo_routeplanner.PNG")
+		ImageIcon routeImageScaled = new ImageIcon(new ImageIcon(bufferedImage)
 				.getImage().getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH));
 		lblRouteimage.setIcon(routeImageScaled);
 	}
@@ -175,25 +179,28 @@ public class RoutePlannerMain {
 		}
 	}
 	
-	private void RoutePart(){
-		List<JPanel> partList = new ArrayList<JPanel>();
+	private void makeRoute(String routeFrom, String routeTo, String routeDistance,  List<RouteModel> routeModels){
+		// Ad basic route info
+		panelRouteDescription.add(new RoutePartBasic(routeFrom, routeTo, routeDistance));
+		
+		// Add route steps
 		int pos = 1;
-		
-		panelRouteDescription.add(new RoutePartBasic(pos++, routeFrom, routeTo, "101Km"));
-		
-		partList.add(new RoutePartStep(pos++, "Kør mod Roskildevej", "600m"));
-		partList.add(new RoutePartStep(pos++, "Kør mod Roskildevej", "600m"));
-		partList.add(new RoutePartStep(pos++, "Kør mod Sverigesvej", "250m"));
-		partList.add(new RoutePartStep(pos++, "Kør mod Sverigesvej", "250m"));
-		partList.add(new RoutePartStep(pos++, "Kør mod Sverigesvej", "250m"));
-		partList.add(new RoutePartStep(pos++, "Kør mod Sverigesvej", "250m"));
-		
-		partList.add(new RoutePartStep(pos++, "Kør mod Amagerbrogade", "1,5Km"));
-		partList.add(new RoutePartStep(pos++, "Ankommet ved distination Rosenhave", ""));
-		
-		for(JPanel part : partList){
-			panelRouteDescription.add(part);
+		for(RouteModel rm : routeModels){
+			panelRouteDescription.add(new RoutePartStep(pos++, routeImageSplit.getStepIcon(rm.getDirection()), rm));
 		}
 	}
-
+	
+	private static List<RouteModel> demo(){
+		List<RouteModel> routeModels = new ArrayList<RouteModel>();
+		
+		routeModels.add(new RouteModel(RouteEnum.CONTINUE_ON, "Roskildevej", "600m"));
+		routeModels.add(new RouteModel(RouteEnum.TURN_LEFT, "Roskildevej", "600m"));
+		routeModels.add(new RouteModel(RouteEnum.CONTINUE_ON, "H. Hansenvej", "250m"));
+		routeModels.add(new RouteModel(RouteEnum.TURN_RIGHT, "Postmosen", "250m"));
+		routeModels.add(new RouteModel(RouteEnum.TURN_RIGHT, "Blågårdsgade", "250m"));
+		routeModels.add(new RouteModel(RouteEnum.CONTINUE_ON, "Sverigesvej", "250m"));
+		routeModels.add(new RouteModel(RouteEnum.TURN_RIGHT, "Amagerbrogade", "1,5Km"));
+		routeModels.add(new RouteModel(RouteEnum.AT_DESTINATION, "Rosenhaven 1", ""));
+		return routeModels;
+	}
 }

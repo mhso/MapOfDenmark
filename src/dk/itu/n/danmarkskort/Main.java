@@ -1,5 +1,6 @@
 package dk.itu.n.danmarkskort;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 
@@ -22,7 +23,7 @@ public class Main {
 	public final static boolean production = false;
 	public final static boolean buffered = true;
 	public final static boolean binaryfile = false;
-	public final static boolean saveParsedAddresses = false;
+	public final static boolean saveParsedAddresses = true;
 
 	public static OSMReader osmReader;
 	public static JFrame window;
@@ -83,7 +84,7 @@ public class Main {
     public static void makeFrame() {
         window = new JFrame(APP_NAME);
         window.setIconImage(Toolkit.getDefaultToolkit().getImage("resources/icons/map-icon.png"));
-        
+        window.setBackground(new Color(110, 192, 255));
         window.add(createFrameComponents());
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         

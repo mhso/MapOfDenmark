@@ -49,12 +49,12 @@ public class PinPoint implements Serializable {
 	
 	private boolean mouseIsOver() {
 		Point2D mouse = Main.map.getRelativeMousePosition();
-		Point2D screenPos = Main.map.toScreenCoords(location);
+		Point2D screenPos = Main.map.toActualScreenCoords(location);
 		return (mouse.distance(screenPos) < 16);
 	}
 	
 	public void draw(Graphics2D g) {
-		Point2D screenPos = Main.map.toScreenCoords(location);
+		Point2D screenPos = Main.map.toActualScreenCoords(location);
 		g.setTransform(new AffineTransform());
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		

@@ -177,7 +177,7 @@ public class MapCanvas extends JPanel implements ActionListener {
         background.lineTo(region.x1, region.y1);
 
         // backgroundcolor for the map. If there's a coastline use the water innercolor, otherwise use the coastline innercolor
-        if(Main.model.enumMapKD.containsKey(WayType.COASTLINE) && Main.model.enumMapKD.get(WayType.COASTLINE).size() > 0) {
+        if(Main.model.enumMapKD.containsKey(WayType.COASTLINE) ){//&& Main.model.enumMapKD.get(WayType.COASTLINE).size() > 0) {
         	g2d.setColor(new Color(110, 192, 255));
         }
         else g2d.setColor(new Color(240, 240, 230));
@@ -319,6 +319,10 @@ public class MapCanvas extends JPanel implements ActionListener {
 	
 	public Point2D toScreenCoords(Point2D coordinates) {
 		return transform.transform(coordinates, null);
+	}
+	
+	public Point2D toActualScreenCoords(Point2D coordinates) {
+		return actualTransform.transform(coordinates, null);
 	}
 	
 	public void toggleAA() {
