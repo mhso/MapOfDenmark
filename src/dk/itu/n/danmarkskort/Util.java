@@ -47,18 +47,16 @@ public class Util {
 	}
 	
 	public static String getFileChecksum(MessageDigest digest, String filename) throws IOException {
-		BufferedInputStream fis;
-		if(Main.production) fis = new BufferedInputStream(new FileInputStream(Util.class.getResource("/"+filename).toString()));
-		else fis = new BufferedInputStream(new FileInputStream(filename));
+		BufferedInputStream buff = new BufferedInputStream(new FileInputStream(filename));
 
 		byte[] byteArray = new byte[1024];
 		int bytesCount = 0;
 
-		while ((bytesCount = fis.read(byteArray)) != -1) {
+		while ((bytesCount = buff.read(byteArray)) != -1) {
 			digest.update(byteArray, 0, bytesCount);
 		}
 		
-		fis.close();
+		buff.close();
 		byte[] bytes = digest.digest();
 
 		StringBuilder sb = new StringBuilder();
@@ -154,9 +152,7 @@ public class Util {
 	
 	public static Object readObjectFromFile(String fileName, List<InputStreamListener> listeners) {		
 		try {
-			BufferedInputStream fout;
-			if(Main.production) fout = new BufferedInputStream(new FileInputStream(Util.class.getResource("/"+fileName).toString()));
-			else fout = new BufferedInputStream(new FileInputStream(fileName));
+			BufferedInputStream fout = new BufferedInputStream(new FileInputStream(fileName));
 			InputMonitor monitor = new InputMonitor(fout, fileName);
 			ObjectInputStream oos = new ObjectInputStream(monitor);
 			for(InputStreamListener listener : listeners) monitor.addListener(listener);
@@ -164,6 +160,7 @@ public class Util {
 			oos.close();
 			return object;
 		} catch(Exception e) {
+			e.printStackTrace();
 			Main.log("Could not find file: " + fileName);
 			return null;
 		}
@@ -171,9 +168,7 @@ public class Util {
 	
 	public static Object readObjectFromFile(String filename) {
 		try {
-			BufferedInputStream fout;
-			if(Main.production) fout = new BufferedInputStream(new FileInputStream(Util.class.getResource("/"+filename).toString()));
-			else fout = new BufferedInputStream(new FileInputStream(filename));
+			BufferedInputStream fout = new BufferedInputStream(new FileInputStream(filename));
 			ObjectInputStream oos = new ObjectInputStream(fout);
 			Object object = oos.readObject();
 			oos.close();

@@ -17,12 +17,12 @@ import dk.itu.n.danmarkskort.models.UserPreferences;
 public class Main {
 
 	public final static String APP_NAME = "Map";
-	public final static String APP_VERSION = "0.5";
+	public final static String APP_VERSION = "0.6";
 	public final static boolean debug = true;
-	public final static boolean production = true;
+	public final static boolean production = false;
 	public final static boolean buffered = true;
 	public final static boolean binaryfile = false;
-	public final static boolean saveParsedAddresses = false;
+	public final static boolean saveParsedAddresses = true;
 
 	public static OSMReader osmReader;
 	public static JFrame window;
@@ -41,18 +41,18 @@ public class Main {
 
 	public static void startup(String[] args) {
 		if(window != null) window.getContentPane().removeAll();
+		addressController  =  new AddressController();
 		osmReader = new OSMReader();
 		model = new OSMParser(osmReader);
-		addressController  =  new AddressController();
 		if(args.length > 0) prepareParser(args);
-		else prepareParser(new String[]{"map.zip"});
+		else prepareParser(new String[]{userPreferences.getDefaultMapFile()});
 		if(userPreferences.getCurrentMapTheme() != null) {
 			GraphicRepresentation.parseData("resources/Theme" + userPreferences.getCurrentMapTheme() + ".XML");
 		}
 		else {
 			GraphicRepresentation.parseData("resources/Theme" + userPreferences.getDefaultTheme() + ".XML");
 			userPreferences.setCurrentMapTheme(userPreferences.getDefaultTheme());
-		}	
+		}
 	}
 
 	public static void prepareParser(String[] args) {

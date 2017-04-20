@@ -1,14 +1,11 @@
 package dk.itu.n.danmarkskort.backend;
 
 import java.io.BufferedInputStream;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -24,7 +21,6 @@ import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.MemoryUtil;
 import dk.itu.n.danmarkskort.TimerUtil;
 import dk.itu.n.danmarkskort.Util;
-import dk.itu.n.danmarkskort.address.AddressHolder;
 import dk.itu.n.danmarkskort.models.UserPreferences;
 
 // This class can parse an OSM file, and turn it into tile files. 
@@ -77,11 +73,11 @@ public class OSMReader {
 			BinaryWrapper binary = (BinaryWrapper) Util.readObjectFromFile(fileName, inputListeners);
 			Main.model = binary.getModel();
 			Main.userPreferences = binary.getUserPreferences();
-			Main.addressController = binary.getAddressController();
+			Main.addressController.setAddressHolder(binary.getAddressHolder());
 			for(InputStreamListener listener : inputListeners) listener.onSetupDone();
 		}
 		else {
-            try {
+			try {
                 currentChecksum = Util.getFileChecksumMD5(fileName);
             } catch (NoSuchAlgorithmException | IOException e1) {
                 e1.printStackTrace();
@@ -92,50 +88,52 @@ public class OSMReader {
                 BinaryWrapper binary = (BinaryWrapper) Util.readObjectFromFile(fileName, inputListeners);
                 Main.model = binary.getModel();
                 Main.userPreferences = binary.getUserPreferences();
-                Main.addressController = binary.getAddressController();
+                Main.addressController.setAddressHolder(binary.getAddressHolder());
                 for (InputStreamListener listener : inputListeners) listener.onSetupDone();
             }
-            else if (fileName.endsWith(".osm")) {
-                try {
-                	if(Main.production) inputStream = new FileInputStream(getClass().getResource(fileName).toString());
-                	else inputStream = new FileInputStream(fileName);
-                    InputMonitor monitor = new InputMonitor(inputStream, fileName);
-                    for (InputStreamListener inListener : inputListeners) monitor.addListener(inListener);
-                    loadOSM(new InputSource(monitor), fileName);
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
+            else {
+            	if (fileName.endsWith(".osm")) {
+                    try {
+                    	if(Main.production) inputStream = new FileInputStream(getClass().getResource(fileName).toString());
+                    	else inputStream = new FileInputStream(fileName);
+                        InputMonitor monitor = new InputMonitor(inputStream, fileName);
+                        for (InputStreamListener inListener : inputListeners) monitor.addListener(inListener);
+                        loadOSM(new InputSource(monitor), fileName);
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
 
-            } else if (fileName.endsWith(".zip")) {
-                try {
-                	if(Main.production) inputStream = new FileInputStream(getClass().getResource(fileName).toString());
-                	else inputStream = new FileInputStream(fileName);
-                    InputMonitor monitor = new InputMonitor(inputStream, fileName);
-                    ZipInputStream zip = new ZipInputStream(new BufferedInputStream(monitor));
-                    zip.getNextEntry();
-                    for (InputStreamListener inListener : inputListeners) monitor.addListener(inListener);
-                    loadOSM(new InputSource(zip), fileName);
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
+                } else if (fileName.endsWith(".zip")) {
+                    try {
+                    	if(Main.production) inputStream = new FileInputStream(getClass().getResource(fileName).toString());
+                    	else inputStream = new FileInputStream(fileName);
+                        InputMonitor monitor = new InputMonitor(inputStream, fileName);
+                        ZipInputStream zip = new ZipInputStream(new BufferedInputStream(monitor));
+                        zip.getNextEntry();
+                        for (InputStreamListener inListener : inputListeners) monitor.addListener(inListener);
+                        loadOSM(new InputSource(zip), fileName);
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
-            }
-
-            Main.userPreferences = new UserPreferences();
-
-            if(Main.binaryfile) {
-                String path = "parsedOSMFiles/" + currentChecksum + "/";
-                try {
-                    Files.createDirectory(Paths.get(path));
-                } catch (IOException e) {
-                    e.printStackTrace();
+            	Main.userPreferences = new UserPreferences();
+            	
+                if(Main.binaryfile) {
+                    String path = "parsedOSMFiles/" + currentChecksum + "/";
+                    try {
+                        Files.createDirectory(Paths.get(path));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    
+                    BinaryWrapper binary = new BinaryWrapper();
+                    binary.setModel(Main.model);
+                    binary.setUserPreferences(Main.userPreferences);
+                    binary.setAddressHolder(Main.addressController.getAddressHolder());
+                    Util.writeObjectToFile(binary, Util.getBinaryFilePath());
                 }
-                BinaryWrapper binary = new BinaryWrapper();
-                binary.setModel(Main.model);
-                binary.setUserPreferences(Main.userPreferences);
-                binary.setAddressController(Main.addressController);
-                Util.writeObjectToFile(binary, Util.getBinaryFilePath());
             }
 
             for (InputStreamListener listener : inputListeners) listener.onSetupDone();
