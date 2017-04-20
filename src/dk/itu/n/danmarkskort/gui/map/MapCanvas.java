@@ -116,7 +116,7 @@ public class MapCanvas extends JPanel implements ActionListener {
 		shapesDrawn = 0;
 
 		if(wayTypesVisible == null) return;
-        drawBackground(g2d);
+        //drawBackground(g2d);
 
         Region currentRegion = getGeographicalRegion();
 

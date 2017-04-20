@@ -72,26 +72,33 @@ public class OSMParser extends SAXAdapter implements Serializable {
         Main.log("Splitting data into KDTrees");
 
         for(WayType wt : WayType.values()) {
-            KDTree tree;
-
+            KDTree<ParsedItem> tree;
+            Main.log("KDing for " + wt);
             if(wt == WayType.COASTLINE) tree = getCoastlines();
             else {
                 ArrayList<ParsedItem> current = enumMap.get(wt);
                 if (current.isEmpty()) tree = null;
-                else if (current.size() < DKConstants.KD_SIZE) tree = new KDTreeLeaf(current);
-                else tree = new KDTreeNode(current);
+                else if (current.size() < DKConstants.KD_SIZE) tree = new KDTreeLeaf<ParsedItem>(current);
+                else tree = new KDTreeNode<ParsedItem>(current);
             }
-
             enumMap.remove(wt);
-            //if(tree != null) tree.makeShapes();
             enumMapKD.put(wt, tree);
         }
 
+        Main.log("Deleting nodes, adding float[] coords");
+        for(Map.Entry<WayType, KDTree<ParsedItem>> entry : enumMapKD.entrySet()) {
+            KDTree<ParsedItem> current = entry.getValue();
+            if(current != null) {
+                for(ParsedItem item: current) item.nodesToCoords();
+            }
+        }
+
         Main.log("Deleting old references");
-        for(Map.Entry<WayType, KDTree> entry : enumMapKD.entrySet()) {
-            KDTree current = entry.getValue();
-            if(current != null) current.nodesToCoords();
-            //if(current != null) current.deleteOldRefs();
+        for(Map.Entry<WayType, KDTree<ParsedItem>> entry : enumMapKD.entrySet()) {
+            KDTree<ParsedItem> current = entry.getValue();
+            if(current != null) {
+                for(ParsedItem item: current) item.deleteOldRefs();
+            }
         }
 
         for(OSMParserListener listener : reader.parserListeners) listener.onParsingFinished();
@@ -218,6 +225,7 @@ public class OSMParser extends SAXAdapter implements Serializable {
             }
             else if(relation != null) {
                 enumMap.get(waytype).add(relation);
+                relation.correctOuters();
                 for(OSMParserListener listener : reader.parserListeners) listener.onParsingGotItem(relation);
             }
             else if(node != null) {
@@ -235,8 +243,8 @@ public class OSMParser extends SAXAdapter implements Serializable {
         cleanUp();
     }
 
-    private KDTree getCoastlines() {
-        KDTree tree;
+    private KDTree<ParsedItem> getCoastlines() {
+        KDTree<ParsedItem> tree;
         HashSet<ParsedWay> connected = new HashSet<>();
         HashSet<ParsedWay> unconnected = new HashSet<>();
         ArrayList<ParsedItem> combined = new ArrayList<>();
@@ -254,7 +262,7 @@ public class OSMParser extends SAXAdapter implements Serializable {
             combined.addAll(connected);
             HashSet<ParsedWay> fixed = ParserUtil.fixUnconnectedCoastlines(unconnected);
             combined.addAll(fixed);
-            tree = new KDTreeLeaf(combined);
+            tree = new KDTreeLeaf<ParsedItem>(combined);
         }
         else tree = null;
         coastlineMap = null;

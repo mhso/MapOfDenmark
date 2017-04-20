@@ -15,7 +15,7 @@ public class KDTreeLeaf<T extends KDComparable> extends KDTree<T> {
     private KDComparable[] data;
     //private int size;
 
-    public KDTreeLeaf(ArrayList<KDComparable> list) {
+    public KDTreeLeaf(ArrayList<T> list) {
         this(list.toArray(new KDComparable[list.size()]));
     }
 

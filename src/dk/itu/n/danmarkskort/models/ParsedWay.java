@@ -13,7 +13,6 @@ import java.util.List;
 public class ParsedWay extends ParsedItem implements KDComparable, Serializable {
 
     private long id;
-    Shape shape;
     ParsedNode[] nodes;
     private float[] coords;
 
@@ -26,9 +25,7 @@ public class ParsedWay extends ParsedItem implements KDComparable, Serializable 
         nodes = null;
     }
 
-    public void addNode(ParsedNode node) {
-        addNodes(new ParsedNode[]{node});
-    }
+    public void addNode(ParsedNode node) { addNodes(new ParsedNode[]{node}); }
 
     public void addNodes(List<ParsedNode> nodeList) {
         addNodes(nodeList.toArray(new ParsedNode[nodeList.size()]));
@@ -43,13 +40,9 @@ public class ParsedWay extends ParsedItem implements KDComparable, Serializable 
         nodes = tempNodes;
     }
 
-    public ParsedNode[] getNodes() {
-        return nodes;
-    }
+    public ParsedNode[] getNodes() { return nodes; }
 
-    public long getID() {
-        return id;
-    }
+    public long getID() { return id; }
 
     ParsedNode[] getReversedNodes() {
         ParsedNode[] revNodes = new ParsedNode[nodes.length];
@@ -58,24 +51,17 @@ public class ParsedWay extends ParsedItem implements KDComparable, Serializable 
         return revNodes;
     }
 
-    @Override
     public void deleteOldRefs() {
         nodes = null;
     }
 
-    @Override
     public Shape getShape() {
-        return shape;
-    }
-
-    private Shape getPath() {
         Path2D path = new Path2D.Float();
-        path.moveTo(nodes[0].getLon(), nodes[0].getLat());
-        for (int i = 1; i < nodes.length; i++) {
-            path.lineTo(nodes[i].getLon(), nodes[i].getLat());
+        path.moveTo(coords[0], coords[1]);
+        for (int i = 2; i < coords.length; ) {
+            path.lineTo(coords[i++], coords[i++]);
         }
-        shape = path;
-        return shape;
+        return path;
     }
 
     public void nodesToCoords() {

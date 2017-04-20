@@ -27,6 +27,14 @@ public class ParsedRelation extends ParsedWay {
         else inners.add(item);
     }
 
+    @Override
+    public void deleteOldRefs() {
+        super.deleteOldRefs();
+        for(ParsedItem inner: inners) inner.deleteOldRefs();
+        for(ParsedItem outer: outers) outer.deleteOldRefs();
+    }
+
+    @Override
     public ParsedNode[] getNodes() {
         ArrayList<ParsedNode> arrList = new ArrayList<>();
         if(inners.size() > 0 && outers.size() > 0) {
@@ -36,7 +44,8 @@ public class ParsedRelation extends ParsedWay {
         return arrList.toArray(new ParsedNode[arrList.size()]);
     }
 
-    public Path2D getPath() {
+    @Override
+    public Shape getShape() {
         Path2D path = new Path2D.Float(Path2D.WIND_EVEN_ODD);
         if(inners.size() > 0) for(ParsedWay inner: inners) path.append(inner.getShape(), false);
         if(outers.size() > 0) for(ParsedWay outer: outers) path.append(outer.getShape(), false);
@@ -53,15 +62,17 @@ public class ParsedRelation extends ParsedWay {
 
     // FIXME: check if there should both be a lastNode and firstNode to check on (ie. 5 ifs in the double for loop)
     // FIXME: also, not sure if inners and nothingerners should also be connected like this?
-    private void correctOuters(ArrayList<ParsedWay> list) {
+    public void correctOuters() {
+        if(outers.size() == 0) return;
+
         ArrayList<ParsedWay> corrected = new ArrayList<>();
         ParsedWay tempWay = null;
-        ParsedWay current = list.get(0);
+        ParsedWay current = outers.get(0);
         current.getLastNode();
-        if(list.size() > 1) {
-            for(int i = 1; i < list.size(); i++) {
-                for(int j = i; j < list.size(); j++ ) {
-                    ParsedWay candidate = list.get(j);
+        if(outers.size() > 1) {
+            for(int i = 1; i < outers.size(); i++) {
+                for(int j = i; j < outers.size(); j++ ) {
+                    ParsedWay candidate = outers.get(j);
                     // checks if candidate is a match, with a correct path direction
                     if(current.getLastNode() == candidate.getFirstNode()) {
                         if(tempWay == null) {
@@ -70,7 +81,7 @@ public class ParsedRelation extends ParsedWay {
                         }
                         tempWay.addNodes(candidate.getNodes());
                         current = candidate;
-                        Collections.swap(list, i, j);
+                        Collections.swap(outers, i, j);
                         break;
                     }
                     // checks if candiate is a match, with an incorrect direction
@@ -81,17 +92,17 @@ public class ParsedRelation extends ParsedWay {
                         }
                         tempWay.addNodes(candidate.getReversedNodes());
                         current = candidate;
-                        Collections.swap(list, i, j);
+                        Collections.swap(outers, i, j);
                         break;
                     }
                     // if no candidates are matches, append the first candidate without connecting,
                     // and set it's lastNode to check new candidates against
-                    else if(j == list.size() - 1) {
+                    else if(j == outers.size() - 1) {
                         if(tempWay == null) corrected.add(current);
                         else {
                             corrected.add(tempWay);
                             tempWay = null;
-                            current = list.get(i);
+                            current = outers.get(i);
                         }
                     }
                 }
@@ -103,6 +114,8 @@ public class ParsedRelation extends ParsedWay {
     @Override
     public void nodesToCoords() {
         if(nodes != null) super.nodesToCoords();
+        for(ParsedItem inner: inners) inner.nodesToCoords();
+        for(ParsedItem outer: outers) outer.nodesToCoords();
     }
 
     @Override
@@ -112,7 +125,8 @@ public class ParsedRelation extends ParsedWay {
         else if(inners.size() > 0) return inners.get(0).getFirstNode();
         return null;
     }
-    
+
+    @Override
     public String toString() {
     	int nodeAmount = 0;
     	if(nodes != null && nodes.length > 0) nodeAmount = nodes.length;
