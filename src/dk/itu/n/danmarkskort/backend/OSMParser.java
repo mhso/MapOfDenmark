@@ -74,12 +74,15 @@ public class OSMParser extends SAXAdapter implements Serializable {
         for(WayType wt : WayType.values()) {
             KDTree<ParsedItem> tree;
             Main.log("KDing for " + wt);
-            if(wt == WayType.COASTLINE) tree = getCoastlines();
+            if(wt == WayType.COASTLINE) {
+                tree = getCoastlines();
+                coastlineMap = null;
+            }
             else {
                 ArrayList<ParsedItem> current = enumMap.get(wt);
                 if (current.isEmpty()) tree = null;
-                else if (current.size() < DKConstants.KD_SIZE) tree = new KDTreeLeaf<ParsedItem>(current);
-                else tree = new KDTreeNode<ParsedItem>(current);
+                else if (current.size() < DKConstants.KD_SIZE) tree = new KDTreeLeaf<>(current);
+                else tree = new KDTreeNode<>(current);
             }
             enumMap.remove(wt);
             enumMapKD.put(wt, tree);
@@ -88,17 +91,14 @@ public class OSMParser extends SAXAdapter implements Serializable {
         Main.log("Deleting nodes, adding float[] coords");
         for(Map.Entry<WayType, KDTree<ParsedItem>> entry : enumMapKD.entrySet()) {
             KDTree<ParsedItem> current = entry.getValue();
-            if(current != null) {
-                for(ParsedItem item: current) item.nodesToCoords();
-            }
+            if(current != null) for (ParsedItem item : current) item.nodesToCoords();
         }
+
 
         Main.log("Deleting old references");
         for(Map.Entry<WayType, KDTree<ParsedItem>> entry : enumMapKD.entrySet()) {
             KDTree<ParsedItem> current = entry.getValue();
-            if(current != null) {
-                for(ParsedItem item: current) item.deleteOldRefs();
-            }
+            if(current != null) for (ParsedItem item : current) item.deleteOldRefs();
         }
 
         for(OSMParserListener listener : reader.parserListeners) listener.onParsingFinished();
@@ -290,7 +290,6 @@ public class OSMParser extends SAXAdapter implements Serializable {
     }
 
     private void finalClean() {
-        coastlineMap = null;
         System.gc();
     }
     

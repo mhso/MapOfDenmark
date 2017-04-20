@@ -41,7 +41,6 @@ public class ParsedWay extends ParsedItem implements KDComparable, Serializable 
     }
 
     public ParsedNode[] getNodes() { return nodes; }
-
     public long getID() { return id; }
 
     ParsedNode[] getReversedNodes() {
@@ -57,6 +56,7 @@ public class ParsedWay extends ParsedItem implements KDComparable, Serializable 
 
     public Shape getShape() {
         Path2D path = new Path2D.Float();
+        if(coords == null) Main.log("wtf: " + id + ", nodes length: "+ nodes.length);
         path.moveTo(coords[0], coords[1]);
         for (int i = 2; i < coords.length; ) {
             path.lineTo(coords[i++], coords[i++]);
@@ -71,7 +71,6 @@ public class ParsedWay extends ParsedItem implements KDComparable, Serializable 
             coords[i++] = pn.getLon();
             coords[i++] = pn.getLat();
         }
-        nodes = null;
     }
 
     public ParsedNode getFirstNode() {

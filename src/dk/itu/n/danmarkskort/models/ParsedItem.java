@@ -1,10 +1,8 @@
 package dk.itu.n.danmarkskort.models;
 
-import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.kdtree.KDComparable;
 
 import java.awt.*;
-import java.util.ArrayList;
 
 public abstract class ParsedItem implements KDComparable {
 

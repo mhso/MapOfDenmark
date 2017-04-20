@@ -121,27 +121,77 @@ public class MapCanvas extends JPanel implements ActionListener {
         Region currentRegion = getGeographicalRegion();
 
         // drawing all the outlines, if the current WayTypeGraphicSpec has one
+        for (WaytypeGraphicSpec wayTypeGraphic : wayTypesVisible) {
+            currentWTGSpec = wayTypeGraphic;
+            KDTree kdTree = Main.model.enumMapKD.get(wayTypeGraphic.getWayType());
+            if (kdTree == null) continue;
+            //if (currentWTGSpec.getOuterColor() != null) {
+            if (currentWTGSpec instanceof GraphicSpecLine) {
+                currentWTGSpec.transformOutline(g2d);
+                for (Iterator<ParsedItem> i = kdTree.iterator(currentRegion); i.hasNext(); ) {
+                    ParsedItem item = i.next();
+                    g2d.draw(item.getShape());
+                    shapesDrawn++;
+                }
+            } else if (currentWTGSpec instanceof GraphicSpecArea) {
+                currentWTGSpec.transformPrimary(g2d);
+                for (Iterator<ParsedItem> i = kdTree.iterator(currentRegion); i.hasNext(); ) {
+                    ParsedItem item = i.next();
+                    g2d.fill(item.getShape());
+                    shapesDrawn++;
+                }
+            }
+            /*else if(currentWTGSpec instanceof GraphicSpecArea) {
+                currentWTGSpec.transformPrimary(g2d);
+                for(Shape shape : shapes) {
+                    currentWTGSpec.transformOutline(g2d);
+                    if (currentWTGSpec instanceof GraphicSpecLine) g2d.draw(shape);
+                    else if (currentWTGSpec instanceof GraphicSpecArea) g2d.fill(shape);
+                    shapesDrawn++;
+                }
+            }
+        }*/
+        }
+
+        // draw or fill for all the different WaytypeGraphicsSpecs
+        for(WaytypeGraphicSpec wayTypeGraphic : wayTypesVisible) {
+            currentWTGSpec = wayTypeGraphic;
+            if (currentWTGSpec instanceof GraphicSpecLine) {
+                currentWTGSpec.transformPrimary(g2d);
+                KDTree kdTree = Main.model.enumMapKD.get(wayTypeGraphic.getWayType());
+                if (kdTree == null) continue;
+                for (Iterator<ParsedItem> i = kdTree.iterator(currentRegion); i.hasNext(); ) {
+                    ParsedItem item = i.next();
+                    g2d.draw(item.getShape());
+                    shapesDrawn++;
+                }
+            }
+        }
+    }
+        /*
+
+
+        // drawing all the outlines, if the current WayTypeGraphicSpec has one
 		for (WaytypeGraphicSpec wayTypeGraphic : wayTypesVisible) {
 			currentWTGSpec = wayTypeGraphic;
 			KDTree<ParsedItem> kdTree = Main.model.enumMapKD.get(wayTypeGraphic.getWayType());
 			if (kdTree == null) continue;
-			if (currentWTGSpec.getOuterColor() != null) {
-                currentWTGSpec.transformOutline(g2d);
-                if (currentWTGSpec instanceof GraphicSpecLine) {
+			if (currentWTGSpec instanceof GraphicSpecLine) {
+                if(currentWTGSpec.getOuterColor() != null) {
+                    currentWTGSpec.transformOutline(g2d);
                     for (Iterator<ParsedItem> i = kdTree.iterator(currentRegion); i.hasNext(); ) {
                         ParsedItem item = i.next();
                         g2d.draw(item.getShape());
                         shapesDrawn++;
                     }
                 }
-                /*else if (currentWTGSpec instanceof GraphicSpecArea) {
+                else if (currentWTGSpec instanceof GraphicSpecArea) {
                     for (Iterator<ParsedItem> i = kdTree.iterator(currentRegion); i.hasNext(); ) {
                         ParsedItem item = i.next();
                         g2d.fill(item.getShape());
                         shapesDrawn++;
                     }
-                }*/
-			}
+                }
 			else if(currentWTGSpec instanceof GraphicSpecArea) {
 				currentWTGSpec.transformPrimary(g2d);
                 for (Iterator<ParsedItem> i = kdTree.iterator(currentRegion); i.hasNext(); ) {
@@ -155,16 +205,20 @@ public class MapCanvas extends JPanel implements ActionListener {
 		// draw or fill for all the different WaytypeGraphicsSpecs
 		for(WaytypeGraphicSpec wayTypeGraphic : wayTypesVisible) {
 			currentWTGSpec = wayTypeGraphic;
-            currentWTGSpec.transformPrimary(g2d);
-            KDTree<ParsedItem> kdTree = Main.model.enumMapKD.get(wayTypeGraphic.getWayType());
-			if(kdTree == null) continue;
-            for (Iterator<ParsedItem> i = kdTree.iterator(currentRegion); i.hasNext(); ) {
-                ParsedItem item = i.next();
-                g2d.draw(item.getShape());
-                shapesDrawn++;
+            if (currentWTGSpec instanceof GraphicSpecLine) {
+                if (currentWTGSpec.getOuterColor() != null) {
+                    currentWTGSpec.transformPrimary(g2d);
+                    KDTree<ParsedItem> kdTree = Main.model.enumMapKD.get(wayTypeGraphic.getWayType());
+                    if (kdTree == null) continue;
+                    for (Iterator<ParsedItem> i = kdTree.iterator(currentRegion); i.hasNext(); ) {
+                        ParsedItem item = i.next();
+                        g2d.draw(item.getShape());
+                        shapesDrawn++;
+                    }
+                }
             }
 		}
-	}
+	}*/
 
 	// This method is probably not the best. We should "just" change the entire background for et mapcanvas instead, if possible
 	private void drawBackground(Graphics2D g2d) {

@@ -79,7 +79,7 @@ public class KDTreeNode<T extends KDComparable> extends KDTree<T> {
     public List<KDComparable[]> getItems(Region reg) { return getItems(reg, true); }
 
     public List<KDComparable[]> getItems(Region reg, boolean sortByLon) {
-        List<KDComparable[]> items = new ArrayList<KDComparable[]>();
+        List<KDComparable[]> items = new ArrayList<>();
         if(sortByLon) {
             if(reg.x1 < leftSplit) items.addAll(leftChild.getItems(reg, !sortByLon));
             if(reg.x2 > rightSplit) items.addAll(rightChild.getItems(reg, !sortByLon));
@@ -89,5 +89,12 @@ public class KDTreeNode<T extends KDComparable> extends KDTree<T> {
             if(reg.y2 > rightSplit) items.addAll(rightChild.getItems(reg, !sortByLon));
         }
         return items;
+    }
+
+    public List<KDComparable[]> getAllItems() {
+        List<KDComparable[]> arrList = new ArrayList<>();
+        arrList.addAll(leftChild.getAllItems());
+        arrList.addAll(rightChild.getAllItems());
+        return arrList;
     }
 }

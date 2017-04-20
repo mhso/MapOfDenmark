@@ -80,9 +80,8 @@ public class ParsedRelation extends ParsedWay {
                             tempWay.addNodes(current.getNodes());
                         }
                         tempWay.addNodes(candidate.getNodes());
-                        current = candidate;
+                        current = tempWay;
                         Collections.swap(outers, i, j);
-                        break;
                     }
                     // checks if candiate is a match, with an incorrect direction
                     else if(current.getLastNode() == candidate.getLastNode()) {
@@ -91,23 +90,26 @@ public class ParsedRelation extends ParsedWay {
                             tempWay.addNodes(current.getNodes());
                         }
                         tempWay.addNodes(candidate.getReversedNodes());
-                        current = candidate;
+                        current = tempWay;
                         Collections.swap(outers, i, j);
-                        break;
                     }
                     // if no candidates are matches, append the first candidate without connecting,
                     // and set it's lastNode to check new candidates against
-                    else if(j == outers.size() - 1) {
-                        if(tempWay == null) corrected.add(current);
+                    if(j == outers.size() - 1) {
+                        if(tempWay == null) {
+                            corrected.add(current);
+                        }
                         else {
                             corrected.add(tempWay);
                             tempWay = null;
-                            current = outers.get(i);
                         }
+                        if(i == j) corrected.add(outers.get(i));
+                        else current = outers.get(i);
                     }
                 }
             }
         }
+        else corrected.add(current);
         outers = corrected;
     }
 

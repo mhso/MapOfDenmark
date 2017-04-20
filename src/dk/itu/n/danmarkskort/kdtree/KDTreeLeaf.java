@@ -1,12 +1,8 @@
 package dk.itu.n.danmarkskort.kdtree;
 
-import dk.itu.n.danmarkskort.gui.map.MapCanvas;
-import dk.itu.n.danmarkskort.models.ParsedItem;
 import dk.itu.n.danmarkskort.models.Region;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public class KDTreeLeaf<T extends KDComparable> extends KDTree<T> {
@@ -31,12 +27,15 @@ public class KDTreeLeaf<T extends KDComparable> extends KDTree<T> {
 
     @Override
     List<KDComparable[]> getItems(Region reg, boolean sortByLon) {
-        List<KDComparable[]> arr = new ArrayList<KDComparable[]>();
+        List<KDComparable[]> arr = new ArrayList<>();
         arr.add(data);
         return arr;
     }
-/*
+
     @Override
-    public int size() { return size; }
-*/
+    public List<KDComparable[]> getAllItems() {
+        List<KDComparable[]> arrList = new ArrayList<>();
+        arrList.add(data);
+        return arrList;
+    }
 }
