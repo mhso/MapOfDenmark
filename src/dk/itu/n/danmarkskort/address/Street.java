@@ -1,5 +1,6 @@
 package dk.itu.n.danmarkskort.address;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -9,7 +10,8 @@ import org.apache.commons.lang3.StringUtils;
 import dk.itu.n.danmarkskort.models.RegionFloat;
 import dk.itu.n.danmarkskort.models.ReuseStringObj;
 
-public class Street {
+public class Street implements Serializable {
+	private static final long serialVersionUID = -2943891636428003556L;
 	private String street;
 	private Map<String, Housenumber> housenumbers;
 	private Postcode postcode;

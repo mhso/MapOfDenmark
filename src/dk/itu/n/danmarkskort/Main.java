@@ -1,5 +1,6 @@
 package dk.itu.n.danmarkskort;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 
@@ -17,7 +18,7 @@ import dk.itu.n.danmarkskort.models.UserPreferences;
 public class Main {
 
 	public final static String APP_NAME = "Map";
-	public final static String APP_VERSION = "0.5";
+	public final static String APP_VERSION = "0.6";
 	public final static boolean debug = true;
 	public final static boolean production = false;
 	public final static boolean buffered = true;
@@ -41,24 +42,24 @@ public class Main {
 
 	public static void startup(String[] args) {
 		if(window != null) window.getContentPane().removeAll();
+		addressController  =  new AddressController();
 		osmReader = new OSMReader();
 		model = new OSMParser(osmReader);
-		addressController  =  new AddressController();
-		prepareParser(args);
+		if(args.length > 0) prepareParser(args);
+		else prepareParser(new String[]{userPreferences.getDefaultMapFile()});
 		if(userPreferences.getCurrentMapTheme() != null) {
 			GraphicRepresentation.parseData("resources/Theme" + userPreferences.getCurrentMapTheme() + ".XML");
 		}
 		else {
 			GraphicRepresentation.parseData("resources/Theme" + userPreferences.getDefaultTheme() + ".XML");
 			userPreferences.setCurrentMapTheme(userPreferences.getDefaultTheme());
-		}	
+		}
 	}
 
 	public static void prepareParser(String[] args) {
 		WindowParsingLoadscreenNew loadScreen = new WindowParsingLoadscreenNew(args[0]);
 		osmReader.addOSMListener(loadScreen);
 		osmReader.addInputListener(loadScreen);
-		System.out.println(loadScreen.hashCode());
 		loadScreen.run();
 		osmReader.parseFile(args[0]);
 	}
@@ -83,7 +84,7 @@ public class Main {
     public static void makeFrame() {
         window = new JFrame(APP_NAME);
         window.setIconImage(Toolkit.getDefaultToolkit().getImage("resources/icons/map-icon.png"));
-        
+        window.setBackground(new Color(110, 192, 255));
         window.add(createFrameComponents());
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         

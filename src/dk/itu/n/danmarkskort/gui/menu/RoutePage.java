@@ -8,9 +8,11 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DocumentFilter;
 
+import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.address.Address;
 import dk.itu.n.danmarkskort.gui.DropdownAddressSearch;
 import dk.itu.n.danmarkskort.gui.Style;
+import dk.itu.n.danmarkskort.gui.map.PinPoint;
 import dk.itu.n.danmarkskort.gui.routeplanner.RoutePlannerMain;
 import dk.itu.n.danmarkskort.models.RouteEnum;
 import dk.itu.n.danmarkskort.models.RouteModel;
@@ -19,6 +21,7 @@ import dk.itu.n.danmarkskort.search.SearchController;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -293,6 +296,16 @@ public class RoutePage extends JPanel {
 				e.printStackTrace();
 			}
     		
+			ArrayList<PinPoint> pinPoints = new ArrayList<PinPoint>();
+			
+			PinPoint from = new PinPoint(SearchController.getSearchFieldAddressObj(txtAddrFrom.getText()).getLonLatAsPoint(), txtAddrFrom.getText());
+			PinPoint to = new PinPoint(SearchController.getSearchFieldAddressObj(txtAddrTo.getText()).getLonLatAsPoint(), txtAddrTo.getText());
+			from.setIconIndex(5);
+			to.setIconIndex(6);
+			pinPoints.add(from);
+			pinPoints.add(to);
+			Main.pinPointManager.setTemporaryPinPoints(pinPoints);
+			
     		RoutePlannerMain routePlannerMain =  new RoutePlannerMain(bufferedImage, txtAddrFrom.getText(), txtAddrTo.getText(), routeDistance, routemodels);
     	} else if(!txtAddrFrom.getText().trim().isEmpty() && !txtAddrTo.getText().trim().isEmpty()) {
     		menu.blockVisibility(true);

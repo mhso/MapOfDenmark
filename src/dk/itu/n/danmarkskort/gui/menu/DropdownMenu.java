@@ -121,6 +121,10 @@ public class DropdownMenu extends CustomDropdown {
 		if(popUpBlocked) return;
 		else super.setVisible(visible);
 	}
+    
+    public void showDropdown() {
+    	showDropdown(topPanel.getMenuButton());
+    }
 
     /**
      * Show the Dropdown-Menu at the specified Component.

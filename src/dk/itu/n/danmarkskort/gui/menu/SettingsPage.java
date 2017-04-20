@@ -4,7 +4,6 @@ import javax.swing.*;
 import javax.swing.border.TitledBorder;
 
 import dk.itu.n.danmarkskort.Main;
-import dk.itu.n.danmarkskort.Util;
 import dk.itu.n.danmarkskort.gui.CustomToggleButton;
 import dk.itu.n.danmarkskort.gui.Style;
 import dk.itu.n.danmarkskort.mapgfx.GraphicRepresentation;
@@ -197,8 +196,43 @@ public class SettingsPage extends JPanel {
     
     private void createPreferencesPanel() {
     	JPanel panelDefaultValues = new JPanel();
+    	panelDefaultValues.setLayout(new BorderLayout(0, 5));
         panelDefaultValues.setOpaque(false);
         panelCenter.add(panelDefaultValues, "name_preferences");
+        
+        JLabel labelPreferences = new JLabel("Change Preferences");
+        labelPreferences.setFont(new Font("Tahoma", Font.PLAIN, 20));
+        labelPreferences.setHorizontalAlignment(SwingConstants.CENTER);
+        panelDefaultValues.add(labelPreferences, BorderLayout.NORTH);
+        
+        JPanel centerPanel = new JPanel();
+        centerPanel.setOpaque(false);
+        centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
+        panelDefaultValues.add(centerPanel, BorderLayout.CENTER);
+        
+        JPanel defaultMapThemePanel = new JPanel();
+        defaultMapThemePanel.setOpaque(false);
+        defaultMapThemePanel.setLayout(new BorderLayout());
+        centerPanel.add(defaultMapThemePanel);
+        
+        JLabel defaultMapThemeLabel = new JLabel("Default Map Theme: ");
+        
+        
+        centerPanel.add(Box.createRigidArea(new Dimension(20, 20)));
+        
+        JPanel defaultGUIThemePanel = new JPanel();
+        
+        JPanel maximizeOnStartupPanel = new JPanel();
+        
+        JPanel panelSouth = new JPanel();
+        panelSouth.setOpaque(false);
+        panelDefaultValues.add(panelSouth, BorderLayout.SOUTH);
+        panelSouth.setLayout(new BorderLayout(0, 0));
+        
+        JButton buttonBack = new JButton("Back");
+        buttonBack.addActionListener(e -> showDefaultPanel());
+        buttonBack.setFont(new Font("Tahoma", Font.PLAIN, 13));
+        panelSouth.add(buttonBack, BorderLayout.WEST);
     }
     
     private void showDefaultPanel() {

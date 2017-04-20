@@ -2,7 +2,7 @@ package dk.itu.n.danmarkskort.backend;
 
 import java.io.Serializable;
 
-import dk.itu.n.danmarkskort.address.AddressController;
+import dk.itu.n.danmarkskort.address.AddressHolder;
 import dk.itu.n.danmarkskort.models.UserPreferences;
 
 public class BinaryWrapper implements Serializable {
@@ -10,7 +10,7 @@ public class BinaryWrapper implements Serializable {
 	
 	private UserPreferences userPreferences;
 	private OSMParser model;
-	private AddressController addressController;
+	private AddressHolder addressHolder;
 	
 	public void setUserPreferences(UserPreferences userPreferences) {
 		this.userPreferences = userPreferences;
@@ -24,12 +24,12 @@ public class BinaryWrapper implements Serializable {
 		return model;
 	}
 	
-	public void setAddressController(AddressController addressController){
-		this.addressController = addressController;
+	public void setAddressHolder(AddressHolder addressHolder){
+		this.addressHolder = addressHolder;
 	}
 	
-	public AddressController getAddressController(){
-		return addressController;
+	public AddressHolder getAddressHolder(){
+		return addressHolder;
 	}
 	
 	public UserPreferences getUserPreferences() {
