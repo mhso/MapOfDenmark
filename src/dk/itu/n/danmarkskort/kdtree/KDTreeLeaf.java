@@ -4,47 +4,39 @@ import dk.itu.n.danmarkskort.gui.map.MapCanvas;
 import dk.itu.n.danmarkskort.models.ParsedItem;
 import dk.itu.n.danmarkskort.models.Region;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
-public class KDTreeLeaf extends KDTree {
+public class KDTreeLeaf<T extends KDComparable> extends KDTree<T> {
 
     private static final long serialVersionUID = 1522369879614832796L;
-    private ParsedItem[] data;
-    private int size;
+    private KDComparable[] data;
+    //private int size;
 
-    public KDTreeLeaf(ArrayList<ParsedItem> list) {
-        this(listToArray(list));
+    public KDTreeLeaf(ArrayList<KDComparable> list) {
+        this(list.toArray(new KDComparable[list.size()]));
     }
 
-    KDTreeLeaf(ParsedItem[] array) {
+    KDTreeLeaf(KDComparable[] array) {
         data = array;
-        size = data.length;
+        //size = data.length;
     }
 
     @Override
-    public void deleteOldRefs() {
-        for(ParsedItem item : data) item.deleteOldRefs();
+    public List<KDComparable[]> getItems(Region reg) {
+        return getItems(reg, true);
     }
 
     @Override
-    public void makeShapes() {
-        for(ParsedItem item : data) item.makeShape();
+    List<KDComparable[]> getItems(Region reg, boolean sortByLon) {
+        List<KDComparable[]> arr = new ArrayList<KDComparable[]>();
+        arr.add(data);
+        return arr;
     }
-
-    @Override
-    public ArrayList<Shape> getShapes(Region reg) {
-        return getShapes(reg, true);
-    }
-
-    @Override
-    ArrayList<Shape> getShapes(Region reg, boolean sortByLon) {
-        ArrayList<Shape> shapes = new ArrayList<>(size);
-        for(ParsedItem item : data) shapes.add(item.getShape());
-        return shapes;
-    }
-
+/*
     @Override
     public int size() { return size; }
+*/
 }

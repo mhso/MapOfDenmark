@@ -23,7 +23,7 @@ public class OSMParser extends SAXAdapter implements Serializable {
     private transient HashMap<ParsedNode, ParsedWay> coastlineMap;
 
     private transient EnumMap<WayType, ArrayList<ParsedItem>> enumMap;
-    public EnumMap<WayType, KDTree> enumMapKD;
+    public EnumMap<WayType, KDTree<ParsedItem>> enumMapKD;
 
     private transient ParsedWay way;
     private transient ParsedRelation relation;
@@ -83,14 +83,15 @@ public class OSMParser extends SAXAdapter implements Serializable {
             }
 
             enumMap.remove(wt);
-            if(tree != null) tree.makeShapes();
+            //if(tree != null) tree.makeShapes();
             enumMapKD.put(wt, tree);
         }
 
         Main.log("Deleting old references");
         for(Map.Entry<WayType, KDTree> entry : enumMapKD.entrySet()) {
             KDTree current = entry.getValue();
-            if(current != null) current.deleteOldRefs();
+            if(current != null) current.nodesToCoords();
+            //if(current != null) current.deleteOldRefs();
         }
 
         for(OSMParserListener listener : reader.parserListeners) listener.onParsingFinished();

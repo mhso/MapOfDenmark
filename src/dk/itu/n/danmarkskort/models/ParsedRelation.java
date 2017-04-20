@@ -27,20 +27,6 @@ public class ParsedRelation extends ParsedWay {
         else inners.add(item);
     }
 
-    @Override
-    public void deleteOldRefs() {
-        nodes = null;
-        inners = null;
-        outers = null;
-    }
-
-    public void makeShape() {
-        shape = getPath();
-    }
-
-    public ArrayList<ParsedWay> getInners() { return inners; }
-    public ArrayList<ParsedWay> getOuters() { return outers; }
-
     public ParsedNode[] getNodes() {
         ArrayList<ParsedNode> arrList = new ArrayList<>();
         if(inners.size() > 0 && outers.size() > 0) {
@@ -52,44 +38,71 @@ public class ParsedRelation extends ParsedWay {
 
     public Path2D getPath() {
         Path2D path = new Path2D.Float(Path2D.WIND_EVEN_ODD);
-        if(inners.size() > 0) {
-            for(ParsedWay item : inners) path.append(item.getPath(), false);
-        }
-        if(outers.size() > 0) path.append(connectItems(outers), false);
+        if(inners.size() > 0) for(ParsedWay inner: inners) path.append(inner.getShape(), false);
+        if(outers.size() > 0) for(ParsedWay outer: outers) path.append(outer.getShape(), false);
         return path;
     }
 
     /*
-    * Connects outer ways into a coherent polygon
-    * Some ways has to have their nodelist reversed
+    * Connects outer ways into a coherent polygon.
+    * Some ways has to have their coords reversed.
+    * These reversed paths have to be created as a new instance of
+    * way, as they would otherwise mess with themselves or other
+    * relations, where they don't have to be reversed.
      */
-    private Path2D connectItems(ArrayList<ParsedWay> list) {
-        Path2D path = new Path2D.Float();
-        path.append(list.get(0).getPath(), false);
-        ParsedNode lastNode = list.get(0).getLastNode();
+
+    // FIXME: check if there should both be a lastNode and firstNode to check on (ie. 5 ifs in the double for loop)
+    // FIXME: also, not sure if inners and nothingerners should also be connected like this?
+    private void correctOuters(ArrayList<ParsedWay> list) {
+        ArrayList<ParsedWay> corrected = new ArrayList<>();
+        ParsedWay tempWay = null;
+        ParsedWay current = list.get(0);
+        current.getLastNode();
         if(list.size() > 1) {
             for(int i = 1; i < list.size(); i++) {
                 for(int j = i; j < list.size(); j++ ) {
-                    if(lastNode == list.get(j).getFirstNode()) {
-                        path.append(list.get(j).getPath(), true);
-                        lastNode = list.get(j).getLastNode();
+                    ParsedWay candidate = list.get(j);
+                    // checks if candidate is a match, with a correct path direction
+                    if(current.getLastNode() == candidate.getFirstNode()) {
+                        if(tempWay == null) {
+                            tempWay = new ParsedWay();
+                            tempWay.addNodes(current.getNodes());
+                        }
+                        tempWay.addNodes(candidate.getNodes());
+                        current = candidate;
                         Collections.swap(list, i, j);
                         break;
                     }
-                    else if(lastNode == list.get(j).getLastNode()) {
-                        path.append(list.get(j).getReversedPath(), true);
-                        lastNode = list.get(j).getFirstNode();
+                    // checks if candiate is a match, with an incorrect direction
+                    else if(current.getLastNode() == candidate.getLastNode()) {
+                        if(tempWay == null) {
+                            tempWay = new ParsedWay();
+                            tempWay.addNodes(current.getNodes());
+                        }
+                        tempWay.addNodes(candidate.getReversedNodes());
+                        current = candidate;
                         Collections.swap(list, i, j);
                         break;
                     }
+                    // if no candidates are matches, append the first candidate without connecting,
+                    // and set it's lastNode to check new candidates against
                     else if(j == list.size() - 1) {
-                        path.append(list.get(i).getPath(), false);
-                        lastNode = list.get(i).getLastNode();
+                        if(tempWay == null) corrected.add(current);
+                        else {
+                            corrected.add(tempWay);
+                            tempWay = null;
+                            current = list.get(i);
+                        }
                     }
                 }
             }
         }
-        return path;
+        outers = corrected;
+    }
+
+    @Override
+    public void nodesToCoords() {
+        if(nodes != null) super.nodesToCoords();
     }
 
     @Override
@@ -105,8 +118,8 @@ public class ParsedRelation extends ParsedWay {
     	if(nodes != null && nodes.length > 0) nodeAmount = nodes.length;
 
     	return "ParsedRelation [" + "id=" + getID()
-                //+ ", firstLon=" + getFirstNode().getLon()
-                //+ ", firstLat=" + getFirstNode().getLat()
+                + ", firstLon=" + getFirstNode().getLon()
+                + ", firstLat=" + getFirstNode().getLat()
                 + ", nodeAmount=" + nodeAmount
                 + ", itemAmount=" + (inners.size() + outers.size()) + "]";
     }
