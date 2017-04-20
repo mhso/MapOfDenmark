@@ -11,30 +11,30 @@ import dk.itu.n.danmarkskort.models.RegionFloat;
 
 public class AddressHolder implements Serializable {
 	private static final long serialVersionUID = 4946666884688610616L;
-	public static HashMap<String, Postcode> postcodes = new HashMap<String, Postcode>();
+	public HashMap<String, Postcode> postcodes = new HashMap<String, Postcode>();
 	
 	public AddressHolder(){
 	
 	}
 	
-	public static Postcode getPostcode(String postcode) {
+	public Postcode getPostcode(String postcode) {
 		if(postcode == null) return null;
 		return postcodes.get(postcode.toLowerCase());
 	}
 	
-	public static int count(){
+	public int count(){
 		int size = 0;
 		for(Postcode pc : postcodes.values()) size += pc.count();
 		return size;
 	}
 	
-	public static int count(Map<String, Postcode> list){
+	public int count(Map<String, Postcode> list){
 		int size = 0;
 		for(Postcode pc : list.values()) size += pc.count();
 		return size;
 	}
 	
-	private static Map<String, Postcode> postcodeContains(Map<String, Postcode> input, String postcode){
+	private Map<String, Postcode> postcodeContains(Map<String, Postcode> input, String postcode){
 		Map<String, Postcode> result = new HashMap<String, Postcode>();
 		if(postcode == null) return result;
 		for(Entry<String, Postcode> entry : input.entrySet()){
@@ -45,7 +45,7 @@ public class AddressHolder implements Serializable {
 		return result;
 	}
 	
-	private static Map<String, Postcode> postcodeStartsWith(Map<String, Postcode> input, String postcode){
+	private Map<String, Postcode> postcodeStartsWith(Map<String, Postcode> input, String postcode){
 		Map<String, Postcode> result = new HashMap<String, Postcode>();
 		if(postcode == null) return result;
 		for(Entry<String, Postcode> entry : input.entrySet()){
@@ -56,7 +56,7 @@ public class AddressHolder implements Serializable {
 		return result;
 	}
 	
-	private static Map<String, Postcode> postcodeLevenshteinDistance(Map<String, Postcode> input, String postcode){
+	private Map<String, Postcode> postcodeLevenshteinDistance(Map<String, Postcode> input, String postcode){
 		Map<String, Postcode> result = new HashMap<String, Postcode>();
 		int minValue = 0, maxValue = 3;
 		if(postcode == null) return result;
@@ -69,7 +69,7 @@ public class AddressHolder implements Serializable {
 		return result;
 	}
 	
-	private static Map<String, Postcode> cityContains(Map<String, Postcode> input, String city){
+	private Map<String, Postcode> cityContains(Map<String, Postcode> input, String city){
 		Map<String, Postcode> result = new HashMap<String, Postcode>();
 		if(input == null) return result;
 		for(Entry<String, Postcode> entry : input.entrySet()){
@@ -80,7 +80,7 @@ public class AddressHolder implements Serializable {
 		return result;
 	}
 	
-	private static Map<String, Postcode> cityStartsWith(Map<String, Postcode> input, String city){
+	private Map<String, Postcode> cityStartsWith(Map<String, Postcode> input, String city){
 		Map<String, Postcode> result = new HashMap<String, Postcode>();
 		if(input == null) return result;
 		for(Entry<String, Postcode> entry : input.entrySet()){
@@ -91,7 +91,7 @@ public class AddressHolder implements Serializable {
 		return result;
 	}
 	
-	private static Map<String, Postcode> cityLevenshteinDistance(Map<String, Postcode> input, String city){
+	private Map<String, Postcode> cityLevenshteinDistance(Map<String, Postcode> input, String city){
 		Map<String, Postcode> result = new HashMap<String, Postcode>();
 		int minValue = 0, maxValue = 3;
 		if(input == null) return result;
@@ -104,7 +104,7 @@ public class AddressHolder implements Serializable {
 		return result;
 	}
 	
-	private static Map<String, Postcode> cityEquals(Map<String, Postcode> input, String city){
+	private Map<String, Postcode> cityEquals(Map<String, Postcode> input, String city){
 		Map<String, Postcode> result = new HashMap<String, Postcode>();
 		if(input == null) return result;
 		for(Entry<String, Postcode> entry : input.entrySet()){
@@ -115,7 +115,7 @@ public class AddressHolder implements Serializable {
 		return result;
 	}
 	
-	private static Map<String, Postcode> searchPostcode(Map<String, Postcode> input, Address addr, SearchEnum postcodeType, SearchEnum cityType){
+	private Map<String, Postcode> searchPostcode(Map<String, Postcode> input, Address addr, SearchEnum postcodeType, SearchEnum cityType){
 		Map<String, Postcode> result = new HashMap<String, Postcode>();
 			switch(postcodeType){
 			case CONTAINS:
@@ -143,7 +143,7 @@ public class AddressHolder implements Serializable {
 		return result;
 	}
 	
-	private static Map<String, Postcode> searchCity(Map<String, Postcode> input, Address addr, SearchEnum cityType){
+	private Map<String, Postcode> searchCity(Map<String, Postcode> input, Address addr, SearchEnum cityType){
 		Map<String, Postcode> result = new HashMap<String, Postcode>();
 			switch(cityType){
 			case CONTAINS:
@@ -167,7 +167,7 @@ public class AddressHolder implements Serializable {
 		return result;
 	}
 	
-	public static Map<String, Postcode> search(Address addr,
+	public Map<String, Postcode> search(Address addr,
 			SearchEnum streetType, SearchEnum housenumberType, SearchEnum postcodeType, SearchEnum cityType){
 			Map<String, Postcode> result = new HashMap<String, Postcode>();
 			for(Postcode pc : searchPostcode(postcodes, addr, postcodeType, cityType).values()){
@@ -181,20 +181,20 @@ public class AddressHolder implements Serializable {
 		return result;
 	}
 	
-	private static void searchToMap(Map<String, Postcode> input, Housenumber hn){
+	private void searchToMap(Map<String, Postcode> input, Housenumber hn){
 		Postcode p = input.get(hn.getPostcode().getPostcode());
 		if(p == null) p = new Postcode(hn.getPostcode().getPostcode(), hn.getPostcode().getCity());
 			p.addAddress(hn.getStreet().getStreet(), hn.getHousenumber(), hn.getLonLat());
 			input.putIfAbsent(p.getPostcode(), p);
 	}
 	
-	public static Map<RegionFloat, Postcode> getRegions(){
+	public Map<RegionFloat, Postcode> getRegions(){
 		Map<RegionFloat, Postcode> regions = new HashMap<RegionFloat, Postcode>();
 		for(Postcode pc : postcodes.values()) regions.put(pc.getRegion(), pc);
 		return regions;
 	}
 	
-	public static Map<RegionFloat, Postcode> searchRegionWithin(RegionFloat input){
+	public Map<RegionFloat, Postcode> searchRegionWithin(RegionFloat input){
 		Map<RegionFloat, Postcode> regions = new HashMap<RegionFloat, Postcode>();
 		for(Postcode pc : postcodes.values()) {
 			RegionFloat pcR = pc.getRegion();
@@ -206,7 +206,7 @@ public class AddressHolder implements Serializable {
 		return regions;
 	}
 	
-	public static Map<RegionFloat, Housenumber> searchRegionHousenumbers(RegionFloat input){	
+	public Map<RegionFloat, Housenumber> searchRegionHousenumbers(RegionFloat input){	
 		Map<RegionFloat, Housenumber> regions = new HashMap<RegionFloat, Housenumber>();
 		for(Postcode pc : searchRegionWithin(input).values()) {
 			float expanVal = 0.0f;
@@ -221,7 +221,7 @@ public class AddressHolder implements Serializable {
 		return regions;
 	}
 	
-	public static Housenumber searchHousenumber(float[] lonLat){
+	public Housenumber searchHousenumber(float[] lonLat){
 		RegionFloat input = new RegionFloat(lonLat[0], lonLat[1], lonLat[0], lonLat[1]);
 		for(Postcode pc : searchRegionWithin(input).values()) {
 			for(Street st : pc.searchRegionWithin(input).values()){

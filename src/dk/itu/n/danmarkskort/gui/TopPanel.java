@@ -180,6 +180,14 @@ public class TopPanel extends JPanel {
         dropSuggestions.showDropdown(input);
     }
 
+	public DropdownMenu getDropMenu() {
+		return  dropMenu;
+	}
+	
+	public JButton getMenuButton() {
+		return menu;
+	}
+	
     public int getMenuWidth() {
         return menu.getPreferredSize().width + style.topPanelBorderWidth() + 12;
     } // 6 is from insets

@@ -10,7 +10,7 @@ public class UserPreferences implements Serializable {
 	private boolean maximizeOnStartup;
 	
 	private String defaultTheme = "Basic";
-	private String defaultMapFile = "map.zip";
+	private String defaultMapFile = "map.bin";
 	
 	public void setCurrentMapTheme(String currentMapTheme) { this.currentMapTheme = currentMapTheme; }
 	public void setCurrentGUITheme(String currentGUITheme) { this.currentGUITheme = currentGUITheme; }
