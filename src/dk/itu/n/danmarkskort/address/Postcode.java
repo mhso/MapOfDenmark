@@ -1,15 +1,21 @@
 package dk.itu.n.danmarkskort.address;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.commons.lang3.StringUtils;
 
-public class Postcode {
+import dk.itu.n.danmarkskort.models.RegionFloat;
+import dk.itu.n.danmarkskort.models.ReuseStringObj;
+
+public class Postcode implements Serializable {
+	private static final long serialVersionUID = 2217407726502936291L;
 	private String postcode, city;
 	private Map<String, Street> streets;
 	private RegionFloat region;
+	private boolean debug = false;
 	
 	Postcode(String postcode, String city){
 		this.postcode = ReuseStringObj.make(postcode);
@@ -43,7 +49,7 @@ public class Postcode {
 			RegionFloat stR = st.getRegion();
 			if(stR.isWithin(input)){
 				regions.put(st.getRegion(), st);
-				System.out.println("MATCH: ADD: " + st.getStreet());
+				if(debug) System.out.println("MATCH: ADD: " + st.getStreet());
 			}
 		}
 		return regions;
@@ -79,71 +85,70 @@ public class Postcode {
 
 	public String getPostcode() { return postcode.toString(); }
 	
-	private Map<String, Street> streetContains(Map<String, Street> inputList, String street){
-		Map<String, Street> list = new HashMap<String, Street>();
-		if(street == null) return list;
-		for(Entry<String, Street> entry : inputList.entrySet()){
+	private Map<String, Street> streetContains(Map<String, Street> input, String street){
+		Map<String, Street> result = new HashMap<String, Street>();
+		if(street == null) return result;
+		for(Entry<String, Street> entry : input.entrySet()){
 			if(entry.getKey().contains(street.toLowerCase())) {
-				list.put(entry.getKey(), entry.getValue());
+				result.put(entry.getKey(), entry.getValue());
 			}
 		}
-		return list;
+		return result;
 	}
 	
-	private Map<String, Street> streetStartsWith(Map<String, Street> inputList, String street){
-		Map<String, Street> list = new HashMap<String, Street>();
-		if(street == null) return list;
-		for(Entry<String, Street> entry : inputList.entrySet()){
+	private Map<String, Street> streetStartsWith(Map<String, Street> input, String street){
+		Map<String, Street> result = new HashMap<String, Street>();
+		if(street == null) return result;
+		for(Entry<String, Street> entry : input.entrySet()){
 			if(entry.getKey().startsWith(street.toLowerCase())) {
-				list.put(entry.getKey(), entry.getValue());
+				result.put(entry.getKey(), entry.getValue());
 			}
 		}
-		return list;
+		return result;
 	}
 	
-	private Map<String, Street> streetLevenshteinDistance(Map<String, Street> inputList, String street){
-		Map<String, Street> list = new HashMap<String, Street>();
+	private Map<String, Street> streetLevenshteinDistance(Map<String, Street> input, String street){
+		Map<String, Street> result = new HashMap<String, Street>();
 		int minValue = 0, maxValue = 3;
-		if(street == null) return list;
-		for(Entry<String, Street> entry : inputList.entrySet()){
+		if(street == null) return result;
+		for(Entry<String, Street> entry : input.entrySet()){
 			try {
 				String matchKey = entry.getKey().substring(0, street.length());
 				if(StringUtils.getLevenshteinDistance(matchKey, street.toLowerCase()) > minValue &&
 						StringUtils.getLevenshteinDistance(matchKey, street.toLowerCase()) < maxValue) {
-					list.put(entry.getKey(), entry.getValue());
+					result.put(entry.getKey(), entry.getValue());
 				}
 			} catch (StringIndexOutOfBoundsException e) {
-				// TODO Auto-generated catch block
 				//e.printStackTrace();
 			}
 		}
-		return list;
+		return result;
 	}
 	
-	public Map<String, Street> search(Map<String, Street> inputList, Address addr, SearchEnum streetType){
-		Map<String, Street> list = new HashMap<String, Street>();
+	public Map<String, Street> search(Map<String, Street> input, Address addr, SearchEnum streetType){
+		Map<String, Street> result = new HashMap<String, Street>();
 			switch(streetType){
 			case CONTAINS:
-				list = streetContains(inputList, addr.getStreet());
+				result = streetContains(input, addr.getStreet());
 				break;
 			case EQUALS:
 				if(getStreet(addr.getStreet()) != null){
 					Street st = getStreet(addr.getStreet());
-					list.put(st.getStreet(), st);
+					result.put(st.getStreet(), st);
 				}
 				break;
 			case ANY:
-				list = inputList;
+				result = input;
 				break;
 			case STARTSWITH:
-				list = streetStartsWith(inputList, addr.getStreet());
+				result = streetStartsWith(input, addr.getStreet());
 				break;
 			case LEVENSHTEIN:
-				list = streetLevenshteinDistance(inputList, addr.getStreet());
+				result = streetLevenshteinDistance(input, addr.getStreet());
 				break;
 			default:
 				break;
 		}
-		return list;
+		return result;
 	}
 }

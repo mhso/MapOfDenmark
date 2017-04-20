@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.TimerUtil;
+import dk.itu.n.danmarkskort.models.RegionFloat;
 
 public class AddressRegionSearch {
 	public Address getSearchResult(float[] lonLat){

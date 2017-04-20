@@ -1,5 +1,6 @@
 package dk.itu.n.danmarkskort.gui.menu;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.text.AbstractDocument;
@@ -10,12 +11,18 @@ import javax.swing.text.DocumentFilter;
 import dk.itu.n.danmarkskort.address.Address;
 import dk.itu.n.danmarkskort.gui.DropdownAddressSearch;
 import dk.itu.n.danmarkskort.gui.Style;
-import dk.itu.n.danmarkskort.routeplanner.RoutePlannerMain;
+import dk.itu.n.danmarkskort.gui.routeplanner.RoutePlannerMain;
+import dk.itu.n.danmarkskort.models.RouteEnum;
+import dk.itu.n.danmarkskort.models.RouteModel;
 import dk.itu.n.danmarkskort.search.SearchController;
 
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class RoutePage extends JPanel {
@@ -276,7 +283,17 @@ public class RoutePage extends JPanel {
     
     private void openFindRoute(){
     	if(validateToFromFields()){
-    		RoutePlannerMain routePlannerMain =  new RoutePlannerMain(txtAddrFrom.getText(), txtAddrTo.getText());
+    		String routeDistance = "999";
+    		BufferedImage bufferedImage = null;
+    		List<RouteModel> routemodels = demoRoute();
+			try {
+				bufferedImage = ImageIO.read(new File("resources/routeplanner/demo_routeplanner.PNG"));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+    		
+    		RoutePlannerMain routePlannerMain =  new RoutePlannerMain(bufferedImage, txtAddrFrom.getText(), txtAddrTo.getText(), routeDistance, routemodels);
     	} else if(!txtAddrFrom.getText().trim().isEmpty() && !txtAddrTo.getText().trim().isEmpty()) {
     		menu.blockVisibility(true);
     		JOptionPane.showMessageDialog(this, "To/From fields can't be empty.", "Missing information", JOptionPane.INFORMATION_MESSAGE);
@@ -285,6 +302,20 @@ public class RoutePage extends JPanel {
     		JOptionPane.showMessageDialog(this, "The address input not found,\n please refere to the smilyes.", "Wrong information", JOptionPane.INFORMATION_MESSAGE);
     	}
     }
+    
+    private List<RouteModel> demoRoute(){
+		List<RouteModel> routeModels = new ArrayList<RouteModel>();
+		
+		routeModels.add(new RouteModel(RouteEnum.CONTINUE_ON, "Roskildevej", "600m"));
+		routeModels.add(new RouteModel(RouteEnum.TURN_LEFT, "Roskildevej", "600m"));
+		routeModels.add(new RouteModel(RouteEnum.CONTINUE_ON, "H. Hansenvej", "250m"));
+		routeModels.add(new RouteModel(RouteEnum.TURN_RIGHT, "Postmosen", "250m"));
+		routeModels.add(new RouteModel(RouteEnum.TURN_RIGHT, "Blågårdsgade", "250m"));
+		routeModels.add(new RouteModel(RouteEnum.CONTINUE_ON, "Sverigesvej", "250m"));
+		routeModels.add(new RouteModel(RouteEnum.TURN_RIGHT, "Amagerbrogade", "1,5Km"));
+		routeModels.add(new RouteModel(RouteEnum.AT_DESTINATION, "Rosenhaven 1", ""));
+		return routeModels;
+	}
 
 	private void initContentPanel(JPanel panel){
 		

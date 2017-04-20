@@ -2,18 +2,20 @@ package dk.itu.n.danmarkskort.models;
 
 import dk.itu.n.danmarkskort.Main;
 
+import java.awt.*;
 import java.awt.geom.Path2D;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 
 public class ParsedRelation extends ParsedWay {
 
-    private long id;
     private ArrayList<ParsedWay> inners;
     private ArrayList<ParsedWay> outers;
 
     public ParsedRelation(long id) {
-        this.id = id;
+        super(id);
         inners = new ArrayList<>();
         outers = new ArrayList<>();
     }
@@ -25,8 +27,9 @@ public class ParsedRelation extends ParsedWay {
         else inners.add(item);
     }
 
+    @Override
     public void deleteOldRefs() {
-        super.deleteOldRefs();
+        nodes = null;
         inners = null;
         outers = null;
     }
@@ -35,23 +38,18 @@ public class ParsedRelation extends ParsedWay {
         shape = getPath();
     }
 
-    public long getID() { return id; }
-
     public ArrayList<ParsedWay> getInners() { return inners; }
     public ArrayList<ParsedWay> getOuters() { return outers; }
 
-    public ArrayList<ParsedNode> getNodes() {
-        ArrayList<ParsedNode> nodeList = new ArrayList<>();
-        if(inners.size() > 0 || outers.size() > 0) {
-            for(ParsedWay inner  : inners) nodeList.addAll(inner.getNodes());
-            for(ParsedWay outer : outers) nodeList.addAll(outer.getNodes());
-        } else if(size() > 0) {
-            return this;
+    public ParsedNode[] getNodes() {
+        ArrayList<ParsedNode> arrList = new ArrayList<>();
+        if(inners.size() > 0 && outers.size() > 0) {
+            for(ParsedItem outer: outers) arrList.addAll(Arrays.asList(outer.getNodes()));
+            for(ParsedItem inner: inners) arrList.addAll(Arrays.asList(inner.getNodes()));
         }
-        return nodeList;
+        return arrList.toArray(new ParsedNode[arrList.size()]);
     }
 
-    @Override
     public Path2D getPath() {
         Path2D path = new Path2D.Float(Path2D.WIND_EVEN_ODD);
         if(inners.size() > 0) {
@@ -61,15 +59,10 @@ public class ParsedRelation extends ParsedWay {
         return path;
     }
 
-    @Override
-    public Path2D getReversedPath() {
-        Main.log("first time reversedpath happens for a relation!");
-        return getPath();
-        // This is not correct, but I don't think its an issue.
-        // relations in relations is only something we have with busroutes and the likes
-        // and that's not something we are displaying at the moment, and probably never will
-    }
-
+    /*
+    * Connects outer ways into a coherent polygon
+    * Some ways has to have their nodelist reversed
+     */
     private Path2D connectItems(ArrayList<ParsedWay> list) {
         Path2D path = new Path2D.Float();
         path.append(list.get(0).getPath(), false);
@@ -101,26 +94,20 @@ public class ParsedRelation extends ParsedWay {
 
     @Override
     public ParsedNode getFirstNode() {
-        if(size() > 0) return get(0);
+        if(nodes != null && nodes.length > 0) return nodes[0];
         else if(outers.size() > 0) return outers.get(0).getFirstNode();
         else if(inners.size() > 0) return inners.get(0).getFirstNode();
-        return null;
-    }
-
-    @Override
-    public ParsedNode getLastNode() {
-        if(size() > 0) return get(size() - 1);
-        else if(outers.size() > 0) return outers.get(outers.size() - 1).getLastNode();
-        else if(inners.size() > 0) return inners.get(inners.size() - 1).getLastNode();
         return null;
     }
     
     public String toString() {
     	int nodeAmount = 0;
-    	if(size() > 0) nodeAmount = size();
+    	if(nodes != null && nodes.length > 0) nodeAmount = nodes.length;
 
-    	return "ParsedRelation [" + "id=" + id 	+ ", firstLon=" + getFirstNode().getLon() + ", firstLat="
-                + getFirstNode().getLat() + ", nodeAmount=" + nodeAmount
+    	return "ParsedRelation [" + "id=" + getID()
+                //+ ", firstLon=" + getFirstNode().getLon()
+                //+ ", firstLat=" + getFirstNode().getLat()
+                + ", nodeAmount=" + nodeAmount
                 + ", itemAmount=" + (inners.size() + outers.size()) + "]";
     }
 }

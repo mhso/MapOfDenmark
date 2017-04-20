@@ -23,7 +23,7 @@ public class AddressValidator {
 	private final static Pattern PAT_HOUSENUMBER = Pattern.compile(RGX_HOUSENUMBER);
 	private final static Pattern PAT_POSTCODE = Pattern.compile(RGX_POSTCODE);
 	private final static Pattern PAT_CITY = Pattern.compile(RGX_CITY);
-	private static boolean debug = true;
+	private static boolean debug = false;
 	
 	public AddressValidator(){
 	}

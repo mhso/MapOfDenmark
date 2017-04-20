@@ -7,6 +7,8 @@ import java.util.Map.Entry;
 
 import org.apache.commons.lang3.StringUtils;
 
+import dk.itu.n.danmarkskort.models.RegionFloat;
+
 public class AddressHolder implements Serializable {
 	private static final long serialVersionUID = 4946666884688610616L;
 	public static HashMap<String, Postcode> postcodes = new HashMap<String, Postcode>();
@@ -22,174 +24,168 @@ public class AddressHolder implements Serializable {
 	
 	public static int count(){
 		int size = 0;
-		for(Postcode pc : postcodes.values()){
-			size += pc.count();
-		}
+		for(Postcode pc : postcodes.values()) size += pc.count();
 		return size;
 	}
 	
 	public static int count(Map<String, Postcode> list){
 		int size = 0;
-		for(Postcode pc : list.values()){
-			size += pc.count();
-		}
+		for(Postcode pc : list.values()) size += pc.count();
 		return size;
 	}
 	
-	private static Map<String, Postcode> postcodeContains(Map<String, Postcode> inputList, String postcode){
-		Map<String, Postcode> list = new HashMap<String, Postcode>();
-		if(postcode == null) return list;
-		for(Entry<String, Postcode> entry : inputList.entrySet()){
+	private static Map<String, Postcode> postcodeContains(Map<String, Postcode> input, String postcode){
+		Map<String, Postcode> result = new HashMap<String, Postcode>();
+		if(postcode == null) return result;
+		for(Entry<String, Postcode> entry : input.entrySet()){
 			if(entry.getKey().contains(postcode.toLowerCase())) {
-				list.put(entry.getKey(), entry.getValue());
+				result.put(entry.getKey(), entry.getValue());
 			}
 		}
-		return list;
+		return result;
 	}
 	
-	private static Map<String, Postcode> postcodeStartsWith(Map<String, Postcode> inputList, String postcode){
-		Map<String, Postcode> list = new HashMap<String, Postcode>();
-		if(postcode == null) return list;
-		for(Entry<String, Postcode> entry : inputList.entrySet()){
+	private static Map<String, Postcode> postcodeStartsWith(Map<String, Postcode> input, String postcode){
+		Map<String, Postcode> result = new HashMap<String, Postcode>();
+		if(postcode == null) return result;
+		for(Entry<String, Postcode> entry : input.entrySet()){
 			if(entry.getKey().startsWith(postcode.toLowerCase())) {
-				list.put(entry.getKey(), entry.getValue());
+				result.put(entry.getKey(), entry.getValue());
 			}
 		}
-		return list;
+		return result;
 	}
 	
-	private static Map<String, Postcode> postcodeLevenshteinDistance(Map<String, Postcode> inputList, String postcode){
-		Map<String, Postcode> list = new HashMap<String, Postcode>();
+	private static Map<String, Postcode> postcodeLevenshteinDistance(Map<String, Postcode> input, String postcode){
+		Map<String, Postcode> result = new HashMap<String, Postcode>();
 		int minValue = 0, maxValue = 3;
-		if(postcode == null) return list;
-		for(Entry<String, Postcode> entry : inputList.entrySet()){
+		if(postcode == null) return result;
+		for(Entry<String, Postcode> entry : input.entrySet()){
 			if(entry.getKey() != null && StringUtils.getLevenshteinDistance(entry.getKey(), postcode.toLowerCase()) > minValue &&
 					StringUtils.getLevenshteinDistance(entry.getKey(), postcode.toLowerCase()) < maxValue) {
-				list.put(entry.getKey(), entry.getValue());
+				result.put(entry.getKey(), entry.getValue());
 			}
 		}
-		return list;
+		return result;
 	}
 	
-	private static Map<String, Postcode> cityContains(Map<String, Postcode> inputList, String city){
-		Map<String, Postcode> list = new HashMap<String, Postcode>();
-		if(inputList == null) return list;
-		for(Entry<String, Postcode> entry : inputList.entrySet()){
+	private static Map<String, Postcode> cityContains(Map<String, Postcode> input, String city){
+		Map<String, Postcode> result = new HashMap<String, Postcode>();
+		if(input == null) return result;
+		for(Entry<String, Postcode> entry : input.entrySet()){
 			if(entry.getValue().getCity() != null && entry.getValue().getCity().contains(city.toLowerCase())) {
-				list.put(entry.getKey(), entry.getValue());
+				result.put(entry.getKey(), entry.getValue());
 			}
 		}
-		return list;
+		return result;
 	}
 	
-	private static Map<String, Postcode> cityStartsWith(Map<String, Postcode> inputList, String city){
-		Map<String, Postcode> list = new HashMap<String, Postcode>();
-		if(inputList == null) return list;
-		for(Entry<String, Postcode> entry : inputList.entrySet()){
+	private static Map<String, Postcode> cityStartsWith(Map<String, Postcode> input, String city){
+		Map<String, Postcode> result = new HashMap<String, Postcode>();
+		if(input == null) return result;
+		for(Entry<String, Postcode> entry : input.entrySet()){
 			if(entry.getValue().getCity() != null && entry.getValue().getCity().startsWith(city.toLowerCase())) {
-				list.put(entry.getKey(), entry.getValue());
+				result.put(entry.getKey(), entry.getValue());
 			}
 		}
-		return list;
+		return result;
 	}
 	
-	private static Map<String, Postcode> cityLevenshteinDistance(Map<String, Postcode> inputList, String city){
-		Map<String, Postcode> list = new HashMap<String, Postcode>();
+	private static Map<String, Postcode> cityLevenshteinDistance(Map<String, Postcode> input, String city){
+		Map<String, Postcode> result = new HashMap<String, Postcode>();
 		int minValue = 0, maxValue = 3;
-		if(inputList == null) return list;
-		for(Entry<String, Postcode> entry : inputList.entrySet()){
+		if(input == null) return result;
+		for(Entry<String, Postcode> entry : input.entrySet()){
 			if(entry.getKey() != null && city != null && StringUtils.getLevenshteinDistance(entry.getKey(), city.toLowerCase()) > minValue &&
 					StringUtils.getLevenshteinDistance(entry.getKey(), city.toLowerCase()) < maxValue) {
-				list.put(entry.getKey(), entry.getValue());
+				result.put(entry.getKey(), entry.getValue());
 			}
 		}
-		return list;
+		return result;
 	}
 	
-	private static Map<String, Postcode> cityEquals(Map<String, Postcode> inputList, String city){
-		Map<String, Postcode> list = new HashMap<String, Postcode>();
-		if(inputList == null) return list;
-		for(Entry<String, Postcode> entry : inputList.entrySet()){
+	private static Map<String, Postcode> cityEquals(Map<String, Postcode> input, String city){
+		Map<String, Postcode> result = new HashMap<String, Postcode>();
+		if(input == null) return result;
+		for(Entry<String, Postcode> entry : input.entrySet()){
 			if(entry.getValue().getCity() != null && entry.getValue().getCity().equalsIgnoreCase(city)) {
-				list.put(entry.getKey(), entry.getValue());
+				result.put(entry.getKey(), entry.getValue());
 			}
 		}
-		return list;
+		return result;
 	}
 	
-	private static Map<String, Postcode> searchPostcode(Map<String, Postcode> inputList, Address addr, SearchEnum postcodeType, SearchEnum cityType){
-		Map<String, Postcode> list = new HashMap<String, Postcode>();
+	private static Map<String, Postcode> searchPostcode(Map<String, Postcode> input, Address addr, SearchEnum postcodeType, SearchEnum cityType){
+		Map<String, Postcode> result = new HashMap<String, Postcode>();
 			switch(postcodeType){
 			case CONTAINS:
-				list = postcodeContains(inputList, addr.getPostcode());
+				result = postcodeContains(input, addr.getPostcode());
 				break;
 			case EQUALS:
 				if(getPostcode(addr.getPostcode()) != null){
 					Postcode pc = getPostcode(addr.getPostcode());
-					list.put(pc.getPostcode(), pc);
+					result.put(pc.getPostcode(), pc);
 				}
 				break;
 			case ANY:
-				list = inputList;
+				result = input;
 				break;
 			case STARTSWITH:
-				list = postcodeStartsWith(inputList, addr.getPostcode());
+				result = postcodeStartsWith(input, addr.getPostcode());
 				break;
 			case LEVENSHTEIN:
-				list = postcodeLevenshteinDistance(inputList, addr.getPostcode());
+				result = postcodeLevenshteinDistance(input, addr.getPostcode());
 				break;
 			default:
 				break;
 			}
-			
-			list = searchCity(list, addr, cityType);
-			
-		return list;
+			result = searchCity(result, addr, cityType);
+		return result;
 	}
 	
-	private static Map<String, Postcode> searchCity(Map<String, Postcode> inputList, Address addr, SearchEnum cityType){
-		Map<String, Postcode> list = new HashMap<String, Postcode>();
+	private static Map<String, Postcode> searchCity(Map<String, Postcode> input, Address addr, SearchEnum cityType){
+		Map<String, Postcode> result = new HashMap<String, Postcode>();
 			switch(cityType){
 			case CONTAINS:
-				list = cityContains(inputList, addr.getCity());
+				result = cityContains(input, addr.getCity());
 				break;
 			case EQUALS:
-				list = cityEquals(inputList, addr.getCity());
+				result = cityEquals(input, addr.getCity());
 				break;
 			case ANY:
-				list = inputList;
+				result = input;
 				break;
 			case STARTSWITH:
-				list = cityStartsWith(inputList, addr.getCity());
+				result = cityStartsWith(input, addr.getCity());
 				break;
 			case LEVENSHTEIN:
-				list = cityLevenshteinDistance(inputList, addr.getCity());
+				result = cityLevenshteinDistance(input, addr.getCity());
 				break;
 			default:
 				break;
 		}
-		return list;
+		return result;
 	}
 	
 	public static Map<String, Postcode> search(Address addr,
 			SearchEnum streetType, SearchEnum housenumberType, SearchEnum postcodeType, SearchEnum cityType){
-			Map<String, Postcode> list = new HashMap<String, Postcode>();
+			Map<String, Postcode> result = new HashMap<String, Postcode>();
 			for(Postcode pc : searchPostcode(postcodes, addr, postcodeType, cityType).values()){
 				for(Street st : pc.search(pc.getStreets(), addr, streetType).values()){
 					for(Housenumber hn : st.search(st.getHousenumbers(), addr, housenumberType).values()) {
 						//System.out.println(hn.toString());
-						searchToMap(list, hn);
+						searchToMap(result, hn);
 					}
 				}
 			}
-		return list;
+		return result;
 	}
 	
-	private static void searchToMap(Map<String, Postcode> inputList, Housenumber hn){
-		Postcode p = inputList.get(hn.getPostcode().getPostcode());
+	private static void searchToMap(Map<String, Postcode> input, Housenumber hn){
+		Postcode p = input.get(hn.getPostcode().getPostcode());
 		if(p == null) p = new Postcode(hn.getPostcode().getPostcode(), hn.getPostcode().getCity());
 			p.addAddress(hn.getStreet().getStreet(), hn.getHousenumber(), hn.getLonLat());
-			inputList.putIfAbsent(p.getPostcode(), p);
+			input.putIfAbsent(p.getPostcode(), p);
 	}
 	
 	public static Map<RegionFloat, Postcode> getRegions(){

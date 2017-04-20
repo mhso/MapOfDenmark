@@ -1,4 +1,4 @@
-package dk.itu.n.danmarkskort.address;
+package dk.itu.n.danmarkskort.models;
 
 import java.util.HashMap;
 

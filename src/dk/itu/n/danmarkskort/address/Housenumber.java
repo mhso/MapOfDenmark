@@ -2,11 +2,13 @@ package dk.itu.n.danmarkskort.address;
 
 import dk.itu.n.danmarkskort.models.ParsedItem;
 import dk.itu.n.danmarkskort.models.ParsedNode;
+import dk.itu.n.danmarkskort.models.ReuseStringObj;
 
 import java.awt.*;
 import java.util.ArrayList;
 
-public class Housenumber extends ParsedItem {
+public class Housenumber {
+	private static final long serialVersionUID = -8400619618776493401L;
 	private float lon;
 	private float lat;
 	private String housenumber;
@@ -34,25 +36,4 @@ public class Housenumber extends ParsedItem {
 	private ParsedNode coordsToNode() {
 	    return new ParsedNode(lon, lat);
     }
-
-	@Override
-	public ParsedNode getFirstNode() {
-	    return coordsToNode();
-	}
-
-	@Override
-	public ArrayList<ParsedNode> getNodes() {
-		ArrayList<ParsedNode> nodes = new ArrayList<>();
-		nodes.add(coordsToNode());
-		return nodes;
-	}
-
-	@Override
-	public void makeShape() {}
-
-	@Override
-	public Shape getShape() { return null;}
-
-	@Override
-	public void deleteOldRefs() {}
 }
