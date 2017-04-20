@@ -3,12 +3,12 @@ package dk.itu.n.danmarkskort;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Toolkit;
-
 import javax.swing.*;
 
 import dk.itu.n.danmarkskort.address.AddressController;
 import dk.itu.n.danmarkskort.backend.OSMParser;
 import dk.itu.n.danmarkskort.backend.OSMReader;
+import dk.itu.n.danmarkskort.gui.WindowLauncher;
 import dk.itu.n.danmarkskort.gui.WindowParsingLoadscreenNew;
 import dk.itu.n.danmarkskort.gui.map.MapCanvas;
 import dk.itu.n.danmarkskort.gui.map.PinPointManager;
@@ -22,9 +22,11 @@ public class Main {
 	public final static boolean debug = true;
 	public final static boolean production = false;
 	public final static boolean buffered = true;
-	public final static boolean binaryfile = false;
 	public final static boolean saveParsedAddresses = true;
-
+	public final static boolean useLauncher = true;
+	public static final boolean binaryfile = true;
+	
+	public static boolean forceParsing;
 	public static OSMReader osmReader;
 	public static JFrame window;
 	public static OSMParser model;
@@ -35,9 +37,19 @@ public class Main {
 	public static UserPreferences userPreferences;
 	
 	public static void main(String[] args) {
-        startup(args);
-        main();
-        shutdown();
+		userPreferences = (UserPreferences)Util.readObjectFromFile(DKConstants.USERPREF_PATH);
+		if(userPreferences == null) {
+			userPreferences = new UserPreferences();
+			Util.writeObjectToFile(Main.userPreferences, DKConstants.USERPREF_PATH);
+		}
+		forceParsing = userPreferences.isForcingParsing();
+        if(useLauncher || args.length < 1) new WindowLauncher();
+        else launch(args);
+	}
+	
+	public static void launch(String[] args) {
+		startup(args);
+		
 	}
 
 	public static void startup(String[] args) {
@@ -61,7 +73,17 @@ public class Main {
 		osmReader.addOSMListener(loadScreen);
 		osmReader.addInputListener(loadScreen);
 		loadScreen.run();
-		osmReader.parseFile(args[0]);
+		
+		System.out.println(Thread.currentThread());
+		Runnable r = new Runnable() {
+			@Override
+			public void run() {
+				osmReader.parseFile(args[0]);
+				main();
+		        shutdown();
+			}
+		};
+		new Thread(r, "lol").start();
 	}
 	
 	public static void main() {

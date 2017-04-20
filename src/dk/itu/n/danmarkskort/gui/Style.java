@@ -13,6 +13,7 @@ public class Style {
             menuLayerButton, menuSaveButton, menuOpenButton, menuSettingsButton, menuRouteButton, menuInfoButton, 
             menuPinPointButton;
     private ImageIcon scaleIndicator, arrowUpDownButton, basicThemePreview;
+    private Image frameIcon;
     
     public Style() {
         // top panel
@@ -59,7 +60,8 @@ public class Style {
         scaleIndicator = new ImageIcon("resources/scale.png");
         
         arrowUpDownButton = new ImageIcon("resources/icons/arrowupdown.png");
-
+        
+        frameIcon = Toolkit.getDefaultToolkit().getImage("resources/icons/map-icon.png");
     }
 
     // Getters
@@ -101,4 +103,6 @@ public class Style {
     public ImageIcon basicThemePreview() { return basicThemePreview; }
     public ImageIcon scaleIndicator() { return scaleIndicator; }
     public ImageIcon arrowUpDownButton() { return arrowUpDownButton; }
+    
+    public Image frameIcon() { return frameIcon; }
 }

@@ -4,6 +4,11 @@ import dk.itu.n.danmarkskort.models.Region;
 
 public class DKConstants {
 	/**
+	 * The File Path for User Preference Bin File, where things like Default Map files, Current Map Theme etc. lies.
+	 */
+	public final static String USERPREF_PATH = "resources/userpref.bin";
+	
+	/**
 	 * Determines the default size of Main Window.
 	 */
 	public final static int WINDOW_WIDTH = 1000, WINDOW_HEIGHT = 800;

@@ -14,6 +14,8 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+
 import java.awt.Color;
 import java.awt.Dimension;
 
@@ -24,7 +26,7 @@ import dk.itu.n.danmarkskort.backend.OSMParserListener;
 
 import javax.imageio.ImageIO;
 
-public class WindowParsingLoadscreenNew extends JFrame implements OSMParserListener, InputStreamListener, Runnable {
+public class WindowParsingLoadscreenNew extends JFrame implements OSMParserListener, InputStreamListener {
 	private static final long serialVersionUID = 4049548769311961507L;
 	private static final Color BAR_STATIC_COLOR = Color.LIGHT_GRAY;
 	private static final Color BAR_LOADING_COLOR = new Color(0, 153, 0);
@@ -91,6 +93,7 @@ public class WindowParsingLoadscreenNew extends JFrame implements OSMParserListe
 	}
 	
 	public void run() {
+		System.out.println(Thread.currentThread());
 		getFileSize(fileName);
 		initialize();
 	}

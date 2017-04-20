@@ -159,7 +159,7 @@ public class Util {
 			Object object = oos.readObject();
 			oos.close();
 			return object;
-		} catch(Exception e) {
+		} catch(IOException | ClassNotFoundException e) {
 			e.printStackTrace();
 			Main.log("Could not find file: " + fileName);
 			return null;

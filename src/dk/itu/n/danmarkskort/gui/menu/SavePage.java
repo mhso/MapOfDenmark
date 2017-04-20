@@ -2,6 +2,7 @@ package dk.itu.n.danmarkskort.gui.menu;
 
 import javax.swing.*;
 
+import dk.itu.n.danmarkskort.DKConstants;
 import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.Util;
 import dk.itu.n.danmarkskort.backend.BinaryWrapper;
@@ -70,7 +71,8 @@ public class SavePage extends JPanel  {
     private void saveCurrentMap(){
     	BinaryWrapper binary = new BinaryWrapper();
     	binary.setModel(Main.model);
-    	binary.setUserPreferences(Main.userPreferences);
+    	binary.setAddressHolder(Main.addressController.getAddressHolder());
+    	Util.writeObjectToFile(Main.userPreferences, DKConstants.USERPREF_PATH);
     	Util.writeObjectToFile(binary, Util.getBinaryFilePath());
 	}
 	

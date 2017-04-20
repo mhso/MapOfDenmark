@@ -8,6 +8,7 @@ public class UserPreferences implements Serializable {
 	private String currentMapTheme;
 	private String currentGUITheme;
 	private boolean maximizeOnStartup;
+	private boolean forceParsing = false;
 	
 	private String defaultTheme = "Basic";
 	private String defaultMapFile = "map.bin";
@@ -15,12 +16,14 @@ public class UserPreferences implements Serializable {
 	public void setCurrentMapTheme(String currentMapTheme) { this.currentMapTheme = currentMapTheme; }
 	public void setCurrentGUITheme(String currentGUITheme) { this.currentGUITheme = currentGUITheme; }
 	public void setMaximizeOnStartup(boolean maximizeOnStartup) { this.maximizeOnStartup = maximizeOnStartup; }
+	public void setForceParsing(boolean forceParsing) { this.forceParsing = forceParsing; }
 	public void setDefaultTheme(String defaultTheme) { this.defaultTheme = defaultTheme; }
 	public void setDefaultMapFile(String defaultMapFile) { this.defaultMapFile = defaultMapFile; }
 	
 	public String getCurrentMapTheme() { return currentMapTheme; }
 	public String getCurrentGUITheme() { return currentGUITheme; }
 	public boolean isMaximizeOnStartup() { return maximizeOnStartup; }
+	public boolean isForcingParsing() { return forceParsing; }
 	public String getDefaultTheme() { return defaultTheme; }
 	public String getDefaultMapFile() { return defaultMapFile; }
 }

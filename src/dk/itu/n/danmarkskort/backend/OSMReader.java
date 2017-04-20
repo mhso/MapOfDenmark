@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -21,7 +22,6 @@ import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.MemoryUtil;
 import dk.itu.n.danmarkskort.TimerUtil;
 import dk.itu.n.danmarkskort.Util;
-import dk.itu.n.danmarkskort.models.UserPreferences;
 
 // This class can parse an OSM file, and turn it into tile files. 
 public class OSMReader {
@@ -72,7 +72,6 @@ public class OSMReader {
 		if(fileName.endsWith(".bin")) {
 			BinaryWrapper binary = (BinaryWrapper) Util.readObjectFromFile(fileName, inputListeners);
 			Main.model = binary.getModel();
-			Main.userPreferences = binary.getUserPreferences();
 			Main.addressController.setAddressHolder(binary.getAddressHolder());
 			for(InputStreamListener listener : inputListeners) listener.onSetupDone();
 		}
@@ -83,11 +82,10 @@ public class OSMReader {
                 e1.printStackTrace();
             }
 
-            if (Main.binaryfile && checkSumExists(currentChecksum)) {
+            if (!Main.forceParsing && Main.binaryfile && checkSumExists(currentChecksum)) {
                 fileName = Util.getBinaryFilePath();
                 BinaryWrapper binary = (BinaryWrapper) Util.readObjectFromFile(fileName, inputListeners);
                 Main.model = binary.getModel();
-                Main.userPreferences = binary.getUserPreferences();
                 Main.addressController.setAddressHolder(binary.getAddressHolder());
                 for (InputStreamListener listener : inputListeners) listener.onSetupDone();
             }
@@ -118,19 +116,21 @@ public class OSMReader {
                         e.printStackTrace();
                     }
                 }
-            	Main.userPreferences = new UserPreferences();
             	
                 if(Main.binaryfile) {
                     String path = "parsedOSMFiles/" + currentChecksum + "/";
                     try {
-                        Files.createDirectory(Paths.get(path));
+                    	Path filePath = Paths.get(path);
+                    	if(Files.exists(filePath)) {
+                    		Files.delete(filePath);
+                    	}
+                        Files.createDirectory(filePath);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                     
                     BinaryWrapper binary = new BinaryWrapper();
                     binary.setModel(Main.model);
-                    binary.setUserPreferences(Main.userPreferences);
                     binary.setAddressHolder(Main.addressController.getAddressHolder());
                     Util.writeObjectToFile(binary, Util.getBinaryFilePath());
                 }
