@@ -1,9 +1,10 @@
 package dk.itu.n.danmarkskort.routeplanner;
 
-public class DijkstraSP {
-    private double[] distTo;          // distTo[v] = distance  of shortest s->v path
-    private DirectedEdge[] edgeTo;    // edgeTo[v] = last edge on shortest s->v path
-    private IndexMinPQ<Double> pq;    // priority queue of vertices
+public class RouteDijkstra {
+	private double[] distTo;         		// distTo[v] = distance  of shortest s->v path
+    private RouteEdge[] edgeTo;    // edgeTo[v] = last edge on shortest s->v path
+    private IndexMinPQ<Double> pq;    		// priority queue of vertices
+    private WeightEnum weightEnum;
 
     /**
      * Computes a shortest-paths tree from the source vertex {@code s} to every other
@@ -14,27 +15,28 @@ public class DijkstraSP {
      * @throws IllegalArgumentException if an edge weight is negative
      * @throws IllegalArgumentException unless {@code 0 <= s < V}
      */
-    public DijkstraSP(EdgeWeightedDigraph G, int s) {
-        for (DirectedEdge e : G.edges()) {
-            if (e.weight() < 0)
+    public RouteDijkstra(RouteGraph G, int s, WeightEnum weightEnum) {
+    	this.weightEnum = weightEnum;
+        for (RouteEdge e : G.edges()) {
+            if (e.getWeight(weightEnum) < 0)
                 throw new IllegalArgumentException("edge " + e + " has negative weight");
         }
 
-        distTo = new double[G.V()];
-        edgeTo = new DirectedEdge[G.V()];
+        distTo = new double[G.getNumOfVertices()];
+        edgeTo = new RouteEdge[G.getNumOfVertices()];
 
         validateVertex(s);
 
-        for (int v = 0; v < G.V(); v++)
+        for (int v = 0; v < G.getNumOfVertices(); v++)
             distTo[v] = Double.POSITIVE_INFINITY;
         distTo[s] = 0.0;
 
         // relax vertices in order of distance from s
-        pq = new IndexMinPQ<Double>(G.V());
+        pq = new IndexMinPQ<Double>(G.getNumOfVertices());
         pq.insert(s, distTo[s]);
         while (!pq.isEmpty()) {
             int v = pq.delMin();
-            for (DirectedEdge e : G.adj(v))
+            for (RouteEdge e : G.adjacent(v))
                 relax(e);
         }
 
@@ -43,10 +45,11 @@ public class DijkstraSP {
     }
 
     // relax edge e and update pq if changed
-    private void relax(DirectedEdge e) {
-        int v = e.from(), w = e.to();
-        if (distTo[w] > distTo[v] + e.weight()) {
-            distTo[w] = distTo[v] + e.weight();
+    private void relax(RouteEdge e) {
+        int v = e.getFromId(), w = e.getToId();
+        
+        if (distTo[w] > distTo[v] + e.getWeight(weightEnum)) {
+            distTo[w] = distTo[v] + e.getWeight(weightEnum);
             edgeTo[w] = e;
             if (pq.contains(w)) pq.decreaseKey(w, distTo[w]);
             else                pq.insert(w, distTo[w]);
@@ -86,11 +89,11 @@ public class DijkstraSP {
      *         as an iterable of edges, and {@code null} if no such path
      * @throws IllegalArgumentException unless {@code 0 <= v < V}
      */
-    public Iterable<DirectedEdge> pathTo(int v) {
+    public Iterable<RouteEdge> pathTo(int v) {
         validateVertex(v);
         if (!hasPathTo(v)) return null;
-        Stack<DirectedEdge> path = new Stack<DirectedEdge>();
-        for (DirectedEdge e = edgeTo[v]; e != null; e = edgeTo[e.from()]) {
+        Stack<RouteEdge> path = new Stack<RouteEdge>();
+        for (RouteEdge e = edgeTo[v]; e != null; e = edgeTo[e.getFromId()]) {
             path.push(e);
         }
         return path;
@@ -100,11 +103,11 @@ public class DijkstraSP {
     // check optimality conditions:
     // (i) for all edges e:            distTo[e.to()] <= distTo[e.from()] + e.weight()
     // (ii) for all edge e on the SPT: distTo[e.to()] == distTo[e.from()] + e.weight()
-    private boolean check(EdgeWeightedDigraph G, int s) {
+    private boolean check(RouteGraph G, int s) {
 
         // check that edge weights are nonnegative
-        for (DirectedEdge e : G.edges()) {
-            if (e.weight() < 0) {
+        for (RouteEdge e : G.edges()) {
+            if (e.getWeight(weightEnum) < 0) {
                 System.err.println("negative edge weight detected");
                 return false;
             }
@@ -115,7 +118,7 @@ public class DijkstraSP {
             System.err.println("distTo[s] and edgeTo[s] inconsistent");
             return false;
         }
-        for (int v = 0; v < G.V(); v++) {
+        for (int v = 0; v < G.getNumOfVertices(); v++) {
             if (v == s) continue;
             if (edgeTo[v] == null && distTo[v] != Double.POSITIVE_INFINITY) {
                 System.err.println("distTo[] and edgeTo[] inconsistent");
@@ -124,10 +127,10 @@ public class DijkstraSP {
         }
 
         // check that all edges e = v->w satisfy distTo[w] <= distTo[v] + e.weight()
-        for (int v = 0; v < G.V(); v++) {
-            for (DirectedEdge e : G.adj(v)) {
-                int w = e.to();
-                if (distTo[v] + e.weight() < distTo[w]) {
+        for (int v = 0; v < G.getNumOfVertices(); v++) {
+            for (RouteEdge e : G.adjacent(v)) {
+                int w = e.getToId();
+                if (distTo[v] + e.getWeight(weightEnum) < distTo[w]) {
                     System.err.println("edge " + e + " not relaxed");
                     return false;
                 }
@@ -135,12 +138,12 @@ public class DijkstraSP {
         }
 
         // check that all edges e = v->w on SPT satisfy distTo[w] == distTo[v] + e.weight()
-        for (int w = 0; w < G.V(); w++) {
+        for (int w = 0; w < G.getNumOfVertices(); w++) {
             if (edgeTo[w] == null) continue;
-            DirectedEdge e = edgeTo[w];
-            int v = e.from();
-            if (w != e.to()) return false;
-            if (distTo[v] + e.weight() != distTo[w]) {
+            RouteEdge e = edgeTo[w];
+            int v = e.getFromId();
+            if (w != e.getToId()) return false;
+            if (distTo[v] + e.getWeight(weightEnum) != distTo[w]) {
                 System.err.println("edge " + e + " on shortest path not tight");
                 return false;
             }

@@ -3,23 +3,45 @@ package dk.itu.n.danmarkskort.routeplanner;
 import java.util.ArrayList;
 import java.util.List;
 
+import dk.itu.n.danmarkskort.models.PointFloat;
 import dk.itu.n.danmarkskort.models.WayType;
 
 public class RouteController {
-	private List<CustomVertex> customVertices;
-	private List<CustomDirectedEdge> customDirectedEdges;
+	private int vertexCount;
+	private List<RouteEdge> routeEdges;
 	
 	public RouteController(){
-		customVertices = new ArrayList<>();
+		vertexCount = 0;
+		routeEdges = new ArrayList<RouteEdge>();
+	}
+	
+	/**
+	 * Creates a RouteVertex with a uniq Id based on the position i the ArrayList
+	 * @param point
+	 * @return A Vertex object
+	 */
+	private RouteVertex makeVertex(PointFloat point){
+		RouteVertex vertex = new RouteVertex(vertexCount, point);
+		vertexCount++;
+		return vertex;
+	}
+	
+	public void addEdge(PointFloat fromVertex, PointFloat toVertex, int maxSpeed, 
+			boolean forwardAllowed, boolean backwardAllowed, String description, WayType wayType){
 		
+		RouteEdge edge = new RouteEdge(makeVertex(fromVertex), makeVertex(toVertex), maxSpeed, 
+				forwardAllowed, backwardAllowed, description, wayType);
+		
+		routeEdges.add(edge);
 	}
 	
-	public void addVertex(CustomVertex v){
-		customVertices.add(v);
+	public void makeGraph(){
+		RouteGraph routeGraph =  new RouteGraph(vertexCount);
+		for(RouteEdge edge : routeEdges) routeGraph.addEdge(edge);
 	}
 	
-	public void addEdge(CustomVertex from, CustomVertex to, int maxSpeed, boolean forwardAllowed, boolean backwardAllowed, String description, WayType wayType){
-		CustomDirectedEdge customDirectedEdge = new CustomDirectedEdge(from, to, maxSpeed, forwardAllowed, backwardAllowed, description, wayType);
-		customDirectedEdges.add(customDirectedEdge);
+	public void cleanUp(){
+		vertexCount = 0;
+		routeEdges = null;
 	}
 }

@@ -31,7 +31,6 @@ public class RegionFloat implements Serializable {
 	}
 	
 	public float[] getMiddlePoint(){
-		if(isSinglePoint()) return new float[] {x1, y1};
 		return new float[] {((x1 + x2) / 2), ((y1 + y2) / 2)};
 	}
 	
