@@ -133,7 +133,7 @@ public class LoadPage extends JPanel  {
         gbc_lblAddressesFound.gridy = 4;
         panelCenter.add(lblAddressesFound, gbc_lblAddressesFound);
         
-        lblCurrentmapaddressesfound = new JLabel(""/* + format.format(Main.addressController.getAddressSize())*/);
+        lblCurrentmapaddressesfound = new JLabel("" + format.format(Main.addressController.getAddressSize()));
         GridBagConstraints gbc_lblCurrentmapaddressesfound = new GridBagConstraints();
         gbc_lblCurrentmapaddressesfound.anchor = GridBagConstraints.WEST;
         gbc_lblCurrentmapaddressesfound.insets = new Insets(0, 0, 5, 0);
