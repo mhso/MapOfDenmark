@@ -23,7 +23,7 @@ public class Main {
 	public final static boolean production = false;
 	public final static boolean buffered = true;
 	public final static boolean binaryfile = false;
-	public final static boolean saveParsedAddresses = true;
+	public final static boolean saveParsedAddresses = false;
 
 	public static OSMReader osmReader;
 	public static JFrame window;
