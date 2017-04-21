@@ -1,5 +1,5 @@
 package dk.itu.n.danmarkskort.routeplanner;
 
-public class CustomDijkstra {
-	
+public enum DEWeightEnum {
+	DISTANCE, SPEED
 }

@@ -1,9 +1,10 @@
 package dk.itu.n.danmarkskort.routeplanner;
 
-public class CustomDiGraph {
+public class routeEWDigraph {
+	private static final String NEWLINE = System.getProperty("line.separator");
 	private final int numOfVertices;			// number of vertices in this digraph
 	private int numOfEdges;						// number of edges in this digraph
-	private Bag<CustomDirectedEdge>[] adj;		// adj[v] = adjacency list for vertex v
+	private Bag<RouteDEdge>[] adj;		// adj[v] = adjacency list for vertex v
 	private int[] indegree;						// indegree[v] = indegree of vertex v
 	
 	/**
@@ -12,16 +13,36 @@ public class CustomDiGraph {
      * @param  V the number of vertices
      * @throws IllegalArgumentException if {@code V < 0}
      */
-    public CustomDiGraph(int numOfVertices) {
+    public routeEWDigraph(int numOfVertices) {
         if (numOfVertices < 0) throw new IllegalArgumentException("Number of vertices in a Digraph must be nonnegative");
         this.numOfVertices = numOfVertices;
         numOfEdges = 0;
         this.indegree = new int[numOfVertices];
-        adj = (Bag<CustomDirectedEdge>[]) new Bag[numOfVertices];
+        adj = (Bag<RouteDEdge>[]) new Bag[numOfVertices];
         for (int i= 0; i < numOfVertices; i++)
-            adj[i] = new Bag<CustomDirectedEdge>();
+            adj[i] = new Bag<RouteDEdge>();
     }
-    
+
+    /**
+     * Returns the number of vertices in this edge-weighted digraph.
+     *
+     * @return the number of vertices in this edge-weighted digraph
+     */
+    public int getNumOfVertices() { return numOfVertices; }
+
+    /**
+     * Returns the number of edges in this edge-weighted digraph.
+     *
+     * @return the number of edges in this edge-weighted digraph
+     */
+    public int getNumOfEdges() { return numOfEdges; }
+
+    // throw an IllegalArgumentException unless {@code 0 <= v < V}
+    private void validateVertex(int v) {
+        if (v < 0 || v >= numOfVertices)
+            throw new IllegalArgumentException("vertex " + v + " is not between 0 and " + (numOfVertices-1));
+    }
+
     /**
      * Adds the directed edge {@code e} to this edge-weighted digraph.
      *
@@ -29,11 +50,13 @@ public class CustomDiGraph {
      * @throws IllegalArgumentException unless endpoints of edge are between {@code 0}
      *         and {@code V-1}
      */
-    public void addEdge(CustomDirectedEdge e) {
-        CustomVertex from = e.getFrom();
-        CustomVertex to = e.to();
+    public void addEdge(RouteDEdge e) {
+        int v = e.getFromId();
+        int w = e.getToId();
+        validateVertex(v);
+        validateVertex(w);
         adj[v].add(e);
-        indegree[e.to()]++;
+        indegree[w]++;
         numOfEdges++;
     }
 
@@ -45,7 +68,8 @@ public class CustomDiGraph {
      * @return the directed edges incident from vertex {@code v} as an Iterable
      * @throws IllegalArgumentException unless {@code 0 <= v < V}
      */
-    public Iterable<CustomDirectedEdge> adj(int v) {
+    public Iterable<RouteDEdge> adj(int v) {
+        validateVertex(v);
         return adj[v];
     }
 
@@ -58,6 +82,7 @@ public class CustomDiGraph {
      * @throws IllegalArgumentException unless {@code 0 <= v < V}
      */
     public int outdegree(int v) {
+        validateVertex(v);
         return adj[v].size();
     }
 
@@ -70,6 +95,7 @@ public class CustomDiGraph {
      * @throws IllegalArgumentException unless {@code 0 <= v < V}
      */
     public int indegree(int v) {
+        validateVertex(v);
         return indegree[v];
     }
 
@@ -80,16 +106,32 @@ public class CustomDiGraph {
      *
      * @return all edges in this edge-weighted digraph, as an iterable
      */
-    public Iterable<CustomDirectedEdge> edges() {
-        Bag<CustomDirectedEdge> list = new Bag<CustomDirectedEdge>();
+    public Iterable<RouteDEdge> edges() {
+        Bag<RouteDEdge> list = new Bag<RouteDEdge>();
         for (int v = 0; v < numOfVertices; v++) {
-            for (DirectedEdge e : adj(v)) {
+            for (RouteDEdge e : adj(v)) {
                 list.add(e);
             }
         }
         return list;
-    }
-    
-    
-}
+    } 
 
+    /**
+     * Returns a string representation of this edge-weighted digraph.
+     *
+     * @return the number of vertices <em>V</em>, followed by the number of edges <em>E</em>,
+     *         followed by the <em>V</em> adjacency lists of edges
+     */
+    public String toString() {
+        StringBuilder s = new StringBuilder();
+        s.append(numOfVertices + " " + numOfEdges + NEWLINE);
+        for (int v = 0; v < numOfVertices; v++) {
+            s.append(v + ": ");
+            for (RouteDEdge e : adj[v]) {
+                s.append(e + "  ");
+            }
+            s.append(NEWLINE);
+        }
+        return s.toString();
+    }
+}

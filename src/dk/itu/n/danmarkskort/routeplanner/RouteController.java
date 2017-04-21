@@ -6,20 +6,24 @@ import java.util.List;
 import dk.itu.n.danmarkskort.models.WayType;
 
 public class RouteController {
-	private List<CustomVertex> customVertices;
-	private List<CustomDirectedEdge> customDirectedEdges;
+	private List<RouteVertex> customVertices;
+	private List<RouteDEdge> customDirectedEdges;
 	
 	public RouteController(){
 		customVertices = new ArrayList<>();
-		
 	}
 	
-	public void addVertex(CustomVertex v){
+	private RouteVertex makeVertex(PointFloat point){
+		RouteVertex v = new RouteVertex(customVertices.size(), point);
 		customVertices.add(v);
+		return v;
 	}
 	
-	public void addEdge(CustomVertex from, CustomVertex to, int maxSpeed, boolean forwardAllowed, boolean backwardAllowed, String description, WayType wayType){
-		CustomDirectedEdge customDirectedEdge = new CustomDirectedEdge(from, to, maxSpeed, forwardAllowed, backwardAllowed, description, wayType);
+	public void addEdge(PointFloat fromVertex, PointFloat toVertex, int maxSpeed, boolean forwardAllowed, boolean backwardAllowed, String description, WayType wayType){
+		RouteVertex from = makeVertex(fromVertex);
+		RouteVertex to = makeVertex(toVertex);
+		
+		RouteDEdge customDirectedEdge = new RouteDEdge(from, to, maxSpeed, forwardAllowed, backwardAllowed, description, wayType);
 		customDirectedEdges.add(customDirectedEdge);
 	}
 }

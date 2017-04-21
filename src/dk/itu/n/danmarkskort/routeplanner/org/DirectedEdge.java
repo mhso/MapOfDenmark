@@ -1,4 +1,4 @@
-package dk.itu.n.danmarkskort.routeplanner;
+package dk.itu.n.danmarkskort.routeplanner.org;
 
 public class DirectedEdge { 
     private final int v;

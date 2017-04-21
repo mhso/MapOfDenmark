@@ -1,6 +1,8 @@
-package dk.itu.n.danmarkskort.routeplanner;
+package dk.itu.n.danmarkskort.routeplanner.org;
 
 import java.util.Stack;
+
+import dk.itu.n.danmarkskort.routeplanner.Bag;
 
 public class EdgeWeightedDigraph {
     private static final String NEWLINE = System.getProperty("line.separator");
