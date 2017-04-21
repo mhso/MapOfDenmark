@@ -3,14 +3,14 @@ package dk.itu.n.danmarkskort.routeplanner;
 import dk.itu.n.danmarkskort.models.ReuseStringObj;
 import dk.itu.n.danmarkskort.models.WayType;
 
-public class RouteDEdge {
+public class RouteEdge {
 	private final RouteVertex from, to;
 	private int maxSpeed;
 	private final boolean forwardAllowed, backwardAllowed;
 	private final String description;
 	private final WayType wayType;
 
-	public RouteDEdge(RouteVertex from, RouteVertex to, int maxSpeed, boolean forwardAllowed, boolean backwardAllowed, String description, WayType wayType){
+	public RouteEdge(RouteVertex from, RouteVertex to, int maxSpeed, boolean forwardAllowed, boolean backwardAllowed, String description, WayType wayType){
 		if (from.getId() < 0) throw new IllegalArgumentException("Vertex names must be nonnegative integers");
         if (to.getId() < 0) throw new IllegalArgumentException("Vertex names must be nonnegative integers");
         if (maxSpeed <= 0) throw new IllegalArgumentException("maxSpeed is 0, must be nonnegative integer");
@@ -35,13 +35,14 @@ public class RouteDEdge {
 	public WayType getWayType(){ return wayType; }
 
 	private double distance(){
-		return Math.sqrt(Math.pow((to.getX() - from.getX()), 2) + Math.pow((to.getY() - from.getY()), 2));
+//		return Math.sqrt(Math.pow((to.getX() - from.getX()), 2) + Math.pow((to.getY() - from.getY()), 2));
+		return from.getDistance(to);
 	}
 	
 	public double getWeightByDistance(){ return distance(); }
 	public double getWeightBySpeed(){ return distance() / (double)maxSpeed; }
 	
-	public double getWeight(DEWeightEnum weightEnum){
+	public double getWeight(WeightEnum weightEnum){
     	double result = 0;
     	switch(weightEnum) {
 		case DISTANCE: result = getWeightByDistance();

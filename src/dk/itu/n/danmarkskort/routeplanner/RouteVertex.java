@@ -1,5 +1,7 @@
 package dk.itu.n.danmarkskort.routeplanner;
 
+import dk.itu.n.danmarkskort.models.PointFloat;
+
 public class RouteVertex extends PointFloat {
 	private final int id;
 	

@@ -2,9 +2,9 @@ package dk.itu.n.danmarkskort.routeplanner;
 
 public class RouteDijkstra {
 	private double[] distTo;         		// distTo[v] = distance  of shortest s->v path
-    private RouteDEdge[] edgeTo;    // edgeTo[v] = last edge on shortest s->v path
+    private RouteEdge[] edgeTo;    // edgeTo[v] = last edge on shortest s->v path
     private IndexMinPQ<Double> pq;    		// priority queue of vertices
-    private DEWeightEnum weightEnum;
+    private WeightEnum weightEnum;
 
     /**
      * Computes a shortest-paths tree from the source vertex {@code s} to every other
@@ -15,15 +15,15 @@ public class RouteDijkstra {
      * @throws IllegalArgumentException if an edge weight is negative
      * @throws IllegalArgumentException unless {@code 0 <= s < V}
      */
-    public RouteDijkstra(routeEWDigraph G, int s, DEWeightEnum weightEnum) {
+    public RouteDijkstra(RouteGraph G, int s, WeightEnum weightEnum) {
     	this.weightEnum = weightEnum;
-        for (RouteDEdge e : G.edges()) {
+        for (RouteEdge e : G.edges()) {
             if (e.getWeight(weightEnum) < 0)
                 throw new IllegalArgumentException("edge " + e + " has negative weight");
         }
 
         distTo = new double[G.getNumOfVertices()];
-        edgeTo = new RouteDEdge[G.getNumOfVertices()];
+        edgeTo = new RouteEdge[G.getNumOfVertices()];
 
         validateVertex(s);
 
@@ -36,7 +36,7 @@ public class RouteDijkstra {
         pq.insert(s, distTo[s]);
         while (!pq.isEmpty()) {
             int v = pq.delMin();
-            for (RouteDEdge e : G.adj(v))
+            for (RouteEdge e : G.adjacent(v))
                 relax(e);
         }
 
@@ -45,7 +45,7 @@ public class RouteDijkstra {
     }
 
     // relax edge e and update pq if changed
-    private void relax(RouteDEdge e) {
+    private void relax(RouteEdge e) {
         int v = e.getFromId(), w = e.getToId();
         
         if (distTo[w] > distTo[v] + e.getWeight(weightEnum)) {
@@ -89,11 +89,11 @@ public class RouteDijkstra {
      *         as an iterable of edges, and {@code null} if no such path
      * @throws IllegalArgumentException unless {@code 0 <= v < V}
      */
-    public Iterable<RouteDEdge> pathTo(int v) {
+    public Iterable<RouteEdge> pathTo(int v) {
         validateVertex(v);
         if (!hasPathTo(v)) return null;
-        Stack<RouteDEdge> path = new Stack<RouteDEdge>();
-        for (RouteDEdge e = edgeTo[v]; e != null; e = edgeTo[e.getFromId()]) {
+        Stack<RouteEdge> path = new Stack<RouteEdge>();
+        for (RouteEdge e = edgeTo[v]; e != null; e = edgeTo[e.getFromId()]) {
             path.push(e);
         }
         return path;
@@ -103,10 +103,10 @@ public class RouteDijkstra {
     // check optimality conditions:
     // (i) for all edges e:            distTo[e.to()] <= distTo[e.from()] + e.weight()
     // (ii) for all edge e on the SPT: distTo[e.to()] == distTo[e.from()] + e.weight()
-    private boolean check(routeEWDigraph G, int s) {
+    private boolean check(RouteGraph G, int s) {
 
         // check that edge weights are nonnegative
-        for (RouteDEdge e : G.edges()) {
+        for (RouteEdge e : G.edges()) {
             if (e.getWeight(weightEnum) < 0) {
                 System.err.println("negative edge weight detected");
                 return false;
@@ -128,7 +128,7 @@ public class RouteDijkstra {
 
         // check that all edges e = v->w satisfy distTo[w] <= distTo[v] + e.weight()
         for (int v = 0; v < G.getNumOfVertices(); v++) {
-            for (RouteDEdge e : G.adj(v)) {
+            for (RouteEdge e : G.adjacent(v)) {
                 int w = e.getToId();
                 if (distTo[v] + e.getWeight(weightEnum) < distTo[w]) {
                     System.err.println("edge " + e + " not relaxed");
@@ -140,7 +140,7 @@ public class RouteDijkstra {
         // check that all edges e = v->w on SPT satisfy distTo[w] == distTo[v] + e.weight()
         for (int w = 0; w < G.getNumOfVertices(); w++) {
             if (edgeTo[w] == null) continue;
-            RouteDEdge e = edgeTo[w];
+            RouteEdge e = edgeTo[w];
             int v = e.getFromId();
             if (w != e.getToId()) return false;
             if (distTo[v] + e.getWeight(weightEnum) != distTo[w]) {

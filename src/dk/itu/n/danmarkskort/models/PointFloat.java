@@ -1,4 +1,4 @@
-package dk.itu.n.danmarkskort.routeplanner;
+package dk.itu.n.danmarkskort.models;
 
 public class PointFloat {
 	public float x;
