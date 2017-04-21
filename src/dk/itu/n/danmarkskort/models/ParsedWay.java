@@ -12,7 +12,8 @@ import java.util.List;
 
 public class ParsedWay extends ParsedItem implements KDComparable, Serializable {
 
-    private long id;
+	private static final long serialVersionUID = -3077017431818142936L;
+	private long id;
     ParsedNode[] nodes;
     private float[] coords;
 

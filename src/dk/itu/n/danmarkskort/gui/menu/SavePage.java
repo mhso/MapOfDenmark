@@ -7,7 +7,6 @@ import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.Util;
 import dk.itu.n.danmarkskort.backend.BinaryWrapper;
 import dk.itu.n.danmarkskort.gui.Style;
-import dk.itu.n.danmarkskort.models.UserPreferences;
 
 import java.awt.*;
 import javax.swing.border.TitledBorder;

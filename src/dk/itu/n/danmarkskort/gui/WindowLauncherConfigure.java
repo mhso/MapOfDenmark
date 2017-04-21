@@ -9,7 +9,9 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import dk.itu.n.danmarkskort.DKConstants;
 import dk.itu.n.danmarkskort.Main;
+import dk.itu.n.danmarkskort.Util;
 
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
@@ -62,9 +64,7 @@ public class WindowLauncherConfigure extends JDialog {
 		panel.add(labelBinary, BorderLayout.WEST);
 		
 		CustomToggleButton buttonBinary = style.toggleButton();
-		buttonBinary.addActionListener(e -> {
-			Main.binaryfile = !buttonBinary.isOn();
-		});
+		buttonBinary.addActionListener(e -> Main.binaryfile = !buttonBinary.isOn());
 		buttonBinary.setOn(Main.binaryfile);
 		panel.add(buttonBinary, BorderLayout.EAST);
 		
@@ -85,6 +85,7 @@ public class WindowLauncherConfigure extends JDialog {
 		buttonReparse.addActionListener(e -> {
 			Main.userPreferences.setForceParsing(!buttonReparse.isOn());
 			Main.forceParsing = !buttonReparse.isOn();
+			Util.writeObjectToFile(Main.userPreferences, DKConstants.USERPREF_PATH);
 		});
 		buttonReparse.setOn(Main.userPreferences.isForcingParsing());
 		panel_1.add(buttonReparse, BorderLayout.EAST);
