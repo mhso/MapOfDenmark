@@ -70,6 +70,15 @@ public class OSMReader {
 		parseMemory.on();
 
 		if(fileName.endsWith(".bin")) {
+			try {
+				for(Path checkSumDir : Files.newDirectoryStream(Paths.get("parsedOSMFiles"))) {
+					for(Path parsedFile : Files.newDirectoryStream(checkSumDir)) {
+						if(parsedFile.toString().equals(fileName)) currentChecksum = checkSumDir.toFile().getName();
+					}
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 			BinaryWrapper binary = (BinaryWrapper) Util.readObjectFromFile(fileName, inputListeners);
 			Main.model = binary.getModel();
 			Main.addressController.setAddressHolder(binary.getAddressHolder());
@@ -81,14 +90,13 @@ public class OSMReader {
             } catch (NoSuchAlgorithmException | IOException e1) {
                 e1.printStackTrace();
             }
-
-            if (!Main.forceParsing && Main.binaryfile && checkSumExists(currentChecksum)) {
-                fileName = Util.getBinaryFilePath();
-                BinaryWrapper binary = (BinaryWrapper) Util.readObjectFromFile(fileName, inputListeners);
-                Main.model = binary.getModel();
-                Main.addressController.setAddressHolder(binary.getAddressHolder());
-                for (InputStreamListener listener : inputListeners) listener.onSetupDone();
-            }
+			if (!Main.forceParsing && Main.binaryfile && checkSumExists(currentChecksum)) {
+	                fileName = Util.getBinaryFilePath();
+	                BinaryWrapper binary = (BinaryWrapper) Util.readObjectFromFile(fileName, inputListeners);
+	                Main.model = binary.getModel();
+	                Main.addressController.setAddressHolder(binary.getAddressHolder());
+	                for (InputStreamListener listener : inputListeners) listener.onSetupDone();
+			}  
             else {
             	if (fileName.endsWith(".osm")) {
                     try {
@@ -121,10 +129,7 @@ public class OSMReader {
                     String path = "parsedOSMFiles/" + currentChecksum + "/";
                     try {
                     	Path filePath = Paths.get(path);
-                    	if(Files.exists(filePath)) {
-                    		Files.delete(filePath);
-                    	}
-                        Files.createDirectory(filePath);
+                        if(!Files.exists(filePath)) Files.createDirectory(filePath);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -157,7 +162,7 @@ public class OSMReader {
 	}
 	
 	private boolean checkSumExists(String checkSum) {
-		if(Main.production) return getClass().getResource("parsedOSMFiles/"+checkSum) != null;
+		if(Main.production) return getClass().getResource("/parsedOSMFiles/"+checkSum) != null;
 		return Files.exists(Paths.get("parsedOSMFiles/"+checkSum));
 	}
 	

@@ -115,11 +115,11 @@ public class WindowLauncher extends JFrame {
 		labelSelectedFileHeader.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		panelCurrentFile.add(labelSelectedFileHeader, BorderLayout.NORTH);
 		
-		labelSelectedFile = new JLabel(Main.userPreferences.getDefaultMapFile());
+		labelSelectedFile = new JLabel(Main.userPreferences.getDefaultMapFile() + " (default)");
 		labelSelectedFile.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.BLACK));
 		labelSelectedFile.setOpaque(true);
 		labelSelectedFile.setBackground(Color.WHITE);
-		labelSelectedFile.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		labelSelectedFile.setFont(new Font("Tahoma", Font.BOLD, 15));
 		labelSelectedFile.setHorizontalAlignment(SwingConstants.CENTER);
 		panelCurrentFile.add(labelSelectedFile);
 		
@@ -141,10 +141,10 @@ public class WindowLauncher extends JFrame {
 		buttonConfigure.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		panelBottom.add(buttonConfigure, BorderLayout.WEST);
 		
-		setPreferredSize(new Dimension(550, 550));
-		setLocationRelativeTo(null);
-		
+		setPreferredSize(new Dimension(550, 500));
 		pack();
+		
+		setLocationRelativeTo(null);
 		setVisible(true);
 	}
 
@@ -158,7 +158,7 @@ public class WindowLauncher extends JFrame {
 		try {
 			for(Path entry : Files.newDirectoryStream(Paths.get("parsedOSMFiles"))) {
 				for(Path binFile : Files.newDirectoryStream(entry)) {
-					binFiles.add(binFile);
+					if(!binFile.toFile().getName().equals("pinpoints.bin")) binFiles.add(binFile);
 				}
 			}
 		}

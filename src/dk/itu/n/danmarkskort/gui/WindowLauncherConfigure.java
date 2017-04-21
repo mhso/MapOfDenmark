@@ -25,6 +25,7 @@ public class WindowLauncherConfigure extends JDialog {
 
 	private JPanel contentPane;
 	private WindowLauncher parent;
+	private JPanel panel_1;
 
 	public WindowLauncherConfigure(WindowLauncher parent) {
 		super(parent);
@@ -35,7 +36,7 @@ public class WindowLauncherConfigure extends JDialog {
 		setIconImage(Toolkit.getDefaultToolkit().getImage("resources/icons/map-icon.png"));
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		contentPane.setLayout(new BorderLayout(0, 15));
+		contentPane.setLayout(new BorderLayout(0, 20));
 		setContentPane(contentPane);
 		
 		JLabel lblLaunchConfigurations = new JLabel("Launch Configurations");
@@ -48,15 +49,37 @@ public class WindowLauncherConfigure extends JDialog {
 		centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
 		
 		JPanel panel = new JPanel();
+		panel.setPreferredSize(new Dimension(10, 50));
+		panel.setBackground(contentPane.getBackground());
 		panel.setBorder(new EmptyBorder(0, 0, 50, 0));
 		centerPanel.add(panel);
 		panel.setLayout(new BorderLayout(0, 0));
+		
+		JLabel labelBinary = new JLabel("Enable Binary Save/Load");
+		labelBinary.setBorder(null);
+		labelBinary.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		labelBinary.setHorizontalAlignment(SwingConstants.CENTER);
+		panel.add(labelBinary, BorderLayout.WEST);
+		
+		CustomToggleButton buttonBinary = style.toggleButton();
+		buttonBinary.addActionListener(e -> {
+			Main.binaryfile = !buttonBinary.isOn();
+		});
+		buttonBinary.setOn(Main.binaryfile);
+		panel.add(buttonBinary, BorderLayout.EAST);
+		
+		panel_1 = new JPanel();
+		panel_1.setPreferredSize(new Dimension(10, 50));
+		panel_1.setBackground(contentPane.getBackground());
+		panel_1.setBorder(new EmptyBorder(0, 0, 50, 0));
+		centerPanel.add(panel_1);
+		panel_1.setLayout(new BorderLayout(0, 0));
 		
 		JLabel labelReparse = new JLabel("Force Reparsing");
 		labelReparse.setBorder(null);
 		labelReparse.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		labelReparse.setHorizontalAlignment(SwingConstants.CENTER);
-		panel.add(labelReparse, BorderLayout.WEST);
+		panel_1.add(labelReparse, BorderLayout.WEST);
 		
 		CustomToggleButton buttonReparse = style.toggleButton();
 		buttonReparse.addActionListener(e -> {
@@ -64,15 +87,19 @@ public class WindowLauncherConfigure extends JDialog {
 			Main.forceParsing = !buttonReparse.isOn();
 		});
 		buttonReparse.setOn(Main.userPreferences.isForcingParsing());
-		panel.add(buttonReparse, BorderLayout.EAST);
+		panel_1.add(buttonReparse, BorderLayout.EAST);
+		
+		JPanel panel_2 = new JPanel();
+		panel_2.setPreferredSize(new Dimension(10, 50));
+		centerPanel.add(panel_2);
 		
 		JButton buttonLoadFile = new JButton("Load New File");
+		panel_2.add(buttonLoadFile);
 		buttonLoadFile.addActionListener(e -> loadFile());
 		buttonLoadFile.setAlignmentX(Component.CENTER_ALIGNMENT);
 		buttonLoadFile.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		centerPanel.add(buttonLoadFile);
 		
-		setPreferredSize(new Dimension(400, 300));
+		setPreferredSize(new Dimension(400, 320));
 		setLocationRelativeTo(null);
 		
 		pack();

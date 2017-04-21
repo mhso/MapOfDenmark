@@ -24,7 +24,8 @@ public class Main {
 	public final static boolean buffered = true;
 	public final static boolean saveParsedAddresses = true;
 	public final static boolean useLauncher = true;
-	public static final boolean binaryfile = true;
+	
+	public static boolean binaryfile = true;
 	
 	public static boolean forceParsing;
 	public static OSMReader osmReader;
@@ -74,7 +75,6 @@ public class Main {
 		osmReader.addInputListener(loadScreen);
 		loadScreen.run();
 		
-		System.out.println(Thread.currentThread());
 		Runnable r = new Runnable() {
 			@Override
 			public void run() {
@@ -83,7 +83,7 @@ public class Main {
 		        shutdown();
 			}
 		};
-		new Thread(r, "lol").start();
+		new Thread(r, "ParseThread").start();
 	}
 	
 	public static void main() {

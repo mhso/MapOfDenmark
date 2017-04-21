@@ -93,7 +93,6 @@ public class WindowParsingLoadscreenNew extends JFrame implements OSMParserListe
 	}
 	
 	public void run() {
-		System.out.println(Thread.currentThread());
 		getFileSize(fileName);
 		initialize();
 	}
