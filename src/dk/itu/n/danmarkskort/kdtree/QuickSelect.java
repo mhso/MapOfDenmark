@@ -8,7 +8,7 @@ public class QuickSelect {
 
     // finds the Kth smallest item of the list.
     // In out case the median, aka the length/2-th item
-    public static ParsedItem quickSelect(ParsedItem[] array, int k, boolean sortByLon) {
+    static KDComparable quickSelect(KDComparable[] array, int k, boolean sortByLon) {
         shuffle(array);
 
         int lo = 0, hi = array.length - 1;
@@ -22,9 +22,9 @@ public class QuickSelect {
         return array[k];
     }
 
-    private static int partition(ParsedItem[] array, int lo, int hi, boolean sortByLon) {
+    private static int partition(KDComparable[] array, int lo, int hi, boolean sortByLon) {
         int i = lo, j = hi + 1;
-        ParsedItem v = array[lo];
+        KDComparable v = array[lo];
         while(true) {
             while(less(array[++i], v, sortByLon)) if(i == hi) break;
             while(less(v, array[--j], sortByLon)) if(j == lo) break;
@@ -35,13 +35,13 @@ public class QuickSelect {
         return j;
     }
 
-    private static void swap(ParsedItem[] array, int a, int b) {
-        ParsedItem temp = array[a];
+    private static void swap(KDComparable[] array, int a, int b) {
+        KDComparable temp = array[a];
         array[a] = array[b];
         array[b] = temp;
     }
 
-    private static void shuffle(ParsedItem[] array) {
+    private static void shuffle(KDComparable[] array) {
         Random random = new Random();
         for(int i = 0; i < array.length; i++) {
             int rn = random.nextInt(array.length);
@@ -49,7 +49,7 @@ public class QuickSelect {
         }
     }
 
-    private static boolean less(ParsedItem a, ParsedItem b, boolean sortByLon) {
+    private static boolean less(KDComparable a, KDComparable b, boolean sortByLon) {
         if(sortByLon) return a.compareLon(b) < 1;
         return a.compareLat(b) < 1;
     }

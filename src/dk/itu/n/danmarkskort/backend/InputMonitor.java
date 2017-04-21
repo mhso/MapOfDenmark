@@ -20,14 +20,28 @@ public class InputMonitor extends CountingInputStream {
 	private int currentPct;
 	private boolean streamStarted;
 	private List<InputStreamListener> listeners = new ArrayList<>();
+	private MonitorTimer monitor;
 	
 	public InputMonitor(InputStream in, String fileName) {
 		super(in);
 		this.in = in;
 		fileSize = Util.getFileSize(new File(fileName));
-		new MonitorTimer(50);
 	}
 	
+	@Override
+	protected synchronized void afterRead(int n) {
+		super.afterRead(n);
+		double pct = ((double)getByteCount()/(double)fileSize)*100;
+		if((int)pct != currentPct) {
+			if(!streamStarted) {
+				for(InputStreamListener listener : listeners) listener.onStreamStarted();
+				streamStarted = true;
+			}
+			for(InputStreamListener listener : listeners) listener.onPercent((int)pct-currentPct);
+			currentPct = (int)pct;
+		}
+	}
+
 	public void addListener(InputStreamListener isl) {
 		listeners.add(isl);
 	}
@@ -45,17 +59,14 @@ public class InputMonitor extends CountingInputStream {
 			timer.start();
 		}
 		
+		public void stop() {
+			timer.stop();
+		}
+		
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			double pct = ((double)getByteCount()/(double)fileSize)*100;
-			if((int)pct != currentPct) {
-				if(!streamStarted) {
-					for(InputStreamListener listener : listeners) listener.onStreamStarted();
-					streamStarted = true;
-				}
-				for(InputStreamListener listener : listeners) listener.onPercent((int)pct-currentPct);
-				currentPct = (int)pct;
-			}
+			System.out.println("timer");
+			
 		}		
 	}
 }
