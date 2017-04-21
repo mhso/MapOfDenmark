@@ -8,6 +8,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 
 public class ParsedRelation extends ParsedWay {
 
@@ -64,52 +65,43 @@ public class ParsedRelation extends ParsedWay {
     // FIXME: also, not sure if inners and nothingerners should also be connected like this?
     public void correctOuters() {
         if(outers.size() == 0) return;
-
+        HashMap<ParsedNode, ParsedWay> tempWayMap = new HashMap<>();
         ArrayList<ParsedWay> corrected = new ArrayList<>();
-        ParsedWay tempWay = null;
-        ParsedWay current = outers.get(0);
-        current.getLastNode();
-        if(outers.size() > 1) {
-            for(int i = 1; i < outers.size(); i++) {
-                for(int j = i; j < outers.size(); j++ ) {
-                    ParsedWay candidate = outers.get(j);
-                    // checks if candidate is a match, with a correct path direction
-                    if(current.getLastNode() == candidate.getFirstNode()) {
-                        if(tempWay == null) {
-                            tempWay = new ParsedWay();
-                            tempWay.addNodes(current.getNodes());
-                        }
-                        tempWay.addNodes(candidate.getNodes());
-                        current = tempWay;
-                        Collections.swap(outers, i, j);
-                    }
-                    // checks if candiate is a match, with an incorrect direction
-                    else if(current.getLastNode() == candidate.getLastNode()) {
-                        if(tempWay == null) {
-                            tempWay = new ParsedWay();
-                            tempWay.addNodes(current.getNodes());
-                        }
-                        tempWay.addNodes(candidate.getReversedNodes());
-                        current = tempWay;
-                        Collections.swap(outers, i, j);
-                    }
-                    // if no candidates are matches, append the first candidate without connecting,
-                    // and set it's lastNode to check new candidates against
-                    if(j == outers.size() - 1) {
-                        if(tempWay == null) {
-                            corrected.add(current);
-                        }
-                        else {
-                            corrected.add(tempWay);
-                            tempWay = null;
-                        }
-                        if(i == j) corrected.add(outers.get(i));
-                        else current = outers.get(i);
+        for(ParsedWay outer: outers) {
+            ParsedWay candidateBefore = tempWayMap.remove(outer.getFirstNode());
+            ParsedWay candidateAfter = tempWayMap.remove(outer.getLastNode());
+            if(candidateBefore != null || candidateAfter != null) {
+                ParsedWay tempWay = new ParsedWay();
+                if(candidateBefore != null) {
+                    if (outer.getFirstNode() == candidateBefore.getLastNode()) { // direction is correct
+                        tempWayMap.remove(candidateBefore.getFirstNode());
+                        tempWay.addNodes(candidateBefore.getNodes());
+                    } else {
+                        tempWayMap.remove(candidateBefore.getLastNode());
+                        tempWay.addNodes(candidateBefore.getReversedNodes());
                     }
                 }
+                tempWay.addNodes(outer.getNodes());
+                if(candidateAfter != null && candidateAfter != candidateBefore) {
+                    if (outer.getLastNode() == candidateAfter.getFirstNode()) { // direction is correct
+                        tempWayMap.remove(candidateAfter.getLastNode());
+                        tempWay.addNodes(candidateAfter.getNodes());
+                    } else {
+                        tempWayMap.remove(candidateAfter.getFirstNode());
+                        tempWay.addNodes(candidateAfter.getReversedNodes());
+                    }
+                }
+                tempWayMap.put(tempWay.getFirstNode(), tempWay);
+                tempWayMap.put(tempWay.getLastNode(), tempWay);
+            }
+            else {
+                tempWayMap.put(outer.getFirstNode(), outer);
+                tempWayMap.put(outer.getLastNode(), outer);
             }
         }
-        else corrected.add(current);
+        tempWayMap.forEach((key, current) -> {
+            if(key == current.getFirstNode()) corrected.add(current);
+        });
         outers = corrected;
     }
 
