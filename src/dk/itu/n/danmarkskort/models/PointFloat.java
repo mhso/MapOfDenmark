@@ -20,5 +20,4 @@ public class PointFloat {
 	public String toString(){
 		return "[" + x + ", " + y + "]";
 	}
-	
 }

@@ -5,14 +5,9 @@ import dk.itu.n.danmarkskort.TimerUtil;
 import dk.itu.n.danmarkskort.models.ParsedAddress;
 import dk.itu.n.danmarkskort.models.RegionFloat;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.stream.Collectors;
 
 public class AddressController {
 	private AddressHolder addressHolder = new AddressHolder();
@@ -93,7 +88,7 @@ public class AddressController {
 		postcodeCityBestMatch.add(postcode,  city);
 	}
 	
-	private int acceptLvl1 = 0, acceptLvl2 = 0, acceptLvl3 = 0, acceptNot = 0;
+	private int acceptLvl1 = 0, acceptLvl2 = 0, acceptNot = 0;
 	public void addressParsed(ParsedAddress addr) {
 		timerUtilA.on();
         if(addr != null) {
