@@ -28,6 +28,7 @@ public class Main {
 	public static boolean binaryfile = true;
 	
 	public static boolean forceParsing;
+
 	public static OSMReader osmReader;
 	public static JFrame window;
 	public static OSMParser model;

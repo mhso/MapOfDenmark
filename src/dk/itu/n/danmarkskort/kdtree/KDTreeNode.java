@@ -8,67 +8,67 @@ import dk.itu.n.danmarkskort.models.Region;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.List;
 
-public class KDTreeNode extends KDTree {
+public class KDTreeNode<T extends KDComparable> extends KDTree<T> {
 
 	private static final long serialVersionUID = 242589004649413322L;
-	private KDTree leftChild;
-    private KDTree rightChild;
+	private KDTree<T> leftChild;
+    private KDTree<T> rightChild;
     private float leftSplit;
     private float rightSplit;
-    private int size;
+   // private int size;
 
-    public KDTreeNode(ArrayList<ParsedItem> list) {
-        this(listToArray(list), true);
+    public KDTreeNode(List<T> list) {
+        this(KDTree.listToArray(list), true);
     }
 
-    private KDTreeNode(ParsedItem[] array, boolean sortByLon) {
-        createStructure(array, sortByLon);
-        size = array.length;
+    private KDTreeNode(KDComparable[] arr, boolean sortByLon) {
+        createStructure(arr, sortByLon);
     }
 
-    private void createStructure(ParsedItem[] array, boolean sortByLon) {
+    private void createStructure(KDComparable[] array, boolean sortByLon) {
         //  finds the median of the given list, either by lon or lat values
-        ParsedItem median = QuickSelect.quickSelect(array, (array.length + 1) / 2, sortByLon);
+        KDComparable median = QuickSelect.quickSelect(array, (array.length + 1) / 2, sortByLon);
 
-        ParsedItem[] leftArray = new ParsedItem[(array.length + 1) / 2];
+        KDComparable[] leftArray = new KDComparable[(array.length + 1) / 2];
         for(int i = 0; i < leftArray.length; i++) {
             leftArray[i] = array[i];
         }
 
-        ParsedItem[] rightArray = new ParsedItem[array.length - leftArray.length];
+        KDComparable[] rightArray = new KDComparable[array.length - leftArray.length];
         for(int i = 0; i < rightArray.length; i ++) {
             rightArray[i] = array[i + leftArray.length];
         }
 
         if(sortByLon) {
             leftSplit = median.getFirstNode().getLon();
-            for(ParsedItem item : leftArray) {
+            for(KDComparable item : leftArray) {
                 ParsedNode[] nodes = item.getNodes();
                 for(ParsedNode node : nodes) leftSplit = node.getLon() > leftSplit ? node.getLon() : leftSplit; // til højre er værdierne størst
             }
             rightSplit = median.getFirstNode().getLon();
-            for(ParsedItem item : rightArray) {
+            for(KDComparable item : rightArray) {
                 ParsedNode[] nodes = item.getNodes();
                 for(ParsedNode node : nodes) rightSplit = node.getLon() < rightSplit ? node.getLon(): rightSplit; // til højre er værdierne størst
             }
         } else {
             leftSplit = median.getFirstNode().getLat();
-            for(ParsedItem item : leftArray) {
+            for(KDComparable item : leftArray) {
                 ParsedNode[] nodes = item.getNodes();
                 for(ParsedNode node : nodes) leftSplit = node.getLat() > leftSplit ? node.getLat() : leftSplit; // nederst er værdierne størst
             }
             rightSplit = median.getFirstNode().getLat();
-            for(ParsedItem item : rightArray) {
+            for(KDComparable item : rightArray) {
                 ParsedNode[] nodes = item.getNodes();
                 for(ParsedNode node : nodes) rightSplit = node.getLat() < rightSplit ? node.getLat() : rightSplit; // nederst er værdierne størst
             }
         }
-        if(leftArray.length > DKConstants.KD_SIZE) leftChild = new KDTreeNode(leftArray, !sortByLon);
-        else leftChild = new KDTreeLeaf(leftArray);
+        if(leftArray.length > DKConstants.KD_SIZE) leftChild = new KDTreeNode<T>(leftArray, !sortByLon);
+        else leftChild = new KDTreeLeaf<T>(leftArray);
 
-        if(rightArray.length > DKConstants.KD_SIZE) rightChild = new KDTreeNode(rightArray, !sortByLon);
-        else rightChild = new KDTreeLeaf(rightArray);
+        if(rightArray.length > DKConstants.KD_SIZE) rightChild = new KDTreeNode<T>(rightArray, !sortByLon);
+        else rightChild = new KDTreeLeaf<T>(rightArray);
     }
 
     public KDTree getRightChild() { return rightChild; }
@@ -76,50 +76,25 @@ public class KDTreeNode extends KDTree {
     public float getLeftSplit() { return leftSplit; }
     public float getRightSplit() { return rightSplit; }
 
-    @Override
-    public ArrayList<Shape> getShapes(Region reg) { return getShapes(reg, true); }
-    @Override
-    public ArrayList<Shape> getShapes(Region reg,  boolean sortByLon) {
-        ArrayList<Shape> shapes = new ArrayList<>(size);
+    public List<KDComparable[]> getItems(Region reg) { return getItems(reg, true); }
+
+    public List<KDComparable[]> getItems(Region reg, boolean sortByLon) {
+        List<KDComparable[]> items = new ArrayList<>();
         if(sortByLon) {
-            if(reg.x1 < leftSplit) shapes.addAll(leftChild.getShapes(reg, !sortByLon));
-            if(reg.x2 > rightSplit) shapes.addAll(rightChild.getShapes(reg, !sortByLon));
+            if(reg.x1 < leftSplit) items.addAll(leftChild.getItems(reg, !sortByLon));
+            if(reg.x2 > rightSplit) items.addAll(rightChild.getItems(reg, !sortByLon));
         }
         else {
-            if(reg.y1 < leftSplit) shapes.addAll(leftChild.getShapes(reg, !sortByLon));
-            if(reg.y2 > rightSplit) shapes.addAll(rightChild.getShapes(reg, !sortByLon));
+            if(reg.y1 < leftSplit) items.addAll(leftChild.getItems(reg, !sortByLon));
+            if(reg.y2 > rightSplit) items.addAll(rightChild.getItems(reg, !sortByLon));
         }
-        return shapes;
+        return items;
     }
 
-    @Override
-    public void makeShapes() {
-        leftChild.makeShapes();
-        rightChild.makeShapes();
+    public List<KDComparable[]> getAllItems() {
+        List<KDComparable[]> arrList = new ArrayList<>();
+        arrList.addAll(leftChild.getAllItems());
+        arrList.addAll(rightChild.getAllItems());
+        return arrList;
     }
-
-    @Override
-    public void deleteOldRefs() {
-        leftChild.deleteOldRefs();
-        rightChild.deleteOldRefs();
-    }
-
-    @Override
-    public int size() { return size; }
-
-    /*
-    @Override
-    public int size(Region reg, boolean sortByLon) {
-    	int size = 0;
-    	if(sortByLon) {
-            if(reg.x1 < leftSplit) size += leftChild.size(reg, !sortByLon);
-            if(reg.x2 > rightSplit) size += rightChild.size(reg, !sortByLon);
-        }
-        else {
-            if(reg.y1 < leftSplit) size += leftChild.size(reg, !sortByLon);
-            if(reg.y2 > rightSplit) size += rightChild.size(reg, !sortByLon);
-        }
-    	return size;
-    }*/
-
 }
