@@ -3,10 +3,12 @@ package dk.itu.n.danmarkskort.models;
 import dk.itu.n.danmarkskort.kdtree.KDComparable;
 
 import java.awt.*;
+import java.io.Serializable;
 
-public abstract class ParsedItem implements KDComparable {
+public abstract class ParsedItem implements KDComparable, Serializable {
 
-    @Override
+	private static final long serialVersionUID = -8684498422989385773L;
+	@Override
     public int compareLon(KDComparable item) {
         float a = getFirstNode().getLon();
         float b = item.getFirstNode().getLon();
