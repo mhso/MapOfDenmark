@@ -16,6 +16,7 @@ public class RouteController {
 	public RouteController(){
 		vertexCount = 0;
 		routeEdges = new ArrayList<RouteEdge>();
+		vertices = new ArrayList<RouteVertex>();
 		routeGraph = null;
 	}
 	
@@ -46,7 +47,6 @@ public class RouteController {
 	}
 	
 	public void cleanUp(){
-		vertexCount = 0;
 		routeEdges = null;
 	}
 	
