@@ -14,7 +14,6 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
 
 import java.awt.Color;
 import java.awt.Dimension;

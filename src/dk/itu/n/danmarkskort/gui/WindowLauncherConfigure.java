@@ -126,7 +126,8 @@ public class WindowLauncherConfigure extends JDialog {
 		fc.setAcceptAllFileFilterUsed(false);
 		fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		fc.setFileFilter(new FileNameExtensionFilter("Map Files", "osm", "zip", "bin"));
-		fc.setCurrentDirectory(new File("D:/BFST17_DK_Kort"));
+		
+		fc.setCurrentDirectory(new File(System.getProperty("user.dir")));
 		return fc;
 	}
 }
