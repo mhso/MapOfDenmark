@@ -7,6 +7,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 
 import dk.itu.n.danmarkskort.Main;
 
@@ -32,6 +33,7 @@ import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
 import javax.swing.ListSelectionModel;
 import java.awt.Color;
+import javax.swing.border.MatteBorder;
 
 public class WindowLauncher extends JFrame {
 	private JPanel contentPane;
@@ -67,7 +69,7 @@ public class WindowLauncher extends JFrame {
 		
 		JPanel centerPanel = new JPanel();
 		contentPane.add(centerPanel, BorderLayout.CENTER);
-		centerPanel.setLayout(new BorderLayout(0, 5));
+		centerPanel.setLayout(new BorderLayout(0, 15));
 		
 		JPanel panelParsedFiles = new JPanel();
 		centerPanel.add(panelParsedFiles, BorderLayout.CENTER);
@@ -81,7 +83,9 @@ public class WindowLauncher extends JFrame {
 		labelSelectedFile = new JLabel();
 		
 		JList<String> binFilesList = new JList(getParsedFiles());
+		binFilesList.setBorder(new MatteBorder(1, 1, 1, 1, (Color) Color.WHITE));
 		binFilesList.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		binFilesList.setSelectionBackground(new Color(130, 173, 198));
 		binFilesList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		DefaultListCellRenderer dlcr = (DefaultListCellRenderer)binFilesList.getCellRenderer();
 		dlcr.setHorizontalAlignment(SwingConstants.CENTER);
@@ -96,6 +100,7 @@ public class WindowLauncher extends JFrame {
 		});
 		
 		JScrollPane scroll = new JScrollPane(binFilesList);
+		scroll.setBorder(null);
 		panelParsedFiles.add(scroll);
 		
 		JPanel panelCurrentFile = new JPanel();
@@ -119,7 +124,7 @@ public class WindowLauncher extends JFrame {
 			enableLaunchButton(false);
 		}
 		
-		labelSelectedFile.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.BLACK));
+		labelSelectedFile.setBorder(new MatteBorder(1, 1, 1, 1, (Color) Color.WHITE));
 		labelSelectedFile.setOpaque(true);
 		labelSelectedFile.setFont(new Font("Tahoma", Font.BOLD, 15));
 		labelSelectedFile.setHorizontalAlignment(SwingConstants.CENTER);
@@ -144,13 +149,13 @@ public class WindowLauncher extends JFrame {
 		panelBottom.add(buttonConfigure, BorderLayout.WEST);
 		
 		// Colors and stuff
-		final Color OUTER_COLOR = style.menuContentBG();
+		final Color OUTER_COLOR = new Color(130, 173, 198);
 		final Color MIDDLE_COLOR = style.menuItemsBG();
 		final Color INNER_COLOR = style.panelBG();
 		
 		contentPane.setBackground(OUTER_COLOR);
 		panel.setBackground(MIDDLE_COLOR);
-		centerPanel.setBackground(MIDDLE_COLOR);
+		centerPanel.setBackground(OUTER_COLOR);
 		panelParsedFiles.setBackground(MIDDLE_COLOR);
 		binFilesList.setBackground(INNER_COLOR);
 		scroll.setBackground(INNER_COLOR);
@@ -162,8 +167,8 @@ public class WindowLauncher extends JFrame {
 		labelHeaderVersion.setForeground(Color.WHITE);
 		labelParsedMaps.setForeground(Color.WHITE);
 		labelSelectedFileHeader.setForeground(Color.WHITE);
-		binFilesList.setForeground(new Color(220, 220, 220));
-		labelSelectedFile.setForeground(new Color(220, 220, 220));
+		binFilesList.setForeground(new Color(200, 200, 200));
+		labelSelectedFile.setForeground(new Color(200, 200, 200));
 		
 		setPreferredSize(new Dimension(550, 500));
 		pack();

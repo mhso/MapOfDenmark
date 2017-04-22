@@ -139,7 +139,7 @@ public class WindowParsingLoadscreenNew extends JFrame implements OSMParserListe
 	
 	@Override
 	public void onStreamEnded() {
-		labelStatus.setText("Saving Data To Binary Format...");
+		labelStatus.setText("Converting Data To KD-Trees...");
 	}
 	
 	@Override
@@ -149,7 +149,7 @@ public class WindowParsingLoadscreenNew extends JFrame implements OSMParserListe
 
 	@Override
 	public void onParsingFinished() {
-		labelStatus.setText("Converting Data To KD-Trees...");
+		labelStatus.setText("Saving Data To Binary Format...");
 	}
 	
 	private class BGImage extends JPanel {
