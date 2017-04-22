@@ -48,39 +48,32 @@ public class WindowLauncher extends JFrame {
 		setIconImage(Toolkit.getDefaultToolkit().getImage("resources/icons/map-icon.png"));
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		contentPane.setBackground(style.panelBG());
 		contentPane.setLayout(new BorderLayout(0, 15));
 		setContentPane(contentPane);
 		
 		JPanel panel = new JPanel();
-		panel.setBackground(style.menuItemsBG());
 		contentPane.add(panel, BorderLayout.NORTH);
 		panel.setLayout(new GridLayout(0, 1, 0, 0));
 		
 		JLabel labelHeaderName = new JLabel(Main.APP_NAME);
-		labelHeaderName.setForeground(Color.WHITE);
 		labelHeaderName.setFont(new Font("Tahoma", Font.PLAIN, 30));
 		labelHeaderName.setHorizontalAlignment(SwingConstants.CENTER);
 		panel.add(labelHeaderName);
 		
 		JLabel labelHeaderVersion = new JLabel("Version " + Main.APP_VERSION);
-		labelHeaderVersion.setForeground(Color.WHITE);
 		labelHeaderVersion.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		labelHeaderVersion.setHorizontalAlignment(SwingConstants.CENTER);
 		panel.add(labelHeaderVersion);
 		
 		JPanel centerPanel = new JPanel();
-		centerPanel.setBackground(style.menuItemsBG());
 		contentPane.add(centerPanel, BorderLayout.CENTER);
 		centerPanel.setLayout(new BorderLayout(0, 5));
 		
 		JPanel panelParsedFiles = new JPanel();
-		panelParsedFiles.setBackground(style.menuItemsBG());
 		centerPanel.add(panelParsedFiles, BorderLayout.CENTER);
 		panelParsedFiles.setLayout(new BorderLayout(0, 5));
 		
 		JLabel labelParsedMaps = new JLabel("Parsed Map Files");
-		labelParsedMaps.setForeground(new Color(215, 215, 215));
 		panelParsedFiles.add(labelParsedMaps, BorderLayout.NORTH);
 		labelParsedMaps.setHorizontalAlignment(SwingConstants.CENTER);
 		labelParsedMaps.setFont(new Font("Tahoma", Font.PLAIN, 17));
@@ -90,7 +83,6 @@ public class WindowLauncher extends JFrame {
 		JList<String> binFilesList = new JList(getParsedFiles());
 		binFilesList.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		binFilesList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		binFilesList.setBackground(style.menuContentBG());
 		DefaultListCellRenderer dlcr = (DefaultListCellRenderer)binFilesList.getCellRenderer();
 		dlcr.setHorizontalAlignment(SwingConstants.CENTER);
 		
@@ -104,16 +96,14 @@ public class WindowLauncher extends JFrame {
 		});
 		
 		JScrollPane scroll = new JScrollPane(binFilesList);
-		scroll.setBackground(style.menuItemsBG());
 		panelParsedFiles.add(scroll);
 		
 		JPanel panelCurrentFile = new JPanel();
-		panelCurrentFile.setBackground(style.menuItemsBG());
+		panelCurrentFile.setBorder(new EmptyBorder(5, 0, 0, 0));
 		centerPanel.add(panelCurrentFile, BorderLayout.NORTH);
 		panelCurrentFile.setLayout(new BorderLayout(0, 5));
 		
 		JLabel labelSelectedFileHeader = new JLabel("Selected File");
-		labelSelectedFileHeader.setForeground(new Color(215, 215, 215));
 		labelSelectedFileHeader.setHorizontalAlignment(SwingConstants.CENTER);
 		labelSelectedFileHeader.setFont(new Font("Tahoma", Font.PLAIN, 17));
 		panelCurrentFile.add(labelSelectedFileHeader, BorderLayout.NORTH);
@@ -131,14 +121,12 @@ public class WindowLauncher extends JFrame {
 		
 		labelSelectedFile.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.BLACK));
 		labelSelectedFile.setOpaque(true);
-		labelSelectedFile.setBackground(style.menuContentBG());
 		labelSelectedFile.setFont(new Font("Tahoma", Font.BOLD, 15));
 		labelSelectedFile.setHorizontalAlignment(SwingConstants.CENTER);
 		panelCurrentFile.add(labelSelectedFile);
 		
 		JPanel panelBottom = new JPanel();
 		panelBottom.setBorder(new EmptyBorder(2, 2, 2, 2));
-		panelBottom.setBackground(style.menuItemsBG());
 		panelBottom.setPreferredSize(new Dimension(10, 50));
 		contentPane.add(panelBottom, BorderLayout.SOUTH);
 		panelBottom.setLayout(new BorderLayout(0, 0));
@@ -154,6 +142,28 @@ public class WindowLauncher extends JFrame {
 		buttonConfigure.addActionListener(e -> new WindowLauncherConfigure(this));
 		buttonConfigure.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		panelBottom.add(buttonConfigure, BorderLayout.WEST);
+		
+		// Colors and stuff
+		final Color OUTER_COLOR = style.menuContentBG();
+		final Color MIDDLE_COLOR = style.menuItemsBG();
+		final Color INNER_COLOR = style.panelBG();
+		
+		contentPane.setBackground(OUTER_COLOR);
+		panel.setBackground(MIDDLE_COLOR);
+		centerPanel.setBackground(MIDDLE_COLOR);
+		panelParsedFiles.setBackground(MIDDLE_COLOR);
+		binFilesList.setBackground(INNER_COLOR);
+		scroll.setBackground(INNER_COLOR);
+		panelCurrentFile.setBackground(MIDDLE_COLOR);
+		labelSelectedFile.setBackground(INNER_COLOR);
+		panelBottom.setBackground(OUTER_COLOR);
+		
+		labelHeaderName.setForeground(Color.WHITE);
+		labelHeaderVersion.setForeground(Color.WHITE);
+		labelParsedMaps.setForeground(Color.WHITE);
+		labelSelectedFileHeader.setForeground(Color.WHITE);
+		binFilesList.setForeground(new Color(220, 220, 220));
+		labelSelectedFile.setForeground(new Color(220, 220, 220));
 		
 		setPreferredSize(new Dimension(550, 500));
 		pack();
