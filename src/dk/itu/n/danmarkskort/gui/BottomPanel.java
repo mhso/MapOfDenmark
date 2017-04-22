@@ -119,8 +119,8 @@ public class BottomPanel extends JPanel implements CanvasListener {
         rightParent.add(zoomSlider, BorderLayout.SOUTH);
         
         JButton buttonCentreView = style.centerViewButton();
+        buttonCentreView.setBorder(new EtchedBorder(EtchedBorder.RAISED, BORDER_HIGHTLIGHT, BORDER_SHADOW));
         buttonCentreView.addActionListener(e -> {
-            Point2D point = new Point2D.Double(Main.model.getMaxLon(), Main.model.getMinLat());
             Main.map.zoomToBounds();
         	Main.map.panToPosition(Main.model.getMapRegion().getMiddlePoint());
         	Main.map.repaint();
