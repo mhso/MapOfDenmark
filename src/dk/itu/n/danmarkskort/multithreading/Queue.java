@@ -1,4 +1,4 @@
-package dk.itu.n.multithreading;
+package dk.itu.n.danmarkskort.multithreading;
 import java.util.ArrayList;
 import java.util.HashMap;
 

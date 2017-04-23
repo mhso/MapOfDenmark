@@ -17,7 +17,7 @@ import dk.itu.n.danmarkskort.models.UserPreferences;
 
 public class Main {
 
-	public final static String APP_NAME = "M&F's Magic Maps";
+	public final static String APP_NAME = "CatMaps";
 	public final static String APP_VERSION = "0.6";
 	public final static boolean debug = true;
 	public final static boolean production = false;
@@ -39,6 +39,8 @@ public class Main {
 	public static UserPreferences userPreferences;
 	
 	public static void main(String[] args) {
+		System.setProperty("awt.useSystemAAFontSettings","on");
+		System.setProperty("swing.aatext", "true");
 		userPreferences = (UserPreferences)Util.readObjectFromFile(DKConstants.USERPREF_PATH);
 		if(userPreferences == null) {
 			userPreferences = new UserPreferences();
