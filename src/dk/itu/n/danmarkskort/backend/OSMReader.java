@@ -133,7 +133,6 @@ public class OSMReader {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    
                     BinaryWrapper binary = new BinaryWrapper();
                     binary.setModel(Main.model);
                     binary.setAddressHolder(Main.addressController.getAddressHolder());
