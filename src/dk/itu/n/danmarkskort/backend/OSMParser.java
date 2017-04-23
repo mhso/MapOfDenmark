@@ -61,8 +61,6 @@ public class OSMParser extends SAXAdapter implements Serializable {
     public void endDocument() throws SAXException {
         Main.log("Parsing finished.");
 
-        for(OSMParserListener listener : reader.parserListeners) listener.onParsingFinished();
-
         int numItemsSaved = 0;
         for(WayType wt : WayType.values()) numItemsSaved += enumMap.get(wt).size();
         Main.log("Ways and Relations saved: " + numItemsSaved);

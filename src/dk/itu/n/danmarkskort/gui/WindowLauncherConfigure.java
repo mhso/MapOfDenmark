@@ -1,6 +1,7 @@
 package dk.itu.n.danmarkskort.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 
 import javax.swing.JDialog;
@@ -20,6 +21,7 @@ import java.awt.Toolkit;
 import java.io.File;
 
 import javax.swing.JButton;
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import java.awt.Component;
 
@@ -27,7 +29,6 @@ public class WindowLauncherConfigure extends JDialog {
 
 	private JPanel contentPane;
 	private WindowLauncher parent;
-	private JPanel panel_1;
 
 	public WindowLauncherConfigure(WindowLauncher parent) {
 		super(parent);
@@ -38,48 +39,53 @@ public class WindowLauncherConfigure extends JDialog {
 		setIconImage(Toolkit.getDefaultToolkit().getImage("resources/icons/map-icon.png"));
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		contentPane.setLayout(new BorderLayout(0, 20));
+		contentPane.setLayout(new BorderLayout(0, 10));
 		setContentPane(contentPane);
 		
-		JLabel lblLaunchConfigurations = new JLabel("Launch Configurations");
-		lblLaunchConfigurations.setFont(new Font("Tahoma", Font.PLAIN, 25));
-		lblLaunchConfigurations.setHorizontalAlignment(SwingConstants.CENTER);
-		contentPane.add(lblLaunchConfigurations, BorderLayout.NORTH);
+		JLabel labelLaunchConfigurations = new JLabel("Launch Configurations");
+		labelLaunchConfigurations.setForeground(Color.WHITE);
+		labelLaunchConfigurations.setOpaque(true);
+		labelLaunchConfigurations.setFont(new Font("Tahoma", Font.PLAIN, 25));
+		labelLaunchConfigurations.setHorizontalAlignment(SwingConstants.CENTER);
+		contentPane.add(labelLaunchConfigurations, BorderLayout.NORTH);
 		
 		JPanel centerPanel = new JPanel();
+		centerPanel.setBackground(new Color(130, 173, 198));
 		contentPane.add(centerPanel, BorderLayout.CENTER);
 		centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
 		
-		JPanel panel = new JPanel();
-		panel.setPreferredSize(new Dimension(10, 50));
-		panel.setBackground(contentPane.getBackground());
-		panel.setBorder(new EmptyBorder(0, 0, 50, 0));
-		centerPanel.add(panel);
-		panel.setLayout(new BorderLayout(0, 0));
+		JPanel panelBinary = new JPanel();
+		panelBinary.setPreferredSize(new Dimension(10, 50));
+		panelBinary.setBackground(style.panelBG());
+		panelBinary.setBorder(new EmptyBorder(0, 5, 0, 5));
+		centerPanel.add(panelBinary);
+		panelBinary.setLayout(new BorderLayout(0, 0));
 		
 		JLabel labelBinary = new JLabel("Enable Binary Save/Load");
+		labelBinary.setForeground(new Color(200, 200, 200));
 		labelBinary.setBorder(null);
 		labelBinary.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		labelBinary.setHorizontalAlignment(SwingConstants.CENTER);
-		panel.add(labelBinary, BorderLayout.WEST);
+		panelBinary.add(labelBinary, BorderLayout.WEST);
 		
 		CustomToggleButton buttonBinary = style.toggleButton();
 		buttonBinary.addActionListener(e -> Main.binaryfile = !buttonBinary.isOn());
 		buttonBinary.setOn(Main.binaryfile);
-		panel.add(buttonBinary, BorderLayout.EAST);
+		panelBinary.add(buttonBinary, BorderLayout.EAST);
 		
-		panel_1 = new JPanel();
-		panel_1.setPreferredSize(new Dimension(10, 50));
-		panel_1.setBackground(contentPane.getBackground());
-		panel_1.setBorder(new EmptyBorder(0, 0, 50, 0));
-		centerPanel.add(panel_1);
-		panel_1.setLayout(new BorderLayout(0, 0));
+		JPanel panelReparse = new JPanel();
+		panelReparse.setPreferredSize(new Dimension(10, 50));
+		panelReparse.setBackground(style.panelBG());
+		panelReparse.setBorder(new EmptyBorder(0, 5, 0, 5));
+		centerPanel.add(panelReparse);
+		panelReparse.setLayout(new BorderLayout(0, 0));
 		
 		JLabel labelReparse = new JLabel("Force Reparsing");
+		labelReparse.setForeground(new Color(200, 200, 200));
 		labelReparse.setBorder(null);
 		labelReparse.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		labelReparse.setHorizontalAlignment(SwingConstants.CENTER);
-		panel_1.add(labelReparse, BorderLayout.WEST);
+		panelReparse.add(labelReparse, BorderLayout.WEST);
 		
 		CustomToggleButton buttonReparse = style.toggleButton();
 		buttonReparse.addActionListener(e -> {
@@ -88,17 +94,23 @@ public class WindowLauncherConfigure extends JDialog {
 			Util.writeObjectToFile(Main.userPreferences, DKConstants.USERPREF_PATH);
 		});
 		buttonReparse.setOn(Main.userPreferences.isForcingParsing());
-		panel_1.add(buttonReparse, BorderLayout.EAST);
+		panelReparse.add(buttonReparse, BorderLayout.EAST);
 		
-		JPanel panel_2 = new JPanel();
-		panel_2.setPreferredSize(new Dimension(10, 50));
-		centerPanel.add(panel_2);
+		centerPanel.add(Box.createRigidArea(new Dimension(centerPanel.getWidth(), 10)));
+		
+		JPanel panelBottom = new JPanel();
+		panelBottom.setBackground(style.menuItemsBG());
+		panelBottom.setPreferredSize(new Dimension(10, 55));
+		centerPanel.add(panelBottom);
 		
 		JButton buttonLoadFile = new JButton("Load New File");
-		panel_2.add(buttonLoadFile);
+		panelBottom.add(buttonLoadFile);
 		buttonLoadFile.addActionListener(e -> loadFile());
 		buttonLoadFile.setAlignmentX(Component.CENTER_ALIGNMENT);
 		buttonLoadFile.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		
+		contentPane.setBackground(new Color(130, 173, 198));
+		labelLaunchConfigurations.setBackground(style.menuItemsBG());
 		
 		setPreferredSize(new Dimension(400, 320));
 		setLocationRelativeTo(null);

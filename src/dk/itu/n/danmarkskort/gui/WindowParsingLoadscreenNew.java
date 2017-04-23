@@ -9,6 +9,7 @@ import javax.swing.JLabel;
 
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -46,6 +47,7 @@ public class WindowParsingLoadscreenNew extends JFrame implements OSMParserListe
 	
 	public void initialize() {
 		setTitle("Parsing Data");
+		setIconImage(Toolkit.getDefaultToolkit().getImage("resources/icons/map-icon.png"));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new BGImage();
@@ -137,7 +139,7 @@ public class WindowParsingLoadscreenNew extends JFrame implements OSMParserListe
 	
 	@Override
 	public void onStreamEnded() {
-		labelStatus.setText("Saving Data To Binary Format...");
+		labelStatus.setText("Converting Data To KD-Trees...");
 	}
 	
 	@Override
@@ -147,7 +149,7 @@ public class WindowParsingLoadscreenNew extends JFrame implements OSMParserListe
 
 	@Override
 	public void onParsingFinished() {
-		labelStatus.setText("Converting Data To KD-Trees...");
+		labelStatus.setText("Saving Data To Binary Format...");
 	}
 	
 	private class BGImage extends JPanel {

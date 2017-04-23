@@ -70,7 +70,7 @@ public class LoadPage extends JPanel  {
         gbc_lblCurrentMap.gridy = 1;
         panelCenter.add(lblCurrentMap, gbc_lblCurrentMap);
 
-        lblCurrentmapfilename = new JLabel(Main.osmReader.getFileName());
+        lblCurrentmapfilename = new JLabel(new File(Main.osmReader.getFileName()).getName());
         GridBagConstraints gbc_lblCurrentmapfilename = new GridBagConstraints();
         gbc_lblCurrentmapfilename.anchor = GridBagConstraints.WEST;
         gbc_lblCurrentmapfilename.insets = new Insets(0, 0, 5, 0);

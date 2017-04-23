@@ -13,6 +13,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 
 public class SettingsPage extends JPanel {
 	private static final long serialVersionUID = 4642167284178775315L;
@@ -50,7 +51,7 @@ public class SettingsPage extends JPanel {
         panelPage.add(panelEast, BorderLayout.EAST);
         
         panelCenter = new JPanel();
-        panelCenter.setBorder(new EmptyBorder(5, 5, 5, 5));
+        panelCenter.setBorder(new EmptyBorder(15, 15, 15, 15));
         panelCenter.setBackground(style.menuContentBG());
         panelPage.add(panelCenter, BorderLayout.CENTER);
         initContentPanel(panelCenter);
@@ -62,14 +63,20 @@ public class SettingsPage extends JPanel {
         panelCenter.add(defaultCenterPanel, "name_default");
         
         JButton buttonChangeMapTheme = new JButton("Change Map Theme");
+        buttonChangeMapTheme.setBackground(new Color(224, 255, 255));
+        buttonChangeMapTheme.setBorder(new LineBorder(new Color(0, 153, 204), 2, true));
         buttonChangeMapTheme.addActionListener(e -> showMapThemePanel());
         defaultCenterPanel.add(buttonChangeMapTheme);
         
         JButton buttonChangeInterfaceTheme = new JButton("Change Interface Theme");
+        buttonChangeInterfaceTheme.setBackground(new Color(224, 255, 255));
+        buttonChangeInterfaceTheme.setBorder(new LineBorder(new Color(0, 153, 204), 2, true));
         buttonChangeInterfaceTheme.addActionListener(e -> showInterfaceThemePanel());
         defaultCenterPanel.add(buttonChangeInterfaceTheme);
         
         JButton buttonChangePreferences = new JButton("Change Preferences");
+        buttonChangePreferences.setBackground(new Color(224, 255, 255));
+        buttonChangePreferences.setBorder(new LineBorder(new Color(0, 153, 204), 2, true));
         buttonChangePreferences.addActionListener(e -> showPreferencesPanel());
         defaultCenterPanel.add(buttonChangePreferences);
         
@@ -210,19 +217,47 @@ public class SettingsPage extends JPanel {
         centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
         panelDefaultValues.add(centerPanel, BorderLayout.CENTER);
         
+        JPanel defaultMapFilePanel = new JPanel();
+        defaultMapFilePanel.setOpaque(false);
+        defaultMapFilePanel.setLayout(new BorderLayout());
+        centerPanel.add(defaultMapFilePanel);
+        
+        JLabel defaultMapFileLabel = new JLabel("Default Map File:");
+        defaultMapFilePanel.add(defaultMapFileLabel, BorderLayout.WEST);
+        
+        JButton defaultMapFileButton = new JButton();
+        defaultMapFilePanel.add(defaultMapFileButton, BorderLayout.EAST);
+        
+        centerPanel.add(Box.createRigidArea(new Dimension(20, 20)));
+        
         JPanel defaultMapThemePanel = new JPanel();
         defaultMapThemePanel.setOpaque(false);
         defaultMapThemePanel.setLayout(new BorderLayout());
         centerPanel.add(defaultMapThemePanel);
         
-        JLabel defaultMapThemeLabel = new JLabel("Default Map Theme: ");
+        JLabel defaultMapThemeLabel = new JLabel("Default Map Theme:");
+        defaultMapThemePanel.add(defaultMapThemeLabel, BorderLayout.WEST);
         
+        JComboBox<String> defaultMapThemeBox = new JComboBox<>(new String[]{"Basic", "Colorblind"});
+        defaultMapThemeBox.setSelectedItem(Main.userPreferences.getDefaultTheme());
+        defaultMapThemePanel.add(defaultMapThemeBox);
         
         centerPanel.add(Box.createRigidArea(new Dimension(20, 20)));
         
-        JPanel defaultGUIThemePanel = new JPanel();
-        
         JPanel maximizeOnStartupPanel = new JPanel();
+        maximizeOnStartupPanel.setOpaque(false);
+        maximizeOnStartupPanel.setLayout(new BorderLayout());
+        centerPanel.add(maximizeOnStartupPanel);
+        
+        JLabel maximizeLabel = new JLabel("Maximize On Startup: ");
+        maximizeOnStartupPanel.add(maximizeLabel, BorderLayout.WEST);
+        
+        JRadioButton maximizeButton = new JRadioButton();
+        maximizeButton.setBackground(panelCenter.getBackground());
+        maximizeButton.setSelected(Main.userPreferences.isMaximizeOnStartup());
+        maximizeOnStartupPanel.add(maximizeButton, BorderLayout.EAST);
+        
+        centerPanel.add(Box.createRigidArea(new Dimension(20, 20)));
         
         JPanel panelSouth = new JPanel();
         panelSouth.setOpaque(false);
