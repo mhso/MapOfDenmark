@@ -163,7 +163,7 @@ public class WindowParsingLoadscreenNew extends JFrame implements OSMParserListe
 		private void createSubImages() {
 			BufferedImage copyImage = null;
 			try {
-				if(Main.production) mainImage = ImageIO.read(getClass().getResourceAsStream("/resources/parsingBG.png"));
+				if(Main.production) mainImage = ImageIO.read(getClass().getResourceAsStream("/parsingBG.png"));
 				else mainImage = ImageIO.read(new File("resources/parsingBG.png"));
 			} 
 			catch (IOException e) {
