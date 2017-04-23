@@ -17,10 +17,10 @@ import dk.itu.n.danmarkskort.models.UserPreferences;
 
 public class Main {
 
-	public final static String APP_NAME = "CatMap";
+	public final static String APP_NAME = "CatMaps";
 	public final static String APP_VERSION = "0.6";
 	public final static boolean debug = true;
-	public final static boolean production = true;
+	public final static boolean production = false;
 	public final static boolean buffered = true;
 	public final static boolean saveParsedAddresses = true;
 	public final static boolean useLauncher = true;
