@@ -7,7 +7,6 @@ import java.awt.Graphics2D;
 import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.RenderingHints;
-import java.awt.Shape;
 import java.awt.geom.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -32,7 +31,6 @@ import dk.itu.n.danmarkskort.mapgfx.GraphicSpecArea;
 import dk.itu.n.danmarkskort.mapgfx.GraphicSpecLine;
 import dk.itu.n.danmarkskort.mapgfx.WaytypeGraphicSpec;
 import dk.itu.n.danmarkskort.models.ParsedItem;
-import dk.itu.n.danmarkskort.models.ParsedWay;
 import dk.itu.n.danmarkskort.models.Region;
 import dk.itu.n.danmarkskort.models.WayType;
 
@@ -80,6 +78,7 @@ public class MapCanvas extends JPanel implements ActionListener {
 	
 	public void forceRepaint() {
 		zoomChanged = true;
+		imageManager.forceFullRepaint();
 		repaint();
 	}
 
@@ -123,7 +122,7 @@ public class MapCanvas extends JPanel implements ActionListener {
         // drawing all the outlines, if the current WayTypeGraphicSpec has one
         for (WaytypeGraphicSpec wayTypeGraphic : wayTypesVisible) {
             currentWTGSpec = wayTypeGraphic;
-            KDTree kdTree = Main.model.enumMapKD.get(wayTypeGraphic.getWayType());
+            KDTree<ParsedItem> kdTree = Main.model.enumMapKD.get(wayTypeGraphic.getWayType());
             if (kdTree == null) continue;
             //if (currentWTGSpec.getOuterColor() != null) {
             if (currentWTGSpec instanceof GraphicSpecLine) {
@@ -148,7 +147,7 @@ public class MapCanvas extends JPanel implements ActionListener {
             currentWTGSpec = wayTypeGraphic;
             if (currentWTGSpec instanceof GraphicSpecLine) {
                 currentWTGSpec.transformPrimary(g2d);
-                KDTree kdTree = Main.model.enumMapKD.get(wayTypeGraphic.getWayType());
+                KDTree<ParsedItem> kdTree = Main.model.enumMapKD.get(wayTypeGraphic.getWayType());
                 if (kdTree == null) continue;
                 for (Iterator<ParsedItem> i = kdTree.iterator(currentRegion); i.hasNext(); ) {
                     ParsedItem item = i.next();

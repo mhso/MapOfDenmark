@@ -119,7 +119,7 @@ public class WindowParsingLoadscreenNew extends JFrame implements OSMParserListe
 	
 	@Override
 	public void onStreamStarted() {
-		labelStatus.setText("Parsing File...");
+		labelStatus.setText("Loading File...");
 	}
 
 	@Override
