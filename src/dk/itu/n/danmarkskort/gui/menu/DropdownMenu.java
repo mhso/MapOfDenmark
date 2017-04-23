@@ -25,7 +25,7 @@ public class DropdownMenu extends CustomDropdown {
 
         loadPage = new LoadPage();
         savePage = new SavePage();
-        settingsPage = new SettingsPage();
+        settingsPage = new SettingsPage(this);
         mapLayersPage = new MapLayersPage(this);
         aboutUsPage = new AboutUsPage();
         pinPointPage = new PinPointPage();
@@ -121,6 +121,10 @@ public class DropdownMenu extends CustomDropdown {
 		if(popUpBlocked) return;
 		else super.setVisible(visible);
 	}
+    
+    public void showDropdown() {
+    	showDropdown(topPanel.getMenuButton());
+    }
 
     /**
      * Show the Dropdown-Menu at the specified Component.

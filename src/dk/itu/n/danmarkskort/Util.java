@@ -8,6 +8,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.LineNumberReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -45,17 +46,17 @@ public class Util {
 		return Util.getCurrentDirectoryPath() + "/parsedOSMFiles/" + Main.osmReader.getChecksum();
 	}
 	
-	public static String getFileChecksum(MessageDigest digest, File file) throws IOException {
-		BufferedInputStream fis = new BufferedInputStream(new FileInputStream(file));
+	public static String getFileChecksum(MessageDigest digest, String filename) throws IOException {
+		BufferedInputStream buff = new BufferedInputStream(new FileInputStream(filename));
 
 		byte[] byteArray = new byte[1024];
 		int bytesCount = 0;
 
-		while ((bytesCount = fis.read(byteArray)) != -1) {
+		while ((bytesCount = buff.read(byteArray)) != -1) {
 			digest.update(byteArray, 0, bytesCount);
 		}
 		
-		fis.close();
+		buff.close();
 		byte[] bytes = digest.digest();
 
 		StringBuilder sb = new StringBuilder();
@@ -66,8 +67,8 @@ public class Util {
 		return sb.toString();
 	}
 	
-	public static String getFileChecksumMD5(File file) throws NoSuchAlgorithmException, IOException {
-		return getFileChecksum(MessageDigest.getInstance("MD5"), file);
+	public static String getFileChecksumMD5(String filename) throws NoSuchAlgorithmException, IOException {
+		return getFileChecksum(MessageDigest.getInstance("MD5"), filename);
 	}
 
 	public static void printMap(Map<?,?> map) {
@@ -158,7 +159,8 @@ public class Util {
 			Object object = oos.readObject();
 			oos.close();
 			return object;
-		} catch(Exception e) {
+		} catch(IOException | ClassNotFoundException e) {
+			e.printStackTrace();
 			Main.log("Could not find file: " + fileName);
 			return null;
 		}

@@ -1,13 +1,14 @@
 package dk.itu.n.danmarkskort;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Toolkit;
-
 import javax.swing.*;
 
 import dk.itu.n.danmarkskort.address.AddressController;
 import dk.itu.n.danmarkskort.backend.OSMParser;
 import dk.itu.n.danmarkskort.backend.OSMReader;
+import dk.itu.n.danmarkskort.gui.WindowLauncher;
 import dk.itu.n.danmarkskort.gui.WindowParsingLoadscreenNew;
 import dk.itu.n.danmarkskort.gui.map.MapCanvas;
 import dk.itu.n.danmarkskort.gui.map.PinPointManager;
@@ -16,13 +17,17 @@ import dk.itu.n.danmarkskort.models.UserPreferences;
 
 public class Main {
 
-	public final static String APP_NAME = "Map";
-	public final static String APP_VERSION = "0.5";
+	public final static String APP_NAME = "CatMaps";
+	public final static String APP_VERSION = "0.6";
 	public final static boolean debug = true;
 	public final static boolean production = false;
 	public final static boolean buffered = true;
-	public final static boolean binaryfile = false;
 	public final static boolean saveParsedAddresses = true;
+	public final static boolean useLauncher = true;
+	
+	public static boolean binaryfile = true;
+	
+	public static boolean forceParsing;
 
 	public static OSMReader osmReader;
 	public static JFrame window;
@@ -34,33 +39,54 @@ public class Main {
 	public static UserPreferences userPreferences;
 	
 	public static void main(String[] args) {
-        startup(args);
-        main();
-        shutdown();
+		System.setProperty("awt.useSystemAAFontSettings","on");
+		System.setProperty("swing.aatext", "true");
+		userPreferences = (UserPreferences)Util.readObjectFromFile(DKConstants.USERPREF_PATH);
+		if(userPreferences == null) {
+			userPreferences = new UserPreferences();
+			Util.writeObjectToFile(Main.userPreferences, DKConstants.USERPREF_PATH);
+		}
+		forceParsing = userPreferences.isForcingParsing();
+        if(useLauncher || args.length < 1) new WindowLauncher();
+        else launch(args);
+	}
+	
+	public static void launch(String[] args) {
+		startup(args);
+		
 	}
 
 	public static void startup(String[] args) {
 		if(window != null) window.getContentPane().removeAll();
+		addressController  =  new AddressController();
 		osmReader = new OSMReader();
 		model = new OSMParser(osmReader);
-		addressController  =  new AddressController();
-		prepareParser(args);
+		if(args.length > 0) prepareParser(args);
+		else prepareParser(new String[]{userPreferences.getDefaultMapFile()});
 		if(userPreferences.getCurrentMapTheme() != null) {
 			GraphicRepresentation.parseData("resources/Theme" + userPreferences.getCurrentMapTheme() + ".XML");
 		}
 		else {
 			GraphicRepresentation.parseData("resources/Theme" + userPreferences.getDefaultTheme() + ".XML");
 			userPreferences.setCurrentMapTheme(userPreferences.getDefaultTheme());
-		}	
+		}
 	}
 
 	public static void prepareParser(String[] args) {
 		WindowParsingLoadscreenNew loadScreen = new WindowParsingLoadscreenNew(args[0]);
 		osmReader.addOSMListener(loadScreen);
 		osmReader.addInputListener(loadScreen);
-		System.out.println(loadScreen.hashCode());
 		loadScreen.run();
-		osmReader.parseFile(args[0]);
+		
+		Runnable r = new Runnable() {
+			@Override
+			public void run() {
+				osmReader.parseFile(args[0]);
+				main();
+		        shutdown();
+			}
+		};
+		new Thread(r, "ParseThread").start();
 	}
 	
 	public static void main() {
@@ -83,7 +109,7 @@ public class Main {
     public static void makeFrame() {
         window = new JFrame(APP_NAME);
         window.setIconImage(Toolkit.getDefaultToolkit().getImage("resources/icons/map-icon.png"));
-        
+        window.setBackground(new Color(110, 192, 255));
         window.add(createFrameComponents());
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         

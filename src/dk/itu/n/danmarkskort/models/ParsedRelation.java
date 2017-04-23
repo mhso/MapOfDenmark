@@ -8,6 +8,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 
 public class ParsedRelation extends ParsedWay {
 
@@ -29,18 +30,12 @@ public class ParsedRelation extends ParsedWay {
 
     @Override
     public void deleteOldRefs() {
-        nodes = null;
-        inners = null;
-        outers = null;
+        super.deleteOldRefs();
+        for(ParsedItem inner: inners) inner.deleteOldRefs();
+        for(ParsedItem outer: outers) outer.deleteOldRefs();
     }
 
-    public void makeShape() {
-        shape = getPath();
-    }
-
-    public ArrayList<ParsedWay> getInners() { return inners; }
-    public ArrayList<ParsedWay> getOuters() { return outers; }
-
+    @Override
     public ParsedNode[] getNodes() {
         ArrayList<ParsedNode> arrList = new ArrayList<>();
         if(inners.size() > 0 && outers.size() > 0) {
@@ -50,46 +45,71 @@ public class ParsedRelation extends ParsedWay {
         return arrList.toArray(new ParsedNode[arrList.size()]);
     }
 
-    public Path2D getPath() {
+    @Override
+    public Shape getShape() {
         Path2D path = new Path2D.Float(Path2D.WIND_EVEN_ODD);
-        if(inners.size() > 0) {
-            for(ParsedWay item : inners) path.append(item.getPath(), false);
-        }
-        if(outers.size() > 0) path.append(connectItems(outers), false);
+        if(inners.size() > 0) for(ParsedWay inner: inners) path.append(inner.getShape(), false);
+        if(outers.size() > 0) for(ParsedWay outer: outers) path.append(outer.getShape(), false);
         return path;
     }
 
     /*
-    * Connects outer ways into a coherent polygon
-    * Some ways has to have their nodelist reversed
+    * Connects outer ways into a coherent polygon.
+    * Some ways has to have their coords reversed.
+    * These reversed paths have to be created as a new instance of
+    * way, as they would otherwise mess with themselves or other
+    * relations, where they don't have to be reversed.
      */
-    private Path2D connectItems(ArrayList<ParsedWay> list) {
-        Path2D path = new Path2D.Float();
-        path.append(list.get(0).getPath(), false);
-        ParsedNode lastNode = list.get(0).getLastNode();
-        if(list.size() > 1) {
-            for(int i = 1; i < list.size(); i++) {
-                for(int j = i; j < list.size(); j++ ) {
-                    if(lastNode == list.get(j).getFirstNode()) {
-                        path.append(list.get(j).getPath(), true);
-                        lastNode = list.get(j).getLastNode();
-                        Collections.swap(list, i, j);
-                        break;
-                    }
-                    else if(lastNode == list.get(j).getLastNode()) {
-                        path.append(list.get(j).getReversedPath(), true);
-                        lastNode = list.get(j).getFirstNode();
-                        Collections.swap(list, i, j);
-                        break;
-                    }
-                    else if(j == list.size() - 1) {
-                        path.append(list.get(i).getPath(), false);
-                        lastNode = list.get(i).getLastNode();
+
+    // FIXME: check if there should both be a lastNode and firstNode to check on (ie. 5 ifs in the double for loop)
+    // FIXME: also, not sure if inners and nothingerners should also be connected like this?
+    public void correctOuters() {
+        if(outers.size() == 0) return;
+        HashMap<ParsedNode, ParsedWay> tempWayMap = new HashMap<>();
+        ArrayList<ParsedWay> corrected = new ArrayList<>();
+        for(ParsedWay outer: outers) {
+            ParsedWay candidateBefore = tempWayMap.remove(outer.getFirstNode());
+            ParsedWay candidateAfter = tempWayMap.remove(outer.getLastNode());
+            if(candidateBefore != null || candidateAfter != null) {
+                ParsedWay tempWay = new ParsedWay();
+                if(candidateBefore != null) {
+                    if (outer.getFirstNode() == candidateBefore.getLastNode()) { // direction is correct
+                        tempWayMap.remove(candidateBefore.getFirstNode());
+                        tempWay.addNodes(candidateBefore.getNodes());
+                    } else {    // direction is incorrect
+                        tempWayMap.remove(candidateBefore.getLastNode());
+                        tempWay.addNodes(candidateBefore.getReversedNodes());
                     }
                 }
+                tempWay.addNodes(outer.getNodes());
+                if(candidateAfter != null && candidateAfter != candidateBefore) {
+                    if (outer.getLastNode() == candidateAfter.getFirstNode()) { // direction is correct
+                        tempWayMap.remove(candidateAfter.getLastNode());
+                        tempWay.addNodes(candidateAfter.getNodes());
+                    } else {    // direction is incorrect
+                        tempWayMap.remove(candidateAfter.getFirstNode());
+                        tempWay.addNodes(candidateAfter.getReversedNodes());
+                    }
+                }
+                tempWayMap.put(tempWay.getFirstNode(), tempWay);
+                tempWayMap.put(tempWay.getLastNode(), tempWay);
+            }
+            else {
+                tempWayMap.put(outer.getFirstNode(), outer);
+                tempWayMap.put(outer.getLastNode(), outer);
             }
         }
-        return path;
+        tempWayMap.forEach((key, current) -> {
+            if(key == current.getFirstNode()) corrected.add(current);
+        });
+        outers = corrected;
+    }
+
+    @Override
+    public void nodesToCoords() {
+        if(nodes != null) super.nodesToCoords();
+        for(ParsedItem inner: inners) inner.nodesToCoords();
+        for(ParsedItem outer: outers) outer.nodesToCoords();
     }
 
     @Override
@@ -99,14 +119,15 @@ public class ParsedRelation extends ParsedWay {
         else if(inners.size() > 0) return inners.get(0).getFirstNode();
         return null;
     }
-    
+
+    @Override
     public String toString() {
     	int nodeAmount = 0;
     	if(nodes != null && nodes.length > 0) nodeAmount = nodes.length;
 
     	return "ParsedRelation [" + "id=" + getID()
-                //+ ", firstLon=" + getFirstNode().getLon()
-                //+ ", firstLat=" + getFirstNode().getLat()
+                + ", firstLon=" + getFirstNode().getLon()
+                + ", firstLat=" + getFirstNode().getLat()
                 + ", nodeAmount=" + nodeAmount
                 + ", itemAmount=" + (inners.size() + outers.size()) + "]";
     }

@@ -5,17 +5,12 @@ import dk.itu.n.danmarkskort.TimerUtil;
 import dk.itu.n.danmarkskort.models.ParsedAddress;
 import dk.itu.n.danmarkskort.models.RegionFloat;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.stream.Collectors;
 
-public class AddressController  implements Serializable {
-	private static final long serialVersionUID = -8850830543220358398L;
+public class AddressController {
+	private AddressHolder addressHolder = new AddressHolder();
 	private int addressesNotAcceptedCount;
 	private TimerUtil timerUtilA = new TimerUtil();
 	private TimerUtil timerUtilB = new TimerUtil();
@@ -30,24 +25,32 @@ public class AddressController  implements Serializable {
 		addressRegionSearch = new AddressRegionSearch();
 	}
 	
+	public AddressHolder getAddressHolder() {
+		return addressHolder;
+	}
+	
+	public void setAddressHolder(AddressHolder holder) {
+		addressHolder = holder;
+	}
+	
 	public List<String> getSearchSuggestions(String find, long limitAmountOfResults){ return addressSuggestion.searchSuggestions(find, limitAmountOfResults); }
 	
 	public Address getSearchResult(String find){
 		
 		Address addrBuild = AddressParser.parse(find, false);
 		Map<String, Postcode> list;
-		list = AddressHolder.search(addrBuild,
+		list = addressHolder.search(addrBuild,
 				SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.EQUALS);
-		if(list.size() < 1) { list = AddressHolder.search(addrBuild,
+		if(list.size() < 1) { list = addressHolder.search(addrBuild,
 				SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.ANY);
 		}
-		if(list.size() < 1) { list = AddressHolder.search(addrBuild,
+		if(list.size() < 1) { list = addressHolder.search(addrBuild,
 				SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.ANY, SearchEnum.EQUALS);
 		}
-		if(list.size() < 1) { list = AddressHolder.search(addrBuild,
+		if(list.size() < 1) { list = addressHolder.search(addrBuild,
 				SearchEnum.LEVENSHTEIN, SearchEnum.EQUALS, SearchEnum.ANY, SearchEnum.EQUALS);
 		}
-		if(list.size() < 1) { list = AddressHolder.search(addrBuild,
+		if(list.size() < 1) { list = addressHolder.search(addrBuild,
 				SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.ANY, SearchEnum.LEVENSHTEIN);
 		}
 		
@@ -78,14 +81,14 @@ public class AddressController  implements Serializable {
 	}
 	
 	public void addAddress(float[] lonLat, String street, String housenumber, String postcode, String city){
-		Postcode pc = AddressHolder.postcodes.get(postcode);
+		Postcode pc = addressHolder.postcodes.get(postcode);
 		if(pc == null) pc = new Postcode(postcode, city);
 		pc.addAddress(street, housenumber, lonLat);
-		AddressHolder.postcodes.put(postcode, pc);
+		addressHolder.postcodes.put(postcode, pc);
 		postcodeCityBestMatch.add(postcode,  city);
 	}
 	
-	private int acceptLvl1 = 0, acceptLvl2 = 0, acceptLvl3 = 0, acceptNot = 0;
+	private int acceptLvl1 = 0, acceptLvl2 = 0, acceptNot = 0;
 	public void addressParsed(ParsedAddress addr) {
 		timerUtilA.on();
         if(addr != null) {
@@ -123,7 +126,7 @@ public class AddressController  implements Serializable {
 		if(debug) System.out.print("acceptLvl1: " + acceptLvl1 + ", acceptLvl2: " + acceptLvl2 + ", acceptNot: " + acceptNot);
 		Main.log("Addresses parse first to last time: " + timerUtilA.toString());
 		timerUtilB.on();
-		for(Entry<String, Postcode> entry : AddressHolder.postcodes.entrySet()){
+		for(Entry<String, Postcode> entry : addressHolder.postcodes.entrySet()){
 			entry.getValue().setCity(postcodeCityBestMatch.getMatch(entry.getKey()));
 		}
 		postcodeCityBestMatch.cleanup();
@@ -134,6 +137,6 @@ public class AddressController  implements Serializable {
 	}
 	
 	public int getAddressSize() {
-		return AddressHolder.count();
+		return addressHolder.count();
 	}
 }

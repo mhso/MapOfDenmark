@@ -9,11 +9,13 @@ import javax.swing.JLabel;
 
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
 import javax.swing.SwingConstants;
+
 import java.awt.Color;
 import java.awt.Dimension;
 
@@ -24,7 +26,7 @@ import dk.itu.n.danmarkskort.backend.OSMParserListener;
 
 import javax.imageio.ImageIO;
 
-public class WindowParsingLoadscreenNew extends JFrame implements OSMParserListener, InputStreamListener, Runnable {
+public class WindowParsingLoadscreenNew extends JFrame implements OSMParserListener, InputStreamListener {
 	private static final long serialVersionUID = 4049548769311961507L;
 	private static final Color BAR_STATIC_COLOR = Color.LIGHT_GRAY;
 	private static final Color BAR_LOADING_COLOR = new Color(0, 153, 0);
@@ -45,6 +47,7 @@ public class WindowParsingLoadscreenNew extends JFrame implements OSMParserListe
 	
 	public void initialize() {
 		setTitle("Parsing Data");
+		setIconImage(Toolkit.getDefaultToolkit().getImage("resources/icons/map-icon.png"));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new BGImage();
@@ -116,7 +119,7 @@ public class WindowParsingLoadscreenNew extends JFrame implements OSMParserListe
 	
 	@Override
 	public void onStreamStarted() {
-		labelStatus.setText("Parsing File...");
+		labelStatus.setText("Loading File...");
 	}
 
 	@Override
@@ -136,7 +139,7 @@ public class WindowParsingLoadscreenNew extends JFrame implements OSMParserListe
 	
 	@Override
 	public void onStreamEnded() {
-		labelStatus.setText("Saving Data To Binary Format...");
+		labelStatus.setText("Converting Data To KD-Trees...");
 	}
 	
 	@Override
@@ -146,7 +149,7 @@ public class WindowParsingLoadscreenNew extends JFrame implements OSMParserListe
 
 	@Override
 	public void onParsingFinished() {
-		labelStatus.setText("Converting Data To KD-Trees...");
+		labelStatus.setText("Saving Data To Binary Format...");
 	}
 	
 	private class BGImage extends JPanel {
@@ -160,13 +163,14 @@ public class WindowParsingLoadscreenNew extends JFrame implements OSMParserListe
 		private void createSubImages() {
 			BufferedImage copyImage = null;
 			try {
-				mainImage = ImageIO.read(new File("resources/parsingBG.png"));
-				copyImage = new BufferedImage(mainImage.getColorModel(), mainImage.copyData(null), 
-						mainImage.isAlphaPremultiplied(), null);
+				if(Main.production) mainImage = ImageIO.read(getClass().getResourceAsStream("/resources/parsingBG.png"));
+				else mainImage = ImageIO.read(new File("resources/parsingBG.png"));
 			} 
 			catch (IOException e) {
 				e.printStackTrace();
 			}
+			copyImage = new BufferedImage(mainImage.getColorModel(), mainImage.copyData(null), 
+					mainImage.isAlphaPremultiplied(), null);
 			subImages[0] = mainImage.getSubimage(0, 0, 
 					mainImage.getWidth(), 3);
 			int y = mainImage.getHeight()-4;

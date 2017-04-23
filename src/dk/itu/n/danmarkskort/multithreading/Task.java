@@ -1,4 +1,4 @@
-package dk.itu.n.multithreading;
+package dk.itu.n.danmarkskort.multithreading;
 
 public abstract class Task implements Runnable{
 	

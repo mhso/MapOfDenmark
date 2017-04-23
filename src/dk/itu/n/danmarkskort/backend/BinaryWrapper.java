@@ -2,19 +2,13 @@ package dk.itu.n.danmarkskort.backend;
 
 import java.io.Serializable;
 
-import dk.itu.n.danmarkskort.address.AddressController;
-import dk.itu.n.danmarkskort.models.UserPreferences;
+import dk.itu.n.danmarkskort.address.AddressHolder;
 
 public class BinaryWrapper implements Serializable {
 	private static final long serialVersionUID = -7588730983362489371L;
 	
-	private UserPreferences userPreferences;
 	private OSMParser model;
-	private AddressController addressController;
-	
-	public void setUserPreferences(UserPreferences userPreferences) {
-		this.userPreferences = userPreferences;
-	}
+	private AddressHolder addressHolder;
 	
 	public void setModel(OSMParser model) {
 		this.model = model;
@@ -24,15 +18,11 @@ public class BinaryWrapper implements Serializable {
 		return model;
 	}
 	
-	public void setAddressController(AddressController addressController){
-		this.addressController = addressController;
+	public void setAddressHolder(AddressHolder addressHolder){
+		this.addressHolder = addressHolder;
 	}
 	
-	public AddressController getAddressController(){
-		return addressController;
-	}
-	
-	public UserPreferences getUserPreferences() {
-		return userPreferences;
+	public AddressHolder getAddressHolder(){
+		return addressHolder;
 	}
 }

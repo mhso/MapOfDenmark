@@ -1,18 +1,28 @@
 package dk.itu.n.danmarkskort.gui;
 
+
 import javax.swing.*;
 import java.awt.*;
+import java.awt.font.TextAttribute;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Style {
 
     private int margin, smallMargin, topPanelBorderWidth, menuItemInsets;
     private float alphaFloat, alphaHover, menuAlpha, menuAlphaHover;
     private Color panelBG, inputFieldBG, panelTextColor, zoomButtonBG, menuContentBG, menuItemsBG, scrollBarThumb, scrollBarThumbActive,
-                dropdownItemBG, dropdownItemBGActive, dropdowItemTextColor, dropdownItemTextColorActive;
+                dropdownItemBG, dropdownItemBGActive, dropdowItemTextColor, dropdownItemTextColorActive, launcherVersionText, launcherSelectionBG;
     private CustomButton searchButton, menuButton, routeButton, centerViewButton, zoomInButton, zoomOutButton,
             menuLayerButton, menuSaveButton, menuOpenButton, menuSettingsButton, menuRouteButton, menuInfoButton, 
             menuPinPointButton;
-    private ImageIcon scaleIndicator, arrowUpDownButton, basicThemePreview;
+    private ImageIcon scaleIndicator, arrowUpDownButton, basicThemePreview, logo, launcherOptionsIcon, launcherLoadIcon;
+    private Image frameIcon;
+    private Font normalText, smallHeadline, mediumHeadline, largeHeadline, largeHeadlineSpacing;
+
     
     public Style() {
         // top panel
@@ -38,6 +48,10 @@ public class Style {
         dropdowItemTextColor = new Color(0,0,0);
         dropdownItemTextColorActive = new Color(255, 255, 255);
 
+
+        launcherVersionText = new Color(160, 160, 160);
+        launcherSelectionBG = new Color(130, 170, 200);
+
         searchButton = new CustomButton("resources/icons/search.png", alphaFloat, alphaHover);
         menuButton = new CustomButton("resources/icons/menu.png", alphaFloat, alphaHover);
         routeButton = new CustomButton("resources/icons/route.png", alphaFloat, alphaHover);
@@ -59,7 +73,29 @@ public class Style {
         scaleIndicator = new ImageIcon("resources/scale.png");
         
         arrowUpDownButton = new ImageIcon("resources/icons/arrowupdown.png");
+        
+        frameIcon = Toolkit.getDefaultToolkit().getImage("resources/icons/map-icon.png");
 
+        logo = new ImageIcon("resources/icons/logo.png");
+        logo = new ImageIcon(logo.getImage().getScaledInstance(40, 40, BufferedImage.SCALE_SMOOTH));
+        launcherOptionsIcon = new ImageIcon("resources/icons/settings.png");
+        launcherLoadIcon = new ImageIcon("resources/icons/open.png");
+
+
+        try {
+            normalText= Font.createFont(Font.TRUETYPE_FONT, new File("resources/fonts/Roboto-Regular.ttf")).deriveFont(16f);
+            smallHeadline = Font.createFont(Font.TRUETYPE_FONT, new File("resources/fonts/Roboto-Medium.ttf")).deriveFont(18f);
+            mediumHeadline = Font.createFont(Font.TRUETYPE_FONT, new File("resources/fonts/Roboto-Light.ttf")).deriveFont(20f);
+            largeHeadline = Font.createFont(Font.TRUETYPE_FONT, new File("resources/fonts/Roboto-Light.ttf")).deriveFont(42f);
+        } catch (FontFormatException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        Map<TextAttribute, Object> attributes = new HashMap<>();
+        attributes.put(TextAttribute.TRACKING, 0.1);
+        largeHeadlineSpacing = largeHeadline.deriveFont(attributes);
     }
 
     // Getters
@@ -101,4 +137,18 @@ public class Style {
     public ImageIcon basicThemePreview() { return basicThemePreview; }
     public ImageIcon scaleIndicator() { return scaleIndicator; }
     public ImageIcon arrowUpDownButton() { return arrowUpDownButton; }
+    
+    public Image frameIcon() { return frameIcon; }
+
+    public Font normalText() { return normalText; }
+    public Font smallHeadline() { return smallHeadline; }
+    public Font mediumHeadline() { return mediumHeadline; }
+    public Font largeHeadline() { return largeHeadline; }
+    public Font largeHeadlineSpacing() { return largeHeadlineSpacing; }
+
+    public Color launcherVersionText() { return launcherVersionText; }
+    public ImageIcon logo() { return logo; }
+    public ImageIcon launcherOptionsIcon() { return launcherOptionsIcon; }
+    public ImageIcon launcherLoadIcon() { return launcherLoadIcon; }
+    public Color launcherSelectionBG() { return launcherSelectionBG; }
 }

@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import dk.itu.n.danmarkskort.Main;
+
 public class AddressSuggestion {
 	private String lastSearchInput = null;
 	private Address lastSearchAddress = null;
@@ -43,9 +45,9 @@ public class AddressSuggestion {
 			String[] strArr = find.split(postcode);
 			if(strArr.length>0) streetNum = strArr[0].trim();
 			
-			if(AddressHolder.getPostcode(postcode) != null){
+			if(Main.addressController.getAddressHolder().getPostcode(postcode) != null){
 				addr.setPostcode(postcode);
-				addr.setCity(AddressHolder.getPostcode(postcode).getCity());
+				addr.setCity(Main.addressController.getAddressHolder().getPostcode(postcode).getCity());
 			}
 		}
 		
@@ -54,7 +56,7 @@ public class AddressSuggestion {
 			for(int i=streetNum.length(); i>0; i--){
 				String part = streetNum.substring(0, i).trim();
 				addr.setStreet(part);
-				if(AddressHolder.search(addr, SearchEnum.EQUALS, SearchEnum.ANY, SearchEnum.ANY, SearchEnum.ANY).size() > 0) {
+				if(Main.addressController.getAddressHolder().search(addr, SearchEnum.EQUALS, SearchEnum.ANY, SearchEnum.ANY, SearchEnum.ANY).size() > 0) {
 					if(debug) System.out.println("Analysed S, found: " + part);
 					streetNum = streetNum.substring(part.length());
 					break;
@@ -70,7 +72,7 @@ public class AddressSuggestion {
 			for(int i=streetNum.length(); i>0; i--){
 				String part = streetNum.substring(0, i).trim();
 				addr.setHousenumber(part);
-				if(AddressHolder.search(addr, SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.ANY, SearchEnum.ANY).size() > 0){
+				if(Main.addressController.getAddressHolder().search(addr, SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.ANY, SearchEnum.ANY).size() > 0){
 					if(debug) System.out.println("Analysed N, found: " + part);
 					break;
 				} else {
@@ -89,7 +91,7 @@ public class AddressSuggestion {
 				for(int i=str.length(); i>0; i--){
 					String part = str.substring(0, i).trim();
 					addr.setCity(part);
-					if(AddressHolder.search(addr, SearchEnum.ANY, SearchEnum.ANY, SearchEnum.ANY, SearchEnum.EQUALS).size() > 0){
+					if(Main.addressController.getAddressHolder().search(addr, SearchEnum.ANY, SearchEnum.ANY, SearchEnum.ANY, SearchEnum.EQUALS).size() > 0){
 						if(debug) System.out.println("Analysed C, found: " + part);
 						break;
 					} else {
@@ -111,35 +113,35 @@ public class AddressSuggestion {
 	}
 	
 	private void searchSuggestionsPart1(List<String> result, Address addr, long limitAmountOfResults) {
-		result.addAll(resizeSearcResult(AddressHolder.search(addr, SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.EQUALS), 5, 3, 10l));
+		result.addAll(resizeSearcResult(Main.addressController.getAddressHolder().search(addr, SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.EQUALS), 5, 3, 10l));
 		
 		if(result.size() != 1 && result.size() < limitAmountOfResults) {
-		result.addAll(resizeSearcResult(AddressHolder.search(addr, SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.ANY), 5, 3, 10l));
+		result.addAll(resizeSearcResult(Main.addressController.getAddressHolder().search(addr, SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.ANY), 5, 3, 10l));
 			if(debug) System.out.println("Search 1, list size: " + result.size());
 		}
 		if(result.size() != 1 && result.size() < limitAmountOfResults) {
-		result.addAll(resizeSearcResult(AddressHolder.search(addr, SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.ANY, SearchEnum.ANY), 5, 3, 10l));
+		result.addAll(resizeSearcResult(Main.addressController.getAddressHolder().search(addr, SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.ANY, SearchEnum.ANY), 5, 3, 10l));
 		if(debug) System.out.println("Search 2, list size: " + result.size());
 		}
 		if(result.size() < limitAmountOfResults) {
-			result.addAll(resizeSearcResult(AddressHolder.search(addr, SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.STARTSWITH, SearchEnum.ANY), 5, 3, 10l));
+			result.addAll(resizeSearcResult(Main.addressController.getAddressHolder().search(addr, SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.STARTSWITH, SearchEnum.ANY), 5, 3, 10l));
 			if(debug) System.out.println("Search 3, list size: " + result.size());
 		}
 		if(result.size() < limitAmountOfResults) {
-			result.addAll(resizeSearcResult(AddressHolder.search(addr, SearchEnum.EQUALS, SearchEnum.STARTSWITH, SearchEnum.ANY, SearchEnum.ANY), 5, 3, 10l));
+			result.addAll(resizeSearcResult(Main.addressController.getAddressHolder().search(addr, SearchEnum.EQUALS, SearchEnum.STARTSWITH, SearchEnum.ANY, SearchEnum.ANY), 5, 3, 10l));
 			if(debug) System.out.println("Search 4, list size: " + result.size());
 		}
 		if(result.size() < 1 && result.size() < limitAmountOfResults) { 
-			result.addAll(resizeSearcResult(AddressHolder.search(addr,SearchEnum.EQUALS, SearchEnum.ANY, SearchEnum.ANY, SearchEnum.ANY), 5, 3, 10l));
+			result.addAll(resizeSearcResult(Main.addressController.getAddressHolder().search(addr,SearchEnum.EQUALS, SearchEnum.ANY, SearchEnum.ANY, SearchEnum.ANY), 5, 3, 10l));
 			if(debug) System.out.println("Search 5, list size: " + result.size());
 		}
 		if(result.size() != 1 && result.size() < limitAmountOfResults) {
-			result.addAll(resizeSearcResult(AddressHolder.search(addr,SearchEnum.ANY, SearchEnum.ANY, SearchEnum.EQUALS, SearchEnum.ANY), 5, 3, 10l));
+			result.addAll(resizeSearcResult(Main.addressController.getAddressHolder().search(addr,SearchEnum.ANY, SearchEnum.ANY, SearchEnum.EQUALS, SearchEnum.ANY), 5, 3, 10l));
 			if(debug) System.out.println("Search 6, list size: " + result.size());
 		}
 		if(result.size() != 1 && result.size() < limitAmountOfResults) {
 			result.addAll(resizeSearcResult(
-				AddressHolder.search(addr, SearchEnum.ANY, SearchEnum.ANY, SearchEnum.ANY, SearchEnum.EQUALS), 5, 3, 10l));
+					Main.addressController.getAddressHolder().search(addr, SearchEnum.ANY, SearchEnum.ANY, SearchEnum.ANY, SearchEnum.EQUALS), 5, 3, 10l));
 			if(debug) System.out.println("Search 7, list size: " + result.size());
 		}
 	}
@@ -148,24 +150,24 @@ public class AddressSuggestion {
 		Address tempAddr = new Address();
 		tempAddr.setStreet(find);
 		if(result.size() != 1 && result.size() < limitAmountOfResults) {
-		result.addAll(resizeSearcResult(AddressHolder.search(tempAddr, SearchEnum.STARTSWITH, SearchEnum.ANY, SearchEnum.ANY, SearchEnum.ANY), 5, 3, 10l));
+		result.addAll(resizeSearcResult(Main.addressController.getAddressHolder().search(tempAddr, SearchEnum.STARTSWITH, SearchEnum.ANY, SearchEnum.ANY, SearchEnum.ANY), 5, 3, 10l));
 			if(debug) System.out.println("Search 10, list size: " + result.size());
 		}
 		
 		if(result.size() < 1) {
-			result.addAll(resizeSearcResult(AddressHolder.search(addr, SearchEnum.LEVENSHTEIN, SearchEnum.ANY, SearchEnum.ANY, SearchEnum.ANY), 5, 3, 10l));
+			result.addAll(resizeSearcResult(Main.addressController.getAddressHolder().search(addr, SearchEnum.LEVENSHTEIN, SearchEnum.ANY, SearchEnum.ANY, SearchEnum.ANY), 5, 3, 10l));
 			if(debug) System.out.println("Search 8, list size: " + result.size());
 		}
 		if(result.size() < 1) {
-			result.addAll(resizeSearcResult(AddressHolder.search(tempAddr, SearchEnum.LEVENSHTEIN, SearchEnum.ANY, SearchEnum.ANY, SearchEnum.ANY), 5, 3, 10l));
+			result.addAll(resizeSearcResult(Main.addressController.getAddressHolder().search(tempAddr, SearchEnum.LEVENSHTEIN, SearchEnum.ANY, SearchEnum.ANY, SearchEnum.ANY), 5, 3, 10l));
 			if(debug) System.out.println("Search 8, list size: " + result.size());
 		}
 		if(result.size() < 1) {
-			result.addAll(resizeSearcResult(AddressHolder.search(addr, SearchEnum.ANY, SearchEnum.ANY, SearchEnum.ANY, SearchEnum.LEVENSHTEIN), 5, 3, 10l));
+			result.addAll(resizeSearcResult(Main.addressController.getAddressHolder().search(addr, SearchEnum.ANY, SearchEnum.ANY, SearchEnum.ANY, SearchEnum.LEVENSHTEIN), 5, 3, 10l));
 			if(debug) System.out.println("Search 9, list size: " + result.size());
 		}
 		if(result.size() < 1) {
-			result.addAll(resizeSearcResult(AddressHolder.search(tempAddr, SearchEnum.ANY, SearchEnum.ANY, SearchEnum.ANY, SearchEnum.LEVENSHTEIN), 5, 3, 10l));
+			result.addAll(resizeSearcResult(Main.addressController.getAddressHolder().search(tempAddr, SearchEnum.ANY, SearchEnum.ANY, SearchEnum.ANY, SearchEnum.LEVENSHTEIN), 5, 3, 10l));
 			if(debug) System.out.println("Search 9, list size: " + result.size());
 		}
 	}

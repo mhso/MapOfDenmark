@@ -23,7 +23,7 @@ public class OSMParser extends SAXAdapter implements Serializable {
     private transient HashMap<ParsedNode, ParsedWay> coastlineMap;
 
     private transient EnumMap<WayType, ArrayList<ParsedItem>> enumMap;
-    public EnumMap<WayType, KDTree> enumMapKD;
+    public EnumMap<WayType, KDTree<ParsedItem>> enumMapKD;
 
     private transient ParsedWay way;
     private transient ParsedRelation relation;
@@ -61,8 +61,6 @@ public class OSMParser extends SAXAdapter implements Serializable {
     public void endDocument() throws SAXException {
         Main.log("Parsing finished.");
 
-        for(OSMParserListener listener : reader.parserListeners) listener.onParsingFinished();
-
         int numItemsSaved = 0;
         for(WayType wt : WayType.values()) numItemsSaved += enumMap.get(wt).size();
         Main.log("Ways and Relations saved: " + numItemsSaved);
@@ -72,25 +70,32 @@ public class OSMParser extends SAXAdapter implements Serializable {
         Main.log("Splitting data into KDTrees");
 
         for(WayType wt : WayType.values()) {
-            KDTree tree;
-
-            if(wt == WayType.COASTLINE) tree = getCoastlines();
+            KDTree<ParsedItem> tree;
+            if(wt == WayType.COASTLINE) {
+                tree = getCoastlines();
+                coastlineMap = null;
+            }
             else {
                 ArrayList<ParsedItem> current = enumMap.get(wt);
                 if (current.isEmpty()) tree = null;
-                else if (current.size() < DKConstants.KD_SIZE) tree = new KDTreeLeaf(current);
-                else tree = new KDTreeNode(current);
+                else if (current.size() < DKConstants.KD_SIZE) tree = new KDTreeLeaf<>(current);
+                else tree = new KDTreeNode<>(current);
             }
-
             enumMap.remove(wt);
-            if(tree != null) tree.makeShapes();
             enumMapKD.put(wt, tree);
         }
 
+        Main.log("Deleting nodes, adding float[] coords");
+        for(Map.Entry<WayType, KDTree<ParsedItem>> entry : enumMapKD.entrySet()) {
+            KDTree<ParsedItem> current = entry.getValue();
+            if(current != null) for (ParsedItem item : current) item.nodesToCoords();
+        }
+
+
         Main.log("Deleting old references");
-        for(Map.Entry<WayType, KDTree> entry : enumMapKD.entrySet()) {
-            KDTree current = entry.getValue();
-            if(current != null) current.deleteOldRefs();
+        for(Map.Entry<WayType, KDTree<ParsedItem>> entry : enumMapKD.entrySet()) {
+            KDTree<ParsedItem> current = entry.getValue();
+            if(current != null) for (ParsedItem item : current) item.deleteOldRefs();
         }
 
         for(OSMParserListener listener : reader.parserListeners) listener.onParsingFinished();
@@ -217,6 +222,7 @@ public class OSMParser extends SAXAdapter implements Serializable {
             }
             else if(relation != null) {
                 enumMap.get(waytype).add(relation);
+                relation.correctOuters();
                 for(OSMParserListener listener : reader.parserListeners) listener.onParsingGotItem(relation);
             }
             else if(node != null) {
@@ -234,8 +240,8 @@ public class OSMParser extends SAXAdapter implements Serializable {
         cleanUp();
     }
 
-    private KDTree getCoastlines() {
-        KDTree tree;
+    private KDTree<ParsedItem> getCoastlines() {
+        KDTree<ParsedItem> tree;
         HashSet<ParsedWay> connected = new HashSet<>();
         HashSet<ParsedWay> unconnected = new HashSet<>();
         ArrayList<ParsedItem> combined = new ArrayList<>();
@@ -253,7 +259,7 @@ public class OSMParser extends SAXAdapter implements Serializable {
             combined.addAll(connected);
             HashSet<ParsedWay> fixed = ParserUtil.fixUnconnectedCoastlines(unconnected);
             combined.addAll(fixed);
-            tree = new KDTreeLeaf(combined);
+            tree = new KDTreeLeaf<ParsedItem>(combined);
         }
         else tree = null;
         coastlineMap = null;
@@ -281,7 +287,6 @@ public class OSMParser extends SAXAdapter implements Serializable {
     }
 
     private void finalClean() {
-        coastlineMap = null;
         System.gc();
     }
     

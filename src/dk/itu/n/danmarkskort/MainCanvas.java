@@ -3,6 +3,7 @@ package dk.itu.n.danmarkskort;
 import javax.swing.*;
 
 import dk.itu.n.danmarkskort.gui.GUIManager;
+import dk.itu.n.danmarkskort.gui.menu.DropdownMenu;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -12,6 +13,7 @@ public class MainCanvas extends JPanel {
     public static final int WIDTH = 1000, HEIGHT = 800;
     private final Color debugBackgroundColor = new Color(255, 240, 224);
     
+    private GUIManager guiManager;
     AffineTransform transform = new AffineTransform();
 	boolean antiAlias;
 	
@@ -37,10 +39,14 @@ public class MainCanvas extends JPanel {
     	g2d.drawString("Zoom: " + String.format("%.01f", Main.map.getZoom()).replace(",", "."), 10, 60);
     	g2d.drawString("Shapes drawn: " + Main.map.shapesDrawn, 10, 75);
     }
+    
+    public DropdownMenu getDropMenu() {
+    	return guiManager.getTopPanel().getDropMenu();
+    }
 
     private void addGUI() {
-        GUIManager gui = new GUIManager();
-        add(gui);
+    	guiManager = new GUIManager();
+        add(guiManager);
     }
     
 }
