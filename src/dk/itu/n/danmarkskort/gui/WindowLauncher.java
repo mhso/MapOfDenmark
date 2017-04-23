@@ -41,7 +41,8 @@ public class WindowLauncher extends JFrame {
 	private List<Path> binFiles;
 	private JLabel labelSelectedFile;
 	private String selectedFilePath;
-
+	private JButton buttonLaunch;
+	
 	public WindowLauncher() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
@@ -78,6 +79,8 @@ public class WindowLauncher extends JFrame {
 		labelParsedMaps.setHorizontalAlignment(SwingConstants.CENTER);
 		labelParsedMaps.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		
+		labelSelectedFile = new JLabel();
+		
 		JList<String> binFilesList = new JList<>(getParsedFiles());
 		binFilesList.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		binFilesList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -90,6 +93,7 @@ public class WindowLauncher extends JFrame {
 				if(e.getClickCount() == 2) {
 					labelSelectedFile.setText(binFilesList.getSelectedValue());
 					selectedFilePath = binFiles.get(binFilesList.getSelectedIndex()).toString();
+					if(!buttonLaunch.isEnabled()) enableLaunchButton(true);
 				}
 			}
 		});
@@ -99,6 +103,7 @@ public class WindowLauncher extends JFrame {
 				if(e.getKeyCode() == KeyEvent.VK_ENTER && !binFilesList.isSelectionEmpty()) {
 					labelSelectedFile.setText(binFilesList.getSelectedValue());
 					selectedFilePath = binFiles.get(binFilesList.getSelectedIndex()).toString();
+					if(!buttonLaunch.isEnabled()) enableLaunchButton(true);
 				}
 			}
 		});
@@ -115,7 +120,17 @@ public class WindowLauncher extends JFrame {
 		labelSelectedFileHeader.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		panelCurrentFile.add(labelSelectedFileHeader, BorderLayout.NORTH);
 		
-		labelSelectedFile = new JLabel(Main.userPreferences.getDefaultMapFile() + " (default)");
+		buttonLaunch = new JButton("Launch");
+		
+		if (binFiles.isEmpty()) {
+			labelSelectedFileHeader.setText("No map files found, load a new one from 'Configure' menu.");
+			enableLaunchButton(false);
+		}
+		else if(selectedFilePath == null) {
+			labelSelectedFile.setText("Default Map Not Found.");
+			enableLaunchButton(false);
+		}
+		
 		labelSelectedFile.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, Color.BLACK));
 		labelSelectedFile.setOpaque(true);
 		labelSelectedFile.setBackground(Color.WHITE);
@@ -128,7 +143,6 @@ public class WindowLauncher extends JFrame {
 		contentPane.add(panelBottom, BorderLayout.SOUTH);
 		panelBottom.setLayout(new BorderLayout(0, 0));
 		
-		JButton buttonLaunch = new JButton("Launch");
 		buttonLaunch.addActionListener(e -> {
 			dispose();
 			Main.launch(new String[]{selectedFilePath});
@@ -151,6 +165,13 @@ public class WindowLauncher extends JFrame {
 	public void setSelectedFile(String fileName) {
 		labelSelectedFile.setText(fileName);
 		selectedFilePath = fileName;
+		if(!buttonLaunch.isEnabled()) enableLaunchButton(true);
+	}
+	
+	private void enableLaunchButton(boolean enable) {
+		buttonLaunch.setEnabled(enable);
+		if(!enable) buttonLaunch.setToolTipText("Load or Select a map to Launch.");
+		else buttonLaunch.setToolTipText("Click to Launch the Application!");
 	}
 	
 	private String[] getParsedFiles() {
@@ -158,7 +179,13 @@ public class WindowLauncher extends JFrame {
 		try {
 			for(Path entry : Files.newDirectoryStream(Paths.get("parsedOSMFiles"))) {
 				for(Path binFile : Files.newDirectoryStream(entry)) {
-					if(!binFile.toFile().getName().equals("pinpoints.bin")) binFiles.add(binFile);
+					if(!binFile.toFile().getName().equals("pinpoints.bin")) {
+						binFiles.add(binFile);
+						if(binFile.toFile().getName().equals(Main.userPreferences.getDefaultMapFile())) {
+							selectedFilePath = binFile.toString();
+							labelSelectedFile.setText(binFile.toFile().getName() + " (default)");
+						}
+					}
 				}
 			}
 		}
