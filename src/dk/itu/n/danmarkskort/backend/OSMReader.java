@@ -1,6 +1,7 @@
 package dk.itu.n.danmarkskort.backend;
 
 import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -76,14 +77,19 @@ public class OSMReader {
 		parseMemory.on();
 
 		if(fileName.endsWith(".bin")) {
-			try {
-				for(Path checkSumDir : Files.newDirectoryStream(Paths.get("parsedOSMFiles"))) {
-					for(Path parsedFile : Files.newDirectoryStream(checkSumDir)) {
-						if(parsedFile.toString().equals(fileName)) currentChecksum = checkSumDir.toFile().getName();
+			if(Main.production && new File(fileName).getName().equals("default.bin")) {
+				fileName = getClass().getResource(fileName).toString();
+			}
+			else {
+				try {
+					for(Path checkSumDir : Files.newDirectoryStream(Paths.get("parsedOSMFiles"))) {
+						for(Path parsedFile : Files.newDirectoryStream(checkSumDir)) {
+							if(parsedFile.toString().equals(fileName)) currentChecksum = checkSumDir.toFile().getName();
+						}
 					}
+				} catch (IOException e) {
+					e.printStackTrace();
 				}
-			} catch (IOException e) {
-				e.printStackTrace();
 			}
 			BinaryWrapper binary = (BinaryWrapper) Util.readObjectFromFile(fileName, inputListeners);
 			Main.model = binary.getModel();

@@ -258,7 +258,7 @@ public class WindowLauncher extends JFrame {
 	
 	private String[] getParsedFiles() {
 		binFiles = new ArrayList<>();
-		selectedFilePath = "resources/default.bin";
+		selectedFilePath = "/resources/default.bin";
 		labelSelectedFile.setText("default.bin (default)");
 		try {
 			for(Path entry : Files.newDirectoryStream(Paths.get("parsedOSMFiles"))) {

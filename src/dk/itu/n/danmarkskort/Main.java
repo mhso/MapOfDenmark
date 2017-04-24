@@ -20,7 +20,7 @@ public class Main {
 	public final static String APP_NAME = "CatMaps";
 	public final static String APP_VERSION = "0.6";
 	public final static boolean debug = true;
-	public final static boolean production = false;
+	public final static boolean production = true;
 	public final static boolean buffered = true;
 	public final static boolean saveParsedAddresses = true;
 	public final static boolean useLauncher = true;
@@ -64,10 +64,14 @@ public class Main {
 		if(args.length > 0) prepareParser(args);
 		else prepareParser(new String[]{userPreferences.getDefaultMapFile()});
 		if(userPreferences.getCurrentMapTheme() != null) {
-			GraphicRepresentation.parseData("resources/Theme" + userPreferences.getCurrentMapTheme() + ".XML");
+			if(Main.production) GraphicRepresentation.parseData(
+					Main.class.getResource("/resources/Theme" + userPreferences.getCurrentMapTheme() + ".XML").toString());
+			else GraphicRepresentation.parseData("resources/Theme" + userPreferences.getCurrentMapTheme() + ".XML");
 		}
 		else {
-			GraphicRepresentation.parseData("resources/Theme" + userPreferences.getDefaultTheme() + ".XML");
+			if(Main.production) GraphicRepresentation.parseData(
+					Main.class.getResource("/resources/Theme" + userPreferences.getDefaultTheme() + ".XML").toString());
+			else GraphicRepresentation.parseData("resources/Theme" + userPreferences.getDefaultTheme() + ".XML");
 			userPreferences.setCurrentMapTheme(userPreferences.getDefaultTheme());
 		}
 	}
