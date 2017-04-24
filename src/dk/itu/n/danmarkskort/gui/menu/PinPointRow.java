@@ -16,6 +16,7 @@ import java.awt.Color;
 import javax.swing.border.EmptyBorder;
 
 import dk.itu.n.danmarkskort.Main;
+import dk.itu.n.danmarkskort.gui.Style;
 import dk.itu.n.danmarkskort.gui.map.PinPoint;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -26,11 +27,13 @@ public class PinPointRow extends JPanel {
 	private JButton btnDelete;
 	private JLabel name;
 	private PinPoint pinPoint;
+	private Style style;
 	
 	/**
 	 * Create the panel.
 	 */
 	public PinPointRow(PinPoint pinPoint) {
+		style = new Style();
 		this.pinPoint = pinPoint;
 		setLayout(new BorderLayout(0, 0));
 		
@@ -64,6 +67,7 @@ public class PinPointRow extends JPanel {
 		JPanel panel_1 = new JPanel();
 		add(panel_1, BorderLayout.CENTER);
 		panel_1.setLayout(new BorderLayout(0, 0));
+		panel_1.setBackground(style.menuContentBG());
 		
 		name = new JLabel(pinPoint.getName());
 		name.setBorder(new EmptyBorder(0, 5, 0, 0));
