@@ -28,6 +28,7 @@ public class PinPointPage extends JPanel {
 	public static PinPointPage instance;
 	public JPanel panel;
 	private Style style;
+	private JPanel panelRow;
 	
 //	public PinPointPage() {
 //		setLayout(new BorderLayout(0, 0));
@@ -87,46 +88,45 @@ public class PinPointPage extends JPanel {
         JPanel panelCenter = new JPanel();
         panelCenter.setBackground(style.menuContentBG());
         panelPage.add(panelCenter, BorderLayout.CENTER);
+        panelCenter.setLayout(new BorderLayout(0, 0));
         initContentPanel(panelCenter);
-
-        instance = this;
     }
 	
-	public void initContentPanel(JPanel panelCenter) {
-		//panelCenter.setLayout(new BorderLayout(0, 0));
-		
-//		JLabel lblDineInteressepunkter = new JLabel("Dine interessepunkter");
-//		lblDineInteressepunkter.setHorizontalAlignment(SwingConstants.CENTER);
-//		add(lblDineInteressepunkter, BorderLayout.NORTH);
-		panel = new JPanel();
-		add(panel, BorderLayout.CENTER);
-		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-		
-		JScrollPane scrollPane = new JScrollPane(panel);
-		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-		add(scrollPane, BorderLayout.SOUTH);
-		
+	public void initContentPanel(JPanel panel) {
+//		setLayout(new BorderLayout(0, 0));
+//		
+		panelRow = new JPanel();
+		panel.add(panelRow);
+		panelRow.setLayout(new BoxLayout(panelRow, BoxLayout.Y_AXIS));
+		panelRow.setBackground(style.menuContentBG());
+//		
+//		JScrollPane scrollPane = new JScrollPane(panel);
+//		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+//		add(scrollPane, BorderLayout.SOUTH);
+//		
 		for(PinPoint pinPoint : Main.pinPointManager.getPinPoints()) {
 			PinPointRow row = new PinPointRow(pinPoint);
 			row.setPreferredSize(new Dimension(getWidth(), 30));
 			row.setBounds(0, 0, getWidth(), 30);
-			panel.add(row);
+			panelRow.add(row);
 		}
+		
+		instance = this;
 	}
 
 	public static void update() {
 		if(instance == null) return;
-		instance.panel.removeAll();
+		instance.panelRow.removeAll();
 		for(PinPoint pinPoint : Main.pinPointManager.getPinPoints()) {
 			PinPointRow row = new PinPointRow(pinPoint);
 			row.setPreferredSize(new Dimension(instance.getWidth(), 30));
 			row.setBounds(0, 0, instance.getWidth(), 30);
-			instance.panel.add(row);
+			instance.panelRow.add(row);
 		}
 	}
 	
 	public static void removeRow(PinPointRow row) {
-		instance.panel.remove(row);
+		instance.panelRow.remove(row);
 	}
 	
 }
