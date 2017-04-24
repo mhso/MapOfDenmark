@@ -23,7 +23,13 @@ import dk.itu.n.danmarkskort.MemoryUtil;
 import dk.itu.n.danmarkskort.TimerUtil;
 import dk.itu.n.danmarkskort.Util;
 
-// This class can parse an OSM file, and turn it into tile files. 
+/**
+ * This class recieves a map file (osm, zip or bin) and either loads from binary, from a Zip Inputstream or
+ * from an Open Street Map XML file. This class also manages Inputstream Listeners, that send events to anyone
+ * listening on the parsing.
+ * 
+ * @author Team N @ ITU
+ */
 public class OSMReader {
 	
 	public List<OSMParserListener> parserListeners = new ArrayList<OSMParserListener>();
