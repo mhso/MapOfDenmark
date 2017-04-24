@@ -16,6 +16,7 @@ import java.awt.Color;
 import javax.swing.border.EmptyBorder;
 
 import dk.itu.n.danmarkskort.Main;
+import dk.itu.n.danmarkskort.gui.Style;
 import dk.itu.n.danmarkskort.gui.map.PinPoint;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -26,30 +27,31 @@ public class PinPointRow extends JPanel {
 	private JButton btnDelete;
 	private JLabel name;
 	private PinPoint pinPoint;
+	private Style style;
 	
 	/**
 	 * Create the panel.
 	 */
 	public PinPointRow(PinPoint pinPoint) {
+		style = new Style();
 		this.pinPoint = pinPoint;
 		setLayout(new BorderLayout(0, 0));
 		
 		JPanel panel = new JPanel();
 		add(panel, BorderLayout.EAST);
 		panel.setLayout(new GridLayout(0, 2, 0, 0));
+		panel.setBackground(style.menuContentBG());
 		PinPointRow self = this;
 		
-		btnPan = new JButton("");
+		btnPan = style.pinPointPanButton();
 		btnPan.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				Main.pinPointManager.panToLocation(pinPoint);
 			}
 		});
-		btnPan.setBackground(Color.WHITE);
-		btnPan.setIcon(new ImageIcon("/home/wituz/Downloads/placeholder.png"));
 		panel.add(btnPan);
 		
-		btnDelete = new JButton("");
+		btnDelete = style.pinPointDeleteButton();
 		btnDelete.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				Main.pinPointManager.removePinPoint(pinPoint);
@@ -57,13 +59,13 @@ public class PinPointRow extends JPanel {
 				PinPointPage.removeRow(self);
 			}
 		});
-		btnDelete.setBackground(Color.WHITE);
-		btnDelete.setIcon(new ImageIcon("/home/wituz/Downloads/trash.png"));
+
 		panel.add(btnDelete);
 		
 		JPanel panel_1 = new JPanel();
 		add(panel_1, BorderLayout.CENTER);
 		panel_1.setLayout(new BorderLayout(0, 0));
+		panel_1.setBackground(style.menuContentBG());
 		
 		name = new JLabel(pinPoint.getName());
 		name.setBorder(new EmptyBorder(0, 5, 0, 0));

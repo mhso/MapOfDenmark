@@ -18,7 +18,7 @@ public class Style {
                 dropdownItemBG, dropdownItemBGActive, dropdowItemTextColor, dropdownItemTextColorActive, launcherVersionText, launcherSelectionBG;
     private CustomButton searchButton, menuButton, routeButton, centerViewButton, zoomInButton, zoomOutButton,
             menuLayerButton, menuSaveButton, menuOpenButton, menuSettingsButton, menuRouteButton, menuInfoButton, 
-            menuPinPointButton;
+            menuPinPointButton, pinPointPanButton, pinPointDeleteButton;
     private ImageIcon scaleIndicator, arrowUpDownButton, basicThemePreview, logo, launcherOptionsIcon, launcherLoadIcon;
     private Image frameIcon;
     private Font normalText, smallHeadline, mediumHeadline, largeHeadline, largeHeadlineSpacing;
@@ -67,6 +67,9 @@ public class Style {
         centerViewButton = new CustomButton("resources/icons/target.png", alphaFloat, alphaHover, zoomButtonBG);
         zoomInButton = new CustomButton("resources/icons/zoomin.png", alphaFloat, alphaHover, zoomButtonBG);
         zoomOutButton = new CustomButton("resources/icons/zoomout.png", alphaFloat, alphaHover, zoomButtonBG);
+        
+        pinPointPanButton = new CustomButton("resources/icons/map-pin.png", menuAlpha, menuAlphaHover);
+        pinPointDeleteButton = new CustomButton("resources/icons/office-bin.png", menuAlpha, menuAlphaHover);
 
         basicThemePreview = new ImageIcon("resources/icons/previewthemebasic.png");
         
@@ -131,6 +134,9 @@ public class Style {
     public CustomButton menuRouteButton() { return menuRouteButton; }
     public CustomButton menuInfoButton() { return menuInfoButton; }
     public CustomButton menuPinPointButton() { return menuPinPointButton; }
+    public CustomButton pinPointPanButton() { return pinPointPanButton; }
+    public CustomButton pinPointDeleteButton() { return pinPointDeleteButton; }
+    
     
     public CustomToggleButton toggleButton() { return new CustomToggleButton(1.0f, 0.8f); }
     
