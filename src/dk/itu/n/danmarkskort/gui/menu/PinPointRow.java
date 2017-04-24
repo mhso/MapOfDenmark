@@ -40,19 +40,18 @@ public class PinPointRow extends JPanel {
 		JPanel panel = new JPanel();
 		add(panel, BorderLayout.EAST);
 		panel.setLayout(new GridLayout(0, 2, 0, 0));
+		panel.setBackground(style.menuContentBG());
 		PinPointRow self = this;
 		
-		btnPan = new JButton("");
+		btnPan = style.pinPointPanButton();
 		btnPan.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				Main.pinPointManager.panToLocation(pinPoint);
 			}
 		});
-		btnPan.setBackground(Color.WHITE);
-		btnPan.setIcon(new ImageIcon("/home/wituz/Downloads/placeholder.png"));
 		panel.add(btnPan);
 		
-		btnDelete = new JButton("");
+		btnDelete = style.pinPointDeleteButton();
 		btnDelete.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				Main.pinPointManager.removePinPoint(pinPoint);
@@ -60,8 +59,7 @@ public class PinPointRow extends JPanel {
 				PinPointPage.removeRow(self);
 			}
 		});
-		btnDelete.setBackground(Color.WHITE);
-		btnDelete.setIcon(new ImageIcon("/home/wituz/Downloads/trash.png"));
+
 		panel.add(btnDelete);
 		
 		JPanel panel_1 = new JPanel();

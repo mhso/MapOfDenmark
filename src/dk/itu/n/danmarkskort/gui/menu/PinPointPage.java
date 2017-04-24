@@ -89,15 +89,15 @@ public class PinPointPage extends JPanel {
         panelPage.add(panelCenter, BorderLayout.CENTER);
         initContentPanel(panelCenter);
 
+        instance = this;
     }
 	
 	public void initContentPanel(JPanel panelCenter) {
-		setLayout(new BorderLayout(0, 0));
+		//panelCenter.setLayout(new BorderLayout(0, 0));
 		
 //		JLabel lblDineInteressepunkter = new JLabel("Dine interessepunkter");
 //		lblDineInteressepunkter.setHorizontalAlignment(SwingConstants.CENTER);
 //		add(lblDineInteressepunkter, BorderLayout.NORTH);
-		
 		panel = new JPanel();
 		add(panel, BorderLayout.CENTER);
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
@@ -112,9 +112,6 @@ public class PinPointPage extends JPanel {
 			row.setBounds(0, 0, getWidth(), 30);
 			panel.add(row);
 		}
-		
-		instance = this;
-
 	}
 
 	public static void update() {
