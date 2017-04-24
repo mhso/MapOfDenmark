@@ -76,7 +76,7 @@ public class ParsedRelation extends ParsedWay {
                     if (outer.getFirstNode() == candidateBefore.getLastNode()) { // direction is correct
                         tempWayMap.remove(candidateBefore.getFirstNode());
                         tempWay.addNodes(candidateBefore.getNodes());
-                    } else {
+                    } else {    // direction is incorrect
                         tempWayMap.remove(candidateBefore.getLastNode());
                         tempWay.addNodes(candidateBefore.getReversedNodes());
                     }
@@ -86,7 +86,7 @@ public class ParsedRelation extends ParsedWay {
                     if (outer.getLastNode() == candidateAfter.getFirstNode()) { // direction is correct
                         tempWayMap.remove(candidateAfter.getLastNode());
                         tempWay.addNodes(candidateAfter.getNodes());
-                    } else {
+                    } else {    // direction is incorrect
                         tempWayMap.remove(candidateAfter.getFirstNode());
                         tempWay.addNodes(candidateAfter.getReversedNodes());
                     }

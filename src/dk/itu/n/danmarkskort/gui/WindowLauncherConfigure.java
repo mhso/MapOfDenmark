@@ -103,12 +103,6 @@ public class WindowLauncherConfigure extends JDialog {
 		panelBottom.setPreferredSize(new Dimension(10, 55));
 		centerPanel.add(panelBottom);
 		
-		JButton buttonLoadFile = new JButton("Load New File");
-		panelBottom.add(buttonLoadFile);
-		buttonLoadFile.addActionListener(e -> loadFile());
-		buttonLoadFile.setAlignmentX(Component.CENTER_ALIGNMENT);
-		buttonLoadFile.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		
 		contentPane.setBackground(new Color(130, 173, 198));
 		labelLaunchConfigurations.setBackground(style.menuItemsBG());
 		
@@ -117,29 +111,5 @@ public class WindowLauncherConfigure extends JDialog {
 		
 		pack();
 		setVisible(true);
-	}
-
-	private void loadFile() {
-		JFileChooser fc = viewFileChooser("Load View To File", "Load");
-		
-		int fcVal = fc.showOpenDialog(WindowLauncherConfigure.this);
-		if (fcVal == JFileChooser.APPROVE_OPTION) {
-			File file = fc.getSelectedFile();
-			
-			parent.setSelectedFile(file.getAbsolutePath());
-			dispose();
-        }
-    }
-	
-	private JFileChooser viewFileChooser(String dialogTitle, String approveBtnTxt){
-		JFileChooser fc = new JFileChooser();
-		fc.setDialogTitle(dialogTitle);
-		fc.setApproveButtonText(approveBtnTxt);
-		fc.setAcceptAllFileFilterUsed(false);
-		fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-		fc.setFileFilter(new FileNameExtensionFilter("Map Files", "osm", "zip", "bin"));
-		
-		fc.setCurrentDirectory(new File(System.getProperty("user.dir")));
-		return fc;
 	}
 }

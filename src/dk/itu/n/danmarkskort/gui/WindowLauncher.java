@@ -1,39 +1,23 @@
 package dk.itu.n.danmarkskort.gui;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
+import java.awt.*;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
+import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
-import javax.swing.border.LineBorder;
 
 import dk.itu.n.danmarkskort.Main;
 
-import javax.swing.JLabel;
-import javax.swing.JList;
-
-import java.awt.GridLayout;
-import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.swing.SwingConstants;
-import java.awt.Font;
-
-import javax.swing.BorderFactory;
-import javax.swing.DefaultListCellRenderer;
-import javax.swing.JButton;
-import javax.swing.ListSelectionModel;
-import java.awt.Color;
-import javax.swing.border.MatteBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class WindowLauncher extends JFrame {
 	private JPanel contentPane;
@@ -44,29 +28,36 @@ public class WindowLauncher extends JFrame {
 	
 	public WindowLauncher() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		//setBounds(100, 100, 450,);
 		Style style = new Style();
-		setTitle(Main.APP_NAME + " Launcher");
+		setTitle("Launcher");
 		setIconImage(Toolkit.getDefaultToolkit().getImage("resources/icons/map-icon.png"));
 		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		contentPane.setLayout(new BorderLayout(0, 15));
+		contentPane.setBorder(new EmptyBorder(style.margin(), 0, 0, 0));
+		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
 		
 		JPanel panel = new JPanel();
 		contentPane.add(panel, BorderLayout.NORTH);
-		panel.setLayout(new GridLayout(0, 1, 0, 0));
-		
+		panel.setLayout(new GridBagLayout());
+		panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+		GridBagConstraints gc = new GridBagConstraints();
+
+		gc.gridy = 0;
 		JLabel labelHeaderName = new JLabel(Main.APP_NAME);
-		labelHeaderName.setFont(new Font("Tahoma", Font.PLAIN, 30));
+		labelHeaderName.setFont(style.largeHeadlineSpacing());
 		labelHeaderName.setHorizontalAlignment(SwingConstants.CENTER);
-		panel.add(labelHeaderName);
-		
+        labelHeaderName.setIcon(style.logo());
+        labelHeaderName.setIconTextGap(10);
+		panel.add(labelHeaderName, gc);
+
+		gc.gridy = 1;
 		JLabel labelHeaderVersion = new JLabel("Version " + Main.APP_VERSION);
-		labelHeaderVersion.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		labelHeaderVersion.setFont(style.mediumHeadline());
 		labelHeaderVersion.setHorizontalAlignment(SwingConstants.CENTER);
-		panel.add(labelHeaderVersion);
-		
+		panel.add(labelHeaderVersion, gc);
+
+
 		JPanel centerPanel = new JPanel();
 		contentPane.add(centerPanel, BorderLayout.CENTER);
 		centerPanel.setLayout(new BorderLayout(0, 15));
@@ -78,18 +69,19 @@ public class WindowLauncher extends JFrame {
 		JLabel labelParsedMaps = new JLabel("Parsed Map Files");
 		panelParsedFiles.add(labelParsedMaps, BorderLayout.NORTH);
 		labelParsedMaps.setHorizontalAlignment(SwingConstants.CENTER);
-		labelParsedMaps.setFont(new Font("Tahoma", Font.PLAIN, 17));
+		labelParsedMaps.setFont(style.mediumHeadline());
 		
 		labelSelectedFile = new JLabel();
 		
 		JList<String> binFilesList = new JList(getParsedFiles());
-		binFilesList.setBorder(new MatteBorder(1, 1, 1, 1, (Color) Color.WHITE));
-		binFilesList.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		binFilesList.setSelectionBackground(new Color(130, 173, 198));
+		binFilesList.setFont(style.normalText());
+		binFilesList.setSelectionBackground(style.launcherSelectionBG());
+		binFilesList.setSelectionForeground(style.panelBG());
 		binFilesList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		DefaultListCellRenderer dlcr = (DefaultListCellRenderer)binFilesList.getCellRenderer();
 		dlcr.setHorizontalAlignment(SwingConstants.CENTER);
-		
+		dlcr.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+
 		binFilesList.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -105,12 +97,12 @@ public class WindowLauncher extends JFrame {
 		
 		JPanel panelCurrentFile = new JPanel();
 		panelCurrentFile.setBorder(new EmptyBorder(5, 0, 0, 0));
-		centerPanel.add(panelCurrentFile, BorderLayout.NORTH);
+		centerPanel.add(panelCurrentFile, BorderLayout.SOUTH);
 		panelCurrentFile.setLayout(new BorderLayout(0, 5));
 		
 		JLabel labelSelectedFileHeader = new JLabel("Selected File");
 		labelSelectedFileHeader.setHorizontalAlignment(SwingConstants.CENTER);
-		labelSelectedFileHeader.setFont(new Font("Tahoma", Font.PLAIN, 17));
+		labelSelectedFileHeader.setFont(style.normalText());
 		panelCurrentFile.add(labelSelectedFileHeader, BorderLayout.NORTH);
 		
 		buttonLaunch = new JButton("Launch");
@@ -124,53 +116,117 @@ public class WindowLauncher extends JFrame {
 			enableLaunchButton(false);
 		}
 		
-		labelSelectedFile.setBorder(new MatteBorder(1, 1, 1, 1, (Color) Color.WHITE));
 		labelSelectedFile.setOpaque(true);
-		labelSelectedFile.setFont(new Font("Tahoma", Font.BOLD, 15));
+		labelSelectedFile.setFont(style.mediumHeadline());
 		labelSelectedFile.setHorizontalAlignment(SwingConstants.CENTER);
 		panelCurrentFile.add(labelSelectedFile);
 		
 		JPanel panelBottom = new JPanel();
-		panelBottom.setBorder(new EmptyBorder(2, 2, 2, 2));
-		panelBottom.setPreferredSize(new Dimension(10, 50));
+		panelBottom.setBorder(BorderFactory.createEmptyBorder(30, 0 ,0 ,0));
+		panelBottom.setPreferredSize(new Dimension(10, 70));
 		contentPane.add(panelBottom, BorderLayout.SOUTH);
-		panelBottom.setLayout(new BorderLayout(0, 0));
-		
+		panelBottom.setLayout(new GridBagLayout());
+		GridBagConstraints gbc = new GridBagConstraints();
+
+
+
 		buttonLaunch.addActionListener(e -> {
 			dispose();
 			Main.launch(new String[]{selectedFilePath});
 		});
-		buttonLaunch.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		panelBottom.add(buttonLaunch, BorderLayout.EAST);
+		buttonLaunch.setFont(style.mediumHeadline());
+        buttonLaunch.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, style.panelBG()));
+        buttonLaunch.setPreferredSize(new Dimension(buttonLaunch.getPreferredSize().width, 40));
+        buttonLaunch.setBackground(style.launcherSelectionBG());
+        buttonLaunch.setForeground(Color.BLACK);
+        buttonLaunch.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+		gbc.weightx = 1;
+		gbc.gridx = 2;
+		panelBottom.add(buttonLaunch, gbc);
 		
-		JButton buttonConfigure = new JButton("Configure");
+		JButton buttonConfigure = new JButton("Options");
 		buttonConfigure.addActionListener(e -> new WindowLauncherConfigure(this));
-		buttonConfigure.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		panelBottom.add(buttonConfigure, BorderLayout.WEST);
-		
+		buttonConfigure.setFont(style.mediumHeadline());
+		buttonConfigure.setIcon(style.launcherOptionsIcon());
+		buttonConfigure.setBackground(style.inputFieldBG());
+		buttonConfigure.setForeground(style.panelTextColor());
+		buttonConfigure.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        buttonConfigure.setBorder(BorderFactory.createMatteBorder(1, 0, 0,0, style.panelBG()));
+        buttonConfigure.setPreferredSize(new Dimension(buttonConfigure.getPreferredSize().width, 40));
+        gbc.gridx = 0;
+		panelBottom.add(buttonConfigure, gbc);
+
+		JButton buttonLoadFile = new JButton("Load New File");
+        gbc.gridx = 1;
+		panelBottom.add(buttonLoadFile, gbc);
+		buttonLoadFile.addActionListener(e -> loadFile());
+		buttonLoadFile.setAlignmentX(Component.CENTER_ALIGNMENT);
+		buttonLoadFile.setFont(style.mediumHeadline());
+		buttonLoadFile.setIcon(style.launcherLoadIcon());
+		buttonLoadFile.setBackground(style.inputFieldBG());
+		buttonLoadFile.setForeground(style.panelTextColor());
+		buttonLoadFile.setCursor(new Cursor(Cursor.HAND_CURSOR));
+		buttonLoadFile.setPreferredSize(new Dimension(buttonLoadFile.getPreferredSize().width, 40));
+        buttonLoadFile.setBorder(BorderFactory.createMatteBorder(1, 1, 0, 1, style.panelBG()));
+
+        buttonLoadFile.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                buttonLoadFile.setBackground(style.panelBG());
+            }
+            @Override
+            public void mouseExited(MouseEvent e) {
+                buttonLoadFile.setBackground(style.inputFieldBG());
+            }
+        });
+
+        buttonConfigure.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                buttonConfigure.setBackground(style.panelBG());
+            }
+            @Override
+            public void mouseExited(MouseEvent e) {
+                buttonConfigure.setBackground(style.inputFieldBG());
+            }
+        });
+
+        buttonLaunch.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                buttonLaunch.setBackground(style.scrollBarThumbActive());
+            }
+            @Override
+            public void mouseExited(MouseEvent e) {
+                buttonLaunch.setBackground(style.launcherSelectionBG());
+            }
+        });
+
 		// Colors and stuff
-		final Color OUTER_COLOR = new Color(130, 173, 198);
-		final Color MIDDLE_COLOR = style.menuItemsBG();
-		final Color INNER_COLOR = style.panelBG();
+
+		final Color outerColor = style.inputFieldBG();
+		final Color middleColor = style.menuItemsBG();
+		final Color innerColor = style.panelBG();
 		
-		contentPane.setBackground(OUTER_COLOR);
-		panel.setBackground(MIDDLE_COLOR);
-		centerPanel.setBackground(OUTER_COLOR);
-		panelParsedFiles.setBackground(MIDDLE_COLOR);
-		binFilesList.setBackground(INNER_COLOR);
-		scroll.setBackground(INNER_COLOR);
-		panelCurrentFile.setBackground(MIDDLE_COLOR);
-		labelSelectedFile.setBackground(INNER_COLOR);
-		panelBottom.setBackground(OUTER_COLOR);
+		contentPane.setBackground(outerColor);
+		panel.setBackground(outerColor);
+		centerPanel.setBackground(outerColor);
+		panelParsedFiles.setBackground(outerColor);
+		binFilesList.setBackground(innerColor);
+		scroll.setBackground(innerColor);
+		panelCurrentFile.setBackground(outerColor);
+		labelSelectedFile.setBackground(middleColor);
+		panelBottom.setBackground(outerColor);
 		
-		labelHeaderName.setForeground(Color.WHITE);
-		labelHeaderVersion.setForeground(Color.WHITE);
-		labelParsedMaps.setForeground(Color.WHITE);
-		labelSelectedFileHeader.setForeground(Color.WHITE);
+		labelHeaderName.setForeground(style.panelTextColor());
+		labelHeaderVersion.setForeground(style.launcherVersionText());
+		labelParsedMaps.setForeground(style.launcherVersionText());
+		labelSelectedFileHeader.setForeground(style.launcherVersionText());
 		binFilesList.setForeground(new Color(200, 200, 200));
 		labelSelectedFile.setForeground(new Color(200, 200, 200));
 		
-		setPreferredSize(new Dimension(550, 500));
+		setPreferredSize(new Dimension(550, 550));
 		pack();
 		
 		setLocationRelativeTo(null);
@@ -212,5 +268,30 @@ public class WindowLauncher extends JFrame {
 			results[i] = binFiles.get(i).getFileName().toString();
 		}
 		return results;
+	}
+
+
+	private void loadFile() {
+		JFileChooser fc = viewFileChooser("Load View To File", "Load");
+
+		int fcVal = fc.showOpenDialog(this);
+		if (fcVal == JFileChooser.APPROVE_OPTION) {
+			File file = fc.getSelectedFile();
+
+			setSelectedFile(file.getAbsolutePath());
+			//dispose();
+		}
+	}
+
+	private JFileChooser viewFileChooser(String dialogTitle, String approveBtnTxt){
+		JFileChooser fc = new JFileChooser();
+		fc.setDialogTitle(dialogTitle);
+		fc.setApproveButtonText(approveBtnTxt);
+		fc.setAcceptAllFileFilterUsed(false);
+		fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		fc.setFileFilter(new FileNameExtensionFilter("Map Files", "osm", "zip", "bin"));
+
+		fc.setCurrentDirectory(new File(System.getProperty("user.dir")));
+		return fc;
 	}
 }
