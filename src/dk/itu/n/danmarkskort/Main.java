@@ -3,6 +3,9 @@ package dk.itu.n.danmarkskort;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+
 import javax.swing.*;
 
 import dk.itu.n.danmarkskort.address.AddressController;
@@ -12,6 +15,7 @@ import dk.itu.n.danmarkskort.gui.WindowLauncher;
 import dk.itu.n.danmarkskort.gui.WindowParsingLoadscreenNew;
 import dk.itu.n.danmarkskort.gui.map.MapCanvas;
 import dk.itu.n.danmarkskort.gui.map.PinPointManager;
+import dk.itu.n.danmarkskort.gui.map.multithreading.TileController;
 import dk.itu.n.danmarkskort.mapgfx.GraphicRepresentation;
 import dk.itu.n.danmarkskort.models.UserPreferences;
 
@@ -37,6 +41,7 @@ public class Main {
 	public static MainCanvas mainPanel;
 	public static PinPointManager pinPointManager;
 	public static UserPreferences userPreferences;
+	public static TileController tileController;
 	
 	public static void main(String[] args) {
 		System.setProperty("awt.useSystemAAFontSettings","on");
@@ -114,12 +119,20 @@ public class Main {
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
         window.setPreferredSize(new Dimension(DKConstants.WINDOW_WIDTH, DKConstants.WINDOW_HEIGHT));  
-        
+        window.addComponentListener(new ComponentListener() {
+            public void componentResized(ComponentEvent e) {         
+            	Main.windowResized(e);
+            }public void componentHidden(ComponentEvent arg0) {}public void componentMoved(ComponentEvent arg0) {}public void componentShown(ComponentEvent arg0) {}
+        });
         window.pack();
         
         window.setLocationRelativeTo(null);
         window.setVisible(true);
         map.setupDone();
+    }
+    
+    public static void windowResized(ComponentEvent e) {
+    	Main.tileController.setTileSize(window.getWidth(), window.getHeight());
     }
     
     public static JPanel createFrameComponents() {
@@ -128,6 +141,7 @@ public class Main {
         overlay.setPreferredSize(new Dimension(DKConstants.WINDOW_WIDTH, DKConstants.WINDOW_HEIGHT));
 
         map = new MapCanvas();
+        tileController = new TileController();
         pinPointManager = PinPointManager.load(map);
         mainPanel = new MainCanvas();
         
