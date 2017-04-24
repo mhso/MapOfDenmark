@@ -25,18 +25,18 @@ public class RouteController {
 	 * @param point
 	 * @return A Vertex object
 	 */
-	private RouteVertex makeVertex(PointFloat point){
-		RouteVertex vertex = new RouteVertex(vertexCount, point);
+	public RouteVertex makeVertex(float lon, float lat){
+		RouteVertex vertex = new RouteVertex(vertexCount, new PointFloat(lon, lat));
 		vertices.add(vertex);
 		vertexCount++;
 		return vertex;
 	}
 	
-	public void addEdge(PointFloat fromVertex, PointFloat toVertex, int maxSpeed, 
-			boolean forwardAllowed, boolean backwardAllowed, String description, WayType wayType){
-		
-		RouteEdge edge = new RouteEdge(makeVertex(fromVertex), makeVertex(toVertex), maxSpeed, 
-				forwardAllowed, backwardAllowed, description, wayType);
+	public void addEdge(RouteVertex fromVertex, RouteVertex toVertex, Integer maxSpeed, 
+			boolean forwardAllowed, boolean backwardAllowed, boolean carsAllowed, boolean bikesAllowed, String description, WayType wayType){
+		RouteEdgeMeta routeEdgeMeta = new RouteEdgeMeta(maxSpeed, forwardAllowed, backwardAllowed,
+				carsAllowed, bikesAllowed, wayType);
+		RouteEdge edge = new RouteEdge(fromVertex, toVertex, routeEdgeMeta, description);
 		
 		routeEdges.add(edge);
 	}
