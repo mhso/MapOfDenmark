@@ -5,42 +5,32 @@ import dk.itu.n.danmarkskort.models.WayType;
 
 public class RouteEdge {
 	private final RouteVertex from, to;
-	private int maxSpeed;
-	private final boolean forwardAllowed, backwardAllowed;
+	private RouteEdgeMeta routeEdgeMeta;
 	private final String description;
-	private final WayType wayType;
 
-	public RouteEdge(RouteVertex from, RouteVertex to, int maxSpeed, boolean forwardAllowed, boolean backwardAllowed, String description, WayType wayType){
+	public RouteEdge(RouteVertex from, RouteVertex to, RouteEdgeMeta routeEdgeMeta, String description){
 		if (from.getId() < 0) throw new IllegalArgumentException("Vertex names must be nonnegative integers");
         if (to.getId() < 0) throw new IllegalArgumentException("Vertex names must be nonnegative integers");
-        if (maxSpeed <= 0) throw new IllegalArgumentException("maxSpeed is 0, must be nonnegative integer");
-		
+        if (routeEdgeMeta.getMaxSpeed() <= 0) throw new IllegalArgumentException("maxSpeed is 0, must be nonnegative integer");
 		this.from = from;
 		this.to = to;
-		this.maxSpeed = maxSpeed;
-		this.forwardAllowed = forwardAllowed;
-		this.backwardAllowed = backwardAllowed;
+		this.routeEdgeMeta = routeEdgeMeta;
 		this.description = ReuseStringObj.make(description);
-		this.wayType = wayType;
 	}
 	
-	public int getMaxSpeed() { return maxSpeed; }
+	public int getMaxSpeed() { return routeEdgeMeta.getMaxSpeed(); }
 	public RouteVertex getFrom() { return from; }
 	public RouteVertex getTo() { return to; }
 	public int getFromId() { return from.getId(); }
 	public int getToId() { return to.getId(); }
-	public boolean isForwardAllowed() { return forwardAllowed; }
-	public boolean isBackwardAllowed() {return backwardAllowed;	}
+	public boolean isForwardAllowed() { return routeEdgeMeta.isForwardAllowed(); }
+	public boolean isBackwardAllowed() {return routeEdgeMeta.isBackwardAllowed();	}
 	public String getDescription(){ return description; }
-	public WayType getWayType(){ return wayType; }
 
-	private double distance(){
-//		return Math.sqrt(Math.pow((to.getX() - from.getX()), 2) + Math.pow((to.getY() - from.getY()), 2));
-		return from.getDistance(to);
-	}
+	private double distance(){ return from.getDistance(to); }
 	
 	public double getWeightByDistance(){ return distance(); }
-	public double getWeightBySpeed(){ return distance() / (double)maxSpeed; }
+	public double getWeightBySpeed(){ return distance() / (double)routeEdgeMeta.getMaxSpeed(); }
 	
 	public double getWeight(WeightEnum weightEnum){
     	double result = 0;
