@@ -86,7 +86,7 @@ public class Style {
         
         arrowUpDownButton = new CustomButton("resources/icons/arrowupdown.png", menuAlpha, menuAlphaHover);
         
-        if(Main.production) frameIcon = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/resources/icons/map-icon.png").toString());
+        if(Main.production) frameIcon = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/resources/icons/map-icon.png"));
         else frameIcon = Toolkit.getDefaultToolkit().getImage("resources/icons/map-icon.png");
 
         logo = getImageIcon("resources/icons/logo.png");

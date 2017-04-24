@@ -13,6 +13,7 @@ import java.awt.Image;
 
 import javax.swing.JScrollPane;
 
+import dk.itu.n.danmarkskort.gui.Style;
 import dk.itu.n.danmarkskort.models.RouteEnum;
 import dk.itu.n.danmarkskort.models.RouteModel;
 
@@ -72,7 +73,7 @@ public class RoutePlannerMain {
 	 */
 	private void initialize() {
 		frmRouteplanner = new JFrame();
-		frmRouteplanner.setIconImage(Toolkit.getDefaultToolkit().getImage("resources/icons/map-icon.png"));
+		frmRouteplanner.setIconImage(new Style().frameIcon());
 		frmRouteplanner.setTitle("Route planner");
 		frmRouteplanner.setBounds(100, 100, 800, 900);
 		frmRouteplanner.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

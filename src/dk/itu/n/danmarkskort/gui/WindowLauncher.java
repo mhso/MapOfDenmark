@@ -3,7 +3,6 @@ package dk.itu.n.danmarkskort.gui;
 import java.awt.*;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 
 import dk.itu.n.danmarkskort.Main;
@@ -30,10 +29,9 @@ public class WindowLauncher extends JFrame {
 	
 	public WindowLauncher() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		//setBounds(100, 100, 450,);
 		Style style = new Style();
 		setTitle("Launcher");
-		setIconImage(Toolkit.getDefaultToolkit().getImage("resources/icons/map-icon.png"));
+		setIconImage(style.frameIcon());
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(style.margin(), 0, 0, 0));
 		contentPane.setLayout(new BorderLayout(0, 0));

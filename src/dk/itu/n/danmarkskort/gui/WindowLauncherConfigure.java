@@ -36,7 +36,7 @@ public class WindowLauncherConfigure extends JDialog {
 		Style style = new Style();
 		setModal(true);
 		setBounds(100, 100, 450, 300);
-		setIconImage(Toolkit.getDefaultToolkit().getImage("resources/icons/map-icon.png"));
+		setIconImage(style.frameIcon());
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 10));
