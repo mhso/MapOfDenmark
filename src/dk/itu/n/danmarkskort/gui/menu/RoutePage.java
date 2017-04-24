@@ -125,8 +125,8 @@ public class RoutePage extends JPanel {
         });
         
         
-        JButton btnS = new JButton();
-        btnS.addActionListener(e -> swapToFromFields());
+        JButton btnSwapToFrom = style.arrowUpDownButton();
+        btnSwapToFrom.addActionListener(e -> swapToFromFields());
         
         lblAddrFromConfirmed = new JLabel();
         lblAddrFromConfirmed.setIcon(ADDR_ICON_INVALID);
@@ -144,14 +144,13 @@ public class RoutePage extends JPanel {
         gbc_lblAddrToConfirmed.gridy = 2;
         panelCenter.add(lblAddrToConfirmed, gbc_lblAddrToConfirmed);
         
-        btnS.setIcon(style.arrowUpDownButton());
         GridBagConstraints gbc_btnS = new GridBagConstraints();
         gbc_btnS.fill = GridBagConstraints.BOTH;
         gbc_btnS.gridheight = 2;
         gbc_btnS.insets = new Insets(0, 0, 5, 5);
         gbc_btnS.gridx = 5;
         gbc_btnS.gridy = 1;
-        panelCenter.add(btnS, gbc_btnS);
+        panelCenter.add(btnSwapToFrom, gbc_btnS);
         
         JLabel lblTo = new JLabel("To:");
         GridBagConstraints gbc_lblTo = new GridBagConstraints();

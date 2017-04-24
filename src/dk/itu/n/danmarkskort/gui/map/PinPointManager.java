@@ -134,6 +134,7 @@ public class PinPointManager implements Serializable {
 	public boolean removePinPoint(PinPoint pinPoint) {
 		if(pinPoints.containsValue(pinPoint)) {
 			pinPoints.remove(pinPoint.getName());
+			save();
 			return true;
 		} else return false;
 	}
@@ -148,7 +149,6 @@ public class PinPointManager implements Serializable {
 		if(systemPinPoints.containsKey(name)) return false;
 		systemPinPoints.put(name, pinPoint);
 		Main.mainPanel.repaint();
-		save();
 		return true;
 	}
 	
