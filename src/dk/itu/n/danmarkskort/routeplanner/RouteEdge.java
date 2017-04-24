@@ -26,7 +26,6 @@ public class RouteEdge {
 	public boolean isForwardAllowed() { return routeEdgeMeta.isForwardAllowed(); }
 	public boolean isBackwardAllowed() {return routeEdgeMeta.isBackwardAllowed();	}
 	public String getDescription(){ return description; }
-	public WayType getWayType(){ return routeEdgeMeta.getWayType(); }
 
 	private double distance(){ return from.getDistance(to); }
 	

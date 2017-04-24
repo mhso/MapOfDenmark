@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import dk.itu.n.danmarkskort.models.PointFloat;
+import dk.itu.n.danmarkskort.models.ReuseRouteEdgeMetaObj;
 import dk.itu.n.danmarkskort.models.WayType;
 
 public class RouteController {
@@ -35,8 +36,9 @@ public class RouteController {
 	public void addEdge(RouteVertex fromVertex, RouteVertex toVertex, Integer maxSpeed, 
 			boolean forwardAllowed, boolean backwardAllowed, boolean carsAllowed, boolean bikesAllowed, String description, WayType wayType){
 		RouteEdgeMeta routeEdgeMeta = new RouteEdgeMeta(maxSpeed, forwardAllowed, backwardAllowed,
-				carsAllowed, bikesAllowed, wayType);
-		RouteEdge edge = new RouteEdge(fromVertex, toVertex, routeEdgeMeta, description);
+				carsAllowed, bikesAllowed);
+		RouteEdgeMeta reuseRouteEdgeMeta = ReuseRouteEdgeMetaObj.make(routeEdgeMeta);
+		RouteEdge edge = new RouteEdge(fromVertex, toVertex, reuseRouteEdgeMeta, description);
 		
 		routeEdges.add(edge);
 	}
