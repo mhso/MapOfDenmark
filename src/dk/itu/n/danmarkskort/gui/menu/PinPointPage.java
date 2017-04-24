@@ -22,6 +22,8 @@ import java.awt.GridLayout;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JScrollPane;
+import java.awt.Component;
+import javax.swing.Box;
 
 public class PinPointPage extends JPanel {
 
@@ -29,32 +31,6 @@ public class PinPointPage extends JPanel {
 	public JPanel panel;
 	private Style style;
 	private JPanel panelRow;
-	
-//	public PinPointPage() {
-//		setLayout(new BorderLayout(0, 0));
-//		
-//		JLabel lblDineInteressepunkter = new JLabel("Dine interessepunkter");
-//		lblDineInteressepunkter.setHorizontalAlignment(SwingConstants.CENTER);
-//		add(lblDineInteressepunkter, BorderLayout.NORTH);
-//		
-//		panel = new JPanel();
-//		add(panel, BorderLayout.CENTER);
-//		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-//		
-//		JScrollPane scrollPane = new JScrollPane(panel);
-//		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-//		add(scrollPane, BorderLayout.SOUTH);
-//		
-//		for(PinPoint pinPoint : Main.pinPointManager.getPinPoints()) {
-//			PinPointRow row = new PinPointRow(pinPoint);
-//			row.setPreferredSize(new Dimension(getWidth(), 30));
-//			row.setBounds(0, 0, getWidth(), 30);
-//			panel.add(row);
-//		}
-//		
-//		instance = this;
-//
-//	}
 	
 	public PinPointPage() {
     	style = new Style();
@@ -69,7 +45,7 @@ public class PinPointPage extends JPanel {
         panelHeadline.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
         panelHeadline.setBackground(style.menuContentBG());
         panelPage.add(panelHeadline, BorderLayout.NORTH);
-        JLabel lblPageHeadline = new JLabel("Dine interessepunkter");
+        JLabel lblPageHeadline = new JLabel("Your Point of Interest");
         lblPageHeadline.setFont(new Font("Tahoma", Font.BOLD, 18));
         panelHeadline.add(lblPageHeadline);
         
@@ -93,23 +69,22 @@ public class PinPointPage extends JPanel {
     }
 	
 	public void initContentPanel(JPanel panel) {
-//		setLayout(new BorderLayout(0, 0));
-//		
 		panelRow = new JPanel();
 		panel.add(panelRow);
 		panelRow.setLayout(new BoxLayout(panelRow, BoxLayout.Y_AXIS));
 		panelRow.setBackground(style.menuContentBG());
-//		
-//		JScrollPane scrollPane = new JScrollPane(panel);
-//		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-//		add(scrollPane, BorderLayout.SOUTH);
-//		
+		int spaceUseByRows = 0;		
 		for(PinPoint pinPoint : Main.pinPointManager.getPinPoints()) {
 			PinPointRow row = new PinPointRow(pinPoint);
 			row.setPreferredSize(new Dimension(getWidth(), 30));
 			row.setBounds(0, 0, getWidth(), 30);
 			panelRow.add(row);
+			spaceUseByRows++;
 		}
+//		int spaceFilling = panel.getHeight() - spaceUseByRows;
+//		System.out.print(spaceFilling);
+//		Component verticalStrut = Box.createVerticalStrut(spaceFilling);
+//		panelRow.add(verticalStrut);
 		
 		instance = this;
 	}

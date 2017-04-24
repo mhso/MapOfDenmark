@@ -18,8 +18,8 @@ public class Style {
                 dropdownItemBG, dropdownItemBGActive, dropdowItemTextColor, dropdownItemTextColorActive, launcherVersionText, launcherSelectionBG;
     private CustomButton searchButton, menuButton, routeButton, centerViewButton, zoomInButton, zoomOutButton,
             menuLayerButton, menuSaveButton, menuOpenButton, menuSettingsButton, menuRouteButton, menuInfoButton, 
-            menuPinPointButton, pinPointPanButton, pinPointDeleteButton;
-    private ImageIcon scaleIndicator, arrowUpDownButton, basicThemePreview, logo, launcherOptionsIcon, launcherLoadIcon;
+            menuPinPointButton, pinPointPanButton, pinPointDeleteButton, arrowUpDownButton;
+    private ImageIcon scaleIndicator, basicThemePreview, logo, launcherOptionsIcon, launcherLoadIcon;
     private Image frameIcon;
     private Font normalText, smallHeadline, mediumHeadline, largeHeadline, largeHeadlineSpacing;
 
@@ -64,6 +64,11 @@ public class Style {
         menuInfoButton = new CustomButton("resources/icons/info.png", menuAlpha, menuAlphaHover);
         menuPinPointButton = new CustomButton("resources/icons/info.png", menuAlpha, menuAlphaHover);
         
+        menuOpenButton = new CustomButton("resources/icons/open.png", menuAlpha, menuAlphaHover);
+        
+
+        arrowUpDownButton = new CustomButton("resources/icons/arrowupdown.png", menuAlpha, menuAlphaHover);
+        
         centerViewButton = new CustomButton("resources/icons/target.png", alphaFloat, alphaHover, zoomButtonBG);
         zoomInButton = new CustomButton("resources/icons/zoomin.png", alphaFloat, alphaHover, zoomButtonBG);
         zoomOutButton = new CustomButton("resources/icons/zoomout.png", alphaFloat, alphaHover, zoomButtonBG);
@@ -74,8 +79,6 @@ public class Style {
         basicThemePreview = new ImageIcon("resources/icons/previewthemebasic.png");
         
         scaleIndicator = new ImageIcon("resources/scale.png");
-        
-        arrowUpDownButton = new ImageIcon("resources/icons/arrowupdown.png");
         
         frameIcon = Toolkit.getDefaultToolkit().getImage("resources/icons/map-icon.png");
 
@@ -136,13 +139,12 @@ public class Style {
     public CustomButton menuPinPointButton() { return menuPinPointButton; }
     public CustomButton pinPointPanButton() { return pinPointPanButton; }
     public CustomButton pinPointDeleteButton() { return pinPointDeleteButton; }
-    
+    public CustomButton arrowUpDownButton() { return arrowUpDownButton; }
     
     public CustomToggleButton toggleButton() { return new CustomToggleButton(1.0f, 0.8f); }
     
     public ImageIcon basicThemePreview() { return basicThemePreview; }
     public ImageIcon scaleIndicator() { return scaleIndicator; }
-    public ImageIcon arrowUpDownButton() { return arrowUpDownButton; }
     
     public Image frameIcon() { return frameIcon; }
 
