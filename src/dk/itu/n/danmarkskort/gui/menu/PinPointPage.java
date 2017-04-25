@@ -24,6 +24,7 @@ import javax.swing.JButton;
 import javax.swing.JScrollPane;
 import java.awt.Component;
 import javax.swing.Box;
+import java.awt.FlowLayout;
 
 public class PinPointPage extends JPanel {
 
@@ -73,18 +74,12 @@ public class PinPointPage extends JPanel {
 		panel.add(panelRow);
 		panelRow.setLayout(new BoxLayout(panelRow, BoxLayout.Y_AXIS));
 		panelRow.setBackground(style.menuContentBG());
-		int spaceUseByRows = 0;		
 		for(PinPoint pinPoint : Main.pinPointManager.getPinPoints()) {
 			PinPointRow row = new PinPointRow(pinPoint);
 			row.setPreferredSize(new Dimension(getWidth(), 30));
 			row.setBounds(0, 0, getWidth(), 30);
 			panelRow.add(row);
-			spaceUseByRows++;
 		}
-//		int spaceFilling = panel.getHeight() - spaceUseByRows;
-//		System.out.print(spaceFilling);
-//		Component verticalStrut = Box.createVerticalStrut(spaceFilling);
-//		panelRow.add(verticalStrut);
 		
 		instance = this;
 	}

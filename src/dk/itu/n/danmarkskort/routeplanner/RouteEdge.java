@@ -46,6 +46,6 @@ public class RouteEdge {
     }
 	
 	public String toString() {
-		return from.getId() + "->" + to.getId();
+		return from.getId() + " [" + from.toString() + "] ->" + to.getId()+ " [" + from.toString() + "]";
 	}
 }
