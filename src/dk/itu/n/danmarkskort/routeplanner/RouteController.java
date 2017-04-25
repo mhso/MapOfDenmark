@@ -22,7 +22,7 @@ public class RouteController {
 	}
 	
 	/**
-	 * Creates a RouteVertex with a uniq Id based on the position i the ArrayList
+	 * Creates a RouteVertex with a unique Id based on the position i the ArrayList
 	 * @param point
 	 * @return A Vertex object
 	 */
@@ -33,9 +33,8 @@ public class RouteController {
 		return vertex;
 	}
 	
-	public void addEdge(RouteVertex fromVertex, RouteVertex toVertex, Integer maxSpeed, 
-			boolean forwardAllowed, boolean backwardAllowed, boolean carsAllowed, boolean bikesAllowed,
-						String description, WayType wayType){
+	public void addEdge(RouteVertex fromVertex, RouteVertex toVertex, Integer maxSpeed,
+			boolean forwardAllowed, boolean backwardAllowed, boolean carsAllowed, boolean bikesAllowed, String description){
 		RouteEdgeMeta routeEdgeMeta = new RouteEdgeMeta(maxSpeed, forwardAllowed, backwardAllowed,
 				carsAllowed, bikesAllowed);
 		RouteEdgeMeta reuseRouteEdgeMeta = ReuseRouteEdgeMetaObj.make(routeEdgeMeta);

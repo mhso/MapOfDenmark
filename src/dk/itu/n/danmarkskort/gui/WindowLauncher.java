@@ -3,11 +3,12 @@ package dk.itu.n.danmarkskort.gui;
 import java.awt.*;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 
 import dk.itu.n.danmarkskort.Main;
 
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
@@ -30,7 +31,7 @@ public class WindowLauncher extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		Style style = new Style();
 		setTitle("Launcher");
-		setIconImage(Toolkit.getDefaultToolkit().getImage("resources/icons/map-icon.png"));
+		setIconImage(style.frameIcon());
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(style.margin(), 0, 0, 0));
 		contentPane.setLayout(new BorderLayout(0, 0));
@@ -87,6 +88,13 @@ public class WindowLauncher extends JFrame {
 				labelSelectedFile.setText(binFilesList.getSelectedValue());
 				selectedFilePath = binFiles.get(binFilesList.getSelectedIndex()).toString();
 				if(!buttonLaunch.isEnabled()) enableLaunchButton(true);
+				if(e.getClickCount() == 2) launch();
+			}
+		});
+		binFilesList.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if(!binFilesList.isSelectionEmpty()) launch();
 			}
 		});
 		
@@ -128,10 +136,7 @@ public class WindowLauncher extends JFrame {
 
 
 
-		buttonLaunch.addActionListener(e -> {
-			dispose();
-			Main.launch(new String[]{selectedFilePath});
-		});
+		buttonLaunch.addActionListener(e -> launch());
 		buttonLaunch.setFont(style.mediumHeadline());
         buttonLaunch.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, style.panelBG()));
         buttonLaunch.setPreferredSize(new Dimension(buttonLaunch.getPreferredSize().width, 40));
@@ -230,6 +235,11 @@ public class WindowLauncher extends JFrame {
 		setLocationRelativeTo(null);
 		setVisible(true);
 	}
+	
+	private void launch() {
+		dispose();
+		Main.launch(new String[]{selectedFilePath});
+	}
 
 	public void setSelectedFile(String fileName) {
 		labelSelectedFile.setText(fileName);
@@ -245,6 +255,8 @@ public class WindowLauncher extends JFrame {
 	
 	private String[] getParsedFiles() {
 		binFiles = new ArrayList<>();
+		selectedFilePath = "/resources/default.bin";
+		labelSelectedFile.setText("default.bin (default)");
 		try {
 			for(Path entry : Files.newDirectoryStream(Paths.get("parsedOSMFiles"))) {
 				for(Path binFile : Files.newDirectoryStream(entry)) {
@@ -277,7 +289,6 @@ public class WindowLauncher extends JFrame {
 			File file = fc.getSelectedFile();
 
 			setSelectedFile(file.getAbsolutePath());
-			//dispose();
 		}
 	}
 

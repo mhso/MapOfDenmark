@@ -45,6 +45,8 @@
 		<type name="SPORT"/>
 		<type name="HIGHWAY_RESIDENTIAL"/>
 		<type name="HIGHWAY_UNCLASSIFIED"/>
+		<type name="HIGHWAY_PEDESTRIAN"/>
+		<type name="PEDESTRIAN_AREA"/>
 	</zoomlevel>
 	<zoomlevel level="12">
 		<type name="BUILDING"/>

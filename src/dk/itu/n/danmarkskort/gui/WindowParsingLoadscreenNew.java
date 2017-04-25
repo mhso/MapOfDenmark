@@ -47,7 +47,7 @@ public class WindowParsingLoadscreenNew extends JFrame implements OSMParserListe
 	
 	public void initialize() {
 		setTitle("Parsing Data");
-		setIconImage(Toolkit.getDefaultToolkit().getImage("resources/icons/map-icon.png"));
+		setIconImage(new Style().frameIcon());
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new BGImage();

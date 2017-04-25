@@ -6,7 +6,7 @@ public class DKConstants {
 	/**
 	 * The File Path for User Preference Bin File, where things like Default Map files, Current Map Theme etc. lies.
 	 */
-	public final static String USERPREF_PATH = "resources/userpref.bin";
+	public final static String USERPREF_PATH = "userpref.bin";
 	
 	/**
 	 * Determines the default size of Main Window.

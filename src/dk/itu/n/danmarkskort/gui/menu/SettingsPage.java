@@ -189,7 +189,9 @@ public class SettingsPage extends JPanel {
     }
     
     private void changeCurrentTheme() {
-    	GraphicRepresentation.parseData("resources/Theme" + Main.userPreferences.getCurrentMapTheme() + ".XML");
+    	if(Main.production) GraphicRepresentation.parseData(
+    			getClass().getResource("/resources/Theme" + Main.userPreferences.getCurrentMapTheme() + ".XML").toString());
+    	else GraphicRepresentation.parseData("resources/Theme" + Main.userPreferences.getCurrentMapTheme() + ".XML");
     	Main.map.forceRepaint();
     	Util.writeObjectToFile(Main.userPreferences, DKConstants.USERPREF_PATH);
     }
@@ -310,7 +312,7 @@ public class SettingsPage extends JPanel {
     	JPanel contentPane = (JPanel) dialog.getContentPane();
     	contentPane.setLayout(new BorderLayout());
     	
-    	JList<String> binFilesList = new JList(getParsedFiles());
+    	JList<String> binFilesList = new JList<>(getParsedFiles());
 		binFilesList.setBorder(new MatteBorder(1, 1, 1, 1, (Color) Color.WHITE));
 		binFilesList.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		binFilesList.setSelectionBackground(new Color(130, 173, 198));
