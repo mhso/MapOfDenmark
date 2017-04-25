@@ -167,7 +167,7 @@ public class Util {
 	}
 	
 	public static Object readObjectFromFile(String filename) {
-		try {
+		try {	
 			BufferedInputStream fout = new BufferedInputStream(new FileInputStream(filename));
 			ObjectInputStream oos = new ObjectInputStream(fout);
 			Object object = oos.readObject();

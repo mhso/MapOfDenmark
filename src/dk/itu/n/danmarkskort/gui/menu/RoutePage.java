@@ -36,12 +36,24 @@ public class RoutePage extends JPanel {
     JLabel lblAddrFromConfirmed, lblAddrToConfirmed;
     private DropdownAddressSearch dropSuggestionsAddrFrom;
     private DropdownAddressSearch dropSuggestionsAddrTo;
-    private final ImageIcon ADDR_ICON_VALID = new ImageIcon("resources/icons/happiness.png");	
-	private final ImageIcon ADDR_ICON_INVALID = new ImageIcon("resources/icons/sad_red.png");
+    private ImageIcon ADDR_ICON_VALID;
+	private ImageIcon ADDR_ICON_INVALID;
 	private DropdownMenu menu;
 	
     public RoutePage(DropdownMenu menu, String txtAddreToSetField) {
     	this.menu = menu;
+    	if(Main.production) {
+    		try {
+				ADDR_ICON_VALID = new ImageIcon(ImageIO.read(getClass().getResourceAsStream("/resources/icons/happiness.png")));
+				ADDR_ICON_INVALID = new ImageIcon(ImageIO.read(getClass().getResourceAsStream("/resources/icons/sad_red.png")));
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}	
+    	}
+    	else {
+    		ADDR_ICON_VALID = new ImageIcon("resources/icons/happiness.png");
+    		ADDR_ICON_INVALID = new ImageIcon("resources/icons/sad_red.png");
+    	}
     	style = new Style();
         setOpaque(false);
         setLayout(new BorderLayout(0, 0));
@@ -289,7 +301,8 @@ public class RoutePage extends JPanel {
     		BufferedImage bufferedImage = null;
     		List<RouteModel> routemodels = demoRoute();
 			try {
-				bufferedImage = ImageIO.read(new File("resources/routeplanner/demo_routeplanner.PNG"));
+				if(Main.production) bufferedImage = ImageIO.read(getClass().getResourceAsStream("/resources/routeplanner/demo_routeplanner.PNG"));
+				else bufferedImage = ImageIO.read(new File("resources/routeplanner/demo_routeplanner.PNG"));
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

@@ -2,12 +2,12 @@ package dk.itu.n.danmarkskort;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Toolkit;
 import javax.swing.*;
 
 import dk.itu.n.danmarkskort.address.AddressController;
 import dk.itu.n.danmarkskort.backend.OSMParser;
 import dk.itu.n.danmarkskort.backend.OSMReader;
+import dk.itu.n.danmarkskort.gui.Style;
 import dk.itu.n.danmarkskort.gui.WindowLauncher;
 import dk.itu.n.danmarkskort.gui.WindowParsingLoadscreenNew;
 import dk.itu.n.danmarkskort.gui.map.MapCanvas;
@@ -64,10 +64,14 @@ public class Main {
 		if(args.length > 0) prepareParser(args);
 		else prepareParser(new String[]{userPreferences.getDefaultMapFile()});
 		if(userPreferences.getCurrentMapTheme() != null) {
-			GraphicRepresentation.parseData("resources/Theme" + userPreferences.getCurrentMapTheme() + ".XML");
+			if(Main.production) GraphicRepresentation.parseData(
+					Main.class.getResource("/resources/Theme" + userPreferences.getCurrentMapTheme() + ".XML").toString());
+			else GraphicRepresentation.parseData("resources/Theme" + userPreferences.getCurrentMapTheme() + ".XML");
 		}
 		else {
-			GraphicRepresentation.parseData("resources/Theme" + userPreferences.getDefaultTheme() + ".XML");
+			if(Main.production) GraphicRepresentation.parseData(
+					Main.class.getResource("/resources/Theme" + userPreferences.getDefaultTheme() + ".XML").toString());
+			else GraphicRepresentation.parseData("resources/Theme" + userPreferences.getDefaultTheme() + ".XML");
 			userPreferences.setCurrentMapTheme(userPreferences.getDefaultTheme());
 		}
 	}
@@ -108,7 +112,7 @@ public class Main {
 
     public static void makeFrame() {
         window = new JFrame(APP_NAME);
-        window.setIconImage(Toolkit.getDefaultToolkit().getImage("resources/icons/map-icon.png"));
+        window.setIconImage(new Style().frameIcon());
         window.setBackground(new Color(110, 192, 255));
         window.add(createFrameComponents());
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

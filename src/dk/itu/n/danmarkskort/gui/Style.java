@@ -1,7 +1,11 @@
 package dk.itu.n.danmarkskort.gui;
 
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
+
+import dk.itu.n.danmarkskort.Main;
+
 import java.awt.*;
 import java.awt.font.TextAttribute;
 import java.awt.image.BufferedImage;
@@ -76,23 +80,34 @@ public class Style {
         pinPointPanButton = new CustomButton("resources/icons/map-pin.png", menuAlpha, menuAlphaHover);
         pinPointDeleteButton = new CustomButton("resources/icons/office-bin.png", menuAlpha, menuAlphaHover);
 
-        basicThemePreview = new ImageIcon("resources/icons/previewthemebasic.png");
+        basicThemePreview = getImageIcon("resources/icons/previewthemebasic.png");
         
-        scaleIndicator = new ImageIcon("resources/scale.png");
+        scaleIndicator = getImageIcon("resources/scale.png");
         
-        frameIcon = Toolkit.getDefaultToolkit().getImage("resources/icons/map-icon.png");
+        arrowUpDownButton = new CustomButton("resources/icons/arrowupdown.png", menuAlpha, menuAlphaHover);
+        
+        if(Main.production) frameIcon = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/resources/icons/map-icon.png"));
+        else frameIcon = Toolkit.getDefaultToolkit().getImage("resources/icons/map-icon.png");
 
-        logo = new ImageIcon("resources/icons/logo.png");
+        logo = getImageIcon("resources/icons/logo.png");
         logo = new ImageIcon(logo.getImage().getScaledInstance(40, 40, BufferedImage.SCALE_SMOOTH));
-        launcherOptionsIcon = new ImageIcon("resources/icons/settings.png");
-        launcherLoadIcon = new ImageIcon("resources/icons/open.png");
+        launcherOptionsIcon = getImageIcon("resources/icons/settings.png");
+        launcherLoadIcon = getImageIcon("resources/icons/open.png");
 
 
         try {
-            normalText= Font.createFont(Font.TRUETYPE_FONT, new File("resources/fonts/Roboto-Regular.ttf")).deriveFont(16f);
-            smallHeadline = Font.createFont(Font.TRUETYPE_FONT, new File("resources/fonts/Roboto-Medium.ttf")).deriveFont(18f);
-            mediumHeadline = Font.createFont(Font.TRUETYPE_FONT, new File("resources/fonts/Roboto-Light.ttf")).deriveFont(20f);
-            largeHeadline = Font.createFont(Font.TRUETYPE_FONT, new File("resources/fonts/Roboto-Light.ttf")).deriveFont(42f);
+        	if(Main.production) {
+        		normalText= Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/resources/fonts/Roboto-Regular.ttf")).deriveFont(16f);
+                smallHeadline = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/resources/fonts/Roboto-Medium.ttf")).deriveFont(18f);
+                mediumHeadline = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/resources/fonts/Roboto-Light.ttf")).deriveFont(20f);
+                largeHeadline = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/resources/fonts/Roboto-Light.ttf")).deriveFont(42f);
+        	}
+        	else {
+        		normalText= Font.createFont(Font.TRUETYPE_FONT, new File("resources/fonts/Roboto-Regular.ttf")).deriveFont(16f);
+                smallHeadline = Font.createFont(Font.TRUETYPE_FONT, new File("resources/fonts/Roboto-Medium.ttf")).deriveFont(18f);
+                mediumHeadline = Font.createFont(Font.TRUETYPE_FONT, new File("resources/fonts/Roboto-Light.ttf")).deriveFont(20f);
+                largeHeadline = Font.createFont(Font.TRUETYPE_FONT, new File("resources/fonts/Roboto-Light.ttf")).deriveFont(42f);
+        	}
         } catch (FontFormatException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -102,6 +117,17 @@ public class Style {
         Map<TextAttribute, Object> attributes = new HashMap<>();
         attributes.put(TextAttribute.TRACKING, 0.1);
         largeHeadlineSpacing = largeHeadline.deriveFont(attributes);
+    }
+    
+    private ImageIcon getImageIcon(String fileName) {
+    	if(Main.production)
+			try {
+				return new ImageIcon(ImageIO.read(getClass().getResourceAsStream("/"+fileName)));
+			} catch (IOException e) {
+				e.printStackTrace();
+				return null;
+			}
+		else return new ImageIcon(fileName);
     }
 
     // Getters
