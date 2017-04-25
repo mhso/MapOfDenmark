@@ -30,7 +30,6 @@ public class Main {
 	public final static boolean useLauncher = true;
 	
 	public static boolean binaryfile = true;
-	
 	public static boolean forceParsing;
 
 	public static OSMReader osmReader;
@@ -43,6 +42,7 @@ public class Main {
 	public static UserPreferences userPreferences;
 	public static TileController tileController;
 	
+	@SuppressWarnings("unused")
 	public static void main(String[] args) {
 		System.setProperty("awt.useSystemAAFontSettings","on");
 		System.setProperty("swing.aatext", "true");
@@ -58,7 +58,6 @@ public class Main {
 	
 	public static void launch(String[] args) {
 		startup(args);
-		
 	}
 
 	public static void startup(String[] args) {
@@ -98,9 +97,7 @@ public class Main {
 		makeFrame();
 	}
 
-	public static void shutdown() {
-
-	}
+	public static void shutdown() {}
 
 	public static void log(Object text) {
 		if(debug) System.out.println("[" + APP_NAME + " " + APP_VERSION + "] " + text.toString());
@@ -117,7 +114,6 @@ public class Main {
         window.setBackground(new Color(110, 192, 255));
         window.add(createFrameComponents());
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        
         window.setPreferredSize(new Dimension(DKConstants.WINDOW_WIDTH, DKConstants.WINDOW_HEIGHT));  
         window.addComponentListener(new ComponentListener() {
             public void componentResized(ComponentEvent e) {         
@@ -125,7 +121,6 @@ public class Main {
             }public void componentHidden(ComponentEvent arg0) {}public void componentMoved(ComponentEvent arg0) {}public void componentShown(ComponentEvent arg0) {}
         });
         window.pack();
-        
         window.setLocationRelativeTo(null);
         window.setVisible(true);
         map.setupDone();
@@ -151,4 +146,5 @@ public class Main {
     	overlay.add(map);
     	return overlay;
     }
+    
 }

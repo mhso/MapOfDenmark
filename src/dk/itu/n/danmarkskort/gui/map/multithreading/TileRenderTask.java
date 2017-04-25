@@ -12,7 +12,8 @@ public class TileRenderTask extends Task {
 	}
 	
 	public void work() {
-		if(tile.render()) Main.tileController.hotswapUselesstile(tile);
+		if(Main.tileController.getUselessTileKeys().contains(tile)) return;
+		tile.render();
 	}
 
 	public void onRunStart() {}

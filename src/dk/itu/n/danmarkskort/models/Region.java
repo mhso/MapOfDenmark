@@ -1,6 +1,10 @@
 package dk.itu.n.danmarkskort.models;
 
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
+
+import dk.itu.n.danmarkskort.Main;
+import dk.itu.n.danmarkskort.Util;
 
 public class Region {
 
@@ -39,6 +43,23 @@ public class Region {
 	
 	public boolean containsPoint(Point2D point) {
 		return (point.getX() >= x1 && point.getX() <= x2 && point.getY() >= y1 && point.getY() <= y2);
+	}
+	
+	public Rectangle2D getRect() {
+		return new Rectangle2D.Double(x1, y1, x1 + getWidth(), y1 + getHeight());
+	}
+	
+	public boolean overlapsRegion(Region other) {
+		if(Util.valueIsBetween(x1, other.x1, other.x2) && Util.valueIsBetween(y1, other.y1, other.y2)) return true;
+		if(Util.valueIsBetween(x2, other.x1, other.x2) && Util.valueIsBetween(y1, other.y1, other.y2)) return true;
+		if(Util.valueIsBetween(x1, other.x1, other.x2) && Util.valueIsBetween(y2, other.y1, other.y2)) return true;
+		if(Util.valueIsBetween(x2, other.x1, other.x2) && Util.valueIsBetween(y2, other.y1, other.y2)) return true;
+		if(Util.valueIsBetween(other.x1, x1, x2) && Util.valueIsBetween(other.y1, y1, y2)) return true;
+		if(Util.valueIsBetween(other.x2, x1, x2) && Util.valueIsBetween(other.y1, y1, y2)) return true;
+		if(Util.valueIsBetween(other.x1, x1, x2) && Util.valueIsBetween(other.y2, y1, y2)) return true;
+		if(Util.valueIsBetween(other.x2, x1, x2) && Util.valueIsBetween(other.y2, y1, y2)) return true;
+		
+		return false;
 	}
 	
 }

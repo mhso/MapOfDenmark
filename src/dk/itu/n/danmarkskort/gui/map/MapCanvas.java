@@ -39,15 +39,13 @@ public class MapCanvas extends JPanel implements ActionListener {
 
 	private AffineTransform transform = new AffineTransform();
 	private AffineTransform actualTransform = new AffineTransform();
+	private AffineTransform pixelTransform = new AffineTransform();
 	private boolean antiAlias = true;
 	public int shapesDrawn = 0;
 	private final int MAX_ZOOM = 20;
 
 	private WaytypeGraphicSpec currentWTGSpec;
 	private boolean zoomChanged;
-
-	private BufferedMapManager imageManager = null;
-	private Point2D zero;
 
 	private List<CanvasListener> listeners = new ArrayList<>();
 	private List<WaytypeGraphicSpec> wayTypesVisible;
@@ -74,25 +72,22 @@ public class MapCanvas extends JPanel implements ActionListener {
 	public void addCanvasListener(CanvasListener l) {
 		listeners.add(l);
 	}
-	
-	public void forceRepaint() {
-		zoomChanged = true;
-		imageManager.forceFullRepaint();
-		repaint();
-	}
 
 	public AffineTransform getTransform() {
 		return transform;
 	}
 	
+	public AffineTransform getActualTransform() {
+		return actualTransform;
+	}
+	
+	public AffineTransform getPixelTransform() {
+		return pixelTransform;
+	}
+	
 	public void drawMap(Graphics2D g2d) {
 		if(Main.buffered) {
-			if(imageManager != null) {
-				if(scaleCurrentLayer) imageManager.drawOldImages(g2d);
-				else if(imageManager.isRepainting()) imageManager.drawOldImages(g2d);
-				else imageManager.draw(g2d);
-				//drawMapShapes(g2d);
-			}
+			Main.tileController.draw(g2d);
 		} else {
 			drawMapShapes(g2d);
 		}
@@ -157,11 +152,12 @@ public class MapCanvas extends JPanel implements ActionListener {
         }
     }
 	
-	public void drawMapShapesForTile(Tile tile, Graphics2D g2d) {
+	public void drawMapShapesForTile(Tile tile) {
+		if(tile.isRendered()) return;
+		Graphics2D g2d = (Graphics2D)tile.getGraphics();
+		Region currentRegion = tile.getGeographicalRegion();
 		
-		
-		
-		g2d.setTransform(transform);
+		g2d.setTransform(tile.getTransform());
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		drawMapRegion(g2d);
 		if(zoomChanged) wayTypesVisible = getOnScreenGraphicsForCurrentZoom();
@@ -247,18 +243,13 @@ public class MapCanvas extends JPanel implements ActionListener {
 		repair();
 		transform.preConcatenate(AffineTransform.getTranslateInstance(dx, dy));
 		actualTransform.preConcatenate(AffineTransform.getTranslateInstance(dx, dy));
-		if(Main.buffered && imageManager != null) imageManager.pan(dx, dy);
+		//pixelTransform.preConcatenate(AffineTransform.getTranslateInstance(dx, dy));
 		if(Main.buffered && Main.tileController != null) Main.tileController.pan(dx, dy);
 		repaint();
 	}
 	
 	public void purePan(double dx, double dy) { //Only pans map temporary without automatic repaint.
 		transform.preConcatenate(AffineTransform.getTranslateInstance(dx, dy));
-	}
-	
-	public void purePanToTile(Point tilePosition) {
-		transform.preConcatenate(AffineTransform.getTranslateInstance(-transform.getTranslateX(), -transform.getTranslateY()));
-		transform.preConcatenate(AffineTransform.getTranslateInstance(zero.getX() + -tilePosition.getX() * getWidth(), zero.getY() + -tilePosition.getY() * getHeight()));
 	}
 	
 	public void purePanToPosition(Point2D position) {
@@ -293,6 +284,12 @@ public class MapCanvas extends JPanel implements ActionListener {
 		return new Region(topLeft.getX(), topLeft.getY(), bottomRight.getX(), bottomRight.getY());
 	}
 	
+	public Region getActualGeographicalRegion() {
+		Point2D topLeft = toActualModelCoords(new Point2D.Double(0, 0));
+		Point2D bottomRight = toActualModelCoords(new Point2D.Double(getWidth(), getHeight()));
+		return new Region(topLeft.getX(), topLeft.getY(), bottomRight.getX(), bottomRight.getY());
+	}
+	
 	public Point2D getRelativeMousePosition() {
 		Point mousePositionScreen = MouseInfo.getPointerInfo().getLocation();
 		Point mapCanvasPosition = getLocationOnScreen();
@@ -321,6 +318,8 @@ public class MapCanvas extends JPanel implements ActionListener {
 		else if(getZoom() < 1) {
 			transform.preConcatenate(AffineTransform.getScaleInstance(scaleBefore/scaleAfter, scaleBefore/scaleAfter));
 			actualTransform.preConcatenate(AffineTransform.getScaleInstance(scaleBefore/scaleAfter, scaleBefore/scaleAfter));
+		} else {
+			pixelTransform = new AffineTransform();
 		}
 
 		for(CanvasListener listener : listeners) listener.onZoom();
@@ -328,13 +327,7 @@ public class MapCanvas extends JPanel implements ActionListener {
 			zoomChanged = true;
 			for(CanvasListener listener : listeners) listener.onZoomLevelChanged();
 		}
-		
-		if(imageManager != null && !this.scaleCurrentLayer) {
-			imageManager.storeZoomImages();
-		}
-		if(imageManager != null) imageManager.zoom(factor);
-		this.scaleCurrentLayer = true;
-		
+
 		zoomTimer.restart();
 		repaint();
 	}
@@ -357,6 +350,14 @@ public class MapCanvas extends JPanel implements ActionListener {
 		try {
 			return transform.inverseTransform(relativeToMapCanvasPosition, null);
 		} catch (NoninvertibleTransformException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	public Point2D toActualModelCoords(Point2D relativeToMapCanvasPosition) {
+		try {
+			return actualTransform.inverseTransform(relativeToMapCanvasPosition, null);
+		} catch(Exception e) {
 			throw new RuntimeException(e);
 		}
 	}
@@ -384,31 +385,28 @@ public class MapCanvas extends JPanel implements ActionListener {
 	public double getZoomRaw() {
 		return transform.getScaleX();
 	}
-
-	public Point2D getZero() {
-		return zero;
-	}
 	
 	public void zoomToBounds() {
 		Region mapRegion = Main.model.getMapRegion();
 		pan(-mapRegion.x1, -mapRegion.y2);
 		zoom(getWidth() / (mapRegion.x2 - mapRegion.x1));
+		Main.tileController.updateZero();
 	}
 	
 	public void setupDone() {	
 		zoomToBounds();
 		if(Main.buffered) {
-			zero = new Point2D.Double(transform.getTranslateX(), transform.getTranslateY());
-			imageManager = new BufferedMapManager();
-			imageManager.forceFullRepaint();
+			// Start rendering
 		}
 		for(CanvasListener listener : listeners) listener.onSetupDone();
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		zero = new Point2D.Double(transform.getTranslateX(), transform.getTranslateY());
-		scaleCurrentLayer = false;
-		imageManager.forceFullRepaint();
+		Main.tileController.fullRepaint();
+	}
+	
+	public void forceRepaint() {
+		Main.tileController.fullRepaint();
 	}
 
 }
