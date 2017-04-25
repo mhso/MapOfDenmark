@@ -39,7 +39,7 @@ public class RouteController {
 				carsAllowed, bikesAllowed);
 		RouteEdgeMeta reuseRouteEdgeMeta = ReuseRouteEdgeMetaObj.make(routeEdgeMeta);
 		RouteEdge edge = new RouteEdge(fromVertex, toVertex, reuseRouteEdgeMeta, description);
-		
+		//System.out.println("add Edge: " + edge.toString());
 		routeEdges.add(edge);
 	}
 	
