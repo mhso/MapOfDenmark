@@ -32,7 +32,7 @@ public class Tile {
 		
 		Main.map.drawMapShapesForTile(this);
 		setIsRendered(true);
-		Main.mainPanel.repaint();
+		
 		return true;
 	}
 	
@@ -77,7 +77,8 @@ public class Tile {
 	public boolean draw(Graphics2D g2d) {
 		if(isVisibleToViewport()) {
 			if(isRendered()) {
-				g2d.setTransform(Main.map.getPixelTransform());
+				if(Main.tileController.isBlurred()) g2d.setTransform(Main.tileController.getBlurTransform());
+				else g2d.setTransform(Main.map.getPixelTransform());
 				Point2D screenPos = Main.map.toActualScreenCoords(getGeographicalRegion().getPointFrom());
 				g2d.drawImage(image, (int)screenPos.getX(), (int)screenPos.getY(), null);
 				Region r = getGeographicalRegion();

@@ -243,7 +243,6 @@ public class MapCanvas extends JPanel implements ActionListener {
 		repair();
 		transform.preConcatenate(AffineTransform.getTranslateInstance(dx, dy));
 		actualTransform.preConcatenate(AffineTransform.getTranslateInstance(dx, dy));
-		//pixelTransform.preConcatenate(AffineTransform.getTranslateInstance(dx, dy));
 		if(Main.buffered && Main.tileController != null) Main.tileController.pan(dx, dy);
 		repaint();
 	}
@@ -319,6 +318,7 @@ public class MapCanvas extends JPanel implements ActionListener {
 			transform.preConcatenate(AffineTransform.getScaleInstance(scaleBefore/scaleAfter, scaleBefore/scaleAfter));
 			actualTransform.preConcatenate(AffineTransform.getScaleInstance(scaleBefore/scaleAfter, scaleBefore/scaleAfter));
 		} else {
+			Main.tileController.zoom(factor);
 			pixelTransform = new AffineTransform();
 		}
 
