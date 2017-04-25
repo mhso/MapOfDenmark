@@ -11,7 +11,7 @@ public class RouteEdge {
 	public RouteEdge(RouteVertex from, RouteVertex to, RouteEdgeMeta routeEdgeMeta, String description){
 		if (from.getId() < 0) throw new IllegalArgumentException("Vertex names must be nonnegative integers");
         if (to.getId() < 0) throw new IllegalArgumentException("Vertex names must be nonnegative integers");
-        if (routeEdgeMeta.getMaxSpeed() <= 0) throw new IllegalArgumentException("maxSpeed is 0, must be nonnegative integer");
+        if (routeEdgeMeta.getMaxSpeed() <= 0) throw new IllegalArgumentException("maxSpeed is 0, must be positive integer");
 		this.from = from;
 		this.to = to;
 		this.routeEdgeMeta = routeEdgeMeta;
