@@ -1,8 +1,12 @@
 package dk.itu.n.danmarkskort.gui;
 
 import java.awt.Color;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
+
+import dk.itu.n.danmarkskort.Main;
 
 public class CustomToggleButton extends CustomButton {
 	private static final long serialVersionUID = -3440659920912017562L;
@@ -28,8 +32,24 @@ public class CustomToggleButton extends CustomButton {
     }
     
     private void swap() {
-    	if(switchedOn) setAlphaIcon(new ImageIcon("resources/icons/offbutton.png"));
-		else setAlphaIcon(new ImageIcon("resources/icons/onbutton.png"));
+    	if(switchedOn) {
+    		if(Main.production)
+				try {
+					setAlphaIcon(new ImageIcon(ImageIO.read(getClass().getResourceAsStream("/resources/icons/offbutton.png"))));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			else setAlphaIcon(new ImageIcon("resources/icons/offbutton.png"));
+    	}
+		else {
+			if(Main.production)
+				try {
+					setAlphaIcon(new ImageIcon(ImageIO.read(getClass().getResourceAsStream("/resources/icons/onbutton.png"))));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			else setAlphaIcon(new ImageIcon("resources/icons/onbutton.png"));
+		}
 		switchedOn = !switchedOn;
     }
 }

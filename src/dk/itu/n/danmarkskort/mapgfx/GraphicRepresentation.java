@@ -11,6 +11,7 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
 import dk.itu.n.danmarkskort.DKConstants;
+import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.backend.SAXAdapter;
 import dk.itu.n.danmarkskort.models.WayType;
 
@@ -155,7 +156,8 @@ public class GraphicRepresentation {
 			InputSource source = new InputSource(themeFile);
 			XMLReader reader = XMLReaderFactory.createXMLReader();
 			reader.setContentHandler(new ZoomHandler());
-			reader.parse(new InputSource("resources/ZoomValues.XML"));
+			if(Main.production) reader.parse(new InputSource(GraphicRepresentation.class.getResourceAsStream("/resources/ZoomValues.XML")));
+			else reader.parse(new InputSource("resources/ZoomValues.XML"));
 			reader = XMLReaderFactory.createXMLReader();
 			reader.setContentHandler(new GraphicsHandler());
 			reader.parse(source);
