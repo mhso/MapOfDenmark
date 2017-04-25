@@ -62,4 +62,12 @@ public abstract class KDTree<T extends KDComparable> implements Serializable, It
             return next;
         }
     }
+
+    public KDComparable getNearestNeighbour(float lon, float lat) {
+        return getNearestNeighbour(lon, lat, 0);
+    }
+
+    public KDComparable getNearestNeighbour(float lon, float lat, int depth) {
+        return null;
+    }
 }

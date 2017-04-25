@@ -1,12 +1,9 @@
 package dk.itu.n.danmarkskort.kdtree;
 
 import dk.itu.n.danmarkskort.DKConstants;
-import dk.itu.n.danmarkskort.gui.map.MapCanvas;
-import dk.itu.n.danmarkskort.models.ParsedItem;
 import dk.itu.n.danmarkskort.models.ParsedNode;
 import dk.itu.n.danmarkskort.models.Region;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,22 +50,24 @@ public class KDTreeNode<T extends KDComparable> extends KDTree<T> {
                 for(ParsedNode node : nodes) rightSplit = node.getLon() < rightSplit ? node.getLon(): rightSplit; // til højre er værdierne størst
             }
         } else {
+            // top part
             leftSplit = median.getFirstNode().getLat();
             for(KDComparable item : leftArray) {
                 ParsedNode[] nodes = item.getNodes();
-                for(ParsedNode node : nodes) leftSplit = node.getLat() > leftSplit ? node.getLat() : leftSplit; // nederst er værdierne størst
+                for(ParsedNode node : nodes) leftSplit = node.getLat() > leftSplit ? node.getLat() : leftSplit; // nederst er værdierne størst (stadig minus, men tættere på 0)
             }
+            // bottom part
             rightSplit = median.getFirstNode().getLat();
             for(KDComparable item : rightArray) {
                 ParsedNode[] nodes = item.getNodes();
                 for(ParsedNode node : nodes) rightSplit = node.getLat() < rightSplit ? node.getLat() : rightSplit; // nederst er værdierne størst
             }
         }
-        if(leftArray.length > DKConstants.KD_SIZE) leftChild = new KDTreeNode<T>(leftArray, !sortByLon);
-        else leftChild = new KDTreeLeaf<T>(leftArray);
+        if(leftArray.length > DKConstants.KD_SIZE) leftChild = new KDTreeNode<>(leftArray, !sortByLon);
+        else leftChild = new KDTreeLeaf<>(leftArray);
 
-        if(rightArray.length > DKConstants.KD_SIZE) rightChild = new KDTreeNode<T>(rightArray, !sortByLon);
-        else rightChild = new KDTreeLeaf<T>(rightArray);
+        if(rightArray.length > DKConstants.KD_SIZE) rightChild = new KDTreeNode<>(rightArray, !sortByLon);
+        else rightChild = new KDTreeLeaf<>(rightArray);
     }
 
     public KDTree getRightChild() { return rightChild; }

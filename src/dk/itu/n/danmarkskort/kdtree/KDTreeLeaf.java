@@ -9,7 +9,6 @@ public class KDTreeLeaf<T extends KDComparable> extends KDTree<T> {
 
     private static final long serialVersionUID = 1522369879614832796L;
     private KDComparable[] data;
-    //private int size;
 
     public KDTreeLeaf(ArrayList<T> list) {
         this(list.toArray(new KDComparable[list.size()]));
@@ -17,19 +16,16 @@ public class KDTreeLeaf<T extends KDComparable> extends KDTree<T> {
 
     KDTreeLeaf(KDComparable[] array) {
         data = array;
-        //size = data.length;
     }
 
     @Override
     public List<KDComparable[]> getItems(Region reg) {
-        return getItems(reg, true);
+        return getAllItems();
     }
 
     @Override
     List<KDComparable[]> getItems(Region reg, boolean sortByLon) {
-        List<KDComparable[]> arr = new ArrayList<>();
-        arr.add(data);
-        return arr;
+        return getAllItems();
     }
 
     @Override

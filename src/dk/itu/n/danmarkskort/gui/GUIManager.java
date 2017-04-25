@@ -1,5 +1,7 @@
 package dk.itu.n.danmarkskort.gui;
 
+import dk.itu.n.danmarkskort.Main;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -12,12 +14,12 @@ public class GUIManager extends JPanel{
      *
      */
     public GUIManager() {
-        style = new Style();
+        style = Main.style;
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createEmptyBorder(style.margin(), style.margin(), style.margin(), style.margin()));
-        topPanel = new TopPanel(style);
+        topPanel = new TopPanel();
         add(topPanel, BorderLayout.NORTH);
-        add(new BottomPanel(style), BorderLayout.SOUTH);
+        add(new BottomPanel(), BorderLayout.SOUTH);
         setOpaque(false);
     }
     

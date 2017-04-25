@@ -54,7 +54,7 @@ public class RoutePage extends JPanel {
     		ADDR_ICON_VALID = new ImageIcon("resources/icons/happiness.png");
     		ADDR_ICON_INVALID = new ImageIcon("resources/icons/sad_red.png");
     	}
-    	style = new Style();
+    	style = Main.style;
         setOpaque(false);
         setLayout(new BorderLayout(0, 0));
         

@@ -91,7 +91,6 @@ public class OSMParser extends SAXAdapter implements Serializable {
             else {
                 ArrayList<ParsedItem> current = enumMap.get(wt);
                 if (current.isEmpty()) tree = null;
-                else if (current.size() < DKConstants.KD_SIZE) tree = new KDTreeLeaf<>(current);
                 else tree = new KDTreeNode<>(current);
             }
             enumMap.remove(wt);

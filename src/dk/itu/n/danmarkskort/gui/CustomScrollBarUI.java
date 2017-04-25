@@ -8,9 +8,15 @@ public class CustomScrollBarUI extends BasicScrollBarUI {
 
     private Style style;
     private final Dimension emptyDimension = new Dimension();
+    private Color background;
 
     public CustomScrollBarUI(Style style) {
+        this(style, style.menuContentBG());
+    }
+
+    public CustomScrollBarUI(Style style, Color background) {
         this.style = style;
+        this.background = background;
     }
 
     @Override
@@ -34,7 +40,7 @@ public class CustomScrollBarUI extends BasicScrollBarUI {
 
     @Override
     protected void paintTrack(Graphics g, JComponent c, Rectangle trackBounds) {
-        g.setColor(style.menuContentBG());
+        g.setColor(background);
 
         g.fillRect(trackBounds.x, trackBounds.y, trackBounds.width, trackBounds.height);
 

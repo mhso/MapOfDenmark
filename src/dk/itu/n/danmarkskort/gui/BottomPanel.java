@@ -27,11 +27,11 @@ public class BottomPanel extends JPanel implements CanvasListener {
 	private JLabel coordsLabel;
 	private JSlider zoomSlider;
 
-    public BottomPanel(Style style) {
+    public BottomPanel() {
     	setBorder(new EmptyBorder(0, 10, 0, 10));
     	setOpaque(false);
     	
-        this.style = style;
+        this.style = Main.style;
 
         setLayout(new BorderLayout());
 

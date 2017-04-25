@@ -38,11 +38,19 @@ public class ParsedRelation extends ParsedWay {
     @Override
     public ParsedNode[] getNodes() {
         ArrayList<ParsedNode> arrList = new ArrayList<>();
-        if(inners.size() > 0 && outers.size() > 0) {
-            for(ParsedItem outer: outers) arrList.addAll(Arrays.asList(outer.getNodes()));
-            for(ParsedItem inner: inners) arrList.addAll(Arrays.asList(inner.getNodes()));
+        if(outers.size() > 0) {
+            for(ParsedItem inner: inners) {
+                for(ParsedNode node: inner.getNodes()) arrList.add(node);
+            }
         }
-        return arrList.toArray(new ParsedNode[arrList.size()]);
+        if(inners.size() > 0) {
+            for(ParsedItem outer: outers) {
+                for(ParsedNode node: outer.getNodes()) arrList.add(node);
+            }
+        }
+        ParsedNode[] nodeArr = new ParsedNode[arrList.size()];
+        for(int i = 0; i < nodeArr.length; i++) nodeArr[i] = arrList.get(i);
+        return nodeArr;
     }
 
     @Override

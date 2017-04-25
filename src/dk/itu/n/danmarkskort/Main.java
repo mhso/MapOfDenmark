@@ -1,6 +1,5 @@
 package dk.itu.n.danmarkskort;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import javax.swing.*;
 
@@ -18,11 +17,11 @@ import dk.itu.n.danmarkskort.routeplanner.RouteController;
 
 public class Main {
 
-	public final static String APP_NAME = "CatMaps";
+	public final static String APP_NAME = "NinjaMaps";
 	public final static String APP_VERSION = "0.6";
 	public final static boolean debug = true;
 	public final static boolean production = false;
-	public final static boolean buffered = true;
+	public final static boolean buffered = false;
 	public final static boolean saveParsedAddresses = true;
 	public final static boolean useLauncher = true;
 	
@@ -39,6 +38,7 @@ public class Main {
 	public static PinPointManager pinPointManager;
 	public static UserPreferences userPreferences;
 	public static RouteController routeController;
+	public static Style style;
 	
 	public static void main(String[] args) {
 		System.setProperty("awt.useSystemAAFontSettings","on");
@@ -64,6 +64,7 @@ public class Main {
 		osmReader = new OSMReader();
 		model = new OSMParser(osmReader);
 		routeController = new RouteController();
+		style = new Style();
 		if(args.length > 0) prepareParser(args);
 		else prepareParser(new String[]{userPreferences.getDefaultMapFile()});
 		if(userPreferences.getCurrentMapTheme() != null) {
@@ -115,7 +116,7 @@ public class Main {
 
     public static void makeFrame() {
         window = new JFrame(APP_NAME);
-        window.setIconImage(new Style().frameIcon());
+        window.setIconImage(style.frameIcon());
         window.add(createFrameComponents());
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setPreferredSize(new Dimension(DKConstants.WINDOW_WIDTH, DKConstants.WINDOW_HEIGHT));
