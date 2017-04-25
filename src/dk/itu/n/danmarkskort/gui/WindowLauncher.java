@@ -26,6 +26,7 @@ public class WindowLauncher extends JFrame {
 	private JLabel labelSelectedFile;
 	private String selectedFilePath;
 	private JButton buttonLaunch;
+	private JLabel labelSelectedFileHeader;
 	
 	public WindowLauncher() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -107,19 +108,15 @@ public class WindowLauncher extends JFrame {
 		centerPanel.add(panelCurrentFile, BorderLayout.SOUTH);
 		panelCurrentFile.setLayout(new BorderLayout(0, 5));
 		
-		JLabel labelSelectedFileHeader = new JLabel("Selected File");
+		labelSelectedFileHeader = new JLabel("Selected File");
 		labelSelectedFileHeader.setHorizontalAlignment(SwingConstants.CENTER);
 		labelSelectedFileHeader.setFont(style.normalText());
 		panelCurrentFile.add(labelSelectedFileHeader, BorderLayout.NORTH);
 		
 		buttonLaunch = new JButton("Launch");
-		if (binFiles.isEmpty()) {
-			labelSelectedFileHeader.setText("No map files found, load a new one from 'Configure' menu.");
-			enableLaunchButton(false);
-		}
-		else if(selectedFilePath == null) {
-			labelSelectedFile.setText("Default Map Not Found.");
-			enableLaunchButton(false);
+		if(selectedFilePath == null) {
+			selectedFilePath = "resources/default.bin";
+			labelSelectedFile.setText("default.bin (default)");
 		}
 		
 		labelSelectedFile.setOpaque(true);
@@ -133,8 +130,6 @@ public class WindowLauncher extends JFrame {
 		contentPane.add(panelBottom, BorderLayout.SOUTH);
 		panelBottom.setLayout(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
-
-
 
 		buttonLaunch.addActionListener(e -> launch());
 		buttonLaunch.setFont(style.mediumHeadline());
@@ -242,6 +237,7 @@ public class WindowLauncher extends JFrame {
 	}
 
 	public void setSelectedFile(String fileName) {
+		labelSelectedFileHeader.setText("Selected File");
 		labelSelectedFile.setText(fileName);
 		selectedFilePath = fileName;
 		if(!buttonLaunch.isEnabled()) enableLaunchButton(true);
@@ -255,8 +251,10 @@ public class WindowLauncher extends JFrame {
 	
 	private String[] getParsedFiles() {
 		binFiles = new ArrayList<>();
-		selectedFilePath = "/resources/default.bin";
-		labelSelectedFile.setText("default.bin (default)");
+		if(Main.production) {
+			selectedFilePath = "/resources/default.bin";
+			labelSelectedFile.setText("default.bin (default)");
+		}		
 		try {
 			for(Path entry : Files.newDirectoryStream(Paths.get("parsedOSMFiles"))) {
 				for(Path binFile : Files.newDirectoryStream(entry)) {
