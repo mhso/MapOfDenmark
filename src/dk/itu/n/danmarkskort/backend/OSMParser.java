@@ -6,6 +6,8 @@ import dk.itu.n.danmarkskort.MemoryUtil;
 import dk.itu.n.danmarkskort.models.*;
 import dk.itu.n.danmarkskort.kdtree.*;
 
+import dk.itu.n.danmarkskort.routeplanner.RouteController;
+import dk.itu.n.danmarkskort.routeplanner.RouteVertex;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
@@ -32,9 +34,14 @@ public class OSMParser extends SAXAdapter implements Serializable {
 
     private transient WayType waytype;
     private transient String name;
-    private transient Integer maxSpeed;
-    private transient boolean oneWay;
     private ArrayList<ParsedNode> currentNodes;
+    private Boolean isHighway;
+    private Boolean isArea;
+    private Boolean bicycle;
+    private String oneWay;
+    private Integer maxSpeed;
+    private RouteController route;
+    private HashMap<ParsedNode, RouteVertex> vertexMap;
 
     private transient boolean finished = false;
     private transient OSMReader reader;
@@ -49,7 +56,9 @@ public class OSMParser extends SAXAdapter implements Serializable {
         temporaryRelationReferences = new HashMap<>();
         coastlineMap = new HashMap<>();
         currentNodes = new ArrayList<>();
+        vertexMap = new HashMap<>();
         enumMap = new EnumMap<>(WayType.class);
+        graph = Main.routeController;
 
         for(WayType waytype : WayType.values()) enumMap.put(waytype, new ArrayList<>());
 
@@ -180,6 +189,9 @@ public class OSMParser extends SAXAdapter implements Serializable {
                 else {
                     waytype = ParserUtil.tagToType(k, v, waytype);
                     switch (k) {
+                        case "highway":
+                            isHighway = true;
+                            break;
                         case "name":
                             name = v;
                             break;
@@ -192,7 +204,10 @@ public class OSMParser extends SAXAdapter implements Serializable {
                             }
                             break;
                         case "oneway":
-                            if(v.equals("yes")) oneWay = true;
+                            oneWay = v;
+                            break;
+                        case "bicycle":
+                            if(v.equals("no")) bicycle = false;
                             break;
                     }
                 }
@@ -205,8 +220,72 @@ public class OSMParser extends SAXAdapter implements Serializable {
             case "relation":
             case "way":
             case "node":
+                checkForWeirdStuff();
+                if(isHighway) addToGraph();
                 addCurrent();
                 break;
+        }
+    }
+
+    private void checkForWeirdStuff() {
+        if(waytype == WayType.HIGHWAY_PEDESTRIAN && isArea) {
+            waytype = WayType.PEDESTRIAN_AREA;
+        }
+    }
+
+    private void addToGraph() {
+        boolean motorvehicle = true;
+        boolean forward = true;
+        boolean backward = true;
+
+        switch(waytype) {
+            case HIGHWAY_DRIVEWAY:
+            case HIGHWAY_SERVICE:
+            case HIGHWAY_STEPS:
+            case HIGHWAY_FOOTWAY:
+                return;
+            case HIGHWAY_CYCLEWAY:
+            case HIGHWAY_PATH:
+            case PEDESTRIAN_AREA:
+            case HIGHWAY_PEDESTRIAN:
+                if(!bicycle) return;
+                motorvehicle = false;
+                break;
+            case HIGHWAY_MOTORWAY:
+                if (maxSpeed == null) maxSpeed = 130;
+            case HIGHWAY_TRUNK:
+            case HIGHWAY_PRIMARY:
+                bicycle = false;
+                if (maxSpeed == null) maxSpeed = 90;
+                break;
+            case HIGHWAY_SECONDARY:
+                if (maxSpeed == null) maxSpeed = 80;
+                break;
+            case HIGHWAY_TERTIARY:
+            case HIGHWAY_RESIDENTIAL:
+            case HIGHWAY_UNCLASSIFIED:
+            case HIGHWAY_UNDEFINED:
+                if (maxSpeed == null) maxSpeed = 50;
+                break;
+        }
+
+        if(oneWay.equals("yes")) backward = false;
+        else if(oneWay.equals("-1")) forward = false;
+
+        for(int i = 0; i < currentNodes.size() - 1; i++) {
+            ParsedNode firstNode = currentNodes.get(i);
+            ParsedNode secondNode = currentNodes.get(i + 1);
+            RouteVertex first = vertexMap.get(firstNode);
+            RouteVertex second = vertexMap.get(secondNode);
+            if(first == null) {
+                first = route.makeVertex(firstNode.getLon(), firstNode.getLat());
+                vertexMap.put(firstNode, first);
+            }
+            if(second == null) {
+                second = route.makeVertex(secondNode.getLon(), secondNode.getLat());
+                vertexMap.put(secondNode, second);
+            }
+            route.addEdge(first, second, maxSpeed, forward, backward, motorvehicle, bicycle, name);
         }
     }
 
@@ -274,8 +353,11 @@ public class OSMParser extends SAXAdapter implements Serializable {
 
         waytype = null;
         name = null;
-        oneWay = false;
+        oneWay = null;
         maxSpeed = null;
+        isHighway = null;
+        bicycle = false;
+        isArea = null;
 
         currentNodes = new ArrayList<>();
     }

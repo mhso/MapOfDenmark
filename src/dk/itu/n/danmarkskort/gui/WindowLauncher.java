@@ -28,7 +28,6 @@ public class WindowLauncher extends JFrame {
 	
 	public WindowLauncher() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		//setBounds(100, 100, 450,);
 		Style style = new Style();
 		setTitle("Launcher");
 		setIconImage(Toolkit.getDefaultToolkit().getImage("resources/icons/map-icon.png"));
@@ -106,7 +105,6 @@ public class WindowLauncher extends JFrame {
 		panelCurrentFile.add(labelSelectedFileHeader, BorderLayout.NORTH);
 		
 		buttonLaunch = new JButton("Launch");
-		
 		if (binFiles.isEmpty()) {
 			labelSelectedFileHeader.setText("No map files found, load a new one from 'Configure' menu.");
 			enableLaunchButton(false);

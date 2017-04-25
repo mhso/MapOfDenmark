@@ -34,7 +34,8 @@ public class RouteController {
 	}
 	
 	public void addEdge(RouteVertex fromVertex, RouteVertex toVertex, Integer maxSpeed, 
-			boolean forwardAllowed, boolean backwardAllowed, boolean carsAllowed, boolean bikesAllowed, String description, WayType wayType){
+			boolean forwardAllowed, boolean backwardAllowed, boolean carsAllowed, boolean bikesAllowed,
+						String description, WayType wayType){
 		RouteEdgeMeta routeEdgeMeta = new RouteEdgeMeta(maxSpeed, forwardAllowed, backwardAllowed,
 				carsAllowed, bikesAllowed);
 		RouteEdgeMeta reuseRouteEdgeMeta = ReuseRouteEdgeMetaObj.make(routeEdgeMeta);
