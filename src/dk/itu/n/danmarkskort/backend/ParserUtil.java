@@ -254,7 +254,7 @@ public class ParserUtil {
                     case "residential":
                         return WayType.HIGHWAY_RESIDENTIAL;
                     case "pedestrian":
-                        return WayType.PEDESTRIAN;
+                        return WayType.HIGHWAY_PEDESTRIAN;
                     case "unclassified":
                         return WayType.HIGHWAY_UNCLASSIFIED;
                     case "service":

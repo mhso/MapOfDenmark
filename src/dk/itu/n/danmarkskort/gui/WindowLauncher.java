@@ -113,7 +113,6 @@ public class WindowLauncher extends JFrame {
 		panelCurrentFile.add(labelSelectedFileHeader, BorderLayout.NORTH);
 		
 		buttonLaunch = new JButton("Launch");
-		
 		if (binFiles.isEmpty()) {
 			labelSelectedFileHeader.setText("No map files found, load a new one from 'Configure' menu.");
 			enableLaunchButton(false);

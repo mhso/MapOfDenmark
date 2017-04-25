@@ -106,8 +106,10 @@ public class MapCanvas extends JPanel implements ActionListener {
 	public void repaintPinPoints() {
 		repaint();
 	}
-	
+
 	public void drawMapShapes(Graphics2D g2d) {
+		drawBackground(g2d);
+
 		g2d.setTransform(transform);
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		drawMapRegion(g2d);
@@ -115,7 +117,6 @@ public class MapCanvas extends JPanel implements ActionListener {
 		shapesDrawn = 0;
 
 		if(wayTypesVisible == null) return;
-        drawBackground(g2d);
 
         Region currentRegion = getGeographicalRegion();
 
@@ -173,8 +174,9 @@ public class MapCanvas extends JPanel implements ActionListener {
         	g2d.setColor(new Color(110, 192, 255));
         }
         else g2d.setColor(new Color(240, 240, 230));
-
-        g2d.fill(background);
+		AffineTransform af = new AffineTransform();
+		g2d.setTransform(af);
+        g2d.fillRect(0, 0, getWidth(), getHeight());
     }
 
 	public List<WaytypeGraphicSpec> getOnScreenGraphicsForCurrentZoom() {
@@ -188,7 +190,6 @@ public class MapCanvas extends JPanel implements ActionListener {
 		g2d.setColor(Color.RED);
 		g2d.setStroke(new BasicStroke(Float.MIN_VALUE));
 		Region mapRegion = Main.model.getMapRegion();
-		g2d.draw(new Line2D.Double(0, 0, mapRegion.x1, mapRegion.y1));
 		g2d.draw(new Rectangle2D.Double(mapRegion.x1, mapRegion.y1, mapRegion.getWidth(), mapRegion.getHeight()));
 	}
 	
