@@ -57,7 +57,6 @@ public class ParsedWay extends ParsedItem implements KDComparable, Serializable 
 
     public Shape getShape() {
         Path2D path = new Path2D.Float();
-        if(coords == null) Main.log("wtf: " + id + ", nodes length: "+ nodes.length);
         path.moveTo(coords[0], coords[1]);
         for (int i = 2; i < coords.length; ) {
             path.lineTo(coords[i++], coords[i++]);

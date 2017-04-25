@@ -14,6 +14,7 @@ import dk.itu.n.danmarkskort.gui.map.MapCanvas;
 import dk.itu.n.danmarkskort.gui.map.PinPointManager;
 import dk.itu.n.danmarkskort.mapgfx.GraphicRepresentation;
 import dk.itu.n.danmarkskort.models.UserPreferences;
+import dk.itu.n.danmarkskort.routeplanner.RouteController;
 
 public class Main {
 
@@ -37,6 +38,7 @@ public class Main {
 	public static MainCanvas mainPanel;
 	public static PinPointManager pinPointManager;
 	public static UserPreferences userPreferences;
+	public static RouteController routeController;
 	
 	public static void main(String[] args) {
 		System.setProperty("awt.useSystemAAFontSettings","on");
@@ -61,6 +63,7 @@ public class Main {
 		addressController  =  new AddressController();
 		osmReader = new OSMReader();
 		model = new OSMParser(osmReader);
+		routeController = new RouteController();
 		if(args.length > 0) prepareParser(args);
 		else prepareParser(new String[]{userPreferences.getDefaultMapFile()});
 		if(userPreferences.getCurrentMapTheme() != null) {
@@ -113,15 +116,11 @@ public class Main {
     public static void makeFrame() {
         window = new JFrame(APP_NAME);
         window.setIconImage(new Style().frameIcon());
-        window.setBackground(new Color(110, 192, 255));
         window.add(createFrameComponents());
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        
-        window.setPreferredSize(new Dimension(DKConstants.WINDOW_WIDTH, DKConstants.WINDOW_HEIGHT));  
-        
+        window.setPreferredSize(new Dimension(DKConstants.WINDOW_WIDTH, DKConstants.WINDOW_HEIGHT));
         window.pack();
-        
-        window.setLocationRelativeTo(null);
+		window.setLocationRelativeTo(null);
         window.setVisible(true);
         map.setupDone();
     }

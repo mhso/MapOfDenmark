@@ -14,6 +14,8 @@ public enum WayType {
 	HIGHWAY_SERVICE,	// serviceveje
 	HIGHWAY_UNDEFINED,	// udefineret vej
 	HIGHWAY_UNCLASSIFIED, // mindre veje, ikke det samme som undefined
+	PEDESTRIAN_AREA,	// gå-gade-område
+	HIGHWAY_PEDESTRIAN,	// gå-gade
 
 	// Landuse:
 	RESIDENTIAL,		// beboelsesområde
@@ -74,8 +76,7 @@ public enum WayType {
 	WATER_DITCH,		// Grøft.
 	WATER_DITCH_TUNNEL, // Grøft-tunnel.
 	PITCH,				// sportsbane
-	PEDESTRIAN,			// gå-område
-	UNDEFINED, 			// Udefinerbar.
+	UNDEFINED 			// Udefinerbar.
 
 	
 }
