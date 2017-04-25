@@ -6,8 +6,6 @@ public class RouteEdgeMeta {
 	
 	public RouteEdgeMeta(Integer maxSpeed, boolean forwardAllowed, boolean backwardAllowed,
 		boolean carsAllowed, boolean bikesAllowed){
-         
-        this.maxSpeed = maxSpeed;
         
 		this.maxSpeed = maxSpeed;
 		this.forwardAllowed = forwardAllowed;

@@ -14,8 +14,11 @@ import dk.itu.n.danmarkskort.gui.DropdownAddressSearch;
 import dk.itu.n.danmarkskort.gui.Style;
 import dk.itu.n.danmarkskort.gui.map.PinPoint;
 import dk.itu.n.danmarkskort.gui.routeplanner.RoutePlannerMain;
+import dk.itu.n.danmarkskort.models.PointFloat;
 import dk.itu.n.danmarkskort.models.RouteEnum;
 import dk.itu.n.danmarkskort.models.RouteModel;
+import dk.itu.n.danmarkskort.routeplanner.RouteVertex;
+import dk.itu.n.danmarkskort.routeplanner.WeightEnum;
 import dk.itu.n.danmarkskort.search.SearchController;
 
 import java.awt.*;
@@ -297,6 +300,8 @@ public class RoutePage extends JPanel {
     
     private void openFindRoute(){
     	if(validateToFromFields()){
+    		Address addrFrom = SearchController.getSearchFieldAddressObj(txtAddrFrom.getText());
+			Address addrTo = SearchController.getSearchFieldAddressObj(txtAddrTo.getText());
     		String routeDistance = "999";
     		BufferedImage bufferedImage = null;
     		List<RouteModel> routemodels = demoRoute();
@@ -307,17 +312,24 @@ public class RoutePage extends JPanel {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-    		
-			ArrayList<PinPoint> pinPoints = new ArrayList<PinPoint>();
 			
-			PinPoint from = new PinPoint(SearchController.getSearchFieldAddressObj(txtAddrFrom.getText()).getLonLatAsPoint(), txtAddrFrom.getText());
-			PinPoint to = new PinPoint(SearchController.getSearchFieldAddressObj(txtAddrTo.getText()).getLonLatAsPoint(), txtAddrTo.getText());
-			from.setIconIndex(5);
-			to.setIconIndex(6);
-			pinPoints.add(from);
-			pinPoints.add(to);
+			ArrayList<PinPoint> pinPoints = new ArrayList<PinPoint>();
+			PinPoint pinPointFrom = new PinPoint(addrFrom.getLonLatAsPoint(), txtAddrFrom.getText());
+			PinPoint pinPointTo = new PinPoint(addrTo.getLonLatAsPoint(), txtAddrTo.getText());
+			pinPointFrom.setIconIndex(5);
+			pinPointTo.setIconIndex(6);
+			pinPoints.add(pinPointFrom);
+			pinPoints.add(pinPointTo);
 			Main.pinPointManager.setTemporaryPinPoints(pinPoints);
 			
+			System.out.println(Main.routeController.toString());
+			RouteVertex vertexFrom = Main.routeController.demoFindVertex(addrFrom.getLonLat());
+			RouteVertex vertexTo = Main.routeController.demoFindVertex(addrTo.getLonLat());
+			if(vertexFrom != null && vertexTo != null) {
+				System.out.println("isRoute: " + Main.routeController.isRoute(vertexFrom, vertexTo, WeightEnum.DISTANCE));
+			} else {
+				System.out.println("isRoute: NO Match");
+			}
     		RoutePlannerMain routePlannerMain =  new RoutePlannerMain(bufferedImage, txtAddrFrom.getText(), txtAddrTo.getText(), routeDistance, routemodels);
     	} else if(!txtAddrFrom.getText().trim().isEmpty() && !txtAddrTo.getText().trim().isEmpty()) {
     		menu.blockVisibility(true);

@@ -20,4 +20,9 @@ public class PointFloat {
 	public String toString(){
 		return "[" + x + ", " + y + "]";
 	}
+	
+	public boolean isEqualPoint(PointFloat to){
+		if(x == to.x && y == to.y) return true;
+		return false;
+	}
 }
