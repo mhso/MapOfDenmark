@@ -7,8 +7,7 @@ import java.io.Serializable;
 
 public class Housenumber implements Serializable {
 	private static final long serialVersionUID = -8400619618776493401L;
-	private float lon;
-	private float lat;
+	private float lon, lat;
 	private String housenumber;
 	private Street street;
 	

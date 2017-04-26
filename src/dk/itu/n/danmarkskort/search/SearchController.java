@@ -6,6 +6,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.address.Address;
+import dk.itu.n.danmarkskort.models.PointFloat;
 import dk.itu.n.danmarkskort.models.RegionFloat;
 
 public class SearchController{
@@ -24,7 +25,7 @@ public class SearchController{
 			float[] cord = new float[strArr.length];
 			for(int i=0; i<cord.length; i++) cord[i] = Float.parseFloat(strArr[i]);
 			return Main.addressController.searchSuggestions(
-					new RegionFloat(cord[0], cord[1], cord[0], cord[1]), limitAmountOfResults);
+					new PointFloat(cord[0], cord[1]), limitAmountOfResults);
 		} else {
 			return Main.addressController.getSearchSuggestions(inputStr, limitAmountOfResults);
 		}

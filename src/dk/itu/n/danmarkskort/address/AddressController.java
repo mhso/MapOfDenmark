@@ -3,6 +3,7 @@ package dk.itu.n.danmarkskort.address;
 import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.TimerUtil;
 import dk.itu.n.danmarkskort.models.ParsedAddress;
+import dk.itu.n.danmarkskort.models.PointFloat;
 import dk.itu.n.danmarkskort.models.RegionFloat;
 
 import java.util.List;
@@ -72,11 +73,11 @@ public class AddressController {
 		return addressRegionSearch.getSearchResult(lonLat);
 	}
 	
-	public Address getNearstSearchResult(RegionFloat input){
+	public Address getNearstSearchResult(PointFloat input){
 		return addressRegionSearch.getNearstSearchResult(input);
 	}
 	
-	public List<String> searchSuggestions(RegionFloat input, long limitAmountOfResults){
+	public List<String> searchSuggestions(PointFloat input, long limitAmountOfResults){
 		 return addressRegionSearch.searchSuggestions(input, limitAmountOfResults);
 	}
 	

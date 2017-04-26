@@ -7,6 +7,7 @@ import java.util.Map.Entry;
 
 import org.apache.commons.lang3.StringUtils;
 
+import dk.itu.n.danmarkskort.models.PointFloat;
 import dk.itu.n.danmarkskort.models.RegionFloat;
 
 public class AddressHolder implements Serializable {
@@ -206,12 +207,12 @@ public class AddressHolder implements Serializable {
 		return regions;
 	}
 	
-	public Map<RegionFloat, Housenumber> searchRegionHousenumbers(RegionFloat input){	
+	public Map<RegionFloat, Housenumber> searchRegionHousenumbers(RegionFloat region){	
 		Map<RegionFloat, Housenumber> regions = new HashMap<RegionFloat, Housenumber>();
-		for(Postcode pc : searchRegionWithin(input).values()) {
+		for(Postcode pc : searchRegionWithin(region).values()) {
 			float expanVal = 0.0f;
 			for(int i=0; i<100; i++) {
-				RegionFloat r = new RegionFloat(input.x1 - expanVal, input.y1 - expanVal, input.x2 + expanVal, input.y2 + expanVal);
+				RegionFloat r = new RegionFloat(region.x1 - expanVal, region.y1 - expanVal, region.x2 + expanVal, region.y2 + expanVal);
 				for(Street st : pc.searchRegionWithin(r).values()){
 					regions.putAll(st.searchRegionWithin(r));
 				}

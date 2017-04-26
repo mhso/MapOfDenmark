@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.TimerUtil;
+import dk.itu.n.danmarkskort.models.PointFloat;
 import dk.itu.n.danmarkskort.models.RegionFloat;
 
 public class AddressRegionSearch {
@@ -17,11 +18,12 @@ public class AddressRegionSearch {
 		return new Address(hn.getLonLat(), hn.getStreet().getStreet(), hn.getHousenumber(), hn.getPostcode().getPostcode(), hn.getPostcode().getCity());
 	}
 	
-	public Address getNearstSearchResult(RegionFloat input){
-		Address addr =  getSearchResult(input.getMiddlePoint());
+	public Address getNearstSearchResult(PointFloat input){
+		Address addr =  getSearchResult(new float[] {input.x, input.y});
 		if (addr == null) {
-			Collection<Housenumber> hns = Main.addressController.getAddressHolder().searchRegionHousenumbers(input).values();
-			Housenumber hn = regionRecursiveLookup(input);
+			RegionFloat region = new RegionFloat(input.x, input.y, input.x, input.y);
+			Collection<Housenumber> hns = Main.addressController.getAddressHolder().searchRegionHousenumbers(region).values();
+			Housenumber hn = regionRecursiveLookup(region);
 			addr = new Address(hn.getLonLat(), hn.getStreet().getStreet(), hn.getHousenumber(), hn.getPostcode().getPostcode(), hn.getPostcode().getCity());
 		}
 		return addr;
@@ -39,11 +41,12 @@ public class AddressRegionSearch {
 		return house;
 	}
 	
-	public List<String> searchSuggestions(RegionFloat input, long limitAmountOfResults){
+	public List<String> searchSuggestions(PointFloat input, long limitAmountOfResults){
 		TimerUtil timerUtil = new TimerUtil();
 		timerUtil.on();
 		List<String> result = new ArrayList<String>();
-		Collection<Housenumber> hns = Main.addressController.getAddressHolder().searchRegionHousenumbers(input).values();
+		RegionFloat region = new RegionFloat(input.x, input.y, input.x, input.y);
+		Collection<Housenumber> hns = Main.addressController.getAddressHolder().searchRegionHousenumbers(region).values();
 		for(Housenumber hn : hns){
 			result.add(hn.toString());
 		}
