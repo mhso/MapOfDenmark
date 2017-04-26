@@ -19,6 +19,9 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 public class GraphicRepresentation {
+	private static Color canvasBGColor;
+	private static Color coastlineColor;
+	
 	private static ArrayList<WaytypeGraphicSpec>[] zoomLevelArr = new ArrayList[20];
 	private static List<WaytypeGraphicSpec> overriddenSpecs = new ArrayList<>();
 	private static EnumMap<WayType, Integer> zoomMap = new EnumMap<>(WayType.class);
@@ -41,7 +44,6 @@ public class GraphicRepresentation {
 		cummulativeList.addAll(overriddenSpecs);
 		for(int i = zoomLevel; i >= 0; i--) {
 			for(WaytypeGraphicSpec wgs : zoomLevelArr[i]) {
-
 				if(!wgs.isFiltered() && !overriddenSpecs.contains(wgs)) cummulativeList.add(wgs);
 			}
 		}
@@ -148,17 +150,35 @@ public class GraphicRepresentation {
 	 * @param source The InputSource of the XML file.
 	 */
 	public static void parseData(String themeFile) {
-		currentTheme = themeFile;
 		for(int i = 0; i < zoomLevelArr.length; i++) {
 			zoomLevelArr[i] = new ArrayList<WaytypeGraphicSpec>();
 		}
+		if(currentTheme == null) parseZoomValues();
+		String parseFile = "";
+		if(Main.production) parseFile = GraphicRepresentation.class.getResource("resources/ThemeBasic.XML").toString();
+		else parseFile = "resources/ThemeBasic.XML";
+		parseTheme(parseFile);
+		if(!themeFile.equals(parseFile)) parseTheme(themeFile);
+		currentTheme = themeFile;
+	}
+	
+	private static void parseZoomValues() {
 		try {
-			InputSource source = new InputSource(themeFile);
 			XMLReader reader = XMLReaderFactory.createXMLReader();
 			reader.setContentHandler(new ZoomHandler());
 			if(Main.production) reader.parse(new InputSource(GraphicRepresentation.class.getResourceAsStream("/resources/ZoomValues.XML")));
 			else reader.parse(new InputSource("resources/ZoomValues.XML"));
-			reader = XMLReaderFactory.createXMLReader();
+		} catch (SAXException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private static void parseTheme(String file) {
+		try {
+			InputSource source = new InputSource(file);
+			XMLReader reader = XMLReaderFactory.createXMLReader();
 			reader.setContentHandler(new GraphicsHandler());
 			reader.parse(source);
 		} catch (SAXException e) {
@@ -170,6 +190,14 @@ public class GraphicRepresentation {
 
 	public static String getCurrentTheme() {
 		return currentTheme.substring(10, currentTheme.length()-4);
+	}
+	
+	public static Color getCanvasBGColor() {
+		return canvasBGColor;
+	}
+	
+	public static Color getCoastlineColor() {
+		return coastlineColor;
 	}
 	
 	/**
@@ -234,6 +262,9 @@ public class GraphicRepresentation {
 					mapElement = WayType.valueOf(atts.getValue("name"));
 					gs.setWayType(mapElement);
 				break;
+				case "bgcolor":
+					canvasBGColor = parseColor(atts.getValue("color"));
+				break;
 				case "defaultfont": 
 					defaultFontSize = Integer.parseInt(atts.getValue("fontsize"));
 					defaultFontColor = parseColor(atts.getValue("fontcolor"));
@@ -252,6 +283,7 @@ public class GraphicRepresentation {
 				break;
 				case "innercolor":
 					gs.setInnerColor(parseColor(atts.getValue("color")));
+					if(mapElement == WayType.COASTLINE) coastlineColor = parseColor(atts.getValue("color"));
 				break;
 				case "outercolor":
 					gs.setOuterColor(parseColor(atts.getValue("color")));

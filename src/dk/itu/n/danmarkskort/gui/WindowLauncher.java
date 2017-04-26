@@ -138,6 +138,15 @@ public class WindowLauncher extends JFrame {
         buttonLaunch.setBackground(style.launcherSelectionBG());
         buttonLaunch.setForeground(Color.BLACK);
         buttonLaunch.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        
+        contentPane.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if(e.getKeyCode() == KeyEvent.VK_ENTER && buttonLaunch.isEnabled()) {
+					buttonLaunch.doClick();
+				}
+			}
+		});
         gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.weightx = 1;
 		gbc.gridx = 2;
@@ -229,6 +238,7 @@ public class WindowLauncher extends JFrame {
 		
 		setLocationRelativeTo(null);
 		setVisible(true);
+		contentPane.requestFocusInWindow();
 	}
 	
 	private void launch() {

@@ -171,9 +171,9 @@ public class MapCanvas extends JPanel implements ActionListener {
 
         // backgroundcolor for the map. If there's a coastline use the water innercolor, otherwise use the coastline innercolor
         if(Main.model.enumMapKD.containsKey(WayType.COASTLINE) ){//&& Main.model.enumMapKD.get(WayType.COASTLINE).size() > 0) {
-        	g2d.setColor(new Color(110, 192, 255));
+        	g2d.setColor(GraphicRepresentation.getCanvasBGColor());
         }
-        else g2d.setColor(new Color(240, 240, 230));
+        else g2d.setColor(GraphicRepresentation.getCoastlineColor());
 		AffineTransform af = new AffineTransform();
 		g2d.setTransform(af);
         g2d.fillRect(0, 0, getWidth(), getHeight());
