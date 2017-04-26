@@ -5,6 +5,7 @@ import dk.itu.n.danmarkskort.address.Address;
 import dk.itu.n.danmarkskort.gui.map.PinPoint;
 import dk.itu.n.danmarkskort.gui.menu.DropdownMenu;
 import dk.itu.n.danmarkskort.gui.menu.RoutePage;
+import dk.itu.n.danmarkskort.models.PointFloat;
 import dk.itu.n.danmarkskort.search.SearchController;
 
 import javax.swing.*;
@@ -154,7 +155,7 @@ public class TopPanel extends JPanel {
     		Address addr = SearchController.getSearchFieldAddressObj(address);
         	if(addr != null ) { 
         		System.out.println("Toppanel->searchForAddress: "+addr.toString());
-        		panZoomToCoordinates(addr.getLonLat());
+        		panZoomToCoordinates(addr.getLonLatPointFloat());
         	} else {
         		JOptionPane.showMessageDialog(null, "No match found.", "Missing information", JOptionPane.INFORMATION_MESSAGE);
         	}
@@ -163,12 +164,11 @@ public class TopPanel extends JPanel {
     	}
     }
 
-    private void panZoomToCoordinates(float[] lonLat) {
-		// TODO Auto-generated method stub
-    	System.out.println("Toppanel->panZoomToCoordinats (lon, lat): (" + lonLat[0] + ", " + lonLat[1] + ")");
-    	String pinPointName = "SearchLocation - (" + lonLat[0] + ", " + lonLat[1] + ")";
-    	Main.pinPointManager.addPinPoint(pinPointName, new PinPoint(Main.map.toScreenCoords(new Point2D.Float(lonLat[0], lonLat[1])), pinPointName));
-    	Main.map.panToPosition(new Point2D.Float(lonLat[0], lonLat[1]));
+    private void panZoomToCoordinates(PointFloat input) {
+    	System.out.println("Toppanel->panZoomToCoordinats (lon, lat): " + input.toString() + "\n -->, real (lon, lat): " + input.getRealCords());
+    	String pinPointName = "SearchLocation - " + input.toString();
+    	Main.pinPointManager.addPinPoint(pinPointName, new PinPoint(Main.map.toScreenCoords(new Point2D.Float(input.x, input.y)), pinPointName));
+    	Main.map.panToPosition(new Point2D.Float(input.x, input.y));
     	Main.mainPanel.repaint();
 	}
 
@@ -235,19 +235,4 @@ public class TopPanel extends JPanel {
             }
         }
     }
-    
-//    private void swingSearch(String text){
-//	    SwingWorker worker = new SwingWorker<List<String>, Void>() {
-//	        @Override
-//	        public List<String> doInBackground() {
-//	            return dropSuggestionsList = SearchController.getSearchFieldSuggestions(text);
-//	        }
-//	
-//	        @Override
-//	        public void done() {
-//	        	populateSuggestions(dropSuggestionsList);
-//	        }
-//	    };
-//	    worker.execute();
-//    }
 }

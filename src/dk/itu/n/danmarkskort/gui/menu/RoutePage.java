@@ -322,14 +322,14 @@ public class RoutePage extends JPanel {
 			pinPoints.add(pinPointTo);
 			Main.pinPointManager.setTemporaryPinPoints(pinPoints);
 			
-			System.out.println(Main.routeController.toString());
-			RouteVertex vertexFrom = Main.routeController.demoFindVertex(addrFrom.getLonLat());
-			RouteVertex vertexTo = Main.routeController.demoFindVertex(addrTo.getLonLat());
-			if(vertexFrom != null && vertexTo != null) {
-				System.out.println("isRoute: " + Main.routeController.isRoute(vertexFrom, vertexTo, WeightEnum.DISTANCE));
-			} else {
-				System.out.println("isRoute: NO Match");
-			}
+//			System.out.println(Main.routeController.toString());
+//			RouteVertex vertexFrom = Main.routeController.demoFindVertex(addrFrom.getLonLat());
+//			RouteVertex vertexTo = Main.routeController.demoFindVertex(addrTo.getLonLat());
+//			if(vertexFrom != null && vertexTo != null) {
+//				System.out.println("isRoute: " + Main.routeController.isRoute(vertexFrom, vertexTo, WeightEnum.DISTANCE));
+//			} else {
+//				System.out.println("isRoute: NO Match");
+//			}
     		RoutePlannerMain routePlannerMain =  new RoutePlannerMain(bufferedImage, txtAddrFrom.getText(), txtAddrTo.getText(), routeDistance, routemodels);
     	} else if(!txtAddrFrom.getText().trim().isEmpty() && !txtAddrTo.getText().trim().isEmpty()) {
     		menu.blockVisibility(true);

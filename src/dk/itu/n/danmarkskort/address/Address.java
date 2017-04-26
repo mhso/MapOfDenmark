@@ -2,6 +2,8 @@ package dk.itu.n.danmarkskort.address;
 
 import java.awt.geom.Point2D;
 
+import dk.itu.n.danmarkskort.models.PointFloat;
+
 public class Address{
 	private float lon, lat;
 	private String street, housenumber, city, postcode;
@@ -31,7 +33,8 @@ public class Address{
 	}
 
 	public float[] getLonLat() { return new float[] {lon, lat}; }
-	public Point2D getLonLatAsPoint() {return new Point2D.Float(lon, lat);}
+	public PointFloat getLonLatPointFloat() { return new PointFloat(lon, lat); }
+	public Point2D getLonLatAsPoint() { return new Point2D.Float(lon, lat); }
 	public void setLonLat(float[] lonLat) {
 		this.lon = lonLat[0];
 		this.lat = lonLat[1];

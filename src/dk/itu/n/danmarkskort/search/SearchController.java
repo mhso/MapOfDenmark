@@ -21,11 +21,7 @@ public class SearchController{
 		if(inputStr == null || inputStr.isEmpty()) return null;
 		
 		if(isCoordinates(inputStr)) {
-			String[] strArr = inputStr.split(", ");
-			float[] cord = new float[strArr.length];
-			for(int i=0; i<cord.length; i++) cord[i] = Float.parseFloat(strArr[i]);
-			return Main.addressController.searchSuggestions(
-					new PointFloat(cord[0], cord[1]), limitAmountOfResults);
+			return Main.addressController.getSearchSuggestions(stringCordsToPointFloat(inputStr), limitAmountOfResults);
 		} else {
 			return Main.addressController.getSearchSuggestions(inputStr, limitAmountOfResults);
 		}
@@ -35,11 +31,10 @@ public class SearchController{
 		if(inputStr == null || inputStr.isEmpty()) return null;
 		
 		if(isCoordinates(inputStr)) {
-			String[] strArr = inputStr.split(", ");
-			float[] cord = new float[strArr.length];
-			for(int i=0; i<cord.length; i++) cord[i] = Float.parseFloat(strArr[i]);
-			return Main.addressController.getSearchResult(cord);
+			System.out.println("Search for cords string");
+			return Main.addressController.getNearstSearchResult(stringCordsToPointFloat(inputStr));
 		} else {
+			System.out.println("Search for address string");
 			return Main.addressController.getSearchResult(inputStr);
 		}
 	}
@@ -49,6 +44,12 @@ public class SearchController{
 		String cordsRegex = cordRegex + "(\\,\\s)" + cordRegex;
 		if(inputStr.matches(cordsRegex)) return true;
 		return false;
-		
+	}
+	
+	private static PointFloat stringCordsToPointFloat(String inputStr){
+		String[] strArr = inputStr.split(", ");
+		float lon = Float.parseFloat(strArr[0]);
+		float lat = Float.parseFloat(strArr[1]);
+		return new PointFloat(lon, lat);
 	}
 }

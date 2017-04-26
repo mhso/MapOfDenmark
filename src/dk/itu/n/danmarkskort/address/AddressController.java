@@ -35,6 +35,8 @@ public class AddressController {
 	}
 	
 	public List<String> getSearchSuggestions(String find, long limitAmountOfResults){ return addressSuggestion.searchSuggestions(find, limitAmountOfResults); }
+	public List<String> getSearchSuggestions(PointFloat find, long limitAmountOfResults){ return searchSuggestions(find, limitAmountOfResults); }
+	
 	
 	public Address getSearchResult(String find){
 		
@@ -67,10 +69,6 @@ public class AddressController {
 			}
 		}
 		return null;
-	}
-	
-	public Address getSearchResult(float[] lonLat){
-		return addressRegionSearch.getSearchResult(lonLat);
 	}
 	
 	public Address getNearstSearchResult(PointFloat input){

@@ -1,6 +1,7 @@
 package dk.itu.n.danmarkskort.address;
 
 import dk.itu.n.danmarkskort.models.ParsedNode;
+import dk.itu.n.danmarkskort.models.PointFloat;
 import dk.itu.n.danmarkskort.models.ReuseStringObj;
 
 import java.io.Serializable;
@@ -17,6 +18,8 @@ public class Housenumber implements Serializable {
 		this.lon = lonLat[0];
 		this.lat = lonLat[1];
 	}
+	
+	public PointFloat getPointFloat(){ return new PointFloat(lon, lat); }
 
 	public float[] getLonLat() { return new float[] {lon, lat}; }
 

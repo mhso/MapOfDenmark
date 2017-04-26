@@ -23,27 +23,37 @@ public class AddressRegionSearch {
 		if (addr == null) {
 			RegionFloat region = new RegionFloat(input.x, input.y, input.x, input.y);
 			Collection<Housenumber> hns = Main.addressController.getAddressHolder().searchRegionHousenumbers(region).values();
-			Housenumber hn = regionRecursiveLookup(region);
-			addr = new Address(hn.getLonLat(), hn.getStreet().getStreet(), hn.getHousenumber(), hn.getPostcode().getPostcode(), hn.getPostcode().getCity());
+			//Housenumber hn = regionRecursiveLookup(region);
+			double distMin = Double.POSITIVE_INFINITY;
+			Housenumber hnNearst = null;
+			System.out.println("getNearstSearchResult, checking distance for: " + hns.size() + " elements.");
+			for(Housenumber hn : hns){
+				double distTemp = input.getDistance(hn.getPointFloat());
+				if(distTemp < distMin) {
+					distMin = distTemp; 
+					hnNearst = hn;
+					System.out.println("getNearstSearchResult: " + hn.toString());
+				}
+			}
+			addr = new Address(hnNearst.getLonLat(), hnNearst.getStreet().getStreet(), 
+					hnNearst.getHousenumber(), hnNearst.getPostcode().getPostcode(), hnNearst.getPostcode().getCity());
 		}
 		return addr;
 	}
 	
-	private Housenumber regionRecursiveLookup(RegionFloat input){
-		Map<RegionFloat, Housenumber> hns = Main.addressController.getAddressHolder().searchRegionHousenumbers(input);
-		Housenumber house = null;
-		if(hns.size() == 1){ 
-			for(Housenumber hn : hns.values()) house = hn;
-		} else {
-			RegionFloat r = new RegionFloat(input.x1 - 0.000001f, input.y1 + 0.000001f, input.x2 + 0.000001f, input.y2 - 0.000001f);
-			house = regionRecursiveLookup(r);
-		}
-		return house;
-	}
+//	private Housenumber regionRecursiveLookup(RegionFloat input){
+//		Map<RegionFloat, Housenumber> hns = Main.addressController.getAddressHolder().searchRegionHousenumbers(input);
+//		Housenumber house = null;
+//		if(hns.size() == 1){ 
+//			for(Housenumber hn : hns.values()) house = hn;
+//		} else {
+//			RegionFloat r = new RegionFloat(input.x1 - 0.000001f, input.y1 + 0.000001f, input.x2 + 0.000001f, input.y2 - 0.000001f);
+//			house = regionRecursiveLookup(r);
+//		}
+//		return house;
+//	}
 	
 	public List<String> searchSuggestions(PointFloat input, long limitAmountOfResults){
-		TimerUtil timerUtil = new TimerUtil();
-		timerUtil.on();
 		List<String> result = new ArrayList<String>();
 		RegionFloat region = new RegionFloat(input.x, input.y, input.x, input.y);
 		Collection<Housenumber> hns = Main.addressController.getAddressHolder().searchRegionHousenumbers(region).values();
@@ -52,8 +62,6 @@ public class AddressRegionSearch {
 		}
 		Collections.sort(result, String.CASE_INSENSITIVE_ORDER);
 		// Remove duplicates and return
-		timerUtil.off();
-		Main.log("Lon/lat Suggestion time: " + timerUtil.toString());
 		return result.parallelStream().distinct().limit(limitAmountOfResults).collect(Collectors.toList());
 	}
 }
