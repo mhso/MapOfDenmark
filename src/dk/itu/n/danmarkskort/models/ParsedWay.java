@@ -91,4 +91,6 @@ public class ParsedWay extends ParsedItem implements KDComparable, Serializable 
     }
 
     public void setID(long id) { this.id = id; }
+
+    public int getNodeAmount() { return nodes.length; }
 }

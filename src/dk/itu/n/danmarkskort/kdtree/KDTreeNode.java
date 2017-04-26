@@ -1,9 +1,11 @@
 package dk.itu.n.danmarkskort.kdtree;
 
 import dk.itu.n.danmarkskort.DKConstants;
+import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.models.ParsedNode;
 import dk.itu.n.danmarkskort.models.Region;
 
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +16,6 @@ public class KDTreeNode<T extends KDComparable> extends KDTree<T> {
     private KDTree<T> rightChild;
     private float leftSplit;
     private float rightSplit;
-   // private int size;
 
     public KDTreeNode(List<T> list) {
         this(KDTree.listToArray(list), true);
@@ -29,38 +30,32 @@ public class KDTreeNode<T extends KDComparable> extends KDTree<T> {
         KDComparable median = QuickSelect.quickSelect(array, (array.length + 1) / 2, sortByLon);
 
         KDComparable[] leftArray = new KDComparable[(array.length + 1) / 2];
-        for(int i = 0; i < leftArray.length; i++) {
-            leftArray[i] = array[i];
-        }
+        for(int i = 0; i < leftArray.length; i++) leftArray[i] = array[i];
 
         KDComparable[] rightArray = new KDComparable[array.length - leftArray.length];
-        for(int i = 0; i < rightArray.length; i ++) {
-            rightArray[i] = array[i + leftArray.length];
-        }
+        for(int i = 0; i < rightArray.length; i ++) rightArray[i] = array[i + leftArray.length];
 
         if(sortByLon) {
+            // left side
             leftSplit = median.getFirstNode().getLon();
             for(KDComparable item : leftArray) {
-                ParsedNode[] nodes = item.getNodes();
-                for(ParsedNode node : nodes) leftSplit = node.getLon() > leftSplit ? node.getLon() : leftSplit; // til højre er værdierne størst
+                for(ParsedNode node : item.getNodes()) leftSplit = node.getLon() > leftSplit ? node.getLon() : leftSplit; // til højre er værdierne størst
             }
+            // right side
             rightSplit = median.getFirstNode().getLon();
             for(KDComparable item : rightArray) {
-                ParsedNode[] nodes = item.getNodes();
-                for(ParsedNode node : nodes) rightSplit = node.getLon() < rightSplit ? node.getLon(): rightSplit; // til højre er værdierne størst
+                for(ParsedNode node : item.getNodes()) rightSplit = node.getLon() < rightSplit ? node.getLon(): rightSplit; // til højre er værdierne størst
             }
         } else {
             // top part
             leftSplit = median.getFirstNode().getLat();
             for(KDComparable item : leftArray) {
-                ParsedNode[] nodes = item.getNodes();
-                for(ParsedNode node : nodes) leftSplit = node.getLat() > leftSplit ? node.getLat() : leftSplit; // nederst er værdierne størst (stadig minus, men tættere på 0)
+                for(ParsedNode node : item.getNodes()) leftSplit = node.getLat() > leftSplit ? node.getLat() : leftSplit; // nederst er værdierne størst (stadig minus, men tættere på 0)
             }
             // bottom part
             rightSplit = median.getFirstNode().getLat();
             for(KDComparable item : rightArray) {
-                ParsedNode[] nodes = item.getNodes();
-                for(ParsedNode node : nodes) rightSplit = node.getLat() < rightSplit ? node.getLat() : rightSplit; // nederst er værdierne størst
+                for(ParsedNode node : item.getNodes()) rightSplit = node.getLat() < rightSplit ? node.getLat() : rightSplit; // nederst er værdierne størst
             }
         }
         if(leftArray.length > DKConstants.KD_SIZE) leftChild = new KDTreeNode<>(leftArray, !sortByLon);
@@ -75,17 +70,19 @@ public class KDTreeNode<T extends KDComparable> extends KDTree<T> {
     public float getLeftSplit() { return leftSplit; }
     public float getRightSplit() { return rightSplit; }
 
-    public List<KDComparable[]> getItems(Region reg) { return getItems(reg, true); }
+    public List<KDComparable[]> getItems(Region reg) {
+        return getItems(reg, true);
+    }
 
     public List<KDComparable[]> getItems(Region reg, boolean sortByLon) {
         List<KDComparable[]> items = new ArrayList<>();
         if(sortByLon) {
-            if(reg.x1 < leftSplit) items.addAll(leftChild.getItems(reg, !sortByLon));
-            if(reg.x2 > rightSplit) items.addAll(rightChild.getItems(reg, !sortByLon));
+            if(reg.x1 < leftSplit) items.addAll(leftChild.getItems(reg, false));
+            if(reg.x2 > rightSplit) items.addAll(rightChild.getItems(reg, false));
         }
         else {
-            if(reg.y1 < leftSplit) items.addAll(leftChild.getItems(reg, !sortByLon));
-            if(reg.y2 > rightSplit) items.addAll(rightChild.getItems(reg, !sortByLon));
+            if(reg.y1 < leftSplit) items.addAll(leftChild.getItems(reg, true));
+            if(reg.y2 > rightSplit) items.addAll(rightChild.getItems(reg, true));
         }
         return items;
     }
@@ -95,5 +92,35 @@ public class KDTreeNode<T extends KDComparable> extends KDTree<T> {
         arrList.addAll(leftChild.getAllItems());
         arrList.addAll(rightChild.getAllItems());
         return arrList;
+    }
+
+    protected T nearest(ParsedNode query, ParsedNode bestMatch, T currentBest, boolean sortByLon,) {
+        double nearestPossibleLT, nearestPossibleRB;
+        T best = currentBest;
+        T candidate = null;
+
+        if(sortByLon) {
+            if(query.getLon() < leftSplit) nearestPossibleLT = 0;
+            else nearestPossibleLT = calcDistance(query, new ParsedNode(leftSplit, query.getLat()));
+
+            if(query.getLon() > rightSplit) nearestPossibleRB = 0;
+            else nearestPossibleRB = calcDistance(query, new ParsedNode(rightSplit, query.getLat()));
+        } else {
+            if(query.getLon() < leftSplit) nearestPossibleLT = 0;
+            else nearestPossibleLT = calcDistance(query, new ParsedNode(query.getLon(), leftSplit));
+
+            if(query.getLat() > rightSplit) nearestPossibleRB = 0;
+            else nearestPossibleRB = calcDistance(query, new ParsedNode(query.getLon(), rightSplit));
+        }
+/*
+        if(nearestPossibleLT == 0) {
+            candidate = leftChild.nearest(query, !sortByLon, best);
+            best = calcDistance(candidate.get
+        }*/
+        if(nearestPossibleRB == 0) {
+
+        }
+
+        return best;
     }
 }

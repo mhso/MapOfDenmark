@@ -37,19 +37,15 @@ public class ParsedRelation extends ParsedWay {
 
     @Override
     public ParsedNode[] getNodes() {
-        ArrayList<ParsedNode> arrList = new ArrayList<>();
-        if(outers.size() > 0) {
-            for(ParsedItem inner: inners) {
-                for(ParsedNode node: inner.getNodes()) arrList.add(node);
-            }
+        int size = getNodeAmount();
+        ParsedNode[] nodeArr = new ParsedNode[size];
+        int i = 0;
+        for(ParsedItem inner : inners) {
+            for(int j = 0; j < inner.getNodes().length; j++, i++) nodeArr[i] = inner.getNodes()[j];
         }
-        if(inners.size() > 0) {
-            for(ParsedItem outer: outers) {
-                for(ParsedNode node: outer.getNodes()) arrList.add(node);
-            }
+        for(ParsedItem outer : outers) {
+            for(int k = 0; k < outer.getNodes().length; k++, i++) nodeArr[i] = outer.getNodes()[k];
         }
-        ParsedNode[] nodeArr = new ParsedNode[arrList.size()];
-        for(int i = 0; i < nodeArr.length; i++) nodeArr[i] = arrList.get(i);
         return nodeArr;
     }
 
@@ -138,5 +134,12 @@ public class ParsedRelation extends ParsedWay {
                 + ", firstLat=" + getFirstNode().getLat()
                 + ", nodeAmount=" + nodeAmount
                 + ", itemAmount=" + (inners.size() + outers.size()) + "]";
+    }
+
+    public int getNodeAmount() {
+        int size = 0;
+        for(ParsedItem inner: inners) size += inner.getNodeAmount();
+        for(ParsedItem outer: outers) size += outer.getNodeAmount();
+        return size;
     }
 }

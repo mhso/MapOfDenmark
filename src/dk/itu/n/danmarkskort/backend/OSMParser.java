@@ -259,7 +259,7 @@ public class OSMParser extends SAXAdapter implements Serializable {
             combined.addAll(connected);
             HashSet<ParsedWay> fixed = ParserUtil.fixUnconnectedCoastlines(unconnected);
             combined.addAll(fixed);
-            tree = new KDTreeLeaf<ParsedItem>(combined);
+            tree = new KDTreeNode<ParsedItem>(combined);
         }
         else tree = null;
         coastlineMap = null;

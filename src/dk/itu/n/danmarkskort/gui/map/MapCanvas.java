@@ -115,19 +115,18 @@ public class MapCanvas extends JPanel implements ActionListener {
 		shapesDrawn = 0;
 		if(wayTypesVisible == null) return;
         Region currentRegion = getGeographicalRegion();
-        if(Main.debug) {
+        if(Main.debug && !Main.buffered) {
             double x1 = currentRegion.x1;
             double x2 = currentRegion.x2;
             double y1 = currentRegion.y1;
             double y2 = currentRegion.y2;
             double width = currentRegion.getWidth();
             double height = currentRegion.getHeight();
-            Region debugRegion = new Region(
+            currentRegion = new Region(
                     x1 + (width * 0.25),
                     y1 + (height * 0.25),
                     x2 - (width * 0.25),
                     y2 - (height * 0.25));
-            currentRegion = debugRegion;
         }
 
         // drawing all the outlines, if the current WayTypeGraphicSpec has one
@@ -167,7 +166,7 @@ public class MapCanvas extends JPanel implements ActionListener {
                 }
             }
         }
-        if(Main.debug) {
+        if(Main.debug && !Main.buffered) {
             g2d.setStroke(new BasicStroke(0.0001f));
             g2d.setColor(Color.BLACK);
             Path2D box = new Path2D.Float();
