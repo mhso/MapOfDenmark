@@ -13,6 +13,8 @@ import javax.swing.SwingUtilities;
 import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.Util;
 import dk.itu.n.danmarkskort.gui.DropdownRightClick;
+import dk.itu.n.danmarkskort.models.ParsedNode;
+import dk.itu.n.danmarkskort.models.WayType;
 public class MapMouseController extends MouseAdapter {
 
 	MapCanvas canvas;
@@ -34,6 +36,7 @@ public class MapMouseController extends MouseAdapter {
 
 	public void mousePressed(MouseEvent e) {
 		lastMousePosition = e.getPoint();
+		System.out.println(Main.model.enumMapKD.get(WayType.HIGHWAY_MOTORWAY).nearest(new ParsedNode((float)e.getX(), (float)e.getY())));
 	}
 
 	public void mouseMoved(MouseEvent e) {

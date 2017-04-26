@@ -1,10 +1,13 @@
 package dk.itu.n.danmarkskort.kdtree;
 
+import dk.itu.n.danmarkskort.models.ParsedNode;
 import dk.itu.n.danmarkskort.models.Region;
 
+import java.awt.geom.Point2D;
 import java.io.Serializable;
 import java.util.Iterator;
 import java.util.List;
+import java.util.zip.InflaterInputStream;
 
 public abstract class KDTree<T extends KDComparable> implements Serializable, Iterable<T> {
 
@@ -62,4 +65,10 @@ public abstract class KDTree<T extends KDComparable> implements Serializable, It
             return next;
         }
     }
+
+    public T nearest(ParsedNode query) {
+        return nearest(query, true, null);
+    }
+
+    abstract T nearest(ParsedNode query, boolean sortByLon, T currentBest);
 }

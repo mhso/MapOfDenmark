@@ -21,6 +21,7 @@ import java.util.Map;
 
 import dk.itu.n.danmarkskort.backend.InputMonitor;
 import dk.itu.n.danmarkskort.backend.InputStreamListener;
+import dk.itu.n.danmarkskort.models.ParsedNode;
 
 import java.awt.MouseInfo;
 import java.awt.Point;
@@ -129,6 +130,12 @@ public class Util {
 	public static Point2D toRealCoords(Point2D fakeCoords) {
 		return new Point2D.Float((float)fakeCoords.getX()/Main.model.getLonFactor(), (float)-fakeCoords.getY());
 	}
+	
+	public static double calcDistance(ParsedNode a, ParsedNode b) {
+        double x = a.getLon() - b.getLon();
+        double y = a.getLat() - b.getLat();
+        return Math.sqrt((x * x) + (y * y));
+    }
 	
 	public static String getBinaryFilePath() {
 		File file = new File(Main.osmReader.getFileName());

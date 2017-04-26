@@ -25,7 +25,7 @@ public abstract class ParsedItem implements KDComparable, Serializable {
         if(a == b) return 0;
         return 0;
     }
-
+    
     public abstract ParsedNode[] getNodes();
     public abstract Shape getShape();
     public abstract void deleteOldRefs();
