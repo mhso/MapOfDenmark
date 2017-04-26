@@ -45,7 +45,7 @@ public class Tile {
 	}
 	
 	public void zoom(double scale) {
-		this.scale *= scale;
+		//this.scale *= scale;
 	}
 	
 	public Region getGeographicalRegion() {
@@ -53,7 +53,7 @@ public class Tile {
 		Point2D p1 = Main.map.toActualScreenCoords(zero);
 		Point2D p2 = Main.map.toModelCoords(new Point2D.Double(p1.getX() + Main.tileController.getTileWidth(), p1.getY() + Main.tileController.getTileHeight()));
 		
-		Point2D position =  Main.map.toModelCoords(new Point2D.Double(p1.getX() + Main.tileController.getTileWidth() * -pos.x, p1.getY() + Main.tileController.getTileHeight() * -pos.y));
+		Point2D position = Main.map.toModelCoords(new Point2D.Double(p1.getX() + Main.tileController.getTileWidth() * -pos.x, p1.getY() + Main.tileController.getTileHeight() * -pos.y));
 		Point2D size = new Point2D.Double(p2.getX() - zero.getX(), p2.getY() - zero.getY());
 		Region region = new Region(-position.getX(), -position.getY(), -(position.getX() + -size.getX()), -(position.getY() + -size.getY()));
 		return region;
@@ -77,12 +77,13 @@ public class Tile {
 	public boolean draw(Graphics2D g2d) {
 		if(isVisibleToViewport()) {
 			if(isRendered()) {
-				if(Main.tileController.isBlurred()) g2d.setTransform(Main.tileController.getBlurTransform());
-				else g2d.setTransform(Main.map.getPixelTransform());
+				g2d.setTransform(Main.tileController.getImageTransform());
 				Point2D screenPos = Main.map.toActualScreenCoords(getGeographicalRegion().getPointFrom());
 				g2d.drawImage(image, (int)screenPos.getX(), (int)screenPos.getY(), null);
 				Region r = getGeographicalRegion();
-				g2d.setColor(Color.GREEN);
+				
+				g2d.setTransform(Main.map.getActualTransform());
+				g2d.setColor(Color.WHITE);
 				g2d.setStroke(new BasicStroke(Float.MIN_VALUE));
 				g2d.draw(new Rectangle2D.Double(r.x1, r.y1, r.getWidth(), r.getHeight()));
 			} else {

@@ -120,23 +120,15 @@ public class TileController implements ActionListener {
 	}
 	
 	public void pan(double dx, double dy) {
-		if(isBlurred()) {
-			Util.pan(blurTransform, dx, dy);
-		} else {
-			Util.pan(imageTransform, dx, dy);
-		}
+		Util.pan(imageTransform, dx / Main.map.getZoomRaw(), dy / Main.map.getZoomRaw());
 		update();
 	}
 	
 	private void blur() {
+		Main.log("Bluring");
 		if(firstRender) return;
 		blur = true;
-		
-		// Remove useless tiles to save memory upon zoom
-		List<String> uselessTileKeys = getUselessTileKeys();
-		blurTransform = (AffineTransform) Main.map.getPixelTransform().clone();
-		for(int i=0; i<uselessTileKeys.size(); i++) tiles.remove(uselessTileKeys);
-		
+
 		// Restart the blur timer
 		blurTimer.restart();
 	}
@@ -146,25 +138,19 @@ public class TileController implements ActionListener {
 	}
 	
 	public void zoom(double scale) {
-		if(!isBlurred()) blur();
-		Util.zoom(blurTransform, scale);
-		Main.log("Bluring");
+		//if(!isBlurred()) blur();
+		Util.zoom(imageTransform, scale);
 	}
 	
 	private void unblur() {
 		blur = false;
-		imageTransform = new AffineTransform();
-		updateLeftTop();
-		tiles.clear();
-		for(int i = currentLeftTop.x - 1; i < currentLeftTop.x + 2; i++) {
-			for(int j = currentLeftTop.y - 1; j < currentLeftTop.y + 2; j++) {
-				Tile tile = new Tile(new Point(i, j));
-				tile.render();
-				tiles.put(tile.getKey(), tile);
-			}
-		}
+
 		Main.log("Unbluring");
 		Main.mainPanel.repaint();
+	}
+	
+	public AffineTransform getImageTransform() {
+		return imageTransform;
 	}
 	
 	public List<Tile> getUnrenderedTiles() {

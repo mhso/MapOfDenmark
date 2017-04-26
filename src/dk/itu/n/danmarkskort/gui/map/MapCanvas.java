@@ -25,6 +25,7 @@ import javax.swing.Timer;
 
 import dk.itu.n.danmarkskort.DKConstants;
 import dk.itu.n.danmarkskort.Main;
+import dk.itu.n.danmarkskort.Util;
 import dk.itu.n.danmarkskort.gui.map.multithreading.Tile;
 import dk.itu.n.danmarkskort.kdtree.KDTree;
 import dk.itu.n.danmarkskort.mapgfx.GraphicRepresentation;
@@ -35,27 +36,24 @@ import dk.itu.n.danmarkskort.models.ParsedItem;
 import dk.itu.n.danmarkskort.models.Region;
 import dk.itu.n.danmarkskort.models.WayType;
 
-public class MapCanvas extends JPanel implements ActionListener {
+public class MapCanvas extends JPanel {
 
 	private AffineTransform transform = new AffineTransform();
 	private AffineTransform actualTransform = new AffineTransform();
-	private AffineTransform pixelTransform = new AffineTransform();
 	private boolean antiAlias = true;
 	public int shapesDrawn = 0;
 	private final int MAX_ZOOM = 20;
 
 	private WaytypeGraphicSpec currentWTGSpec;
 	private boolean zoomChanged;
-
+	private boolean isInitialized = false;
+	
 	private List<CanvasListener> listeners = new ArrayList<>();
 	private List<WaytypeGraphicSpec> wayTypesVisible;
 	
 	public boolean scaleCurrentLayer = false;
-	private Timer zoomTimer;
 	
 	public MapCanvas() {
-		zoomTimer = new Timer(200, this);
-		zoomTimer.setRepeats(false);
 		new MapMouseController(this);
 		setDoubleBuffered(true);
 	}
@@ -79,10 +77,6 @@ public class MapCanvas extends JPanel implements ActionListener {
 	
 	public AffineTransform getActualTransform() {
 		return actualTransform;
-	}
-	
-	public AffineTransform getPixelTransform() {
-		return pixelTransform;
 	}
 	
 	public void drawMap(Graphics2D g2d) {
@@ -155,7 +149,9 @@ public class MapCanvas extends JPanel implements ActionListener {
 	public void drawMapShapesForTile(Tile tile) {
 		if(tile.isRendered()) return;
 		Graphics2D g2d = (Graphics2D)tile.getGraphics();
-		Region currentRegion = tile.getGeographicalRegion();
+		
+		Region tileRegion = tile.getGeographicalRegion();
+		Region currentRegion = new Region(tileRegion.x1, tileRegion.y1 + tileRegion.getHeight(), tileRegion.x2, tileRegion.y2 + tileRegion.getHeight());
 		
 		g2d.setTransform(tile.getTransform());
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -218,8 +214,7 @@ public class MapCanvas extends JPanel implements ActionListener {
         // backgroundcolor for the map. If there's a coastline use the water innercolor, otherwise use the coastline innercolor
         if(Main.model.enumMapKD.containsKey(WayType.COASTLINE) ){//&& Main.model.enumMapKD.get(WayType.COASTLINE).size() > 0) {
         	g2d.setColor(new Color(110, 192, 255));
-        }
-        else g2d.setColor(new Color(240, 240, 230));
+        } else g2d.setColor(new Color(240, 240, 230));
 
         g2d.fill(background);
     }
@@ -240,10 +235,10 @@ public class MapCanvas extends JPanel implements ActionListener {
 	}
 	
 	public void pan(double dx, double dy) {
+		if(Main.buffered && Main.tileController != null) Main.tileController.pan(dx, dy);
 		repair();
 		transform.preConcatenate(AffineTransform.getTranslateInstance(dx, dy));
 		actualTransform.preConcatenate(AffineTransform.getTranslateInstance(dx, dy));
-		if(Main.buffered && Main.tileController != null) Main.tileController.pan(dx, dy);
 		repaint();
 	}
 	
@@ -304,31 +299,26 @@ public class MapCanvas extends JPanel implements ActionListener {
 	}
 	
 	public void zoom(double factor) {
+		
 		double zoomBefore = getZoom();
 		double scaleBefore = getZoomRaw();
-		repair();
-		transform.preConcatenate(AffineTransform.getScaleInstance(factor, factor));
-		actualTransform.preConcatenate(AffineTransform.getScaleInstance(factor, factor));
+		Util.zoom(transform, factor);
+		Util.zoom(actualTransform, factor);
+		
 		double scaleAfter = getZoomRaw();
-		if(getZoom() > MAX_ZOOM) {
-			transform.preConcatenate(AffineTransform.getScaleInstance(scaleBefore/scaleAfter, scaleBefore/scaleAfter));
-			actualTransform.preConcatenate(AffineTransform.getScaleInstance(scaleBefore/scaleAfter, scaleBefore/scaleAfter));
+		if(getZoom() > MAX_ZOOM || getZoom() < 1) {
+			Util.zoom(transform, scaleBefore/scaleAfter);
+			Util.zoom(transform, scaleBefore/scaleAfter);			
 		}
-		else if(getZoom() < 1) {
-			transform.preConcatenate(AffineTransform.getScaleInstance(scaleBefore/scaleAfter, scaleBefore/scaleAfter));
-			actualTransform.preConcatenate(AffineTransform.getScaleInstance(scaleBefore/scaleAfter, scaleBefore/scaleAfter));
-		} else {
-			Main.tileController.zoom(factor);
-			pixelTransform = new AffineTransform();
-		}
-
+		
+		if(isInitialized) Main.tileController.zoom(factor);
 		for(CanvasListener listener : listeners) listener.onZoom();
+		
 		if(zoomBefore != getZoom()) {
 			zoomChanged = true;
 			for(CanvasListener listener : listeners) listener.onZoomLevelChanged();
 		}
 
-		zoomTimer.restart();
 		repaint();
 	}
 	
@@ -391,6 +381,7 @@ public class MapCanvas extends JPanel implements ActionListener {
 		pan(-mapRegion.x1, -mapRegion.y2);
 		zoom(getWidth() / (mapRegion.x2 - mapRegion.x1));
 		Main.tileController.updateZero();
+		isInitialized = true;
 	}
 	
 	public void setupDone() {	
@@ -399,10 +390,6 @@ public class MapCanvas extends JPanel implements ActionListener {
 			// Start rendering
 		}
 		for(CanvasListener listener : listeners) listener.onSetupDone();
-	}
-
-	public void actionPerformed(ActionEvent e) {
-		Main.tileController.fullRepaint();
 	}
 	
 	public void forceRepaint() {
