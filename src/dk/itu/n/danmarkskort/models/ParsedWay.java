@@ -2,6 +2,7 @@ package dk.itu.n.danmarkskort.models;
 
 import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.kdtree.KDComparable;
+import dk.itu.n.danmarkskort.kdtree.KDTree;
 
 import java.awt.*;
 import java.awt.geom.Path2D;
@@ -93,4 +94,12 @@ public class ParsedWay extends ParsedItem implements KDComparable, Serializable 
     public void setID(long id) { this.id = id; }
 
     public int getNodeAmount() { return nodes.length; }
+
+    public double shortestDistance(ParsedNode query) {
+        double shortestDistance = Double.POSITIVE_INFINITY;
+        for(ParsedNode node: nodes) {
+            if(KDTree.calcDistance(query, node) < shortestDistance) shortestDistance = KDTree.calcDistance(query, node);
+        }
+        return shortestDistance;
+    }
 }

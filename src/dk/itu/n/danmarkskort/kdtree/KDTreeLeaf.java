@@ -56,4 +56,17 @@ public class KDTreeLeaf<T extends KDComparable> extends KDTree<T> {
                 minLat < reg.y1 + reg.getHeight() &&
                 minLat + (maxLat - minLat) > reg.y1;
     }
+
+    @SuppressWarnings("unchecked")
+    public T nearest(ParsedNode query, double shortest, boolean sortByLon) {
+        KDComparable candidate = null;
+        double shortestDistance = Double.POSITIVE_INFINITY;
+        for(KDComparable item: data) {
+            if(item.shortestDistance(query) < shortestDistance) {
+                shortestDistance = item.shortestDistance(query);
+                candidate = item;
+            }
+        }
+        return (T) candidate;
+    }
 }

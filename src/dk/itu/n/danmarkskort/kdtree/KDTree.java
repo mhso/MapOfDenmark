@@ -66,15 +66,15 @@ public abstract class KDTree<T extends KDComparable> implements Serializable, It
         }
     }
 
-    protected double calcDistance(ParsedNode a, ParsedNode b) {
+    public static double calcDistance(ParsedNode a, ParsedNode b) {
         double x = a.getLon() - b.getLon();
         double y = a.getLat() - b.getLat();
         return Math.sqrt((x * x) + (y * y));
     }
 
     public T nearest(ParsedNode query) {
-        return nearest(query, true, null);
+        return nearest(query, null, true);
     }
 
-    abstract T nearest(ParsedNode query, boolean sortByLon, T currentBest);
+    abstract T nearest(ParsedNode query, double currentShortest, boolean sortByLon);
 }

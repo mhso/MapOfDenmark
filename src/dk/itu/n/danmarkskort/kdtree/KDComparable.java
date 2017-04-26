@@ -8,4 +8,5 @@ public interface KDComparable {
     int compareLat(KDComparable otherItem);
     ParsedNode getFirstNode();
     ParsedNode[] getNodes();
+    double shortestDistance(ParsedNode node);
 }
