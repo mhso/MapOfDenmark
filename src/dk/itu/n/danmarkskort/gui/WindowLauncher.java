@@ -26,6 +26,7 @@ public class WindowLauncher extends JFrame {
 	private JLabel labelSelectedFile;
 	private String selectedFilePath;
 	private JButton buttonLaunch;
+	private JLabel labelSelectedFileHeader;
 	
 	public WindowLauncher() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -107,19 +108,15 @@ public class WindowLauncher extends JFrame {
 		centerPanel.add(panelCurrentFile, BorderLayout.SOUTH);
 		panelCurrentFile.setLayout(new BorderLayout(0, 5));
 		
-		JLabel labelSelectedFileHeader = new JLabel("Selected File");
+		labelSelectedFileHeader = new JLabel("Selected File");
 		labelSelectedFileHeader.setHorizontalAlignment(SwingConstants.CENTER);
 		labelSelectedFileHeader.setFont(style.normalText());
 		panelCurrentFile.add(labelSelectedFileHeader, BorderLayout.NORTH);
 		
 		buttonLaunch = new JButton("Launch");
-		if (binFiles.isEmpty()) {
-			labelSelectedFileHeader.setText("No map files found, load a new one from 'Configure' menu.");
-			enableLaunchButton(false);
-		}
-		else if(selectedFilePath == null) {
-			labelSelectedFile.setText("Default Map Not Found.");
-			enableLaunchButton(false);
+		if(selectedFilePath == null) {
+			selectedFilePath = "resources/default.bin";
+			labelSelectedFile.setText("default.bin (default)");
 		}
 		
 		labelSelectedFile.setOpaque(true);
@@ -134,8 +131,6 @@ public class WindowLauncher extends JFrame {
 		panelBottom.setLayout(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
 
-
-
 		buttonLaunch.addActionListener(e -> launch());
 		buttonLaunch.setFont(style.mediumHeadline());
         buttonLaunch.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, style.panelBG()));
@@ -143,6 +138,15 @@ public class WindowLauncher extends JFrame {
         buttonLaunch.setBackground(style.launcherSelectionBG());
         buttonLaunch.setForeground(Color.BLACK);
         buttonLaunch.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        
+        contentPane.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if(e.getKeyCode() == KeyEvent.VK_ENTER && buttonLaunch.isEnabled()) {
+					buttonLaunch.doClick();
+				}
+			}
+		});
         gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.weightx = 1;
 		gbc.gridx = 2;
@@ -238,6 +242,7 @@ public class WindowLauncher extends JFrame {
 		
 		setLocationRelativeTo(null);
 		setVisible(true);
+		contentPane.requestFocusInWindow();
 	}
 	
 	private void launch() {
@@ -246,6 +251,7 @@ public class WindowLauncher extends JFrame {
 	}
 
 	public void setSelectedFile(String fileName) {
+		labelSelectedFileHeader.setText("Selected File");
 		labelSelectedFile.setText(fileName);
 		selectedFilePath = fileName;
 		if(!buttonLaunch.isEnabled()) enableLaunchButton(true);
@@ -259,8 +265,10 @@ public class WindowLauncher extends JFrame {
 	
 	private String[] getParsedFiles() {
 		binFiles = new ArrayList<>();
-		selectedFilePath = "/resources/default.bin";
-		labelSelectedFile.setText("default.bin (default)");
+		if(Main.production) {
+			selectedFilePath = "/resources/default.bin";
+			labelSelectedFile.setText("default.bin (default)");
+		}		
 		try {
 			for(Path entry : Files.newDirectoryStream(Paths.get("parsedOSMFiles"))) {
 				for(Path binFile : Files.newDirectoryStream(entry)) {

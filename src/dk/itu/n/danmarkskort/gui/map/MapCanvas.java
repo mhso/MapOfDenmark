@@ -7,6 +7,7 @@ import java.awt.Graphics2D;
 import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.RenderingHints;
+import java.awt.Shape;
 import java.awt.geom.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -54,6 +55,8 @@ public class MapCanvas extends JPanel implements ActionListener {
 	
 	public boolean scaleCurrentLayer = false;
 	private Timer zoomTimer;
+	private Shape currentHighlighedWay;
+	private WayType currentHighlighedWaytype;
 	
 	public MapCanvas() {
 		zoomTimer = new Timer(200, this);
@@ -180,10 +183,19 @@ public class MapCanvas extends JPanel implements ActionListener {
     }
 
 	private void drawBackground(Graphics2D g2d) {
-        if(Main.model.enumMapKD.containsKey(WayType.COASTLINE) ){
-        	g2d.setColor(new Color(110, 192, 255));
+        Region region = Main.model.getMapRegion();
+        Path2D background = new Path2D.Double();
+        background.moveTo(region.x1, region.y1);
+        background.lineTo(region.x2, region.y1);
+        background.lineTo(region.x2, region.y2);
+        background.lineTo(region.x1, region.y2);
+        background.lineTo(region.x1, region.y1);
+
+        // backgroundcolor for the map. If there's a coastline use the water innercolor, otherwise use the coastline innercolor
+        if(Main.model.enumMapKD.containsKey(WayType.COASTLINE) ){//&& Main.model.enumMapKD.get(WayType.COASTLINE).size() > 0) {
+        	g2d.setColor(GraphicRepresentation.getCanvasBGColor());
         }
-        else g2d.setColor(new Color(240, 240, 230));
+        else g2d.setColor(GraphicRepresentation.getCoastlineColor());
 		AffineTransform af = new AffineTransform();
 		g2d.setTransform(af);
         g2d.fillRect(0, 0, getWidth(), getHeight());
@@ -201,6 +213,36 @@ public class MapCanvas extends JPanel implements ActionListener {
 		g2d.setStroke(new BasicStroke(Float.MIN_VALUE));
 		Region mapRegion = Main.model.getMapRegion();
 		g2d.draw(new Rectangle2D.Double(mapRegion.x1, mapRegion.y1, mapRegion.getWidth(), mapRegion.getHeight()));
+	}
+	
+	public void highlightWay(WayType wayType, Shape way) {
+		Graphics2D g2d = (Graphics2D)getGraphics();
+		g2d.setTransform(transform);
+		List<WaytypeGraphicSpec> wgs = getOnScreenGraphicsForCurrentZoom();
+		for(WaytypeGraphicSpec spec : wgs) {
+			if(currentHighlighedWay != null && currentHighlighedWay != way && 
+					spec.getWayType() == currentHighlighedWaytype) {
+				if(spec.getOuterColor() != null) {
+					spec.transformOutline(g2d);
+					g2d.draw(currentHighlighedWay);
+				}
+				spec.transformPrimary(g2d);
+				if(spec instanceof GraphicSpecLine) g2d.draw(currentHighlighedWay);
+				else g2d.fill(currentHighlighedWay);
+			}
+			if(spec.getWayType() == wayType) {
+				if(spec.getOuterColor() != null) {
+					spec.transformOutline(g2d);
+					g2d.draw(way);
+				}
+				spec.transformPrimary(g2d);
+				g2d.setColor(Color.ORANGE);
+				if(spec instanceof GraphicSpecLine) g2d.draw(way);
+				else g2d.fill(way);
+			}
+		}
+		currentHighlighedWay = way;
+		currentHighlighedWaytype = wayType;
 	}
 	
 	public void pan(double dx, double dy) {

@@ -174,6 +174,7 @@ public class BottomPanel extends JPanel implements CanvasListener {
             ParsedNode query = new ParsedNode(Main.map.getGeographicalMousePosition());
             ParsedWay nearest = null;
             double shortest = Double.POSITIVE_INFINITY;
+            WayType type = null;
             for(WayType waytype: highways) {
                 KDTree<ParsedItem> tree = Main.model.enumMapKD.get(waytype);
                 if(tree == null) continue;
@@ -184,11 +185,15 @@ public class BottomPanel extends JPanel implements CanvasListener {
                     if (distance < shortest) {
                         shortest = distance;
                         nearest = (ParsedWay) candidate;
+                        type = waytype;
                     }
                 }
             }
             String text = " ";
-            if(nearest != null && nearest.getName() != null) text = nearest.getName();
+            if(nearest != null) {
+            	Main.map.highlightWay(type, nearest.getShape());
+            	if(nearest.getName() != null) text = nearest.getName();
+            }
             nearestStreetLabel.setText(text  + ", "+ shortest);
 
             ParsedNode lonLat = new ParsedNode(Main.map.getGeographicalMousePosition());

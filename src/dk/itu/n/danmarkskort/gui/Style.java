@@ -66,7 +66,7 @@ public class Style {
         menuSettingsButton = new CustomButton("resources/icons/settings.png", menuAlpha, menuAlphaHover);
         menuRouteButton = new CustomButton("resources/icons/menuroute.png", menuAlpha, menuAlphaHover);
         menuInfoButton = new CustomButton("resources/icons/info.png", menuAlpha, menuAlphaHover);
-        menuPinPointButton = new CustomButton("resources/icons/info.png", menuAlpha, menuAlphaHover);
+        menuPinPointButton = new CustomButton("resources/icons/pinpointmenu.png", menuAlpha, menuAlphaHover);
         
         menuOpenButton = new CustomButton("resources/icons/open.png", menuAlpha, menuAlphaHover);
         
