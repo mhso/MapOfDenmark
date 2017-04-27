@@ -558,7 +558,7 @@ public class OSMParser extends SAXAdapter implements Serializable {
                 break;
             case "name":
                 name = v;
-                if(Main.nearest && way != null) way.setName(v);
+                if(way != null) way.setName(v);
                 break;
             case "maxspeed":
                 try{
