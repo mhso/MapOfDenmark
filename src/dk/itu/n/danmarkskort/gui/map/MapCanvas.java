@@ -103,7 +103,7 @@ public class MapCanvas extends JPanel {
 		shapesDrawn = 0;
 
 		if(wayTypesVisible == null) return;
-        drawBackground(g2d);
+        //drawBackground(g2d);
 
         Region currentRegion = getGeographicalRegion();
 
@@ -238,6 +238,11 @@ public class MapCanvas extends JPanel {
 		repair();
 		transform.preConcatenate(AffineTransform.getTranslateInstance(dx, dy));
 		actualTransform.preConcatenate(AffineTransform.getTranslateInstance(dx, dy));
+		if(Main.tileController.isInitialized()) {
+			if(Main.tileController.updateTilePos()) {
+				Main.log(Main.tileController.getTilePos());
+			}
+		}
 		repaint();
 	}
 	
@@ -378,6 +383,7 @@ public class MapCanvas extends JPanel {
 		Region mapRegion = Main.model.getMapRegion();
 		pan(-mapRegion.x1, -mapRegion.y2);
 		zoom(getWidth() / (mapRegion.x2 - mapRegion.x1));
+		if(!Main.tileController.isInitialized) Main.tileController.initialize();
 		isInitialized = true;
 	}
 	

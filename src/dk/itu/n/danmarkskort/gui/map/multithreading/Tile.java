@@ -20,6 +20,11 @@ public class Tile {
 	public Tile(Point pos) {
 		this.pos = pos;
 		isRendered = false;
+		image = new BufferedImage(Main.tileController.getTileWidth(), Main.tileController.getTileHeight(), BufferedImage.TYPE_INT_ARGB);
+	}
+	
+	public String getKey() {
+		return pos.x + "" + pos.y;
 	}
 	
 	public Region getGeographicalRegion() {
@@ -55,6 +60,10 @@ public class Tile {
 	
 	public void draw(Graphics2D g2d) {
 		if(!isRendered()) return;
+		Region pixelRegion = getGeographicalRegion().toPixelRegion();
+		double scale = 1; 
+		g2d.setTransform(new AffineTransform());
+		g2d.drawImage(image, (int)pixelRegion.x1, (int)(pixelRegion.y1+pixelRegion.getHeight()), (int)(pixelRegion.getWidth() * scale), (int)(pixelRegion.getHeight() * scale), null);
 	}
 	
 }

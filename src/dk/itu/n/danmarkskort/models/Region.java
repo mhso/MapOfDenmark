@@ -1,5 +1,6 @@
 package dk.itu.n.danmarkskort.models;
 
+import java.awt.Shape;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
@@ -60,6 +61,16 @@ public class Region {
 		if(Util.valueIsBetween(other.x2, x1, x2) && Util.valueIsBetween(other.y2, y1, y2)) return true;
 		
 		return false;
+	}
+	
+	public Region toPixelRegion() {
+		Point2D p1 = Main.map.toActualScreenCoords(new Point2D.Double(x1, y1));
+		Point2D p2 = Main.map.toActualScreenCoords(new Point2D.Double(x2, y2));
+		return new Region(p1.getX(), p1.getY(), p2.getX(), p2.getY());
+	}
+	
+	public Shape getShape() {
+		return getRect();
 	}
 	
 }
