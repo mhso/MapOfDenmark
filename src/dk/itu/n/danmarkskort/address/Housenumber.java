@@ -1,6 +1,5 @@
 package dk.itu.n.danmarkskort.address;
 
-import dk.itu.n.danmarkskort.models.ParsedNode;
 import dk.itu.n.danmarkskort.models.PointFloat;
 import dk.itu.n.danmarkskort.models.ReuseStringObj;
 
@@ -32,8 +31,4 @@ public class Housenumber implements Serializable {
 	public String toString(){
 		return street.getStreet() + " " + getHousenumber() + ", " + getPostcode().getPostcode() + " " + getPostcode().getCity();
 	}
-
-	private ParsedNode coordsToNode() {
-	    return new ParsedNode(lon, lat);
-    }
 }

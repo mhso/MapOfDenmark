@@ -2,11 +2,9 @@ package dk.itu.n.danmarkskort.routeplanner;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import dk.itu.n.danmarkskort.models.PointFloat;
 import dk.itu.n.danmarkskort.models.ReuseRouteEdgeMetaObj;
-import dk.itu.n.danmarkskort.models.WayType;
 
 public class RouteController {
 	private int vertexCount;

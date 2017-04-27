@@ -1,7 +1,6 @@
 package dk.itu.n.danmarkskort.routeplanner;
 
 import dk.itu.n.danmarkskort.models.ReuseStringObj;
-import dk.itu.n.danmarkskort.models.WayType;
 
 public class RouteEdge {
 	private final RouteVertex from, to;

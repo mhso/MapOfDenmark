@@ -4,7 +4,6 @@ import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.TimerUtil;
 import dk.itu.n.danmarkskort.models.ParsedAddress;
 import dk.itu.n.danmarkskort.models.PointFloat;
-import dk.itu.n.danmarkskort.models.RegionFloat;
 
 import java.util.List;
 import java.util.Map;

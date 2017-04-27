@@ -1,13 +1,10 @@
 package dk.itu.n.danmarkskort.search;
 
 import java.util.List;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.address.Address;
 import dk.itu.n.danmarkskort.models.PointFloat;
-import dk.itu.n.danmarkskort.models.RegionFloat;
 
 public class SearchController{
 	
