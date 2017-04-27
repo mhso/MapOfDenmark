@@ -3,6 +3,7 @@ package dk.itu.n.danmarkskort.kdtree;
 import dk.itu.n.danmarkskort.models.ParsedNode;
 import dk.itu.n.danmarkskort.models.Region;
 
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -23,11 +24,11 @@ public class KDTreeLeaf<T extends KDComparable> extends KDTree<T> {
     KDTreeLeaf(KDComparable[] array) {
         data = array;
         for(KDComparable item: data) {
-            for(ParsedNode node: item.getNodes()) {
-                if(minLon > node.getLon()) minLon = node.getLon();
-                if(maxLon < node.getLon()) maxLon = node.getLon();
-                if(minLat > node.getLat()) minLat = node.getLat();
-                if(maxLat < node.getLat()) maxLat = node.getLat();
+            for(Point2D.Float point: item.getNodes()) {
+                if(minLon > point.getX()) minLon = point.x;
+                if(maxLon < point.getX()) maxLon = point.x;
+                if(minLat > point.getY()) minLat = point.y;
+                if(maxLat < point.getY()) maxLat = point.y;
             }
         }
     }
@@ -58,11 +59,11 @@ public class KDTreeLeaf<T extends KDComparable> extends KDTree<T> {
     }
 
     @SuppressWarnings("unchecked")
-    public T nearest(ParsedNode query, double currentShortest, boolean sortByLon) {
+    public T nearest(Point2D.Float query, double currentShortest, boolean sortByLon) {
         T candidate = null;
         double shortest = currentShortest;
         for(KDComparable item: data) {
-            double distance = item.shortestDistance(query);
+            double distance = KDTree.shortestDistance(query, item.getCoords());
             if(distance < shortest) {
                 shortest = distance;
                 candidate = (T) item;

@@ -3,6 +3,7 @@ package dk.itu.n.danmarkskort.kdtree;
 import dk.itu.n.danmarkskort.models.ParsedNode;
 import dk.itu.n.danmarkskort.models.Region;
 
+import java.awt.geom.Point2D;
 import java.io.Serializable;
 import java.util.Iterator;
 import java.util.List;
@@ -69,15 +70,37 @@ public abstract class KDTree<T extends KDComparable> implements Serializable, It
         }
     }
 
-    public static double calcDistance(ParsedNode a, ParsedNode b) {
-        double x = a.getLon() - b.getLon();
-        double y = a.getLat() - b.getLat();
+    public static double calcDistance(Point2D.Float a, Point2D.Float b) {
+        double x = b.x - a.x;
+        double y = b.y - a.y;
         return Math.sqrt((x * x) + (y * y));
     }
 
-    public T nearest(ParsedNode query) {
+    public static double distancePointToLine(Point2D.Float a, Point2D.Float b, Point2D.Float query) {
+        double segmentLength = calcDistance(a, b);
+        double distance = (
+                ((query.x - a.y) * (b.y - a.y))
+                - ((query.y - a.y) * (b.x - a.x)));
+        distance = Math.abs(distance) / segmentLength;
+        return distance;
+    }
+
+    public T nearest(Point2D.Float query) {
         return nearest(query, Double.POSITIVE_INFINITY, true);
     }
 
-    abstract T nearest(ParsedNode query, double currentShortest, boolean sortByLon);
+    abstract T nearest(Point2D.Float query, double currentShortest, boolean sortByLon);
+
+    public static double shortestDistance(Point2D.Float query, float[] coords) {
+        double shortestDistance = Double.POSITIVE_INFINITY;
+        for(int i = 0; i < coords.length - 1; i++) {
+            double distance = KDTree.calcDistance(query, new Point2D.Float(coords[i], coords[i+1]));
+            /*double distance = KDTree.distancePointToLine(
+                    new ParsedNode(coords[i], coords[i+1]),
+                    new ParsedNode(coords[i+2], coords[i+3]),
+                    query);*/
+            if(distance < shortestDistance) shortestDistance = distance;
+        }
+        return shortestDistance;
+    }
 }

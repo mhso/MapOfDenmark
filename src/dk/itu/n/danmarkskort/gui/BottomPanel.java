@@ -164,7 +164,7 @@ public class BottomPanel extends JPanel implements CanvasListener {
     public void onMouseMoved() {
     	Point2D mousePoint = Util.toRealCoords(Main.map.getGeographicalMousePosition());
     	coordsLabel.setText("Lat: " + 
-    			String.format("%.4f", mousePoint.getY()) + ", Lon: " + String.format("%.4f", mousePoint.getX()));
+    			String.format("%.6f", mousePoint.getY()) + ", Lon: " + String.format("%.6f", mousePoint.getX()));
 
 
     	if(Main.nearest) {
@@ -177,7 +177,7 @@ public class BottomPanel extends JPanel implements CanvasListener {
                 ParsedItem candidate = tree.nearest(query);
                 if(candidate == null) continue;
                 else {
-                    double distance = candidate.shortestDistance(query);
+                    double distance = KDTree.shortestDistance(query, candidate.getCoords());
                     if (distance < shortest) {
                         shortest = distance;
                         nearest = (ParsedWay) candidate;
@@ -186,7 +186,7 @@ public class BottomPanel extends JPanel implements CanvasListener {
             }
             String text = " ";
             if(nearest != null && nearest.getName() != null) text = nearest.getName();
-            nearestStreetLabel.setText(text);
+            nearestStreetLabel.setText(text  + ", "+ shortest);
         }
     }
     

@@ -5,6 +5,7 @@ import dk.itu.n.danmarkskort.models.ParsedNode;
 import dk.itu.n.danmarkskort.models.ParsedWay;
 import dk.itu.n.danmarkskort.models.WayType;
 
+import java.awt.geom.Point2D;
 import java.util.*;
 
 public class ParserUtil {
@@ -14,7 +15,7 @@ public class ParserUtil {
             BOTTOM = 2,
             RIGHT = 3;
 
-    public static void connectCoastline(HashMap<ParsedNode, ParsedWay> coastlineMap, ParsedWay current) {
+    public static void connectCoastline(HashMap<Point2D.Float, ParsedWay> coastlineMap, ParsedWay current) {
         ParsedWay prev = coastlineMap.remove(current.getFirstNode());
         ParsedWay next = coastlineMap.remove(current.getLastNode());
         ParsedWay merged = new ParsedWay();
@@ -28,12 +29,12 @@ public class ParserUtil {
     }
 
     public static HashSet<ParsedWay> fixUnconnectedCoastlines(HashSet<ParsedWay> unconnected) {
-        HashMap<ParsedNode, ParsedWay> unconnectedEnds = new HashMap<>();
-        HashMap<ParsedNode, ParsedWay> unconnectedStarts = new HashMap<>();
+        HashMap<Point2D.Float, ParsedWay> unconnectedEnds = new HashMap<>();
+        HashMap<Point2D.Float, ParsedWay> unconnectedStarts = new HashMap<>();
 
         // index 0 for the top-aligned, 1: left-aligned, 2: bottom-aligned, and 3: right-aligned
-        ArrayList<ParsedNode>[] starts = new ArrayList[4];
-        ArrayList<ParsedNode>[] ends = new ArrayList[4];
+        ArrayList<Point2D.Float>[] starts = new ArrayList[4];
+        ArrayList<Point2D.Float>[] ends = new ArrayList[4];
         for (int i = 0; i < starts.length; i++) starts[i] = new ArrayList<>();
         for (int i = 0; i < ends.length; i++) ends[i] = new ArrayList<>();
 
@@ -55,7 +56,7 @@ public class ParserUtil {
         sortSides(starts);
         sortSides(ends);
 
-        ParsedNode endNode, startNode;
+        Point2D.Float endNode, startNode;
         ParsedWay endWay, startWay;
 
         HashSet<ParsedWay> connectedSet = new HashSet<>();
@@ -85,14 +86,14 @@ public class ParserUtil {
         return connectedSet;
     }
 
-    private static ParsedNode findMatch(ArrayList<ParsedNode>[] starts, ParsedNode endNode, ParsedWay currentWay, int startSide) {
-        ParsedNode currentEnd = endNode;
+    private static Point2D.Float findMatch(ArrayList<Point2D.Float>[] starts, Point2D.Float endNode, ParsedWay currentWay, int startSide) {
+        Point2D.Float currentEnd = endNode;
         int runs = 0;
         for (int i = startSide; i < starts.length; ) {
             runs++;
             if (starts[i].size() > 0) {
                 for (int j = 0; j < starts[i].size(); j++) {
-                    ParsedNode currentCheck = starts[i].get(j);
+                    Point2D.Float currentCheck = starts[i].get(j);
                     if (currentCheck != null) {
                         if (runs > 1) {
                             starts[i].set(j, null);
@@ -100,22 +101,22 @@ public class ParserUtil {
                         }
 
                         if (i == 0) {
-                            if (currentEnd.getLon() > currentCheck.getLon()) {
+                            if (currentEnd.x > currentCheck.x) {
                                 starts[i].set(j, null);
                                 return currentCheck;
                             }
                         } else if (i == 1) {
-                            if (currentEnd.getLat() > currentCheck.getLat()) {
+                            if (currentEnd.y > currentCheck.y) {
                                 starts[i].set(j, null);
                                 return currentCheck;
                             }
                         } else if (i == 2) {
-                            if (currentEnd.getLon() < currentCheck.getLon()) {
+                            if (currentEnd.x < currentCheck.x) {
                                 starts[i].set(j, null);
                                 return currentCheck;
                             }
                         } else if (i == 3) {
-                            if (currentEnd.getLat() < currentCheck.getLat()) {
+                            if (currentEnd.y < currentCheck.y) {
                                 starts[i].set(j, null);
                                 return currentCheck;
                             }
@@ -167,47 +168,47 @@ public class ParserUtil {
         return null;
     }
 
-    private static void sortSides(ArrayList<ParsedNode>[] sides) {
+    private static void sortSides(ArrayList<Point2D.Float>[] sides) {
         // sorting all sides, counter-clockwise
         // top side. sorting from right to left
-        sides[0].sort((ParsedNode f1, ParsedNode f2) -> {
-            if (f1.getLon() < f2.getLon()) return 1;
+        sides[0].sort((Point2D.Float f1, Point2D.Float f2) -> {
+            if (f1.x < f2.x) return 1;
             else return -1;
         });
 
         // left side. sorting from top to bottom
-        sides[1].sort((ParsedNode f1, ParsedNode f2) -> {
-            if (f1.getLat() < f2.getLat()) return 1;
+        sides[1].sort((Point2D.Float f1, Point2D.Float f2) -> {
+            if (f1.y < f2.y) return 1;
             else return -1;
         });
 
         // bottom side. sorting from left to right
-        sides[2].sort((ParsedNode f1, ParsedNode f2) -> {
-            if (f1.getLon() > f2.getLon()) return 1;
+        sides[2].sort((Point2D.Float f1, Point2D.Float f2) -> {
+            if (f1.x > f2.x) return 1;
             else return -1;
         });
 
         // right side. sorting from bottom to top
-        sides[3].sort((ParsedNode f1, ParsedNode f2) -> {
-            if (f1.getLat() > f2.getLat()) return 1;
+        sides[3].sort((Point2D.Float f1, Point2D.Float f2) -> {
+            if (f1.y > f2.y) return 1;
             else return -1;
         });
     }
 
-    private static int findSide(ParsedNode node) {
+    private static int findSide(Point2D.Float node) {
         int side;
 
-        float distanceToLeft = Math.abs(node.getLon() - Main.model.getMinLon());
-        float distanceToRight = Math.abs(node.getLon() - Main.model.getMaxLon());
-        float distanceToBottom = Math.abs(node.getLat() - Main.model.getMinLat());
-        float distanceToTop = Math.abs(node.getLat() - Main.model.getMaxLat());
+        float distanceToLeft = Math.abs(node.x - Main.model.getMinLon());
+        float distanceToRight = Math.abs(node.x - Main.model.getMaxLon());
+        float distanceToBottom = Math.abs(node.y - Main.model.getMinLat());
+        float distanceToTop = Math.abs(node.y - Main.model.getMaxLat());
 
         float midLon = Main.model.getMinLon() + ((Main.model.getMaxLon() - Main.model.getMinLon()) / 2);
         float midLat = Main.model.getMinLat() + ((Main.model.getMaxLat() - Main.model.getMinLat()) / 2);
 
         boolean top, left;
-        left = (node.getLon() < midLon);
-        top = (node.getLat() < midLat);
+        left = (node.x < midLon);
+        top = (node.y < midLat);
 
         if (top && left) { // top or left
             if (distanceToTop < distanceToLeft) side = TOP;

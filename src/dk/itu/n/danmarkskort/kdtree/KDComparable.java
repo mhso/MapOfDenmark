@@ -2,11 +2,11 @@ package dk.itu.n.danmarkskort.kdtree;
 
 import dk.itu.n.danmarkskort.models.ParsedNode;
 
+import java.awt.geom.Point2D;
+
 public interface KDComparable {
 
-    int compareLon(KDComparable otherItem);
-    int compareLat(KDComparable otherItem);
-    ParsedNode getFirstNode();
-    ParsedNode[] getNodes();
-    double shortestDistance(ParsedNode node);
+    Point2D.Float getFirstNode();
+    Point2D.Float[] getNodes();
+    float[] getCoords();
 }
