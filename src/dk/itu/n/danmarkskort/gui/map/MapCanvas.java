@@ -112,7 +112,8 @@ public class MapCanvas extends JPanel implements ActionListener {
 	public void drawMapShapes(Graphics2D g2d) {
 		drawBackground(g2d);
 		g2d.setTransform(transform);
-		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		if(antiAlias) g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		else g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
 		drawMapRegion(g2d);
 		if(zoomChanged) wayTypesVisible = getOnScreenGraphicsForCurrentZoom();
 		shapesDrawn = 0;
@@ -218,23 +219,17 @@ public class MapCanvas extends JPanel implements ActionListener {
 	public void highlightWay(WayType wayType, Shape way) {
 		Graphics2D g2d = (Graphics2D)getGraphics();
 		g2d.setTransform(transform);
+		if(antiAlias) g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		else g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
 		List<WaytypeGraphicSpec> wgs = getOnScreenGraphicsForCurrentZoom();
 		for(WaytypeGraphicSpec spec : wgs) {
 			if(currentHighlighedWay != null && currentHighlighedWay != way && 
 					spec.getWayType() == currentHighlighedWaytype) {
-				if(spec.getOuterColor() != null) {
-					spec.transformOutline(g2d);
-					g2d.draw(currentHighlighedWay);
-				}
 				spec.transformPrimary(g2d);
 				if(spec instanceof GraphicSpecLine) g2d.draw(currentHighlighedWay);
 				else g2d.fill(currentHighlighedWay);
 			}
 			if(spec.getWayType() == wayType) {
-				if(spec.getOuterColor() != null) {
-					spec.transformOutline(g2d);
-					g2d.draw(way);
-				}
 				spec.transformPrimary(g2d);
 				g2d.setColor(Color.ORANGE);
 				if(spec instanceof GraphicSpecLine) g2d.draw(way);
