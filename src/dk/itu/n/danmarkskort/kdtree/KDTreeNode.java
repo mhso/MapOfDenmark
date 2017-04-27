@@ -26,6 +26,13 @@ public class KDTreeNode<T extends KDComparable> extends KDTree<T> {
     }
 
     private void createStructure(KDComparable[] array, boolean sortByLon) {
+
+        if(array.length < 2) {
+            leftChild = new KDTreeLeaf<T>(array);
+            rightChild = new KDTreeLeaf<T>(new KDComparable[]{});
+            return;
+        }
+
         //  finds the median of the given list, either by lon or lat values
         KDComparable median = QuickSelect.quickSelect(array, (array.length + 1) / 2, sortByLon);
 
