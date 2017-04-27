@@ -21,10 +21,10 @@ public class Main {
 	public final static String APP_VERSION = "0.7";
 	public final static boolean debug = true;
 	public final static boolean production = false;
-	public final static boolean buffered = false;
+	public final static boolean buffered = true;
 	public final static boolean saveParsedAddresses = true;
 	public final static boolean useLauncher = true;
-	public final static boolean nearest = false;
+	public final static boolean nearest = true;
 	
 	public static boolean binaryfile = true;
 	

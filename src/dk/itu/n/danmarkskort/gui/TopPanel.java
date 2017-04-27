@@ -143,7 +143,10 @@ public class TopPanel extends JPanel {
             dropMenu.showDropdown(menu);
         });
 
-        search.addActionListener(e -> searchForAddress(input.getText()));
+        search.addActionListener(e -> {
+        	System.out.println(input.getText());
+        	searchForAddress(input.getText());
+        });
 
         // adding drop down functionality
         ((AbstractDocument) input.getDocument()).setDocumentFilter(new SearchFilter());

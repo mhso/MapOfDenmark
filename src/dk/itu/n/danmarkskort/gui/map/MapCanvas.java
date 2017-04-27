@@ -55,7 +55,7 @@ public class MapCanvas extends JPanel implements ActionListener {
 	
 	public boolean scaleCurrentLayer = false;
 	private Timer zoomTimer;
-	private Shape currentHighlighedWay;
+	private Shape currentHighlighedShape;
 	private WayType currentHighlighedWaytype;
 	
 	public MapCanvas() {
@@ -215,34 +215,38 @@ public class MapCanvas extends JPanel implements ActionListener {
 		g2d.draw(new Rectangle2D.Double(mapRegion.x1, mapRegion.y1, mapRegion.getWidth(), mapRegion.getHeight()));
 	}
 	
-	public void highlightWay(WayType wayType, Shape way) {
-		Graphics2D g2d = (Graphics2D)getGraphics();
+	public void highlightWay(WayType wayType, Shape shape) {
+		Graphics2D g2d = (Graphics2D) getGraphics();
 		g2d.setTransform(transform);
 		List<WaytypeGraphicSpec> wgs = getOnScreenGraphicsForCurrentZoom();
 		for(WaytypeGraphicSpec spec : wgs) {
-			if(currentHighlighedWay != null && currentHighlighedWay != way && 
+			if(currentHighlighedShape != null && currentHighlighedShape != shape && 
 					spec.getWayType() == currentHighlighedWaytype) {
 				if(spec.getOuterColor() != null) {
 					spec.transformOutline(g2d);
-					g2d.draw(currentHighlighedWay);
+					g2d.draw(currentHighlighedShape);
 				}
 				spec.transformPrimary(g2d);
-				if(spec instanceof GraphicSpecLine) g2d.draw(currentHighlighedWay);
-				else g2d.fill(currentHighlighedWay);
+				if(spec instanceof GraphicSpecLine) g2d.draw(currentHighlighedShape);
+				else g2d.fill(currentHighlighedShape);
 			}
 			if(spec.getWayType() == wayType) {
 				if(spec.getOuterColor() != null) {
 					spec.transformOutline(g2d);
-					g2d.draw(way);
+					g2d.draw(shape);
 				}
 				spec.transformPrimary(g2d);
 				g2d.setColor(Color.ORANGE);
-				if(spec instanceof GraphicSpecLine) g2d.draw(way);
-				else g2d.fill(way);
+				if(spec instanceof GraphicSpecLine) g2d.draw(shape);
+				else g2d.fill(shape);
 			}
 		}
-		currentHighlighedWay = way;
+		currentHighlighedShape = shape;
 		currentHighlighedWaytype = wayType;
+	}
+	
+	public Shape getHighlightedShape() {
+		return currentHighlighedShape;
 	}
 	
 	public void pan(double dx, double dy) {
