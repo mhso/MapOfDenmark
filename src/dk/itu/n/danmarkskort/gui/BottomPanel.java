@@ -166,25 +166,27 @@ public class BottomPanel extends JPanel implements CanvasListener {
     	coordsLabel.setText("Lon: " + String.format("%.4f", mousePoint.getX()) + ", Lat: " + 
     			String.format("%.4f", mousePoint.getY()));
 
-    	ParsedNode query = new ParsedNode(Main.map.getGeographicalMousePosition());
-        ParsedWay nearest = null;
-        double shortest = Double.POSITIVE_INFINITY;
-    	for(WayType waytype: highways) {
-    	    KDTree<ParsedItem> tree = Main.model.enumMapKD.get(waytype);
-    	    if(tree == null) continue;
-    	    ParsedItem candidate = tree.nearest(query);
-    	    if(candidate == null) continue;
-    	    else {
-                double distance = candidate.shortestDistance(query);
-                if (distance < shortest) {
-                    shortest = distance;
-                    nearest = (ParsedWay) candidate;
+    	if(Main.nearest) {
+            ParsedNode query = new ParsedNode(Main.map.getGeographicalMousePosition());
+            ParsedWay nearest = null;
+            double shortest = Double.POSITIVE_INFINITY;
+            for(WayType waytype: highways) {
+                KDTree<ParsedItem> tree = Main.model.enumMapKD.get(waytype);
+                if(tree == null) continue;
+                ParsedItem candidate = tree.nearest(query);
+                if(candidate == null) continue;
+                else {
+                    double distance = candidate.shortestDistance(query);
+                    if (distance < shortest) {
+                        shortest = distance;
+                        nearest = (ParsedWay) candidate;
+                    }
                 }
             }
+            String text = " ";
+            if(nearest != null && nearest.getName() != null) text = nearest.getName();
+            nearestStreetLabel.setText(text);
         }
-        String text = "";
-    	//if(nearest != null && nearest.getName() != null) text = nearest.getName();
-        nearestStreetLabel.setText(text);
     }
     
     @Override

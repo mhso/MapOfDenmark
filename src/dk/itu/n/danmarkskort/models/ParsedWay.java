@@ -1,5 +1,6 @@
 package dk.itu.n.danmarkskort.models;
 
+import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.kdtree.KDComparable;
 import dk.itu.n.danmarkskort.kdtree.KDTree;
 
@@ -14,7 +15,7 @@ public class ParsedWay extends ParsedItem implements KDComparable, Serializable 
 	private long id;
     ParsedNode[] nodes;
     private float[] coords;
-    //private String name;
+    private String name;
 
     public ParsedWay() {
         this(0);
@@ -23,11 +24,11 @@ public class ParsedWay extends ParsedItem implements KDComparable, Serializable 
     public ParsedWay(long id) {
         this.id = id;
         nodes = null;
-       // name = null;
+        name = null;
     }
 
-    //public void setName(String name) { this.name = ReuseStringObj.make(name); }
-    //public String getName() { return name; }
+    public void setName(String name) { this.name = ReuseStringObj.make(name); }
+    public String getName() { return name; }
 
     public void addNode(ParsedNode node) { addNodes(new ParsedNode[]{node}); }
 

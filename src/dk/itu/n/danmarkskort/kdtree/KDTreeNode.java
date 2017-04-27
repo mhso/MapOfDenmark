@@ -97,6 +97,7 @@ public class KDTreeNode<T extends KDComparable> extends KDTree<T> {
     protected T nearest(ParsedNode query, double currentShortest, boolean sortByLon) {
         double nearestPossibleLT, nearestPossibleRB;
         double shortest = currentShortest;
+        T candidate = null;
 
         // calculate the nearest possible candidate from either side
         if(sortByLon) {
@@ -112,37 +113,40 @@ public class KDTreeNode<T extends KDComparable> extends KDTree<T> {
 
         // if query point is inside the left/top
         if(nearestPossibleLT == 0) {
-            T candidate = leftChild.nearest(query, shortest, !sortByLon);
-            if(candidate != null) {
-                shortest = candidate.shortestDistance(query);
-                if(nearestPossibleRB > shortest) return candidate;
+            T leftCandidate = leftChild.nearest(query, shortest, !sortByLon);
+            if(leftCandidate != null) {
+                shortest = leftCandidate.shortestDistance(query);
+                if(nearestPossibleRB > shortest) return leftCandidate;
+                else candidate = leftCandidate;
             }
         }
         // if query point is inside the right/bottom
         if(nearestPossibleRB == 0) {
-            T candidate = rightChild.nearest(query, shortest, !sortByLon);
-            if(candidate != null) {
-                shortest = candidate.shortestDistance(query);
-                if(nearestPossibleLT > shortest) return candidate;
+            T rightCandidate = rightChild.nearest(query, shortest, !sortByLon);
+            if(rightCandidate != null) {
+                shortest = rightCandidate.shortestDistance(query);
+                if(nearestPossibleLT > shortest) return rightCandidate;
+                else candidate = rightCandidate;
             }
         }
 
         // query point outside of left/top
         if(nearestPossibleLT > 0) {
-            T candidate = leftChild.nearest(query, shortest, !sortByLon);
-            if(candidate != null) {
-                shortest = candidate.shortestDistance(query);
-                if(nearestPossibleRB > shortest) return candidate;
+            T leftCandidate = leftChild.nearest(query, shortest, !sortByLon);
+            if(leftCandidate != null) {
+                shortest = leftCandidate.shortestDistance(query);
+                if(nearestPossibleRB > shortest) return leftCandidate;
+                else candidate = leftCandidate;
             }
         }
 
         // query point outside of right/bottom
         if(nearestPossibleRB > 0) {
-            T candidate = rightChild.nearest(query, shortest, !sortByLon);
-            if(candidate != null) return candidate;
+            T rightCandidate = rightChild.nearest(query, shortest, !sortByLon);
+            if(rightCandidate != null) return rightCandidate;
         }
 
-        // nothing of interest found
-        return null;
+        // maybe nothing of interest found (it could be null, but it could also be amazing)
+        return candidate;
     }
 }
