@@ -21,6 +21,7 @@ import java.util.Map;
 
 import dk.itu.n.danmarkskort.backend.InputMonitor;
 import dk.itu.n.danmarkskort.backend.InputStreamListener;
+import dk.itu.n.danmarkskort.models.ParsedNode;
 
 import java.awt.MouseInfo;
 import java.awt.Point;
