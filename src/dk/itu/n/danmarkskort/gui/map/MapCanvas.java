@@ -308,19 +308,24 @@ public class MapCanvas extends JPanel {
 		double scaleBefore = getZoomRaw();
 		Util.zoom(transform, factor);
 		Util.zoom(actualTransform, factor);
-		
+		if(Main.tileController.isInitialized()) Main.tileController.zoom(factor);
 		double scaleAfter = getZoomRaw();
 		if(getZoom() > MAX_ZOOM || getZoom() < 1) {
 			Util.zoom(transform, scaleBefore/scaleAfter);
-			Util.zoom(transform, scaleBefore/scaleAfter);			
+			Util.zoom(transform, scaleBefore/scaleAfter);		
+			if(Main.tileController.isInitialized()) Main.tileController.zoom(scaleBefore/scaleAfter);
 		}
+		
 		
 		for(CanvasListener listener : listeners) listener.onZoom();
 		
 		if(zoomBefore != getZoom()) {
+			
 			zoomChanged = true;
 			for(CanvasListener listener : listeners) listener.onZoomLevelChanged();
 		}
+		
+		
 
 		repaint();
 	}

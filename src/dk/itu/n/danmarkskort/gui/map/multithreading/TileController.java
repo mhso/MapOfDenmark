@@ -19,6 +19,7 @@ public class TileController {
 	public boolean isInitialized;
 	public Queue tileQueue;
 	public HashMap<String, Tile> tiles;
+	public double imageScale = 1;
 	
 	public TileController() {
 		isInitialized = false;
@@ -47,6 +48,10 @@ public class TileController {
 	
 	public void updateZero() {
 		zero = Main.map.toActualModelCoords(new Point2D.Double(0, 0));
+	}
+	
+	public void zoom(double scale) {
+		imageScale *= scale;
 	}
 	
 	public boolean updateTilePos() {
@@ -89,6 +94,10 @@ public class TileController {
 		return tileHeight;
 	}
 	
+	public double getImageScale() {
+		return imageScale;
+	}
+	
 	public double getGeographicalTileWidth() {
 		Point2D p1 = Main.map.toActualModelCoords(new Point2D.Double(0, 0));
 		Point2D p2 = Main.map.toActualModelCoords(new Point2D.Double(tileWidth, tileHeight));
@@ -105,5 +114,7 @@ public class TileController {
 		if(!isInitialized()) return;
 		for(Tile tile : tiles.values()) tile.draw(g2d);
 	}
+	
+	
 	
 }
