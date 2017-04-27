@@ -11,7 +11,6 @@ import java.awt.geom.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.Line2D;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
@@ -109,16 +108,26 @@ public class MapCanvas extends JPanel implements ActionListener {
 
 	public void drawMapShapes(Graphics2D g2d) {
 		drawBackground(g2d);
-
 		g2d.setTransform(transform);
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		drawMapRegion(g2d);
 		if(zoomChanged) wayTypesVisible = getOnScreenGraphicsForCurrentZoom();
 		shapesDrawn = 0;
-
 		if(wayTypesVisible == null) return;
-
         Region currentRegion = getGeographicalRegion();
+        if(Main.debug && !Main.buffered) {
+            double x1 = currentRegion.x1;
+            double x2 = currentRegion.x2;
+            double y1 = currentRegion.y1;
+            double y2 = currentRegion.y2;
+            double width = currentRegion.getWidth();
+            double height = currentRegion.getHeight();
+            currentRegion = new Region(
+                    x1 + (width * 0.25),
+                    y1 + (height * 0.25),
+                    x2 - (width * 0.25),
+                    y2 - (height * 0.25));
+        }
 
         // drawing all the outlines, if the current WayTypeGraphicSpec has one
         for (WaytypeGraphicSpec wayTypeGraphic : wayTypesVisible) {
@@ -157,20 +166,21 @@ public class MapCanvas extends JPanel implements ActionListener {
                 }
             }
         }
+        if(Main.debug && !Main.buffered) {
+            g2d.setStroke(new BasicStroke(0.0001f));
+            g2d.setColor(Color.BLACK);
+            Path2D box = new Path2D.Float();
+            box.moveTo(currentRegion.x1, currentRegion.y1);
+            box.lineTo(currentRegion.x1, currentRegion.y2);
+            box.lineTo(currentRegion.x2, currentRegion.y2);
+            box.lineTo(currentRegion.x2, currentRegion.y1);
+            box.lineTo(currentRegion.x1, currentRegion.y1);
+            g2d.draw(box);
+        }
     }
 
-	// This method is probably not the best. We should "just" change the entire background for et mapcanvas instead, if possible
 	private void drawBackground(Graphics2D g2d) {
-        Region region = Main.model.getMapRegion();
-        Path2D background = new Path2D.Double();
-        background.moveTo(region.x1, region.y1);
-        background.lineTo(region.x2, region.y1);
-        background.lineTo(region.x2, region.y2);
-        background.lineTo(region.x1, region.y2);
-        background.lineTo(region.x1, region.y1);
-
-        // backgroundcolor for the map. If there's a coastline use the water innercolor, otherwise use the coastline innercolor
-        if(Main.model.enumMapKD.containsKey(WayType.COASTLINE) ){//&& Main.model.enumMapKD.get(WayType.COASTLINE).size() > 0) {
+        if(Main.model.enumMapKD.containsKey(WayType.COASTLINE) ){
         	g2d.setColor(new Color(110, 192, 255));
         }
         else g2d.setColor(new Color(240, 240, 230));
@@ -182,7 +192,7 @@ public class MapCanvas extends JPanel implements ActionListener {
 	public List<WaytypeGraphicSpec> getOnScreenGraphicsForCurrentZoom() {
 		List<WaytypeGraphicSpec> wayTypeSpecs = GraphicRepresentation.getGraphicSpecs((int)getZoom());
 		zoomChanged = false;
-		if(wayTypeSpecs == null) return new ArrayList<WaytypeGraphicSpec>();
+		if(wayTypeSpecs == null) return new ArrayList<>();
 		return wayTypeSpecs;
 	}
 	
@@ -289,8 +299,8 @@ public class MapCanvas extends JPanel implements ActionListener {
 	}
 	
 	public void snapToZoom(int zoomValue) {
-		double factor = 0.0;
-		int amount = 0;
+		double factor;
+		int amount;
 		if(zoomValue > getZoom()) {
 			factor = 1.5;
 			amount = (int)(zoomValue-getZoom());

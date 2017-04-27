@@ -4,8 +4,9 @@ import dk.itu.n.danmarkskort.models.ParsedNode;
 
 public interface KDComparable {
 
-    public int compareLon(KDComparable otherItem);
-    public int compareLat(KDComparable otherItem);
-    public ParsedNode getFirstNode();
-    public ParsedNode[] getNodes();
+    int compareLon(KDComparable otherItem);
+    int compareLat(KDComparable otherItem);
+    ParsedNode getFirstNode();
+    ParsedNode[] getNodes();
+    double shortestDistance(ParsedNode node);
 }

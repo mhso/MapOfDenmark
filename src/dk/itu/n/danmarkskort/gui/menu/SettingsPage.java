@@ -34,7 +34,7 @@ public class SettingsPage extends JPanel {
 	private DropdownMenu menu;
     
     public SettingsPage(DropdownMenu menu) {
-    	style = new Style();
+    	style = Main.style;
     	this.menu = menu;
         setOpaque(false);
         setLayout(new BorderLayout(0, 0));

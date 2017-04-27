@@ -22,7 +22,7 @@ public class PinPointPage extends JPanel {
 	private JPanel panelRow;
 	
 	public PinPointPage() {
-    	style = new Style();
+    	style = Main.style;
         setOpaque(false);
         setLayout(new BorderLayout(0, 0));
         

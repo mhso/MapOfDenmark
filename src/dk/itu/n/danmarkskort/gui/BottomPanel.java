@@ -7,6 +7,11 @@ import dk.itu.n.danmarkskort.DKConstants;
 import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.Util;
 import dk.itu.n.danmarkskort.gui.map.CanvasListener;
+import dk.itu.n.danmarkskort.kdtree.KDTree;
+import dk.itu.n.danmarkskort.models.ParsedItem;
+import dk.itu.n.danmarkskort.models.ParsedNode;
+import dk.itu.n.danmarkskort.models.ParsedWay;
+import dk.itu.n.danmarkskort.models.WayType;
 
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
@@ -25,13 +30,26 @@ public class BottomPanel extends JPanel implements CanvasListener {
 	Style style;
     private JLabel scale;
 	private JLabel coordsLabel;
+	private JLabel nearestStreetLabel;
 	private JSlider zoomSlider;
+	private WayType[] highways = new WayType[]{
+            WayType.HIGHWAY_MOTORWAY,
+            WayType.HIGHWAY_TRUNK,
+            WayType.HIGHWAY_PRIMARY,
+            WayType.HIGHWAY_SECONDARY,
+            WayType.HIGHWAY_TERTIARY,
+            WayType.HIGHWAY_RESIDENTIAL,
+            WayType.HIGHWAY_SERVICE,
+            WayType.HIGHWAY_UNDEFINED,
+            WayType.HIGHWAY_UNCLASSIFIED,
+            WayType.PEDESTRIAN_AREA,
+            WayType.HIGHWAY_PEDESTRIAN};
 
-    public BottomPanel(Style style) {
+    public BottomPanel() {
     	setBorder(new EmptyBorder(0, 10, 0, 10));
     	setOpaque(false);
     	
-        this.style = style;
+        this.style = Main.style;
 
         setLayout(new BorderLayout());
 
@@ -80,7 +98,7 @@ public class BottomPanel extends JPanel implements CanvasListener {
         coordsLabel.setHorizontalAlignment(SwingConstants.CENTER);
         southCenterPanel.add(coordsLabel, BorderLayout.CENTER);
         
-        JLabel nearestStreetLabel = new JLabel("<html><body><u>Streetname</u></body></html>");
+        nearestStreetLabel = new JLabel("Street");
         nearestStreetLabel.setForeground(Color.WHITE);
         nearestStreetLabel.setHorizontalAlignment(SwingConstants.CENTER);
         southCenterPanel.add(nearestStreetLabel, BorderLayout.SOUTH);
@@ -147,6 +165,29 @@ public class BottomPanel extends JPanel implements CanvasListener {
     	Point2D mousePoint = Util.toRealCoords(Main.map.getGeographicalMousePosition());
     	coordsLabel.setText("Lat: " + 
     			String.format("%.4f", mousePoint.getY()) + ", Lon: " + String.format("%.4f", mousePoint.getX()));
+
+
+    	if(Main.nearest) {
+            ParsedNode query = new ParsedNode(Main.map.getGeographicalMousePosition());
+            ParsedWay nearest = null;
+            double shortest = Double.POSITIVE_INFINITY;
+            for(WayType waytype: highways) {
+                KDTree<ParsedItem> tree = Main.model.enumMapKD.get(waytype);
+                if(tree == null) continue;
+                ParsedItem candidate = tree.nearest(query);
+                if(candidate == null) continue;
+                else {
+                    double distance = candidate.shortestDistance(query);
+                    if (distance < shortest) {
+                        shortest = distance;
+                        nearest = (ParsedWay) candidate;
+                    }
+                }
+            }
+            String text = " ";
+            if(nearest != null && nearest.getName() != null) text = nearest.getName();
+            nearestStreetLabel.setText(text);
+        }
     }
     
     @Override

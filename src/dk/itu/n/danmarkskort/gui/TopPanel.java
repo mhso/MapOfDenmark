@@ -33,9 +33,9 @@ public class TopPanel extends JPanel {
     private JButton menu;
     private List<String> dropSuggestionsList;
 
-    public TopPanel(Style style) {
-    	dropSuggestionsList = new ArrayList<String>();
-        this.style = style;
+    public TopPanel() {
+    	dropSuggestionsList = new ArrayList<>();
+        this.style = Main.style;
         setOpaque(false);
 
         topParent = new JPanel(new BorderLayout());

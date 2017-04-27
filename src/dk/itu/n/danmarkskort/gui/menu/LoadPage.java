@@ -4,9 +4,6 @@ import javax.swing.*;
 
 import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.Util;
-import dk.itu.n.danmarkskort.address.AddressController;
-import dk.itu.n.danmarkskort.backend.BinaryWrapper;
-import dk.itu.n.danmarkskort.backend.OSMParser;
 import dk.itu.n.danmarkskort.gui.Style;
 import dk.itu.n.danmarkskort.models.Region;
 
@@ -23,7 +20,7 @@ public class LoadPage extends JPanel  {
 	private JLabel lblCurrentmapfilename, lblCurrentmapfilesize, lblCurrentmapaddressesfound, lblCurrentmapbounds;
 	
     public LoadPage() {
-    	style = new Style();
+    	style = Main.style;
         setOpaque(false);
         setLayout(new BorderLayout(0, 0));
         
@@ -115,7 +112,7 @@ public class LoadPage extends JPanel  {
         double latKm = -bounds.getHeight()*110.574;
         double lonKm = bounds.getWidth()*111.320*Math.cos(Math.toRadians(-bounds.y2));
         double squareKm = latKm*lonKm;
-        lblCurrentmapbounds = new JLabel("<html><body>Lontitude: " + format.format(bounds.x1) + " - " + format.format(bounds.x2) + 
+        lblCurrentmapbounds = new JLabel("<html><body>Longitude: " + format.format(bounds.x1) + " - " + format.format(bounds.x2) +
         		"<br>Latitude: " + format.format(-bounds.y1) + " - " + format.format(-bounds.y2) + 
         		"<br>Square Kilometres: " + format.format(squareKm) + " km²</body></html>");
         GridBagConstraints gbc_lblCurrentmapbounds = new GridBagConstraints();
