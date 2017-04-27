@@ -3,10 +3,9 @@ package dk.itu.n.danmarkskort.routeplanner;
 import java.awt.geom.Point2D;
 
 import dk.itu.n.danmarkskort.kdtree.KDComparable;
-import dk.itu.n.danmarkskort.models.ParsedNode;
 import dk.itu.n.danmarkskort.models.ReuseStringObj;
 
-public class RouteEdge {
+public class RouteEdge implements KDComparable{
 	private final RouteVertex from, to;
 	private RouteEdgeMeta routeEdgeMeta;
 	private final String description;
@@ -56,17 +55,22 @@ public class RouteEdge {
 		return from.getId() + " -> " + to.getId() + " [ " + description + " ]";
 	}
 
-//	@Override
-//	public Point2D getFirstNode() {
-//		// TODO Auto-generated method stub
-//		return new Point2D.Float(from.x, from.y);
-//	}
-//
-//	@Override
-//	public Point2D[] getNodes() {
-//		// TODO Auto-generated method stub
-//		return new Point2D[]{from, to};
-//	}
+	@Override
+	public Point2D.Float getFirstNode() {
+		return from;
+	}
+
+	@Override
+	public Point2D.Float[] getNodes() {
+		return new Point2D.Float[] {from, to};
+	}
+
+	@Override
+	public float[] getCoords() {
+		return new float[] {from.x, from.y, to.x, to.y};
+	}
+	
+	
 
 	
 }

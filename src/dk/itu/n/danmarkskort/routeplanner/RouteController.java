@@ -4,6 +4,8 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
 
+import dk.itu.n.danmarkskort.kdtree.KDTree;
+import dk.itu.n.danmarkskort.kdtree.KDTreeNode;
 import dk.itu.n.danmarkskort.models.ReuseRouteEdgeMetaObj;
 
 public class RouteController {
@@ -96,5 +98,12 @@ public class RouteController {
 			if(rv.isEqualPoint(new Point2D.Float(lonLat[0], lonLat[1]))) return rv;
 		}
 		return null;
+	}
+	
+	public void searchEdgesKDTree(Point2D.Float lonLat){
+		KDTree<RouteEdge> kdTree = new KDTreeNode<>(routeEdges);
+		RouteEdge edge = kdTree.nearest(lonLat);
+		if(edge != null) { System.out.println("RouteCOntroller found Edge: " + edge.getDescription()); }
+		else { System.out.println("No edge found"); }
 	}
 }

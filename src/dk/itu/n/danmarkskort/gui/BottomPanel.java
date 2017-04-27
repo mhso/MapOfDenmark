@@ -162,6 +162,9 @@ public class BottomPanel extends JPanel implements CanvasListener {
     
     @Override
     public void onMouseMoved() {
+    	
+    	
+    	
     	Point2D mousePoint = Util.toRealCoords(Main.map.getGeographicalMousePosition());
     	coordsLabel.setText("Lat: " + 
     			String.format("%.6f", mousePoint.getY()) + ", Lon: " + String.format("%.6f", mousePoint.getX()));
@@ -187,6 +190,9 @@ public class BottomPanel extends JPanel implements CanvasListener {
             String text = " ";
             if(nearest != null && nearest.getName() != null) text = nearest.getName();
             nearestStreetLabel.setText(text  + ", "+ shortest);
+
+            ParsedNode lonLat = new ParsedNode(Main.map.getGeographicalMousePosition());
+            if(lonLat != null)Main.routeController.searchEdgesKDTree(lonLat);
         }
     }
     
