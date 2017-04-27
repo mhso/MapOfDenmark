@@ -36,7 +36,6 @@ public class MapMouseController extends MouseAdapter {
 
 	public void mousePressed(MouseEvent e) {
 		lastMousePosition = e.getPoint();
-		System.out.println(Main.model.enumMapKD.get(WayType.HIGHWAY_MOTORWAY).nearest(new ParsedNode((float)e.getX(), (float)e.getY())));
 	}
 
 	public void mouseMoved(MouseEvent e) {

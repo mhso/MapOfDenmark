@@ -18,13 +18,13 @@ import dk.itu.n.danmarkskort.routeplanner.RouteController;
 public class Main {
 
 	public final static String APP_NAME = "NinjaMaps";
-	public final static String APP_VERSION = "0.6";
+	public final static String APP_VERSION = "0.7";
 	public final static boolean debug = true;
 	public final static boolean production = false;
-	public final static boolean buffered = true;
+	public final static boolean buffered = false;
 	public final static boolean saveParsedAddresses = true;
 	public final static boolean useLauncher = true;
-	public final static boolean nearest = false;
+	public final static boolean nearest = true;
 	
 	public static boolean binaryfile = true;
 	
@@ -137,7 +137,6 @@ public class Main {
         mainPanel = new MainCanvas();
         
         map.setPreferredSize(new Dimension(DKConstants.WINDOW_WIDTH, DKConstants.WINDOW_HEIGHT));
-        mainPanel = new MainCanvas();
         overlay.add(mainPanel);
     	overlay.add(map);
     	return overlay;
