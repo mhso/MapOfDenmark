@@ -1,11 +1,11 @@
 package dk.itu.n.danmarkskort.gui;
 
 import dk.itu.n.danmarkskort.Main;
+import dk.itu.n.danmarkskort.Util;
 import dk.itu.n.danmarkskort.address.Address;
 import dk.itu.n.danmarkskort.gui.map.PinPoint;
 import dk.itu.n.danmarkskort.gui.menu.DropdownMenu;
 import dk.itu.n.danmarkskort.gui.menu.RoutePage;
-import dk.itu.n.danmarkskort.models.PointFloat;
 import dk.itu.n.danmarkskort.search.SearchController;
 
 import javax.swing.*;
@@ -154,7 +154,7 @@ public class TopPanel extends JPanel {
     		Address addr = SearchController.getSearchFieldAddressObj(address);
         	if(addr != null ) { 
         		System.out.println("Toppanel->searchForAddress: "+addr.toString());
-        		panZoomToCoordinates(addr.getLonLatPointFloat());
+        		panZoomToCoordinates(addr.getLonLatAsPoint());
         	} else {
         		JOptionPane.showMessageDialog(null, "No match found.", "Missing information", JOptionPane.INFORMATION_MESSAGE);
         	}
@@ -163,10 +163,10 @@ public class TopPanel extends JPanel {
     	}
     }
 
-    private void panZoomToCoordinates(PointFloat input) {
-    	System.out.println("Toppanel->panZoomToCoordinats (lon, lat): " + input.toString() + "\n -->, real (lon, lat): " + input.getRealCords());
+    private void panZoomToCoordinates(Point2D.Float input) {
+    	System.out.println("Toppanel->panZoomToCoordinats (lon, lat): " + input.toString() + "\n -->, real (lon, lat): " + Util.toRealCoords(input));
     	String pinPointName = "SearchLocation - " + input.toString();
-    	Main.pinPointManager.addPinPoint(pinPointName, new PinPoint(Main.map.toScreenCoords(new Point2D.Float(input.x, input.y)), pinPointName));
+    	Main.pinPointManager.addPinPoint(pinPointName, new PinPoint(Main.map.toScreenCoords(input), pinPointName));
     	Main.map.panToPosition(new Point2D.Float(input.x, input.y));
     	Main.mainPanel.repaint();
 	}

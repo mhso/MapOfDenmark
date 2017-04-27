@@ -6,7 +6,6 @@ import java.util.List;
 import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.Util;
 import dk.itu.n.danmarkskort.address.Address;
-import dk.itu.n.danmarkskort.models.PointFloat;
 
 public class SearchController{
 	
@@ -31,7 +30,8 @@ public class SearchController{
 		
 		if(isCoordinates(inputStr)) {
 			System.out.println("Search for cords string");
-			return Main.addressController.getNearstSearchResult(stringCordsToPointFloat(inputStr));
+			//return Main.addressController.getNearstSearchResult(stringCordsToPointFloat(inputStr));
+			return null;
 		} else {
 			System.out.println("Search for address string");
 			return Main.addressController.getSearchResult(inputStr);
@@ -45,11 +45,11 @@ public class SearchController{
 		return false;
 	}
 	
-	private static PointFloat stringCordsToPointFloat(String inputStr){
+	private static Point2D.Float stringCordsToPointFloat(String inputStr){
 		String[] strArr = inputStr.split(", ");
 		float lat = Float.parseFloat(strArr[0]);
 		float lon = Float.parseFloat(strArr[1]);
 		Point2D fakeCoords = Util.toFakeCoords(new Point2D.Float(lon, lat));
-		return new PointFloat((float)fakeCoords.getX(), (float)fakeCoords.getY());
+		return new Point2D.Float((float)fakeCoords.getX(), (float)fakeCoords.getY());
 	}
 }

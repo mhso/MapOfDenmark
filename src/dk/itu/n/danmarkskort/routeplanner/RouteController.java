@@ -1,9 +1,9 @@
 package dk.itu.n.danmarkskort.routeplanner;
 
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
 
-import dk.itu.n.danmarkskort.models.PointFloat;
 import dk.itu.n.danmarkskort.models.ReuseRouteEdgeMetaObj;
 
 public class RouteController {
@@ -25,7 +25,7 @@ public class RouteController {
 	 * @return A Vertex object
 	 */
 	public RouteVertex makeVertex(float lon, float lat){
-		RouteVertex vertex = new RouteVertex(vertexCount, new PointFloat(lon, lat));
+		RouteVertex vertex = new RouteVertex(vertexCount, new Point2D.Float(lon, lat));
 		vertices.add(vertex);
 		vertexCount++;
 		return vertex;
@@ -37,7 +37,7 @@ public class RouteController {
 				carsAllowed, bikesAllowed);
 		RouteEdgeMeta reuseRouteEdgeMeta = ReuseRouteEdgeMetaObj.make(routeEdgeMeta);
 		RouteEdge edge = new RouteEdge(fromVertex, toVertex, reuseRouteEdgeMeta, description);
-		System.out.println("add Edge: " + edge.toString());
+		//System.out.println("add Edge: " + edge.toString());
 		routeEdges.add(edge);
 	}
 	
@@ -93,7 +93,7 @@ public class RouteController {
 	public RouteVertex demoFindVertex(float[] lonLat){
 		for(RouteVertex rv : vertices){
 			System.out.println("demoFindVertex, compare: x" + lonLat[0] + " = " + rv.x +", " + lonLat[1] + " = " + rv.y);
-			if(rv.isEqualPoint(new PointFloat(lonLat[0], lonLat[1]))) return rv;
+			if(rv.isEqualPoint(new Point2D.Float(lonLat[0], lonLat[1]))) return rv;
 		}
 		return null;
 	}

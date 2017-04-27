@@ -317,7 +317,6 @@ public class RoutePage extends JPanel {
 			pinPoints.add(pinPointFrom);
 			pinPoints.add(pinPointTo);
 			Main.pinPointManager.setTemporaryPinPoints(pinPoints);
-			
 //			System.out.println(Main.routeController.toString());
 //			RouteVertex vertexFrom = Main.routeController.demoFindVertex(addrFrom.getLonLat());
 //			RouteVertex vertexTo = Main.routeController.demoFindVertex(addrTo.getLonLat());

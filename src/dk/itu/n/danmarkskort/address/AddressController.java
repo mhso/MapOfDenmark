@@ -3,8 +3,8 @@ package dk.itu.n.danmarkskort.address;
 import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.TimerUtil;
 import dk.itu.n.danmarkskort.models.ParsedAddress;
-import dk.itu.n.danmarkskort.models.PointFloat;
 
+import java.awt.geom.Point2D;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -34,7 +34,7 @@ public class AddressController {
 	}
 	
 	public List<String> getSearchSuggestions(String find, long limitAmountOfResults){ return addressSuggestion.searchSuggestions(find, limitAmountOfResults); }
-	public List<String> getSearchSuggestions(PointFloat find, long limitAmountOfResults){ return searchSuggestions(find, limitAmountOfResults); }
+	public List<String> getSearchSuggestions(Point2D.Float find, long limitAmountOfResults){ return searchSuggestions(find, limitAmountOfResults); }
 	
 	
 	public Address getSearchResult(String find){
@@ -69,15 +69,15 @@ public class AddressController {
 		return null;
 	}
 	
-	public Address getNearstSearchResult(PointFloat input){
-		return addressRegionSearch.getNearstSearchResult(input);
-	}
+//	public Address getNearstSearchResult(Point2D.Float input){
+//		return addressRegionSearch.getNearstSearchResult(input);
+//	}
 	
-	public List<String> searchSuggestions(PointFloat input, long limitAmountOfResults){
+	public List<String> searchSuggestions(Point2D.Float input, long limitAmountOfResults){
 		 return addressRegionSearch.searchSuggestions(input, limitAmountOfResults);
 	}
 	
-	public void addAddress(float[] lonLat, String street, String housenumber, String postcode, String city){
+	public void addAddress(Point2D.Float lonLat, String street, String housenumber, String postcode, String city){
 		Postcode pc = addressHolder.postcodes.get(postcode);
 		if(pc == null) pc = new Postcode(postcode, city);
 		pc.addAddress(street, housenumber, lonLat);
@@ -89,7 +89,7 @@ public class AddressController {
 	public void addressParsed(ParsedAddress addr) {
 		timerUtilA.on();
         if(addr != null) {
-			float[] lonLat = new float[] {addr.getFirstLon(), addr.getFirstLat()};
+        	Point2D.Float lonLat = new Point2D.Float(addr.getFirstLon(), addr.getFirstLat());
 			
 			//if(debug) if(addr.getPostcode() != null && !addr.getPostcode().matches("(^[0-9]{4}$)")) System.out.println("Postcode sucks: " + addr.toStringParted());
 			

@@ -1,5 +1,6 @@
 package dk.itu.n.danmarkskort.address;
 
+import java.awt.geom.Point2D;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
@@ -67,7 +68,7 @@ public class Postcode implements Serializable {
 		streets.put(street.toLowerCase(), newStreet);
 	}
 	
-	public void addAddress(String street, String housenumber, float[] latLon){
+	public void addAddress(String street, String housenumber, Point2D.Float latLon){
 		if(street != null && housenumber != null && latLon != null){
 			Street st = getStreet(street);
 			if(st == null) st = new Street(this, street);

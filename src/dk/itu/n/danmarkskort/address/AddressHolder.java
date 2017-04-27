@@ -1,5 +1,6 @@
 package dk.itu.n.danmarkskort.address;
 
+import java.awt.geom.Point2D;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.HashMap;
@@ -223,13 +224,12 @@ public class AddressHolder implements Serializable {
 		return Collections.emptyMap();
 	}
 	
-	public Housenumber searchHousenumber(float[] lonLat){
-		RegionFloat input = new RegionFloat(lonLat[0], lonLat[1], lonLat[0], lonLat[1]);
+	public Housenumber searchHousenumber(Point2D.Float lonLat){
+		RegionFloat input = new RegionFloat(lonLat.x, lonLat.y, lonLat.x, lonLat.y);
 		for(Postcode pc : searchRegionWithin(input).values()) {
 			for(Street st : pc.searchRegionWithin(input).values()){
 				for(Housenumber hn : st.searchRegionWithin(input).values()){
-					float[] hnLonLat = hn.getLonLat();
-					if(hnLonLat[0] == lonLat[0] && hnLonLat[0] == lonLat[0]) {
+					if(hn.getLon() == lonLat.x && hn.getLat() == lonLat.y) {
 						return hn;
 					}
 				}
