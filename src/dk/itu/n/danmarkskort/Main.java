@@ -24,7 +24,7 @@ public class Main {
 	public final static boolean buffered = true;
 	public final static boolean saveParsedAddresses = true;
 	public final static boolean useLauncher = true;
-	public final static boolean nearest = false;
+	public final static boolean nearest = true;
 	
 	public static boolean binaryfile = true;
 	
