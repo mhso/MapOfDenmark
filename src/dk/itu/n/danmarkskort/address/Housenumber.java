@@ -22,9 +22,7 @@ public class Housenumber implements Serializable {
 	public float getLon(){ return lon; }
 	public float getLat(){ return lat; }
 	public Street getStreet() { return street; }
-	
 	public String getHousenumber() { return housenumber.toString(); }
-
 	public Postcode getPostcode() { return street.getPostcode(); }
 	
 	public String toString(){
