@@ -381,14 +381,12 @@ public class MapCanvas extends JPanel {
 		pan(-mapRegion.x1, -mapRegion.y2);
 		zoom(getWidth() / (mapRegion.x2 - mapRegion.x1));
 		Main.tileController.updateZero();
+		Main.tileController.update();
 		isInitialized = true;
 	}
 	
 	public void setupDone() {	
 		zoomToBounds();
-		if(Main.buffered) {
-			// Start rendering
-		}
 		for(CanvasListener listener : listeners) listener.onSetupDone();
 	}
 	

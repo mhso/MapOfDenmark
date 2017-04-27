@@ -49,11 +49,14 @@ public class Tile {
 	}
 	
 	public Region getGeographicalRegion() {
+		
+		double scale = Main.tileController.getImageTransform().getScaleX();
+		
 		Point2D zero = Main.tileController.getZero();
 		Point2D p1 = Main.map.toActualScreenCoords(zero);
-		Point2D p2 = Main.map.toModelCoords(new Point2D.Double(p1.getX() + Main.tileController.getTileWidth(), p1.getY() + Main.tileController.getTileHeight()));
+		Point2D p2 = Main.map.toModelCoords(new Point2D.Double(p1.getX() + Main.tileController.getTileWidth() * scale, p1.getY() + Main.tileController.getTileHeight() * scale));
 		
-		Point2D position = Main.map.toModelCoords(new Point2D.Double(p1.getX() + Main.tileController.getTileWidth() * -pos.x, p1.getY() + Main.tileController.getTileHeight() * -pos.y));
+		Point2D position = Main.map.toModelCoords(new Point2D.Double(p1.getX() + (Main.tileController.getTileWidth()) * scale * -pos.x, p1.getY() + (Main.tileController.getTileHeight() * scale) * -(pos.y-1)));
 		Point2D size = new Point2D.Double(p2.getX() - zero.getX(), p2.getY() - zero.getY());
 		Region region = new Region(-position.getX(), -position.getY(), -(position.getX() + -size.getX()), -(position.getY() + -size.getY()));
 		return region;
@@ -75,26 +78,33 @@ public class Tile {
 	}
 	
 	public boolean draw(Graphics2D g2d) {
-		if(isVisibleToViewport()) {
+		//if(isVisibleToViewport()) {
 			if(isRendered()) {
-				g2d.setTransform(Main.tileController.getImageTransform());
-				Point2D screenPos = Main.map.toActualScreenCoords(getGeographicalRegion().getPointFrom());
-				g2d.drawImage(image, (int)screenPos.getX(), (int)screenPos.getY(), null);
 				Region r = getGeographicalRegion();
+				Point2D pos1 = Main.map.toActualScreenCoords(new Point2D.Double(r.x1,  r.y1 + r.getHeight()));
+				Point2D pos2 = Main.map.toActualScreenCoords(new Point2D.Double(r.x1 + r.getWidth(), r.y1 + r.getHeight()*2));
+				int width  = (int)(pos2.getX() - pos1.getX());
+				int height = (int)(pos2.getY() - pos1.getY());
+				Main.log("Width: " + width);
+				Main.log("Height: " + height);
+				Main.log("X: " + pos1.getX());
+				Main.log("Y: " + pos1.getY());
+				g2d.setTransform(Util.zeroTransform);
+				g2d.drawImage(image, (int)pos1.getX(), (int)pos1.getY(), width, height, null);
 				
 				g2d.setTransform(Main.map.getActualTransform());
 				g2d.setColor(Color.WHITE);
 				g2d.setStroke(new BasicStroke(Float.MIN_VALUE));
-				g2d.draw(new Rectangle2D.Double(r.x1, r.y1, r.getWidth(), r.getHeight()));
+				g2d.draw(new Rectangle2D.Double(r.x1, r.y1 + r.getHeight(), r.getWidth(), r.getHeight()*2));
 			} else {
 				g2d.setTransform(Main.map.getActualTransform());
 				Region r = getGeographicalRegion();
 				g2d.setColor(Color.DARK_GRAY);
 				g2d.setStroke(new BasicStroke(Float.MIN_VALUE));
-				g2d.fill(new Rectangle2D.Double(r.x1, r.y1, r.getWidth(), r.getHeight()));
+				g2d.fill(new Rectangle2D.Double(r.x1,  r.y1 + r.getHeight(), r.getWidth(), r.getHeight()*2));
 			}
 			return true;
-		} else return false;
+		//} else return false;
 	}
 	
 	public Graphics getGraphics() {

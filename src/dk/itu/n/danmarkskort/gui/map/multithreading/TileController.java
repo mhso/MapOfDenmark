@@ -14,6 +14,7 @@ import javax.swing.Timer;
 
 import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.Util;
+import dk.itu.n.danmarkskort.models.Region;
 import dk.itu.n.danmarkskort.multithreading.Queue;
 import dk.itu.n.danmarkskort.multithreading.Task;
 import dk.itu.n.danmarkskort.multithreading.TaskPriority;
@@ -58,8 +59,11 @@ public class TileController implements ActionListener {
 	}
 	
 	public void updateZero() {
-		zero = new Point2D.Double(imageTransform.getTranslateX(), imageTransform.getTranslateY());
-		update();
+		zero = Main.map.toActualModelCoords(new Point2D.Double(0, 0));
+	}
+	
+	public void resetImageTransform() {
+		imageTransform = new AffineTransform();
 	}
 	
 	public void hotswap(String oldTileKey, Tile newTile) {
@@ -93,9 +97,7 @@ public class TileController implements ActionListener {
 	}
 	
 	public void update() {
-		if(isBlurred()) return;
-		
-		if(updateLeftTop() || firstRender) {
+		if((updateLeftTop() || firstRender) && !isBlurred()) {
 			Main.log("It changed to: " + currentLeftTop.toString());
 			List<Tile> unrenderedTiles = getUnrenderedTiles();
 			Main.log(unrenderedTiles.size() + " unrendered tiles.");
@@ -125,8 +127,8 @@ public class TileController implements ActionListener {
 	}
 	
 	private void blur() {
-		Main.log("Bluring");
 		if(firstRender) return;
+		Main.log("Bluring");
 		blur = true;
 
 		// Restart the blur timer
@@ -138,7 +140,7 @@ public class TileController implements ActionListener {
 	}
 	
 	public void zoom(double scale) {
-		//if(!isBlurred()) blur();
+		if(!isBlurred()) blur();
 		Util.zoom(imageTransform, scale);
 	}
 	
@@ -146,6 +148,12 @@ public class TileController implements ActionListener {
 		blur = false;
 
 		Main.log("Unbluring");
+
+		List<Tile> unrenderedTiles = getUnrenderedTiles();
+		for(Tile tile : unrenderedTiles) {
+			tile.render();
+			tiles.put(tile.getKey(), tile);
+		}
 		Main.mainPanel.repaint();
 	}
 	
@@ -171,10 +179,18 @@ public class TileController implements ActionListener {
 	
 	// Returns true if value is changed
 	private boolean updateLeftTop() {
-		int x = -Util.roundByN(getTileWidth(), imageTransform.getTranslateX()) / getTileWidth();
-		int y = -Util.roundByN(getTileHeight(), imageTransform.getTranslateY()) / getTileHeight();
+
+		Point2D coords = Main.map.toActualModelCoords(new Point2D.Double(0, 0));
+		Point2D coords2 =  Main.map.toActualModelCoords(new Point2D.Double(getTileWidth(), getTileHeight()));
+		Point2D size = new Point2D.Double(coords2.getX() - coords.getX(), coords2.getY() - coords.getY());
+		Main.log(coords);
+		Main.log(size);
+		int x = (int)((coords.getX() - zero.getX()) / size.getX());
+		int y = (int)((coords.getY() - zero.getY()) / size.getY());
+		
 		boolean outcome = (x != currentLeftTop.x || y != currentLeftTop.getY());
 		currentLeftTop = new Point(x, y);
+		Main.log(currentLeftTop);
 		return outcome;
 	}
 

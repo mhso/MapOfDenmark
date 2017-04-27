@@ -26,6 +26,8 @@ import java.awt.geom.Point2D;
 
 public class Util {
 	
+	public static final AffineTransform zeroTransform = new AffineTransform();
+	
 	public static float getRAMUsageInMB() {
 		return (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1000000F;
 	}
@@ -90,7 +92,7 @@ public class Util {
 		}
 	}
 	
-	public static int roundByN(int n, double value){
+	public static int roundByN(double n, double value){
 	    return (int) (Math.round(value/n) * n);
 	}
 	
