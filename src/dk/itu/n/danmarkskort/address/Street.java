@@ -58,12 +58,13 @@ public class Street implements Serializable {
 			float lon = lonLat[0];
 			float lat = lonLat[1];
 			RegionFloat hnR =  new RegionFloat(lon, lat, lon, lat);
-			System.out.println("Compare isWithin: hnR = input: ");
-			System.out.println("Larger: " + hnR.toString());
-			System.out.println("Smaller: " + input.toString());
+//			System.out.println("Compare isWithin: hnR = input: ");
+//			System.out.println("Larger: " + hnR.toString());
+//			System.out.println("Smaller: " + input.toString());
 			if(hnR.isWithin(input)){
 				regions.put(hnR, hn);
 				System.out.println("Street -> searchRegionWithin: " + input.toString());
+				System.out.println("Street -> house: " + hn.toString());
 			}
 		}
 		return regions;

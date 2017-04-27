@@ -2,17 +2,9 @@ package dk.itu.n.danmarkskort.gui.menu;
 
 import javax.swing.JPanel;
 import javax.swing.JButton;
-import javax.swing.BoxLayout;
 import java.awt.BorderLayout;
 import javax.swing.JLabel;
-import java.awt.FlowLayout;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
-import javax.swing.JSplitPane;
 import java.awt.GridLayout;
-import javax.swing.ImageIcon;
-import java.awt.Color;
 import javax.swing.border.EmptyBorder;
 
 import dk.itu.n.danmarkskort.Main;
@@ -22,7 +14,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class PinPointRow extends JPanel {
-	
 	private JButton btnPan;
 	private JButton btnDelete;
 	private JLabel name;

@@ -1,14 +1,13 @@
 package dk.itu.n.danmarkskort.address;
 
-import dk.itu.n.danmarkskort.models.ParsedNode;
+import dk.itu.n.danmarkskort.models.PointFloat;
 import dk.itu.n.danmarkskort.models.ReuseStringObj;
 
 import java.io.Serializable;
 
 public class Housenumber implements Serializable {
 	private static final long serialVersionUID = -8400619618776493401L;
-	private float lon;
-	private float lat;
+	private float lon, lat;
 	private String housenumber;
 	private Street street;
 	
@@ -18,6 +17,8 @@ public class Housenumber implements Serializable {
 		this.lon = lonLat[0];
 		this.lat = lonLat[1];
 	}
+	
+	public PointFloat getPointFloat(){ return new PointFloat(lon, lat); }
 
 	public float[] getLonLat() { return new float[] {lon, lat}; }
 
@@ -30,8 +31,4 @@ public class Housenumber implements Serializable {
 	public String toString(){
 		return street.getStreet() + " " + getHousenumber() + ", " + getPostcode().getPostcode() + " " + getPostcode().getCity();
 	}
-
-	private ParsedNode coordsToNode() {
-	    return new ParsedNode(lon, lat);
-    }
 }

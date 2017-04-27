@@ -4,27 +4,15 @@ import javax.swing.JPanel;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 
 import javax.swing.JLabel;
-import javax.swing.SwingConstants;
 import javax.swing.border.TitledBorder;
 
 import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.gui.Style;
 import dk.itu.n.danmarkskort.gui.map.PinPoint;
 
-import javax.swing.JTable;
-import javax.swing.JList;
-import javax.swing.AbstractListModel;
-import java.awt.GridLayout;
 import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JScrollPane;
-import java.awt.Component;
-import javax.swing.Box;
-import java.awt.FlowLayout;
 
 public class PinPointPage extends JPanel {
 

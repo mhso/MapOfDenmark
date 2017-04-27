@@ -2,7 +2,6 @@ package dk.itu.n.danmarkskort.gui.routeplanner;
 
 import javax.swing.JPanel;
 
-import dk.itu.n.danmarkskort.models.RouteEnum;
 import dk.itu.n.danmarkskort.models.RouteModel;
 
 import java.awt.GridBagLayout;
