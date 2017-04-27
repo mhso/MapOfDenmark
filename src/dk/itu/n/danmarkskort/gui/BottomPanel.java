@@ -145,8 +145,8 @@ public class BottomPanel extends JPanel implements CanvasListener {
     @Override
     public void onMouseMoved() {
     	Point2D mousePoint = Util.toRealCoords(Main.map.getGeographicalMousePosition());
-    	coordsLabel.setText("Lon: " + String.format("%.4f", mousePoint.getX()) + ", Lat: " + 
-    			String.format("%.4f", mousePoint.getY()));
+    	coordsLabel.setText("Lat: " + 
+    			String.format("%.4f", mousePoint.getY()) + ", Lon: " + String.format("%.4f", mousePoint.getX()));
     }
     
     @Override

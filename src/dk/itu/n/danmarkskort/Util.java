@@ -130,6 +130,10 @@ public class Util {
 		return new Point2D.Float((float)fakeCoords.getX()/Main.model.getLonFactor(), (float)-fakeCoords.getY());
 	}
 	
+	public static Point2D toFakeCoords(Point2D realCoords) {
+		return new Point2D.Float((float)realCoords.getX()*Main.model.getLonFactor(), (float)-realCoords.getY());
+	}
+	
 	public static String getBinaryFilePath() {
 		File file = new File(Main.osmReader.getFileName());
 		String simpleFileName = file.getName().substring(0, file.getName().length()-4);

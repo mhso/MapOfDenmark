@@ -1,6 +1,8 @@
 package dk.itu.n.danmarkskort.models;
 
-import dk.itu.n.danmarkskort.DKConstants;
+import java.awt.geom.Point2D;
+
+import dk.itu.n.danmarkskort.Util;
 
 public class PointFloat {
 	public float x;
@@ -29,20 +31,13 @@ public class PointFloat {
 	}
 	
 	public PointFloat getRealCords(){
-		return calcRealCords(this);
+		Point2D result = Util.toRealCoords(new Point2D.Float(x, y));
+		return new PointFloat((float)result.getX(), (float)result.getY());
 	}
 	
-	public PointFloat calcRealCords(PointFloat input){
-		float realLon = input.x / DKConstants.FACTOR_LON_DENMARK;
-		float realLat = -(input.y);
-		return new PointFloat(realLon, realLat);
+	public PointFloat getFakeCords(){
+		Point2D result = Util.toFakeCoords(new Point2D.Float(x, y));
+		return new PointFloat((float)result.getX(), (float)result.getY());
 	}
-	
-	public PointFloat calcFakeCords(PointFloat input){
-		float realLon = input.x * DKConstants.FACTOR_LON_DENMARK;
-		float realLat = -(input.y);
-		return new PointFloat(realLon, realLat);
-	}
-	
 	
 }

@@ -1,8 +1,10 @@
 package dk.itu.n.danmarkskort.search;
 
+import java.awt.geom.Point2D;
 import java.util.List;
 
 import dk.itu.n.danmarkskort.Main;
+import dk.itu.n.danmarkskort.Util;
 import dk.itu.n.danmarkskort.address.Address;
 import dk.itu.n.danmarkskort.models.PointFloat;
 
@@ -47,6 +49,7 @@ public class SearchController{
 		String[] strArr = inputStr.split(", ");
 		float lon = Float.parseFloat(strArr[0]);
 		float lat = Float.parseFloat(strArr[1]);
-		return new PointFloat(lon, lat);
+		Point2D fakeCoords = Util.toFakeCoords(new Point2D.Float(lat, lon));
+		return new PointFloat((float)fakeCoords.getX(), (float)fakeCoords.getY());
 	}
 }
