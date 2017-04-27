@@ -8,7 +8,6 @@ import javax.swing.JPanel;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import java.awt.Font;
 import java.awt.Image;
 
 import javax.swing.JScrollPane;
@@ -20,7 +19,6 @@ import dk.itu.n.danmarkskort.models.RouteModel;
 
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
-import java.awt.Toolkit;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JCheckBox;

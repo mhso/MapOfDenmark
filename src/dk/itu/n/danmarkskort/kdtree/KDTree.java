@@ -44,7 +44,11 @@ public abstract class KDTree<T extends KDComparable> implements Serializable, It
          * @return {@code true} if the iteration has more elements
          */
         @Override
-        public boolean hasNext() { return i < arrList.size(); }
+        public boolean hasNext() { 
+        	while(i < arrList.size() && arrList.get(i) == null) {
+        		i++;
+        	}
+        	return i < arrList.size(); }
 
         /**
          * Returns the next element in the iteration.
@@ -55,6 +59,7 @@ public abstract class KDTree<T extends KDComparable> implements Serializable, It
         @SuppressWarnings("unchecked")
         @Override
         public T next() {
+        
             T next = (T) arrList.get(i)[j++];
             if(j > arrList.get(i).length - 1) {
                 j = 0;

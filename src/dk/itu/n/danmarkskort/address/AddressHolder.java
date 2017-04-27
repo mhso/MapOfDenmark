@@ -1,6 +1,7 @@
 package dk.itu.n.danmarkskort.address;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -206,19 +207,21 @@ public class AddressHolder implements Serializable {
 		return regions;
 	}
 	
-	public Map<RegionFloat, Housenumber> searchRegionHousenumbers(RegionFloat input){	
-		Map<RegionFloat, Housenumber> regions = new HashMap<RegionFloat, Housenumber>();
-		for(Postcode pc : searchRegionWithin(input).values()) {
+	public Map<RegionFloat, Housenumber> searchRegionHousenumbers(RegionFloat region){	
+//		Map<RegionFloat, Housenumber> regions = new HashMap<RegionFloat, Housenumber>();
+		for(Postcode pc : searchRegionWithin(region).values()) {
 			float expanVal = 0.0f;
-			for(int i=0; i<100; i++) {
-				RegionFloat r = new RegionFloat(input.x1 - expanVal, input.y1 - expanVal, input.x2 + expanVal, input.y2 + expanVal);
+			for(int i=0; i<10000; i++) {
+				RegionFloat r = new RegionFloat(region.x1 - expanVal, region.y1 - expanVal, region.x2 + expanVal, region.y2 + expanVal);
 				for(Street st : pc.searchRegionWithin(r).values()){
-					regions.putAll(st.searchRegionWithin(r));
+					Map<RegionFloat, Housenumber> regions = st.searchRegionWithin(r);
+					if(!regions.isEmpty()) System.out.println("searchRegionHousenumbers succes!");
+					if(!regions.isEmpty()) return regions;
 				}
 				expanVal = expanVal + 0.0000100f;
 			}
 		}
-		return regions;
+		return Collections.emptyMap();
 	}
 	
 	public Housenumber searchHousenumber(float[] lonLat){

@@ -2,11 +2,9 @@ package dk.itu.n.danmarkskort.routeplanner;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import dk.itu.n.danmarkskort.models.PointFloat;
 import dk.itu.n.danmarkskort.models.ReuseRouteEdgeMetaObj;
-import dk.itu.n.danmarkskort.models.WayType;
 
 public class RouteController {
 	private int vertexCount;
@@ -39,7 +37,7 @@ public class RouteController {
 				carsAllowed, bikesAllowed);
 		RouteEdgeMeta reuseRouteEdgeMeta = ReuseRouteEdgeMetaObj.make(routeEdgeMeta);
 		RouteEdge edge = new RouteEdge(fromVertex, toVertex, reuseRouteEdgeMeta, description);
-		
+		System.out.println("add Edge: " + edge.toString());
 		routeEdges.add(edge);
 	}
 	
@@ -56,5 +54,47 @@ public class RouteController {
 		if(routeGraph == null) makeGraph();
 		RouteDijkstra routeDijkstra = new RouteDijkstra(routeGraph, from.getId(), weightEnum);
 		return routeDijkstra.pathTo(to.getId());
+	}
+	
+	public boolean isRoute(RouteVertex from, RouteVertex to, WeightEnum weightEnum){
+		if(routeGraph == null) makeGraph();
+		RouteDijkstra routeDijkstra = new RouteDijkstra(routeGraph, 
+				from.getId(), 
+				weightEnum);
+		return routeDijkstra.hasPathTo(to.getId());
+	}
+
+	public int getVertexCount() {
+		return vertexCount;
+	}
+	
+	public int getNumOfRouteEdges() {
+		return routeEdges.size();
+	}
+
+	public int getNumOfVertices() {
+		return vertices.size();
+	}
+
+	public List<RouteEdge> getRouteEdges() {
+		return routeEdges;
+	}
+
+	public List<RouteVertex> getVertices() {
+		return vertices;
+	}
+	
+	public String toString() {
+		return "RouteController: vertexCount=" + vertexCount
+				+ " getNumOfVertices=" + getNumOfVertices()
+				+ " getNumOfRouteEdges=" + getNumOfRouteEdges();
+	}
+	
+	public RouteVertex demoFindVertex(float[] lonLat){
+		for(RouteVertex rv : vertices){
+			System.out.println("demoFindVertex, compare: x" + lonLat[0] + " = " + rv.x +", " + lonLat[1] + " = " + rv.y);
+			if(rv.isEqualPoint(new PointFloat(lonLat[0], lonLat[1]))) return rv;
+		}
+		return null;
 	}
 }
