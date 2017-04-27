@@ -38,7 +38,6 @@ public class AddressController {
 	
 	
 	public Address getSearchResult(String find){
-		
 		Address addrBuild = AddressParser.parse(find, false);
 		Map<String, Postcode> list;
 		list = addressHolder.search(addrBuild,

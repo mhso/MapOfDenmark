@@ -32,10 +32,12 @@ public class AddressRegionSearch {
 					System.out.println("getNearstSearchResult: " + hn.toString());
 				}
 			}
-			Address addr = new Address(hnNearst.getLonLat(), hnNearst.getStreet().getStreet(), 
+			if(hnNearst != null){
+			return new Address(hnNearst.getLonLat(), hnNearst.getStreet().getStreet(), 
 					hnNearst.getHousenumber(), hnNearst.getPostcode().getPostcode(), hnNearst.getPostcode().getCity());
+			}
 //		}
-		return addr;
+		return null;
 	}
 	
 	public List<String> searchSuggestions(PointFloat input, long limitAmountOfResults){

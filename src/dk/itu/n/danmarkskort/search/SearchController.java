@@ -47,9 +47,9 @@ public class SearchController{
 	
 	private static PointFloat stringCordsToPointFloat(String inputStr){
 		String[] strArr = inputStr.split(", ");
-		float lon = Float.parseFloat(strArr[0]);
-		float lat = Float.parseFloat(strArr[1]);
-		Point2D fakeCoords = Util.toFakeCoords(new Point2D.Float(lat, lon));
+		float lat = Float.parseFloat(strArr[0]);
+		float lon = Float.parseFloat(strArr[1]);
+		Point2D fakeCoords = Util.toFakeCoords(new Point2D.Float(lon, lat));
 		return new PointFloat((float)fakeCoords.getX(), (float)fakeCoords.getY());
 	}
 }

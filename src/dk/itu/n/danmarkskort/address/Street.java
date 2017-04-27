@@ -58,9 +58,6 @@ public class Street implements Serializable {
 			float lon = lonLat[0];
 			float lat = lonLat[1];
 			RegionFloat hnR =  new RegionFloat(lon, lat, lon, lat);
-//			System.out.println("Compare isWithin: hnR = input: ");
-//			System.out.println("Larger: " + hnR.toString());
-//			System.out.println("Smaller: " + input.toString());
 			if(hnR.isWithin(input)){
 				regions.put(hnR, hn);
 				System.out.println("Street -> searchRegionWithin: " + input.toString());
@@ -72,10 +69,10 @@ public class Street implements Serializable {
 
 	public Map<String, Housenumber> getHousenumbers() { return housenumbers; }
 	
-	public void addHousenumber(String housenumber, float[] latLon){
-		if(housenumber != null && latLon != null) {
+	public void addHousenumber(String housenumber, float[] lonLat){
+		if(housenumber != null && lonLat != null) {
 			Housenumber hn = getHousenumber(housenumber);
-			if(hn == null) hn = new Housenumber(postcode, this, housenumber, latLon);
+			if(hn == null) hn = new Housenumber(postcode, this, housenumber, lonLat);
 			housenumbers.put(housenumber.toLowerCase(), hn);
 		}
 	}
@@ -144,7 +141,6 @@ public class Street implements Serializable {
 				break;
 			default:
 				break;
-			
 		}
 		return result;
 	}

@@ -201,14 +201,12 @@ public class AddressHolder implements Serializable {
 			RegionFloat pcR = pc.getRegion();
 			if(pcR.isWithin(input)){
 				regions.put(pc.getRegion(), pc);
-				System.out.println("MATCH: ADD: " + pc.getPostcode());
 			}
 		}
 		return regions;
 	}
 	
 	public Map<RegionFloat, Housenumber> searchRegionHousenumbers(RegionFloat region){	
-//		Map<RegionFloat, Housenumber> regions = new HashMap<RegionFloat, Housenumber>();
 		for(Postcode pc : searchRegionWithin(region).values()) {
 			float expanVal = 0.0f;
 			for(int i=0; i<10000; i++) {
@@ -218,7 +216,8 @@ public class AddressHolder implements Serializable {
 					if(!regions.isEmpty()) System.out.println("searchRegionHousenumbers succes!");
 					if(!regions.isEmpty()) return regions;
 				}
-				expanVal = expanVal + 0.0000100f;
+				System.out.println("searchRegionHousenumbers expand!" + r.toString());
+				expanVal = expanVal + 	0.000100f;
 			}
 		}
 		return Collections.emptyMap();

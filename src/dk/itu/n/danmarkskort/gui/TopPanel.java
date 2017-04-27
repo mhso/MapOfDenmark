@@ -149,7 +149,6 @@ public class TopPanel extends JPanel {
         ((AbstractDocument) input.getDocument()).setDocumentFilter(new TopPanel.SearchFilter());
     }
 
-    // Skal nok flyttes senere, for at overholde MVC
     public void searchForAddress(String address) {
     	if(!address.trim().isEmpty()) {
     		Address addr = SearchController.getSearchFieldAddressObj(address);
