@@ -235,7 +235,6 @@ public class MapCanvas extends JPanel {
 	}
 	
 	public void pan(double dx, double dy) {
-		if(Main.buffered && Main.tileController != null) Main.tileController.pan(dx, dy);
 		repair();
 		transform.preConcatenate(AffineTransform.getTranslateInstance(dx, dy));
 		actualTransform.preConcatenate(AffineTransform.getTranslateInstance(dx, dy));
@@ -311,7 +310,6 @@ public class MapCanvas extends JPanel {
 			Util.zoom(transform, scaleBefore/scaleAfter);			
 		}
 		
-		if(isInitialized) Main.tileController.zoom(factor);
 		for(CanvasListener listener : listeners) listener.onZoom();
 		
 		if(zoomBefore != getZoom()) {
@@ -380,8 +378,6 @@ public class MapCanvas extends JPanel {
 		Region mapRegion = Main.model.getMapRegion();
 		pan(-mapRegion.x1, -mapRegion.y2);
 		zoom(getWidth() / (mapRegion.x2 - mapRegion.x1));
-		Main.tileController.updateZero();
-		Main.tileController.update();
 		isInitialized = true;
 	}
 	
@@ -391,7 +387,7 @@ public class MapCanvas extends JPanel {
 	}
 	
 	public void forceRepaint() {
-		Main.tileController.fullRepaint();
+		
 	}
 
 }

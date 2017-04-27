@@ -17,6 +17,7 @@ import java.util.Map;
 
 import dk.itu.n.danmarkskort.backend.InputMonitor;
 import dk.itu.n.danmarkskort.backend.InputStreamListener;
+import dk.itu.n.danmarkskort.models.Region;
 
 import java.awt.MouseInfo;
 import java.awt.Point;
@@ -195,4 +196,9 @@ public class Util {
 		transform.preConcatenate(AffineTransform.getScaleInstance(scale, scale));
 	}
 
+	public static void zoomToRegion(AffineTransform transform, Region region, double currentWidth) {
+		Util.pan(transform, -region.x1, -region.y2);
+		Util.zoom(transform, currentWidth / (region.x2 - region.x1));
+	}
+	
 }

@@ -13,7 +13,6 @@ public class TileRenderTask extends Task {
 	}
 	
 	public void work() {
-		if(Main.tileController.getUselessTileKeys().contains(tile)) return;
 		tile.render();
 		if(repaintWhenDone) Main.mainPanel.repaint();
 	}
