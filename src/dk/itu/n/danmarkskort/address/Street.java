@@ -1,5 +1,6 @@
 package dk.itu.n.danmarkskort.address;
 
+import java.awt.geom.Point2D;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
@@ -39,10 +40,7 @@ public class Street implements Serializable {
 	private RegionFloat genRegion(){
 		RegionFloat region =  new RegionFloat(Float.NEGATIVE_INFINITY, Float.NEGATIVE_INFINITY, Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY);
 		for(Housenumber hn : housenumbers.values()){
-				float[] lonLat = hn.getLonLat();
-				float lon = lonLat[0];
-				float lat = lonLat[1];
-				RegionFloat hnR = new RegionFloat(lon, lat, lon, lat);
+				RegionFloat hnR = new RegionFloat(hn.getLon(), hn.getLat(), hn.getLon(), hn.getLat());
 				if(hnR.x1 > region.x1) region.x1 = hnR.x1;
 				if(hnR.y1 > region.y1) region.y1 = hnR.y1;
 				if(hnR.x2 < region.x2) region.x2 = hnR.x2;
@@ -54,13 +52,7 @@ public class Street implements Serializable {
 	public Map<RegionFloat, Housenumber> searchRegionWithin(RegionFloat input){
 		Map<RegionFloat, Housenumber> regions = new HashMap<RegionFloat, Housenumber>();
 		for(Housenumber hn : housenumbers.values()) {
-			float[] lonLat = hn.getLonLat();
-			float lon = lonLat[0];
-			float lat = lonLat[1];
-			RegionFloat hnR =  new RegionFloat(lon, lat, lon, lat);
-//			System.out.println("Compare isWithin: hnR = input: ");
-//			System.out.println("Larger: " + hnR.toString());
-//			System.out.println("Smaller: " + input.toString());
+			RegionFloat hnR =  new RegionFloat(hn.getLon(), hn.getLat(), hn.getLon(), hn.getLat());
 			if(hnR.isWithin(input)){
 				regions.put(hnR, hn);
 				System.out.println("Street -> searchRegionWithin: " + input.toString());
@@ -72,10 +64,10 @@ public class Street implements Serializable {
 
 	public Map<String, Housenumber> getHousenumbers() { return housenumbers; }
 	
-	public void addHousenumber(String housenumber, float[] latLon){
-		if(housenumber != null && latLon != null) {
+	public void addHousenumber(String housenumber, Point2D.Float lonLat){
+		if(housenumber != null && lonLat != null) {
 			Housenumber hn = getHousenumber(housenumber);
-			if(hn == null) hn = new Housenumber(postcode, this, housenumber, latLon);
+			if(hn == null) hn = new Housenumber(postcode, this, housenumber, lonLat);
 			housenumbers.put(housenumber.toLowerCase(), hn);
 		}
 	}
@@ -144,7 +136,6 @@ public class Street implements Serializable {
 				break;
 			default:
 				break;
-			
 		}
 		return result;
 	}

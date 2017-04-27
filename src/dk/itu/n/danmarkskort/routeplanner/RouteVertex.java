@@ -1,20 +1,23 @@
 package dk.itu.n.danmarkskort.routeplanner;
 
-import dk.itu.n.danmarkskort.models.PointFloat;
+import java.awt.geom.Point2D;
 
-public class RouteVertex extends PointFloat {
+public class RouteVertex extends Point2D.Float {
 	private final int id;
 	
-	RouteVertex(int id, PointFloat point){
+	RouteVertex(int id, Point2D.Float point){
 		super(point.x, point.y);
 		this.id = id;
 	}
 
 	public int getId() { return id; }
-	public float getX() { return x; }
-	public float getY(){ return y; }
 	
 	public String toString(){
 		return "Id: " + id + ", " + "Point[" + x + ", " + y + "]";
+	}
+	
+	public boolean isEqualPoint(Point2D.Float to){
+		if(x == to.x && y == to.y) return true;
+		return false;
 	}
 }
