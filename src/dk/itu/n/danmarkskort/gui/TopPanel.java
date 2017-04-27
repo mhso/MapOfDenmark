@@ -146,7 +146,7 @@ public class TopPanel extends JPanel {
         search.addActionListener(e -> searchForAddress(input.getText()));
 
         // adding drop down functionality
-        ((AbstractDocument) input.getDocument()).setDocumentFilter(new TopPanel.SearchFilter());
+        ((AbstractDocument) input.getDocument()).setDocumentFilter(new SearchFilter());
     }
 
     // Skal nok flyttes senere, for at overholde MVC
@@ -213,14 +213,13 @@ public class TopPanel extends JPanel {
          */
         @Override
         public void remove(FilterBypass fb, int offset, int length) throws BadLocationException {
-            super.remove(fb, offset, length);
+        	super.remove(fb, offset, length);
             dropdownSuggestions(offset - 1, input.getText());
         }
 
         @Override
         public void replace(FilterBypass fb, int offset, int length, String newText,
                             AttributeSet attr) throws BadLocationException {
-
             super.replace(fb, offset, length, newText, attr);
             dropdownSuggestions(offset, input.getText());
         }
