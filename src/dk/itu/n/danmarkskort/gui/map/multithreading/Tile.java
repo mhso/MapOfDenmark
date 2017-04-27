@@ -71,7 +71,12 @@ public class Tile {
 		g2d.setColor(Color.RED);
 		g2d.setStroke(new BasicStroke(Float.MIN_VALUE));
 		g2d.drawRect((int)pixelRegion.x1, (int)(pixelRegion.y1+pixelRegion.getHeight()), (int)(pixelRegion.getWidth() * scale), (int)(pixelRegion.getHeight() * scale));
-		Main.log("Drawing image at: " + (int)pixelRegion.x1 + "," + (int)(pixelRegion.y1+pixelRegion.getHeight()) + ", w:"+(int)(pixelRegion.getWidth() * scale)+" h:"+(int)(pixelRegion.getHeight() * scale));
+	}
+	
+	public boolean isUseless() {
+		Point viewPoint = Main.tileController.getTilePos();
+		viewPoint = new Point(viewPoint.x, viewPoint.y - 1);	
+		
 	}
 	
 }

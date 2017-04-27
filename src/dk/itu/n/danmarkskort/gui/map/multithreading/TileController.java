@@ -5,7 +5,9 @@ import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.swing.Timer;
 
@@ -40,7 +42,7 @@ public class TileController implements ActionListener {
 		updateZero();
 		blur = false;
 		imageScale = 1;
-		blurTimer = new Timer(1000, this);
+		blurTimer = new Timer(500, this);
 		blurTimer.setRepeats(false);
 		
 		// Debug tiles start
@@ -63,6 +65,7 @@ public class TileController implements ActionListener {
 	public void zoom(double scale) {
 		imageScale *= scale;
 		if(!isBlurred()) blur();
+		blurTimer.restart();
 	}
 	
 	public boolean updateTilePos() {
@@ -132,8 +135,6 @@ public class TileController implements ActionListener {
 	
 	public void blur() {
 		if(!isInitialized()) return;
-		blurTimer.restart();
-		Main.log("Blurring");
 		blur = true;
 	}
 	
@@ -142,27 +143,40 @@ public class TileController implements ActionListener {
 		updateTilePos();
 		tiles.clear();
 		imageScale = 1;
-		Main.log("Unblurring");
-		Main.log("Tile is now: " + getTilePos());
 		
 		Tile tile = new Tile(new Point(0, -1));
 		tiles.put(tile.getKey(), tile);
 		queueTile(tile, TaskPriority.HIGHEST, true);
-		Tile tile2 = new Tile(new Point(0, 0));
-		tiles.put(tile2.getKey(), tile2);
-		queueTile(tile2, TaskPriority.MEDIUM, true);
-		Tile tile3 = new Tile(new Point(-1, 0));
-		tiles.put(tile3.getKey(), tile3);
-		queueTile(tile3, TaskPriority.MEDIUM, true);
-		Tile tile4 = new Tile(new Point(-1, -1));
-		tiles.put(tile4.getKey(), tile4);
-		queueTile(tile4, TaskPriority.MEDIUM, true);
 		
 		blur = false;
 	}
 
 	public void actionPerformed(ActionEvent e) {
 		unblur();
+	}
+	
+	public void swapTile(Tile tileOld, Tile tileNew) {
+		tiles.remove(tileOld.getKey());
+		tiles.put(tileNew.getKey(), tileNew);
+	}
+	
+	public void swapTileWithUselessTile(Tile tile) {
+		
+	}
+	
+	public void checkForNewTiles() {
+		List<Tile> newTiles = getNewTiles();
+	}
+	
+	public List<Tile> getNewTiles() {
+		List<Tile> newTiles = new ArrayList<Tile>();
+		for(int x=-1; x<2; x++) {
+			for(int y=-2; y<1; y++) {
+				Tile tile = new Tile(new Point(x, y));
+				if(!tiles.containsKey(tile.getKey())) newTiles.add(tile);
+			}
+		}
+		return newTiles;
 	}
 	
 }

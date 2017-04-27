@@ -240,7 +240,7 @@ public class MapCanvas extends JPanel {
 		actualTransform.preConcatenate(AffineTransform.getTranslateInstance(dx, dy));
 		if(Main.tileController.isInitialized()) {
 			if(Main.tileController.updateTilePos()) {
-				Main.log(Main.tileController.getTilePos());
+				Main.tileController.checkForNewTiles();
 			}
 		}
 		repaint();

@@ -7,6 +7,7 @@ public class TileRenderTask extends Task {
 
 	private Tile tile;
 	private boolean repaintWhenDone = true;
+	private boolean swapWhenDone = false;
 	
 	public TileRenderTask(Tile tile) {
 		this.tile = tile;
@@ -14,6 +15,7 @@ public class TileRenderTask extends Task {
 	
 	public void work() {
 		tile.render();
+		if(swapWhenDone) Main.tileController.swapTileWithUselessTile(tile);
 		if(repaintWhenDone) Main.mainPanel.repaint();
 	}
 
@@ -22,6 +24,10 @@ public class TileRenderTask extends Task {
 
 	public void setRepaintWhenDone(boolean repaintWhenDone) {
 		this.repaintWhenDone = repaintWhenDone;
+	}
+	
+	public void setSwapWhenDone(boolean swapWhenDone) {
+		this.swapWhenDone = swapWhenDone;
 	}
 	
 }
