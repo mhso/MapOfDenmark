@@ -2,8 +2,12 @@ package dk.itu.n.danmarkskort.gui.map.multithreading;
 
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.geom.Point2D;
 import java.util.HashMap;
+
+import javax.swing.Timer;
 
 import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.Util;
@@ -11,15 +15,16 @@ import dk.itu.n.danmarkskort.models.Region;
 import dk.itu.n.danmarkskort.multithreading.Queue;
 import dk.itu.n.danmarkskort.multithreading.TaskPriority;
 
-public class TileController {
+public class TileController implements ActionListener {
 
 	public int tileWidth, tileHeight;
 	public Point2D zero;
 	public Point tilePos;
-	public boolean isInitialized;
+	public boolean isInitialized, blur;
 	public Queue tileQueue;
 	public HashMap<String, Tile> tiles;
-	public double imageScale = 1;
+	public double imageScale;
+	public Timer blurTimer;
 	
 	public TileController() {
 		isInitialized = false;
@@ -33,13 +38,18 @@ public class TileController {
 		Queue.run(tileQueue);
 		tilePos = new Point(0, 0);
 		updateZero();
-		isInitialized = true;
+		blur = false;
+		imageScale = 1;
+		blurTimer = new Timer(1000, this);
+		blurTimer.setRepeats(false);
+		
+		// Debug tiles start
 		Tile tile = new Tile(new Point(0, -1));
 		tiles.put(tile.getKey(), tile);
 		queueTile(tile, TaskPriority.MEDIUM, true);
-		Tile tile2 = new Tile(new Point(0, 0));
-		tiles.put(tile2.getKey(), tile2);
-		queueTile(tile2, TaskPriority.MEDIUM, true);
+		// Debug tiles end
+		
+		isInitialized = true;
 	}
 	
 	public boolean isInitialized() {
@@ -52,6 +62,7 @@ public class TileController {
 	
 	public void zoom(double scale) {
 		imageScale *= scale;
+		if(!isBlurred()) blur();
 	}
 	
 	public boolean updateTilePos() {
@@ -115,6 +126,43 @@ public class TileController {
 		for(Tile tile : tiles.values()) tile.draw(g2d);
 	}
 	
+	public boolean isBlurred() {
+		return blur;
+	}
 	
+	public void blur() {
+		if(!isInitialized()) return;
+		blurTimer.restart();
+		Main.log("Blurring");
+		blur = true;
+	}
+	
+	public void unblur() {
+		updateZero();
+		updateTilePos();
+		tiles.clear();
+		imageScale = 1;
+		Main.log("Unblurring");
+		Main.log("Tile is now: " + getTilePos());
+		
+		Tile tile = new Tile(new Point(0, -1));
+		tiles.put(tile.getKey(), tile);
+		queueTile(tile, TaskPriority.HIGHEST, true);
+		Tile tile2 = new Tile(new Point(0, 0));
+		tiles.put(tile2.getKey(), tile2);
+		queueTile(tile2, TaskPriority.MEDIUM, true);
+		Tile tile3 = new Tile(new Point(-1, 0));
+		tiles.put(tile3.getKey(), tile3);
+		queueTile(tile3, TaskPriority.MEDIUM, true);
+		Tile tile4 = new Tile(new Point(-1, -1));
+		tiles.put(tile4.getKey(), tile4);
+		queueTile(tile4, TaskPriority.MEDIUM, true);
+		
+		blur = false;
+	}
+
+	public void actionPerformed(ActionEvent e) {
+		unblur();
+	}
 	
 }

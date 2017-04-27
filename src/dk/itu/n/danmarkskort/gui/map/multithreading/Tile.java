@@ -1,5 +1,7 @@
 package dk.itu.n.danmarkskort.gui.map.multithreading;
 
+import java.awt.BasicStroke;
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -64,6 +66,12 @@ public class Tile {
 		double scale = Main.tileController.getImageScale();
 		g2d.setTransform(new AffineTransform());
 		g2d.drawImage(image, (int)pixelRegion.x1, (int)(pixelRegion.y1+pixelRegion.getHeight()), (int)(pixelRegion.getWidth() * scale), (int)(pixelRegion.getHeight() * scale), null);
+		
+		// Debug
+		g2d.setColor(Color.RED);
+		g2d.setStroke(new BasicStroke(Float.MIN_VALUE));
+		g2d.drawRect((int)pixelRegion.x1, (int)(pixelRegion.y1+pixelRegion.getHeight()), (int)(pixelRegion.getWidth() * scale), (int)(pixelRegion.getHeight() * scale));
+		Main.log("Drawing image at: " + (int)pixelRegion.x1 + "," + (int)(pixelRegion.y1+pixelRegion.getHeight()) + ", w:"+(int)(pixelRegion.getWidth() * scale)+" h:"+(int)(pixelRegion.getHeight() * scale));
 	}
 	
 }
