@@ -29,7 +29,7 @@ public class KDTreeNode<T extends KDComparable> extends KDTree<T> {
 
         if(array.length < 2) {
             leftChild = new KDTreeLeaf<T>(array);
-            rightChild = new KDTreeLeaf<T>(new KDComparable[]{});
+            rightChild = null;
             return;
         }
 
@@ -96,8 +96,8 @@ public class KDTreeNode<T extends KDComparable> extends KDTree<T> {
 
     public List<KDComparable[]> getAllItems() {
         List<KDComparable[]> arrList = new ArrayList<>();
-        arrList.addAll(leftChild.getAllItems());
-        arrList.addAll(rightChild.getAllItems());
+        if(leftChild != null) arrList.addAll(leftChild.getAllItems());
+        if(rightChild != null) arrList.addAll(rightChild.getAllItems());
         return arrList;
     }
 
