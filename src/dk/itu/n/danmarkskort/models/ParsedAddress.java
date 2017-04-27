@@ -1,5 +1,7 @@
 package dk.itu.n.danmarkskort.models;
 
+import java.awt.geom.Point2D;
+
 public class ParsedAddress {
 
     private String city, street, housenumber, postcode;
@@ -13,7 +15,11 @@ public class ParsedAddress {
     public void setHousenumber(String h) { housenumber = h; }
     public void setWay(ParsedWay w) { way = w; }
     public void setRelation(ParsedRelation r) { relation = r; }
-    public void setCoords(float[] c) { coords = c;}
+    public void setCoords(Point2D.Float point) {
+        coords = new float[2];
+        coords[0] = point.x;
+        coords[1] = point.y;
+    }
 
     public String getCity() { return city; }
     public String getStreet() { return street; }
@@ -25,15 +31,15 @@ public class ParsedAddress {
 
     public float getFirstLon() {
         if(coords != null) return coords[0];
-        else if (way != null) return way.getFirstNode().getLon();
-        else if(relation != null) return relation.getFirstNode().getLon();
+        else if (way != null) return (float) way.getFirstNode().x;
+        else if(relation != null) return (float) relation.getFirstNode().getX();
         return -1;
     }
 
     public float getFirstLat() {
         if(coords != null) return coords[1];
-        else if (way != null) return way.getFirstNode().getLat();
-        else if(relation != null) return relation.getFirstNode().getLat();
+        else if (way != null) return (float) way.getFirstNode().getY();
+        else if(relation != null) return (float) relation.getFirstNode().getY();
         return -1;
     }
     

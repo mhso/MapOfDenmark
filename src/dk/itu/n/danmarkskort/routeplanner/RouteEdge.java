@@ -1,5 +1,9 @@
 package dk.itu.n.danmarkskort.routeplanner;
 
+import java.awt.geom.Point2D;
+
+import dk.itu.n.danmarkskort.kdtree.KDComparable;
+import dk.itu.n.danmarkskort.models.ParsedNode;
 import dk.itu.n.danmarkskort.models.ReuseStringObj;
 
 public class RouteEdge {
@@ -26,7 +30,7 @@ public class RouteEdge {
 	public boolean isBackwardAllowed() {return routeEdgeMeta.isBackwardAllowed();	}
 	public String getDescription(){ return description; }
 
-	private double distance(){ return from.getDistance(to); }
+	private double distance(){ return from.distance(to); }
 	
 	public double getWeightByDistance(){ return distance(); }
 	public double getWeightBySpeed(){ return distance() / (double)routeEdgeMeta.getMaxSpeed(); }
@@ -51,4 +55,18 @@ public class RouteEdge {
 	public String toStringDesr() {
 		return from.getId() + " -> " + to.getId() + " [ " + description + " ]";
 	}
+
+//	@Override
+//	public Point2D getFirstNode() {
+//		// TODO Auto-generated method stub
+//		return new Point2D.Float(from.x, from.y);
+//	}
+//
+//	@Override
+//	public Point2D[] getNodes() {
+//		// TODO Auto-generated method stub
+//		return new Point2D[]{from, to};
+//	}
+
+	
 }
