@@ -10,6 +10,7 @@ import dk.itu.n.danmarkskort.routeplanner.RouteVertex;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
+import java.awt.geom.Point2D;
 import java.io.Serializable;
 import java.util.*;
 
@@ -21,7 +22,7 @@ public class OSMParser extends SAXAdapter implements Serializable {
     private transient NodeMap nodeMap;
     private transient HashMap<Long, ParsedWay> temporaryWayReferences;
     private transient HashMap<Long, ParsedRelation> temporaryRelationReferences;
-    private transient HashMap<ParsedNode, ParsedWay> coastlineMap;
+    private transient HashMap<Point2D.Float, ParsedWay> coastlineMap;
 
     private transient EnumMap<WayType, ArrayList<ParsedItem>> enumMap;
     public EnumMap<WayType, KDTree<ParsedItem>> enumMapKD;
@@ -32,7 +33,7 @@ public class OSMParser extends SAXAdapter implements Serializable {
     private transient ParsedAddress address;
 
     private transient WayType waytype;
-    private transient ArrayList<ParsedNode> currentNodes;
+    private transient ArrayList<Point2D.Float> currentNodes;
 
     private transient String name;
     private transient boolean isHighway;
@@ -44,7 +45,7 @@ public class OSMParser extends SAXAdapter implements Serializable {
     private transient boolean toGraph;
     private transient int maxSpeed;
     private transient RouteController route;
-    private transient HashMap<ParsedNode, RouteVertex> vertexMap;
+    private transient HashMap<Point2D.Float, RouteVertex> vertexMap;
 
     private transient boolean finished = false;
     private transient OSMReader reader;
@@ -194,16 +195,16 @@ public class OSMParser extends SAXAdapter implements Serializable {
         if(maxSpeed == 0) Main.log(waytype);
 
         for(int i = 0; i < currentNodes.size() - 1; i++) {
-            ParsedNode firstNode = currentNodes.get(i);
-            ParsedNode secondNode = currentNodes.get(i + 1);
+            Point2D.Float firstNode = currentNodes.get(i);
+            Point2D.Float secondNode = currentNodes.get(i + 1);
             RouteVertex first = vertexMap.get(firstNode);
             RouteVertex second = vertexMap.get(secondNode);
             if(first == null) {
-                first = route.makeVertex(firstNode.getLon(), firstNode.getLat());
+                first = route.makeVertex(firstNode.x, firstNode.y);
                 vertexMap.put(firstNode, first);
             }
             if(second == null) {
-                second = route.makeVertex(secondNode.getLon(), secondNode.getLat());
+                second = route.makeVertex(secondNode.x, secondNode.y);
                 vertexMap.put(secondNode, second);
             }
             route.addEdge(first, second, maxSpeed, forward, backward, motorvehicle, bicycle, name);
@@ -231,7 +232,7 @@ public class OSMParser extends SAXAdapter implements Serializable {
         }
 
         if(address != null && Main.saveParsedAddresses) {
-            if(node != null) address.setCoords(node.getPoint());
+            if(node != null) address.setCoords(node);
             else if (way != null) address.setWay(way);
             else if (relation != null) address.setRelation(relation);
             Main.addressController.addressParsed(address);
@@ -384,7 +385,7 @@ public class OSMParser extends SAXAdapter implements Serializable {
                         break;
                     case "pedestrian":
                         if(isArea) waytype = WayType.PEDESTRIAN_AREA;
-                        waytype = WayType.HIGHWAY_PEDESTRIAN;
+                        else waytype = WayType.HIGHWAY_PEDESTRIAN;
                         break;
                     case "unclassified":
                         waytype = WayType.HIGHWAY_UNCLASSIFIED;

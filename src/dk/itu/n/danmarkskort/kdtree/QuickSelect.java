@@ -49,8 +49,18 @@ public class QuickSelect {
         }
     }
 
+    /*
+    * Returns true if 'a' is less than 'b', otherwise returns false
+     */
     private static boolean less(KDComparable a, KDComparable b, boolean sortByLon) {
-        if(sortByLon) return a.compareLon(b) < 1;
-        return a.compareLat(b) < 1;
+        double valueA, valueB;
+        if(sortByLon) {
+            valueA = a.getFirstNode().getX();
+            valueB = b.getFirstNode().getX();
+        } else {
+            valueA = a.getFirstNode().getY();
+            valueB = b.getFirstNode().getY();
+        }
+        return valueA < valueB;
     }
 }
