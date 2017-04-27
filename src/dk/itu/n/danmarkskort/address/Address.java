@@ -11,12 +11,12 @@ public class Address{
 		this.lat = -1f;
 	}
 	
-	public Address(float[] lonLat){
-		this.lon = lonLat[0];
-		this.lat = lonLat[1];
+	public Address(Point2D.Float lonLat){
+		this.lon = lonLat.x;
+		this.lat = lonLat.y;
 	}
 	
-	public Address(float[] lonLat, String street, String housenumber, String city, String postcode) {
+	public Address(Point2D.Float lonLat, String street, String housenumber, String city, String postcode) {
 		this(lonLat);
 		this.street = street;
 		this.housenumber = housenumber;
@@ -30,7 +30,6 @@ public class Address{
 		this.postcode = postcode;
 	}
 
-	public float[] getLonLat() { return new float[] {lon, lat}; }
 	public Point2D.Float getLonLatAsPoint() { return new Point2D.Float(lon, lat); }
 	public void setLonLat(Point2D.Float lonLat) {
 		this.lon = lonLat.x;

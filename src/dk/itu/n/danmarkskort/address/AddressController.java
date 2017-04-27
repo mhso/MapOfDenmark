@@ -69,10 +69,6 @@ public class AddressController {
 		return null;
 	}
 	
-//	public Address getNearstSearchResult(Point2D.Float input){
-//		return addressRegionSearch.getNearstSearchResult(input);
-//	}
-	
 	public List<String> searchSuggestions(Point2D.Float input, long limitAmountOfResults){
 		 return addressRegionSearch.searchSuggestions(input, limitAmountOfResults);
 	}
@@ -90,16 +86,13 @@ public class AddressController {
 		timerUtilA.on();
         if(addr != null) {
         	Point2D.Float lonLat = new Point2D.Float(addr.getFirstLon(), addr.getFirstLat());
-			
-			//if(debug) if(addr.getPostcode() != null && !addr.getPostcode().matches("(^[0-9]{4}$)")) System.out.println("Postcode sucks: " + addr.toStringParted());
-			
+	
 			if(AddressValidator.isAddressMinimum(addr.getStreet(), addr.getHousenumber(), addr.getPostcode())){
 				if(AddressValidator.isCityname(addr.getCity())) {
 					addAddress(lonLat, addr.getStreet(), addr.getHousenumber(), addr.getPostcode(), addr.getCity());
 				} else {
 					addAddress(lonLat, addr.getStreet(), addr.getHousenumber(), addr.getPostcode(), null);
 				}
-				//if(debug) if(addr.getStreet().matches(".*[0-9].*")) System.out.println("lvl1 " + addr.toStringParted());
 				acceptLvl1++;
 			}else if(AddressValidator.isAddressMinimum(
         				AddressValidator.prepStreetname(addr.getStreet()),
