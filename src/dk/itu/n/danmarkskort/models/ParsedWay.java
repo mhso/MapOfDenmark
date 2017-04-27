@@ -1,14 +1,11 @@
 package dk.itu.n.danmarkskort.models;
 
-import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.kdtree.KDComparable;
 import dk.itu.n.danmarkskort.kdtree.KDTree;
 
 import java.awt.*;
 import java.awt.geom.Path2D;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class ParsedWay extends ParsedItem implements KDComparable, Serializable {
@@ -17,6 +14,7 @@ public class ParsedWay extends ParsedItem implements KDComparable, Serializable 
 	private long id;
     ParsedNode[] nodes;
     private float[] coords;
+    //private String name;
 
     public ParsedWay() {
         this(0);
@@ -25,7 +23,11 @@ public class ParsedWay extends ParsedItem implements KDComparable, Serializable 
     public ParsedWay(long id) {
         this.id = id;
         nodes = null;
+       // name = null;
     }
+
+    //public void setName(String name) { this.name = ReuseStringObj.make(name); }
+    //public String getName() { return name; }
 
     public void addNode(ParsedNode node) { addNodes(new ParsedNode[]{node}); }
 
@@ -97,8 +99,9 @@ public class ParsedWay extends ParsedItem implements KDComparable, Serializable 
 
     public double shortestDistance(ParsedNode query) {
         double shortestDistance = Double.POSITIVE_INFINITY;
-        for(ParsedNode node: nodes) {
-            if(KDTree.calcDistance(query, node) < shortestDistance) shortestDistance = KDTree.calcDistance(query, node);
+        for(int i = 0; i < coords.length; i+=2) {
+            double distance = KDTree.calcDistance(query, new ParsedNode(coords[i], coords[i+1]));
+            if(distance < shortestDistance) shortestDistance = distance;
         }
         return shortestDistance;
     }

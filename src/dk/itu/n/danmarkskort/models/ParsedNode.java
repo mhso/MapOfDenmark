@@ -1,5 +1,7 @@
 package dk.itu.n.danmarkskort.models;
 
+import java.awt.geom.Point2D;
+
 public class ParsedNode {
 
     public static final long serialVersionUID = 20170322L;
@@ -18,6 +20,11 @@ public class ParsedNode {
     public ParsedNode(float lon, float lat) {
         this.lon = lon;
         this.lat = lat;
+    }
+
+    public ParsedNode(Point2D point) {
+        this.lon = (float) point.getX();
+        this.lat = (float) point.getY();
     }
 
     public ParsedNode getNext() { return next; }

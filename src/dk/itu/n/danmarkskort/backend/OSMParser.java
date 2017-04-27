@@ -90,7 +90,7 @@ public class OSMParser extends SAXAdapter implements Serializable {
             }
             else {
                 ArrayList<ParsedItem> current = enumMap.get(wt);
-                if (current.isEmpty()) tree = null;
+                if(current.isEmpty()) tree = null;
                 else tree = new KDTreeNode<>(current);
             }
             enumMap.remove(wt);
@@ -100,7 +100,7 @@ public class OSMParser extends SAXAdapter implements Serializable {
         Main.log("Deleting nodes, adding float[] coords");
         for(Map.Entry<WayType, KDTree<ParsedItem>> entry : enumMapKD.entrySet()) {
             KDTree<ParsedItem> current = entry.getValue();
-            if(current != null) for (ParsedItem item : current) item.nodesToCoords();
+            if(current != null) for(ParsedItem item : current) item.nodesToCoords();
         }
 
 
@@ -259,7 +259,7 @@ public class OSMParser extends SAXAdapter implements Serializable {
             combined.addAll(connected);
             HashSet<ParsedWay> fixed = ParserUtil.fixUnconnectedCoastlines(unconnected);
             combined.addAll(fixed);
-            tree = new KDTreeNode<ParsedItem>(combined);
+            tree = new KDTreeNode<>(combined);
         }
         else tree = null;
         coastlineMap = null;
@@ -391,9 +391,6 @@ public class OSMParser extends SAXAdapter implements Serializable {
                         break;
                     case "service":
                         waytype = WayType.HIGHWAY_SERVICE;
-                        break;
-                    case "driveway":
-                        waytype = WayType.HIGHWAY_DRIVEWAY;
                         break;
                     case "cycleway":
                         waytype = WayType.HIGHWAY_CYCLEWAY;
@@ -560,6 +557,7 @@ public class OSMParser extends SAXAdapter implements Serializable {
                 break;
             case "name":
                 name = v;
+                //if(Main.nearest && way != null) way.setName(v);
                 break;
             case "maxspeed":
                 try{
@@ -584,14 +582,11 @@ public class OSMParser extends SAXAdapter implements Serializable {
 
     private void checkMaxSpeed() {
         switch(waytype) {
-            case HIGHWAY_DRIVEWAY:
             case HIGHWAY_SERVICE:
-            case HIGHWAY_STEPS:
             case HIGHWAY_FOOTWAY:
                 toGraph = false;
                 return;
             case HIGHWAY_CYCLEWAY:
-            case HIGHWAY_PATH:
             case PEDESTRIAN_AREA:
             case HIGHWAY_PEDESTRIAN:
                 if(!bicycle) toGraph = false;

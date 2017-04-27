@@ -58,15 +58,16 @@ public class KDTreeLeaf<T extends KDComparable> extends KDTree<T> {
     }
 
     @SuppressWarnings("unchecked")
-    public T nearest(ParsedNode query, double shortest, boolean sortByLon) {
-        KDComparable candidate = null;
-        double shortestDistance = Double.POSITIVE_INFINITY;
+    public T nearest(ParsedNode query, double currentShortest, boolean sortByLon) {
+        T candidate = null;
+        double shortest = currentShortest;
         for(KDComparable item: data) {
-            if(item.shortestDistance(query) < shortestDistance) {
-                shortestDistance = item.shortestDistance(query);
-                candidate = item;
+            double distance = item.shortestDistance(query);
+            if(distance < shortest) {
+                shortest = distance;
+                candidate = (T) item;
             }
         }
-        return (T) candidate;
+        return candidate;
     }
 }

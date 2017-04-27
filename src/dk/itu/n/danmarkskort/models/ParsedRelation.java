@@ -1,13 +1,10 @@
 package dk.itu.n.danmarkskort.models;
 
-import dk.itu.n.danmarkskort.Main;
+import dk.itu.n.danmarkskort.kdtree.KDTree;
 
 import java.awt.*;
 import java.awt.geom.Path2D;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 
 public class ParsedRelation extends ParsedWay {
@@ -141,5 +138,19 @@ public class ParsedRelation extends ParsedWay {
         for(ParsedItem inner: inners) size += inner.getNodeAmount();
         for(ParsedItem outer: outers) size += outer.getNodeAmount();
         return size;
+    }
+
+    @Override
+    public double shortestDistance(ParsedNode query) {
+        double shortest = Double.POSITIVE_INFINITY;
+        for(ParsedItem inner: inners) {
+            double distance = inner.shortestDistance(query);
+            if(distance < shortest) shortest = distance;
+        }
+        for(ParsedItem outer: outers) {
+            double distance = outer.shortestDistance(query);
+            if(distance < shortest) shortest = distance;
+        }
+        return shortest;
     }
 }
