@@ -30,4 +30,5 @@ public abstract class ParsedItem implements KDComparable, Serializable {
     public abstract Shape getShape();
     public abstract void deleteOldRefs();
     public abstract void nodesToCoords();
+    public abstract int getNodeAmount();
 }

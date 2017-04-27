@@ -12,7 +12,7 @@ public class AboutUsPage extends JPanel  {
 	private static final long serialVersionUID = 7161959941791759055L;
 	Style style;
     public AboutUsPage() {
-    	style = new Style();
+    	style = Main.style;
         setOpaque(false);
         setLayout(new BorderLayout(0, 0));
         

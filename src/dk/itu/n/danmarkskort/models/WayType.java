@@ -10,7 +10,6 @@ public enum WayType {
 	HIGHWAY_RESIDENTIAL, // Vej i beboerområde.
 	HIGHWAY_CYCLEWAY,	// Cykelsti.
 	HIGHWAY_FOOTWAY,	// Gangsti.
-	HIGHWAY_DRIVEWAY,	// Indkørsel.
 	HIGHWAY_SERVICE,	// serviceveje
 	HIGHWAY_UNDEFINED,	// udefineret vej
 	HIGHWAY_UNCLASSIFIED, // mindre veje, ikke det samme som undefined
@@ -68,15 +67,17 @@ public enum WayType {
 
 	// Ikke i brug lige nu, af forskellige grunde
 	FARMLAND,			// Landbrug.
-	ROUTE_FERRY,		// Færgeroute.
-	HEDGE,				// Hæk.
-	HIGHWAY_PATH,		// gangsti?
-	HIGHWAY_TRACK,		// Vandrerute?
-	HIGHWAY_STEPS,		// Trappe.
-	WATER_DITCH,		// Grøft.
-	WATER_DITCH_TUNNEL, // Grøft-tunnel.
-	PITCH,				// sportsbane
-	UNDEFINED 			// Udefinerbar.
+	//ROUTE_FERRY,		// Færgeroute.
+	//HEDGE,				// Hæk.
+	//HIGHWAY_PATH,		// gangsti?
+	//HIGHWAY_TRACK,		// Vandrerute?
+	//HIGHWAY_STEPS,		// Trappe.
+	//WATER_DITCH,		// Grøft.
+	//WATER_DITCH_TUNNEL, // Grøft-tunnel.
+	PITCH,
+	HIGHWAY_TRACK,
+	HIGHWAY_PATH
+	//UNDEFINED 			// Udefinerbar.
 
 	
 }

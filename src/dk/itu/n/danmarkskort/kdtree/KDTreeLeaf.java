@@ -1,6 +1,5 @@
 package dk.itu.n.danmarkskort.kdtree;
 
-import dk.itu.n.danmarkskort.Util;
 import dk.itu.n.danmarkskort.models.ParsedNode;
 import dk.itu.n.danmarkskort.models.Region;
 
@@ -58,21 +57,17 @@ public class KDTreeLeaf<T extends KDComparable> extends KDTree<T> {
                 minLat + (maxLat - minLat) > reg.y1;
     }
 
-	@Override
-	T nearest(ParsedNode query, boolean sortByLon, T currentBest) {
-		double dist = Double.POSITIVE_INFINITY;
-		KDComparable best = currentBest;
-		ParsedNode bestNode = null;
-		for(KDComparable item : data) {
-			if(item.getNodes() == null) continue;
-			for(ParsedNode node : item.getNodes()) {
-				if(Util.calcDistance(node, query) < dist) {
-					dist = Util.calcDistance(node, query);
-					bestNode = node;
-					best = item;
-				}
-			}
-		}
-		return (T)best;
-	}
+    @SuppressWarnings("unchecked")
+    public T nearest(ParsedNode query, double currentShortest, boolean sortByLon) {
+        T candidate = null;
+        double shortest = currentShortest;
+        for(KDComparable item: data) {
+            double distance = item.shortestDistance(query);
+            if(distance < shortest) {
+                shortest = distance;
+                candidate = (T) item;
+            }
+        }
+        return candidate;
+    }
 }

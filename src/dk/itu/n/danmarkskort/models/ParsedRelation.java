@@ -1,13 +1,10 @@
 package dk.itu.n.danmarkskort.models;
 
-import dk.itu.n.danmarkskort.Main;
+import dk.itu.n.danmarkskort.kdtree.KDTree;
 
 import java.awt.*;
 import java.awt.geom.Path2D;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 
 public class ParsedRelation extends ParsedWay {
@@ -37,12 +34,16 @@ public class ParsedRelation extends ParsedWay {
 
     @Override
     public ParsedNode[] getNodes() {
-        ArrayList<ParsedNode> arrList = new ArrayList<>();
-        if(inners.size() > 0 && outers.size() > 0) {
-            for(ParsedItem outer: outers) arrList.addAll(Arrays.asList(outer.getNodes()));
-            for(ParsedItem inner: inners) arrList.addAll(Arrays.asList(inner.getNodes()));
+        int size = getNodeAmount();
+        ParsedNode[] nodeArr = new ParsedNode[size];
+        int i = 0;
+        for(ParsedItem inner : inners) {
+            for(int j = 0; j < inner.getNodes().length; j++, i++) nodeArr[i] = inner.getNodes()[j];
         }
-        return arrList.toArray(new ParsedNode[arrList.size()]);
+        for(ParsedItem outer : outers) {
+            for(int k = 0; k < outer.getNodes().length; k++, i++) nodeArr[i] = outer.getNodes()[k];
+        }
+        return nodeArr;
     }
 
     @Override
@@ -130,5 +131,26 @@ public class ParsedRelation extends ParsedWay {
                 + ", firstLat=" + getFirstNode().getLat()
                 + ", nodeAmount=" + nodeAmount
                 + ", itemAmount=" + (inners.size() + outers.size()) + "]";
+    }
+
+    public int getNodeAmount() {
+        int size = 0;
+        for(ParsedItem inner: inners) size += inner.getNodeAmount();
+        for(ParsedItem outer: outers) size += outer.getNodeAmount();
+        return size;
+    }
+
+    @Override
+    public double shortestDistance(ParsedNode query) {
+        double shortest = Double.POSITIVE_INFINITY;
+        for(ParsedItem inner: inners) {
+            double distance = inner.shortestDistance(query);
+            if(distance < shortest) shortest = distance;
+        }
+        for(ParsedItem outer: outers) {
+            double distance = outer.shortestDistance(query);
+            if(distance < shortest) shortest = distance;
+        }
+        return shortest;
     }
 }

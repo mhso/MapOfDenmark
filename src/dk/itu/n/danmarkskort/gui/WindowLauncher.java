@@ -157,7 +157,7 @@ public class WindowLauncher extends JFrame {
 		buttonConfigure.setFont(style.mediumHeadline());
 		buttonConfigure.setIcon(style.launcherOptionsIcon());
 		buttonConfigure.setBackground(style.inputFieldBG());
-		buttonConfigure.setForeground(style.panelTextColor());
+		buttonConfigure.setForeground(style.panelTextColor().darker());
 		buttonConfigure.setCursor(new Cursor(Cursor.HAND_CURSOR));
         buttonConfigure.setBorder(BorderFactory.createMatteBorder(1, 0, 0,0, style.panelBG()));
         buttonConfigure.setPreferredSize(new Dimension(buttonConfigure.getPreferredSize().width, 40));
@@ -172,7 +172,7 @@ public class WindowLauncher extends JFrame {
 		buttonLoadFile.setFont(style.mediumHeadline());
 		buttonLoadFile.setIcon(style.launcherLoadIcon());
 		buttonLoadFile.setBackground(style.inputFieldBG());
-		buttonLoadFile.setForeground(style.panelTextColor());
+		buttonLoadFile.setForeground(style.panelTextColor().darker());
 		buttonLoadFile.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		buttonLoadFile.setPreferredSize(new Dimension(buttonLoadFile.getPreferredSize().width, 40));
         buttonLoadFile.setBorder(BorderFactory.createMatteBorder(1, 1, 0, 1, style.panelBG()));
@@ -181,22 +181,26 @@ public class WindowLauncher extends JFrame {
             @Override
             public void mouseEntered(MouseEvent e) {
                 buttonLoadFile.setBackground(style.panelBG());
+				buttonLoadFile.setForeground(style.panelTextColor());
             }
             @Override
             public void mouseExited(MouseEvent e) {
                 buttonLoadFile.setBackground(style.inputFieldBG());
-            }
+				buttonLoadFile.setForeground(style.panelTextColor().darker());
+			}
         });
 
         buttonConfigure.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
                 buttonConfigure.setBackground(style.panelBG());
+				buttonConfigure.setForeground(style.panelTextColor());
             }
             @Override
             public void mouseExited(MouseEvent e) {
                 buttonConfigure.setBackground(style.inputFieldBG());
-            }
+				buttonConfigure.setForeground(style.panelTextColor().darker());
+			}
         });
 
         buttonLaunch.addMouseListener(new MouseAdapter() {
@@ -227,7 +231,7 @@ public class WindowLauncher extends JFrame {
 		panelBottom.setBackground(outerColor);
 		
 		labelHeaderName.setForeground(style.panelTextColor());
-		labelHeaderVersion.setForeground(style.launcherVersionText());
+		labelHeaderVersion.setForeground(style.launcherVersionText().darker());
 		labelParsedMaps.setForeground(style.launcherVersionText());
 		labelSelectedFileHeader.setForeground(style.launcherVersionText());
 		binFilesList.setForeground(new Color(200, 200, 200));

@@ -33,7 +33,7 @@ public class PinPointRow extends JPanel {
 	 * Create the panel.
 	 */
 	public PinPointRow(PinPoint pinPoint) {
-		style = new Style();
+		style = Main.style;
 		this.pinPoint = pinPoint;
 		setLayout(new BorderLayout(0, 0));
 		

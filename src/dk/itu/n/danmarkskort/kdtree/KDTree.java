@@ -3,11 +3,9 @@ package dk.itu.n.danmarkskort.kdtree;
 import dk.itu.n.danmarkskort.models.ParsedNode;
 import dk.itu.n.danmarkskort.models.Region;
 
-import java.awt.geom.Point2D;
 import java.io.Serializable;
 import java.util.Iterator;
 import java.util.List;
-import java.util.zip.InflaterInputStream;
 
 public abstract class KDTree<T extends KDComparable> implements Serializable, Iterable<T> {
 
@@ -66,9 +64,15 @@ public abstract class KDTree<T extends KDComparable> implements Serializable, It
         }
     }
 
-    public T nearest(ParsedNode query) {
-        return nearest(query, true, null);
+    public static double calcDistance(ParsedNode a, ParsedNode b) {
+        double x = a.getLon() - b.getLon();
+        double y = a.getLat() - b.getLat();
+        return Math.sqrt((x * x) + (y * y));
     }
 
-    abstract T nearest(ParsedNode query, boolean sortByLon, T currentBest);
+    public T nearest(ParsedNode query) {
+        return nearest(query, Double.POSITIVE_INFINITY, true);
+    }
+
+    abstract T nearest(ParsedNode query, double currentShortest, boolean sortByLon);
 }
