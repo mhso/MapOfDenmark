@@ -411,7 +411,7 @@ public class MapCanvas extends JPanel implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		zero = new Point2D.Double(transform.getTranslateX(), transform.getTranslateY());
 		scaleCurrentLayer = false;
-		imageManager.forceFullRepaint();
+		if(imageManager != null)imageManager.forceFullRepaint();
 	}
 
 }

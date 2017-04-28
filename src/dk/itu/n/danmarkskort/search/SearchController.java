@@ -29,11 +29,11 @@ public class SearchController{
 		if(inputStr == null || inputStr.isEmpty()) return null;
 		
 		if(isCoordinates(inputStr)) {
-			System.out.println("Search for cords string");
+			Main.log("Search for cords string");
 			//return Main.addressController.getNearstSearchResult(stringCordsToPointFloat(inputStr));
 			return null;
 		} else {
-			System.out.println("Search for address string");
+			Main.log("Search for address string");
 			return Main.addressController.getSearchResult(inputStr);
 		}
 	}
