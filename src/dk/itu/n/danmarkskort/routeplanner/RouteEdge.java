@@ -37,9 +37,9 @@ public class RouteEdge implements KDComparable{
 	public double getWeight(WeightEnum weightEnum){
     	double result = 0;
     	switch(weightEnum) {
-		case DISTANCE: result = getDistance();
+		case DISTANCE_CAR: result = getDistance();
 			break;
-		case SPEED: result = getWeightBySpeed();
+		case SPEED_CAR: result = getWeightBySpeed();
 			break;
 		default:
 			break;

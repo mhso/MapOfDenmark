@@ -2,6 +2,7 @@ package dk.itu.n.danmarkskort.routeplanner;
 
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import dk.itu.n.danmarkskort.kdtree.KDTree;
@@ -40,9 +41,15 @@ public class RouteController {
 		RouteEdgeMeta routeEdgeMeta = new RouteEdgeMeta(maxSpeed, forwardAllowed, backwardAllowed,
 				carsAllowed, bikesAllowed);
 		RouteEdgeMeta reuseRouteEdgeMeta = ReuseRouteEdgeMetaObj.make(routeEdgeMeta);
-		RouteEdge edge = new RouteEdge(fromVertex, toVertex, reuseRouteEdgeMeta, description);
-		//System.out.println("add Edge: " + edge.toString());
-		routeEdges.add(edge);
+		if(forwardAllowed){
+			RouteEdge edge = new RouteEdge(fromVertex, toVertex, reuseRouteEdgeMeta, description);
+			routeEdges.add(edge);
+		}
+		if(backwardAllowed){
+			RouteEdge edge = new RouteEdge(toVertex, fromVertex, reuseRouteEdgeMeta, description);
+			routeEdges.add(edge);
+		}
+	
 	}
 	
 	public void makeGraph(){
@@ -60,7 +67,7 @@ public class RouteController {
 		return routeDijkstra.pathTo(to.getId());
 	}
 	
-	public boolean isRoute(RouteVertex from, RouteVertex to, WeightEnum weightEnum){
+	public boolean hasRoute(RouteVertex from, RouteVertex to, WeightEnum weightEnum){
 		if(routeGraph == null) makeGraph();
 		RouteDijkstra routeDijkstra = new RouteDijkstra(routeGraph, 
 				from.getId(), 
@@ -104,34 +111,42 @@ public class RouteController {
 	
 	public RouteEdge searchEdgesKDTree(Point2D.Float lonLat){
 		KDTree<RouteEdge> kdTree = new KDTreeNode<>(routeEdges);
-		RouteEdge edge = kdTree.nearest(lonLat);
-		if(edge != null) { System.out.println("RouteCOntroller found Edge: " + edge.getDescription()); }
-		else { System.out.println("No edge found"); }
-		return edge;
+		if(lonLat != null) {
+			RouteEdge edge = kdTree.nearest(lonLat);
+			if(edge != null) { System.out.println("RouteCOntroller found Edge: " + edge.getDescription()); }
+			else { System.out.println("No edge found"); }
+			return edge;
+		}
+		return null;
 	}
 	
 	public List<RouteModel> makeRoute(Point2D.Float from, Point2D.Float to, WeightEnum weightEnum){
 		List<RouteModel> routeModels = new ArrayList<RouteModel>();
 		RouteEdge fromEdge = searchEdgesKDTree(from);
 		RouteEdge toEdge = searchEdgesKDTree(to);
-		
-		Iterable<RouteEdge> routeEdges = getRoute(fromEdge.getFrom(), toEdge.getFrom(), weightEnum);
-		RouteModel lastModel = null;
-		double distSum = 0;
-		for(RouteEdge edge : routeEdges){
-			RouteEnum routeEnum = RouteEnum.CONTINUE_ON;
-			
-			if(lastModel != null && edge.getDescription().equals(lastModel.getDescription())) {
-				distSum += edge.getDistance();
-				lastModel.setDistance(distSum);
-			}else{
-				distSum = 0;
-				RouteModel routeModel = new RouteModel(routeEnum, edge.getDescription(), edge.getDistance());
-				lastModel = routeModel;
-				routeModels.add(routeModel);
+		if(hasRoute(fromEdge
+				.getFrom(), 
+				toEdge
+				.getFrom(),
+				weightEnum)) {
+			Iterable<RouteEdge> routeEdges = getRoute(fromEdge.getFrom(), toEdge.getFrom(), weightEnum);
+			RouteModel lastModel = null;
+			double distSum = 0;
+			for(RouteEdge edge : routeEdges){
+				RouteEnum routeEnum = RouteEnum.CONTINUE_ON;
+				
+				if(lastModel != null && edge.getDescription().equals(lastModel.getDescription())) {
+					distSum += edge.getDistance();
+					lastModel.setDistance(distSum);
+				}else{
+					distSum = 0;
+					RouteModel routeModel = new RouteModel(routeEnum, edge.getDescription(), edge.getDistance());
+					lastModel = routeModel;
+					routeModels.add(routeModel);
+				}
 			}
+			return routeModels;
 		}
-		
-		return routeModels;
+		return Collections.emptyList();
 	}
 }

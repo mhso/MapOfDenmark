@@ -55,13 +55,13 @@ public class RouteControllerTest {
 //		rc.addEdge(B3, A6, 20, false, false, false, false, "B3, A6");
 //		rc.addEdge(A6, B2, 20, false, false, false, false, "A6, B2");
 		
-		Iterable<RouteEdge> A1_A6 = rc.getRoute(A1, A6, WeightEnum.DISTANCE);
+		Iterable<RouteEdge> A1_A6 = rc.getRoute(A1, A6, WeightEnum.DISTANCE_CAR);
 		System.out.println("SHOW ME THE ROUTE A1 -> A6");
 		for(RouteEdge e : A1_A6){
 			System.out.println(e.toStringDesr());
 		}
 		
-		Iterable<RouteEdge> A6_A1 = rc.getRoute(A6, A1, WeightEnum.DISTANCE);
+		Iterable<RouteEdge> A6_A1 = rc.getRoute(A6, A1, WeightEnum.DISTANCE_CAR);
 		System.out.println("SHOW ME THE ROUTE A6 -> A1");
 		for(RouteEdge e : A6_A1){
 			System.out.println(e.toStringDesr());

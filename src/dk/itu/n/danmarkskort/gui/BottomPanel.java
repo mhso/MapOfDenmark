@@ -192,8 +192,8 @@ public class BottomPanel extends JPanel implements CanvasListener {
             }
             nearestStreetLabel.setText(text  + ", "+ shortest);
 
-            ParsedNode lonLat = new ParsedNode(Main.map.getGeographicalMousePosition());
-            if(lonLat != null)Main.routeController.searchEdgesKDTree(lonLat);
+//            ParsedNode lonLat = new ParsedNode(Main.map.getGeographicalMousePosition());
+//            if(lonLat != null)Main.routeController.searchEdgesKDTree(lonLat);
         }
     }
     
