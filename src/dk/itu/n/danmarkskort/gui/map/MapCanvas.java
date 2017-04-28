@@ -55,7 +55,7 @@ public class MapCanvas extends JPanel implements ActionListener {
 	
 	public boolean scaleCurrentLayer = false;
 	private Timer zoomTimer;
-	private Shape currentHighlighedWay;
+	private Shape currentHighlighedShape;
 	private WayType currentHighlighedWaytype;
 	
 	public MapCanvas() {
@@ -112,7 +112,8 @@ public class MapCanvas extends JPanel implements ActionListener {
 	public void drawMapShapes(Graphics2D g2d) {
 		drawBackground(g2d);
 		g2d.setTransform(transform);
-		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		if(antiAlias) g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		else g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
 		drawMapRegion(g2d);
 		if(zoomChanged) wayTypesVisible = getOnScreenGraphicsForCurrentZoom();
 		shapesDrawn = 0;
@@ -215,34 +216,35 @@ public class MapCanvas extends JPanel implements ActionListener {
 		g2d.draw(new Rectangle2D.Double(mapRegion.x1, mapRegion.y1, mapRegion.getWidth(), mapRegion.getHeight()));
 	}
 	
-	public void highlightWay(WayType wayType, Shape way) {
-		Graphics2D g2d = (Graphics2D)getGraphics();
+	public void highlightWay(WayType wayType, Shape shape) {
+		Graphics2D g2d = (Graphics2D) getGraphics();
 		g2d.setTransform(transform);
+		if(antiAlias) g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		else g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
 		List<WaytypeGraphicSpec> wgs = getOnScreenGraphicsForCurrentZoom();
 		for(WaytypeGraphicSpec spec : wgs) {
-			if(currentHighlighedWay != null && currentHighlighedWay != way && 
-					spec.getWayType() == currentHighlighedWaytype) {
+			if(currentHighlighedShape != null && spec.getWayType() == currentHighlighedWaytype) {
 				if(spec.getOuterColor() != null) {
 					spec.transformOutline(g2d);
-					g2d.draw(currentHighlighedWay);
+					g2d.draw(currentHighlighedShape);
 				}
 				spec.transformPrimary(g2d);
-				if(spec instanceof GraphicSpecLine) g2d.draw(currentHighlighedWay);
-				else g2d.fill(currentHighlighedWay);
+				if(spec instanceof GraphicSpecLine) g2d.draw(currentHighlighedShape);
+				else g2d.fill(currentHighlighedShape);
 			}
 			if(spec.getWayType() == wayType) {
-				if(spec.getOuterColor() != null) {
-					spec.transformOutline(g2d);
-					g2d.draw(way);
-				}
 				spec.transformPrimary(g2d);
 				g2d.setColor(Color.ORANGE);
-				if(spec instanceof GraphicSpecLine) g2d.draw(way);
-				else g2d.fill(way);
+				if(spec instanceof GraphicSpecLine) g2d.draw(shape);
+				else g2d.fill(shape);
 			}
 		}
-		currentHighlighedWay = way;
+		currentHighlighedShape = shape;
 		currentHighlighedWaytype = wayType;
+	}
+	
+	public Shape getHighlightedShape() {
+		return currentHighlighedShape;
 	}
 	
 	public void pan(double dx, double dy) {

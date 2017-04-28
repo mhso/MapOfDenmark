@@ -166,30 +166,32 @@ public class BottomPanel extends JPanel implements CanvasListener {
     	coordsLabel.setText("Lat: " + 
     			String.format("%.6f", mousePoint.getY()) + ", Lon: " + String.format("%.6f", mousePoint.getX()));
 
-        ParsedNode query = new ParsedNode(Main.map.getGeographicalMousePosition());
-        ParsedWay nearest = null;
-        double shortest = Double.POSITIVE_INFINITY;
-        WayType type = null;
-        for(WayType waytype: highways) {
-            KDTree<ParsedItem> tree = Main.model.enumMapKD.get(waytype);
-            if(tree == null) continue;
-            ParsedItem candidate = tree.nearest(query);
-            if(candidate == null) continue;
-            else {
-                double distance = KDTree.shortestDistance(query, candidate.getCoords());
-                if (distance < shortest) {
-                    shortest = distance;
-                    nearest = (ParsedWay) candidate;
-                    type = waytype;
+    	if(Main.nearest) {
+    		ParsedNode query = new ParsedNode(Main.map.getGeographicalMousePosition());
+            ParsedWay nearest = null;
+            double shortest = Double.POSITIVE_INFINITY;
+            WayType type = null;
+            for(WayType waytype: highways) {
+                KDTree<ParsedItem> tree = Main.model.enumMapKD.get(waytype);
+                if(tree == null) continue;
+                ParsedItem candidate = tree.nearest(query);
+                if(candidate == null) continue;
+                else {
+                    double distance = KDTree.shortestDistance(query, candidate.getCoords());
+                    if (distance < shortest) {
+                        shortest = distance;
+                        nearest = (ParsedWay) candidate;
+                        type = waytype;
+                    }
                 }
             }
-        }
-        String text = " ";
-        if(nearest != null) {
-            Main.map.highlightWay(type, nearest.getShape());
-            if(nearest.getName() != null) text = nearest.getName();
-        }
-        nearestStreetLabel.setText(text  + ", "+ shortest);
+            String text = " ";
+            if(nearest != null) {
+            	if(Main.map.getHighlightedShape() != nearest.getShape()) Main.map.highlightWay(type, nearest.getShape());
+            	if(nearest.getName() != null) text = nearest.getName();
+            }
+            nearestStreetLabel.setText(text  + ", "+ shortest);
+    	} 
     }
     
     @Override
