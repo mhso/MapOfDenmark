@@ -153,7 +153,7 @@ public class TopPanel extends JPanel {
     }
 
     public void searchForAddress(String address) {
-    	if(!address.trim().isEmpty()) {
+    	if(!address.isEmpty()) {
     		Address addr = SearchController.getSearchFieldAddressObj(address);
         	if(addr != null ) { 
         		System.out.println("Toppanel->searchForAddress: "+addr.toString());

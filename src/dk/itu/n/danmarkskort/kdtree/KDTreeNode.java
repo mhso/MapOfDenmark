@@ -108,11 +108,11 @@ public class KDTreeNode<T extends KDComparable> extends KDTree<T> {
 
         // calculate the nearest possible candidate from either side
         if(sortByLon) {
-            nearestPossibleLT = (query.x < leftSplit) ? 0 : calcDistance(query, new ParsedNode(leftSplit, query.y));
-            nearestPossibleRB = (query.x > rightSplit) ? 0 : calcDistance(query, new ParsedNode(rightSplit, query.y));
+            nearestPossibleLT = (query.x < leftSplit) ? 0 : calcDistance(query, new Point2D.Float(leftSplit, query.y));
+            nearestPossibleRB = (query.x > rightSplit) ? 0 : calcDistance(query, new Point2D.Float(rightSplit, query.y));
         } else { // FIXME: is query.x correct?
-            nearestPossibleLT = (query.y < leftSplit) ? 0 : calcDistance(query, new ParsedNode(query.x, leftSplit));
-            nearestPossibleRB = (query.y > rightSplit) ? 0 : calcDistance(query, new ParsedNode(query.x, rightSplit));
+            nearestPossibleLT = (query.y < leftSplit) ? 0 : calcDistance(query, new Point2D.Float(query.x, leftSplit));
+            nearestPossibleRB = (query.y > rightSplit) ? 0 : calcDistance(query, new Point2D.Float(query.x, rightSplit));
         }
 
         // if no possible candidate has shorter path than det one already known, abort the operation
