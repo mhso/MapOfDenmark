@@ -91,6 +91,7 @@ public class RouteDijkstra {
         if (!hasPathTo(vertexId)) return null;
         Stack<RouteEdge> path = new Stack<RouteEdge>();
         for (RouteEdge edge = edgeTo[vertexId]; edge != null; edge = edgeTo[edge.getFromId()]) {
+        	System.out.println("debug pathTo: " + edge.toString());
             path.push(edge);
         }
         return path;

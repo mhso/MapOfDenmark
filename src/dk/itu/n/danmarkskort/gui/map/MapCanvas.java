@@ -224,20 +224,24 @@ public class MapCanvas extends JPanel implements ActionListener {
 		List<WaytypeGraphicSpec> wgs = getOnScreenGraphicsForCurrentZoom();
 		for(WaytypeGraphicSpec spec : wgs) {
 			if(currentHighlighedShape != null && spec.getWayType() == currentHighlighedWaytype) {
-				if(spec.getOuterColor() != null) {
-					spec.transformOutline(g2d);
-					g2d.draw(currentHighlighedShape);
-				}
 				spec.transformPrimary(g2d);
+
 				if(spec instanceof GraphicSpecLine) g2d.draw(currentHighlighedShape);
 				else g2d.fill(currentHighlighedShape);
 			}
 			if(spec.getWayType() == wayType) {
 				spec.transformPrimary(g2d);
+				try {
+					float lineWidth = ((GraphicSpecLine) spec).getLineWidth() * 0.9f;
+					g2d.setStroke(new BasicStroke(lineWidth, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+				} catch (ClassCastException e) {
+					// do nothing
+				}
 				g2d.setColor(Color.ORANGE);
 				if(spec instanceof GraphicSpecLine) g2d.draw(shape);
 				else g2d.fill(shape);
 			}
+			Main.mainPanel.getGuiManager().repaintGUI();
 		}
 		currentHighlighedShape = shape;
 		currentHighlighedWaytype = wayType;
@@ -411,7 +415,7 @@ public class MapCanvas extends JPanel implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		zero = new Point2D.Double(transform.getTranslateX(), transform.getTranslateY());
 		scaleCurrentLayer = false;
-		imageManager.forceFullRepaint();
+		if(imageManager != null)imageManager.forceFullRepaint();
 	}
 
 }

@@ -19,7 +19,7 @@ public class RoutePartStep extends JPanel {
 		this.routeModel = routeModel;
 		STEP_POSITION = stepPosition+"";
 		STEP_DESCRIPTION = routeModel.getDescription();
-		STEP_DISTANCE = routeModel.getDistance();
+		STEP_DISTANCE = makeDistance(routeModel.getDistance());
 		
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
@@ -64,4 +64,8 @@ public class RoutePartStep extends JPanel {
 		
 	}
 	
+	private String makeDistance(double input){
+		if(input == -1) return "";
+		return input + "";
+	}
 }

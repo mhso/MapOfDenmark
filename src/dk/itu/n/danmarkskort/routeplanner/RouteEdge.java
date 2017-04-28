@@ -3,10 +3,9 @@ package dk.itu.n.danmarkskort.routeplanner;
 import java.awt.geom.Point2D;
 
 import dk.itu.n.danmarkskort.kdtree.KDComparable;
-import dk.itu.n.danmarkskort.models.ParsedNode;
 import dk.itu.n.danmarkskort.models.ReuseStringObj;
 
-public class RouteEdge {
+public class RouteEdge implements KDComparable{
 	private final RouteVertex from, to;
 	private RouteEdgeMeta routeEdgeMeta;
 	private final String description;
@@ -32,15 +31,19 @@ public class RouteEdge {
 
 	private double distance(){ return from.distance(to); }
 	
-	public double getWeightByDistance(){ return distance(); }
+	public double getDistance(){ return distance(); }
 	public double getWeightBySpeed(){ return distance() / (double)routeEdgeMeta.getMaxSpeed(); }
 	
 	public double getWeight(WeightEnum weightEnum){
     	double result = 0;
     	switch(weightEnum) {
-		case DISTANCE: result = getWeightByDistance();
+		case DISTANCE_CAR: result = getDistance();
 			break;
-		case SPEED: result = getWeightBySpeed();
+		case SPEED_CAR: result = getWeightBySpeed();
+			break;
+		case DISTANCE_BIKE: result = getDistance();
+			break;
+		case DISTANCE_WALK: result = getDistance();
 			break;
 		default:
 			break;
@@ -56,17 +59,22 @@ public class RouteEdge {
 		return from.getId() + " -> " + to.getId() + " [ " + description + " ]";
 	}
 
-//	@Override
-//	public Point2D getFirstNode() {
-//		// TODO Auto-generated method stub
-//		return new Point2D.Float(from.x, from.y);
-//	}
-//
-//	@Override
-//	public Point2D[] getNodes() {
-//		// TODO Auto-generated method stub
-//		return new Point2D[]{from, to};
-//	}
+	@Override
+	public Point2D.Float getFirstNode() {
+		return from;
+	}
+
+	@Override
+	public Point2D.Float[] getNodes() {
+		return new Point2D.Float[] {from, to};
+	}
+
+	@Override
+	public float[] getCoords() {
+		return new float[] {from.x, from.y, to.x, to.y};
+	}
+	
+	
 
 	
 }

@@ -1,5 +1,5 @@
 package dk.itu.n.danmarkskort.routeplanner;
 
 public enum WeightEnum {
-	DISTANCE, SPEED
+	DISTANCE_CAR, DISTANCE_BIKE, DISTANCE_WALK, SPEED_CAR
 }

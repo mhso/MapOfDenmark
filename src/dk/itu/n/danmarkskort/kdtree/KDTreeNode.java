@@ -119,7 +119,7 @@ public class KDTreeNode<T extends KDComparable> extends KDTree<T> {
         if(shortest < nearestPossibleLT && shortest < nearestPossibleRB) return null;
 
         // if query point is inside the left/top
-        if(nearestPossibleLT == 0) {
+        if(nearestPossibleLT == 0 && leftChild != null) {
             T leftCandidate = leftChild.nearest(query, shortest, !sortByLon);
             if(leftCandidate != null) {
                 shortest = KDTree.shortestDistance(query, leftCandidate.getCoords());
@@ -128,7 +128,7 @@ public class KDTreeNode<T extends KDComparable> extends KDTree<T> {
             }
         }
         // if query point is inside the right/bottom
-        if(nearestPossibleRB == 0) {
+        if(nearestPossibleRB == 0 && rightChild != null) {
             T rightCandidate = rightChild.nearest(query, shortest, !sortByLon);
             if(rightCandidate != null) {
                 shortest = KDTree.shortestDistance(query, rightCandidate.getCoords());
@@ -138,7 +138,7 @@ public class KDTreeNode<T extends KDComparable> extends KDTree<T> {
         }
 
         // query point outside of left/top
-        if(nearestPossibleLT > 0) {
+        if(nearestPossibleLT > 0 && leftChild != null) {
             T leftCandidate = leftChild.nearest(query, shortest, !sortByLon);
             if(leftCandidate != null) {
                 shortest = KDTree.shortestDistance(query, leftCandidate.getCoords());
@@ -148,7 +148,7 @@ public class KDTreeNode<T extends KDComparable> extends KDTree<T> {
         }
 
         // query point outside of right/bottom
-        if(nearestPossibleRB > 0) {
+        if(nearestPossibleRB > 0 && rightChild != null) {
             T rightCandidate = rightChild.nearest(query, shortest, !sortByLon);
             if(rightCandidate != null) return rightCandidate;
         }

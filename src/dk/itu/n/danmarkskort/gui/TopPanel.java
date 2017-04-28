@@ -29,7 +29,7 @@ public class TopPanel extends JPanel {
     private DropdownAddressSearch dropSuggestions;
     private DropdownMenu dropMenu;
     private JTextField input;
-    private JPanel searchInputWrapper, topParent;
+    private JPanel searchInputWrapper, topParent, top;
     private JButton menu;
     private List<String> dropSuggestionsList;
 
@@ -40,9 +40,8 @@ public class TopPanel extends JPanel {
 
         topParent = new JPanel(new BorderLayout());
         topParent.setBorder(BorderFactory.createLineBorder(style.panelBG(), style.topPanelBorderWidth(), false));
-        topParent.setOpaque(false);
 
-        JPanel top = new JPanel(new GridBagLayout());
+        top = new JPanel(new GridBagLayout());
         top.setBackground(style.panelBG());
         top.setBorder(null);
         GridBagConstraints gbc = new GridBagConstraints();
@@ -150,6 +149,10 @@ public class TopPanel extends JPanel {
 
         // adding drop down functionality
         ((AbstractDocument) input.getDocument()).setDocumentFilter(new SearchFilter());
+    }
+
+    public void repaintPanels() {
+        topParent.repaint();
     }
 
     public void searchForAddress(String address) {
