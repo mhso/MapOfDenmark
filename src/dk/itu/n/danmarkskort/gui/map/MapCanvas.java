@@ -80,7 +80,7 @@ public class MapCanvas extends JPanel implements ActionListener {
 	
 	public void forceRepaint() {
 		zoomChanged = true;
-		imageManager.forceFullRepaint();
+		if(imageManager != null) imageManager.forceFullRepaint();
 		repaint();
 	}
 
