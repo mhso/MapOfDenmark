@@ -1,6 +1,5 @@
 package dk.itu.n.danmarkskort;
 
-import java.awt.Desktop;
 import java.awt.Dimension;
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -8,12 +7,9 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.LineNumberReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
@@ -21,7 +17,6 @@ import java.util.Map;
 
 import dk.itu.n.danmarkskort.backend.InputMonitor;
 import dk.itu.n.danmarkskort.backend.InputStreamListener;
-import dk.itu.n.danmarkskort.models.ParsedNode;
 
 import java.awt.MouseInfo;
 import java.awt.Point;
@@ -97,6 +92,12 @@ public class Util {
 	
 	public static int roundByN(int n, double value){
 	    return (int) (Math.round(value/n) * n);
+	}
+	
+	public static double distanceInMeters(Point2D p1, Point2D p2) {
+		double latM = 1000*((p2.getY()-p1.getY())*110.574);
+        double lonM = 1000*((p2.getX()-p1.getX())*111.320*Math.cos(Math.toRadians(p2.getY())));
+        return Math.sqrt((lonM * lonM) + (latM * latM));
 	}
 	
 	public static int mouseWarp() {
