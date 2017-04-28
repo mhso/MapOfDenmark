@@ -190,10 +190,10 @@ public class BottomPanel extends JPanel implements CanvasListener {
             }
             String text = " ";
             if(nearest != null) {
-            	if(Main.map.getHighlightedShape() == null || !nearest.getShape().contains
-            			(Main.map.getHighlightedShape().getBounds2D().getCenterX(),
-            			Main.map.getHighlightedShape().getBounds2D().getCenterY())) 
+            	if(Main.map.getHighlightedShape() == null || 
+            			nearest.getShape().getBounds2D().getCenterX() != Main.map.getHighlightedShape().getBounds2D().getCenterX()) {
             		Main.map.highlightWay(type, nearest.getShape());
+            	}
             	if(nearest.getName() != null) text = nearest.getName();
             }
             nearestStreetLabel.setText(text);

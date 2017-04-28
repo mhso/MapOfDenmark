@@ -243,7 +243,6 @@ public class MapCanvas extends JPanel implements ActionListener {
 			}
 			Main.mainPanel.getGuiManager().repaintGUI();
 		}
-		System.out.println("Highlighted way");
 		currentHighlighedShape = shape;
 		currentHighlighedWaytype = wayType;
 	}
