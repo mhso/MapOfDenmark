@@ -300,6 +300,8 @@ public class RoutePage extends JPanel {
 			Address addrTo = SearchController.getSearchFieldAddressObj(txtAddrTo.getText());
     		String routeDistance = "999";
     		BufferedImage bufferedImage = null;
+    		Main.routeController.searchEdgesKDTree(addrFrom.getLonLatAsPoint());
+    		
     		List<RouteModel> routemodels = demoRoute();
 			try {
 				if(Main.production) bufferedImage = ImageIO.read(getClass().getResourceAsStream("/resources/routeplanner/demo_routeplanner.PNG"));
@@ -338,14 +340,14 @@ public class RoutePage extends JPanel {
     private List<RouteModel> demoRoute(){
 		List<RouteModel> routeModels = new ArrayList<RouteModel>();
 		
-		routeModels.add(new RouteModel(RouteEnum.CONTINUE_ON, "Roskildevej", "600m"));
-		routeModels.add(new RouteModel(RouteEnum.TURN_LEFT, "Roskildevej", "600m"));
-		routeModels.add(new RouteModel(RouteEnum.CONTINUE_ON, "H. Hansenvej", "250m"));
-		routeModels.add(new RouteModel(RouteEnum.TURN_RIGHT, "Postmosen", "250m"));
-		routeModels.add(new RouteModel(RouteEnum.TURN_RIGHT, "Blågårdsgade", "250m"));
-		routeModels.add(new RouteModel(RouteEnum.CONTINUE_ON, "Sverigesvej", "250m"));
-		routeModels.add(new RouteModel(RouteEnum.TURN_RIGHT, "Amagerbrogade", "1,5Km"));
-		routeModels.add(new RouteModel(RouteEnum.AT_DESTINATION, "Rosenhaven 1", ""));
+		routeModels.add(new RouteModel(RouteEnum.CONTINUE_ON, "Roskildevej", 600));
+		routeModels.add(new RouteModel(RouteEnum.TURN_LEFT, "Roskildevej", 600));
+		routeModels.add(new RouteModel(RouteEnum.CONTINUE_ON, "H. Hansenvej", 250));
+		routeModels.add(new RouteModel(RouteEnum.TURN_RIGHT, "Postmosen", 250));
+		routeModels.add(new RouteModel(RouteEnum.TURN_RIGHT, "Blågårdsgade", 250));
+		routeModels.add(new RouteModel(RouteEnum.CONTINUE_ON, "Sverigesvej", 250));
+		routeModels.add(new RouteModel(RouteEnum.TURN_RIGHT, "Amagerbrogade", 1500));
+		routeModels.add(new RouteModel(RouteEnum.AT_DESTINATION, "Rosenhaven 1", -1));
 		return routeModels;
 	}
 

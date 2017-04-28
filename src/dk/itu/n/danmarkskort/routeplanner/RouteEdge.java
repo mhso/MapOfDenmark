@@ -31,13 +31,13 @@ public class RouteEdge implements KDComparable{
 
 	private double distance(){ return from.distance(to); }
 	
-	public double getWeightByDistance(){ return distance(); }
+	public double getDistance(){ return distance(); }
 	public double getWeightBySpeed(){ return distance() / (double)routeEdgeMeta.getMaxSpeed(); }
 	
 	public double getWeight(WeightEnum weightEnum){
     	double result = 0;
     	switch(weightEnum) {
-		case DISTANCE: result = getWeightByDistance();
+		case DISTANCE: result = getDistance();
 			break;
 		case SPEED: result = getWeightBySpeed();
 			break;
