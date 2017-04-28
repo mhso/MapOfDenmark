@@ -213,6 +213,12 @@ public class WindowLauncher extends JFrame {
                 buttonLaunch.setBackground(style.launcherSelectionBG());
             }
         });
+        buttonLaunch.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if(e.getKeyCode() == KeyEvent.VK_ENTER && buttonLaunch.isEnabled()) buttonLaunch.doClick();
+			}
+        });
 
 		// Colors and stuff
 
@@ -255,6 +261,7 @@ public class WindowLauncher extends JFrame {
 		labelSelectedFile.setText(fileName);
 		selectedFilePath = fileName;
 		if(!buttonLaunch.isEnabled()) enableLaunchButton(true);
+		buttonLaunch.requestFocusInWindow();
 	}
 	
 	private void enableLaunchButton(boolean enable) {

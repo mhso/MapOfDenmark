@@ -162,16 +162,12 @@ public class BottomPanel extends JPanel implements CanvasListener {
     
     @Override
     public void onMouseMoved() {
-    	
-    	
-    	
     	Point2D mousePoint = Util.toRealCoords(Main.map.getGeographicalMousePosition());
     	coordsLabel.setText("Lat: " + 
     			String.format("%.6f", mousePoint.getY()) + ", Lon: " + String.format("%.6f", mousePoint.getX()));
 
-
     	if(Main.nearest) {
-            ParsedNode query = new ParsedNode(Main.map.getGeographicalMousePosition());
+    		ParsedNode query = new ParsedNode(Main.map.getGeographicalMousePosition());
             ParsedWay nearest = null;
             double shortest = Double.POSITIVE_INFINITY;
             WayType type = null;
