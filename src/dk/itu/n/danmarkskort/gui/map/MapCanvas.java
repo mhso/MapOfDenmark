@@ -119,7 +119,7 @@ public class MapCanvas extends JPanel implements ActionListener {
 		shapesDrawn = 0;
 		if(wayTypesVisible == null) return;
         Region currentRegion = getGeographicalRegion();
-        if(Main.debug && !Main.buffered) {
+        if(Main.debugExtra && !Main.buffered) {
             double x1 = currentRegion.x1;
             double x2 = currentRegion.x2;
             double y1 = currentRegion.y1;
@@ -170,7 +170,7 @@ public class MapCanvas extends JPanel implements ActionListener {
                 }
             }
         }
-        if(Main.debug && !Main.buffered) {
+        if(Main.debugExtra && !Main.buffered) {
             g2d.setStroke(new BasicStroke(0.0001f));
             g2d.setColor(Color.BLACK);
             Path2D box = new Path2D.Float();
@@ -193,7 +193,7 @@ public class MapCanvas extends JPanel implements ActionListener {
         background.lineTo(region.x1, region.y1);
 
         // backgroundcolor for the map. If there's a coastline use the water innercolor, otherwise use the coastline innercolor
-        if(Main.model.enumMapKD.containsKey(WayType.COASTLINE) ){//&& Main.model.enumMapKD.get(WayType.COASTLINE).size() > 0) {
+        if(Main.model.enumMapKD.containsKey(WayType.COASTLINE) ){
         	g2d.setColor(GraphicRepresentation.getCanvasBGColor());
         }
         else g2d.setColor(GraphicRepresentation.getCoastlineColor());
@@ -224,20 +224,24 @@ public class MapCanvas extends JPanel implements ActionListener {
 		List<WaytypeGraphicSpec> wgs = getOnScreenGraphicsForCurrentZoom();
 		for(WaytypeGraphicSpec spec : wgs) {
 			if(currentHighlighedShape != null && spec.getWayType() == currentHighlighedWaytype) {
-				if(spec.getOuterColor() != null) {
-					spec.transformOutline(g2d);
-					g2d.draw(currentHighlighedShape);
-				}
 				spec.transformPrimary(g2d);
+
 				if(spec instanceof GraphicSpecLine) g2d.draw(currentHighlighedShape);
 				else g2d.fill(currentHighlighedShape);
 			}
 			if(spec.getWayType() == wayType) {
 				spec.transformPrimary(g2d);
+				try {
+					float lineWidth = ((GraphicSpecLine) spec).getLineWidth() * 0.9f;
+					g2d.setStroke(new BasicStroke(lineWidth, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+				} catch (ClassCastException e) {
+					// do nothing
+				}
 				g2d.setColor(Color.ORANGE);
 				if(spec instanceof GraphicSpecLine) g2d.draw(shape);
 				else g2d.fill(shape);
 			}
+			Main.mainPanel.getGuiManager().repaintGUI();
 		}
 		currentHighlighedShape = shape;
 		currentHighlighedWaytype = wayType;

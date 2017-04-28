@@ -17,6 +17,7 @@ public class RouteController {
 	private List<RouteVertex> vertices;
 	private RouteGraph routeGraph;
 	private boolean debug = true;
+	KDTree<RouteEdge> edgeTree;
 	
 	public RouteController(){
 		vertexCount = 0;
@@ -58,6 +59,7 @@ public class RouteController {
 	public void makeGraph(){
 		routeGraph = new RouteGraph(vertexCount);
 		for(RouteEdge edge : routeEdges) routeGraph.addEdge(edge);
+		edgeTree = new KDTreeNode<>(routeEdges);
 	}
 	
 	public void cleanUp(){
@@ -112,7 +114,7 @@ public class RouteController {
 	}
 	
 	public RouteEdge searchEdgesKDTree(Point2D.Float lonLat){
-		KDTree<RouteEdge> kdTree = new KDTreeNode<>(routeEdges);
+		//KDTree<RouteEdge> kdTree = new KDTreeNode<>(routeEdges);
 		
 		if(debug) {
 			System.out.println("debug searchEdgesKDTree: \n"
@@ -121,13 +123,15 @@ public class RouteController {
 		}
 		
 		if(lonLat != null) {
-			RouteEdge edge = kdTree.nearest(lonLat);
+			RouteEdge edge = edgeTree.nearest(lonLat);
 			if(edge != null) { System.out.println("RouteController found Edge: " + edge.getDescription()); }
 			else { System.out.println("No edge found"); }
 			return edge;
 		}
 		return null;
 	}
+
+
 	
 	public List<RouteModel> makeRoute(Point2D.Float from, Point2D.Float to, WeightEnum weightEnum){
 		List<RouteModel> routeModels = new ArrayList<RouteModel>();
