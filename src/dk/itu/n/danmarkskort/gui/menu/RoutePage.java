@@ -334,15 +334,15 @@ public class RoutePage extends JPanel {
     		
     		List<RouteModel> routemodels = Main.routeController.makeRoute(addrFrom.getLonLatAsPoint(), addrTo.getLonLatAsPoint(), weightEnum);
 			if(!routemodels.isEmpty()){
-    		try {
-				if(Main.production) bufferedImage = ImageIO.read(getClass().getResourceAsStream("/resources/routeplanner/demo_routeplanner.PNG"));
-				else bufferedImage = ImageIO.read(new File("resources/routeplanner/demo_routeplanner.PNG"));
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			
-			makePinPoint(addrFrom, addrTo);
-			RoutePlannerMain routePlannerMain =  new RoutePlannerMain(bufferedImage, txtAddrFrom.getText(), txtAddrTo.getText(), routeDistance, routemodels);
+	    		try {
+					if(Main.production) bufferedImage = ImageIO.read(getClass().getResourceAsStream("/resources/routeplanner/demo_routeplanner.PNG"));
+					else bufferedImage = ImageIO.read(new File("resources/routeplanner/demo_routeplanner.PNG"));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				
+				makePinPoint(addrFrom, addrTo);
+				RoutePlannerMain routePlannerMain =  new RoutePlannerMain(bufferedImage, txtAddrFrom.getText(), txtAddrTo.getText(), routeDistance, routemodels);
 			}else {
 				menu.blockVisibility(true);
 	    		JOptionPane.showMessageDialog(this, "Unable to find a route, we're sorry.", "No route", JOptionPane.INFORMATION_MESSAGE);

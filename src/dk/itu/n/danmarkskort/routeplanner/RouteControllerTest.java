@@ -31,11 +31,11 @@ public class RouteControllerTest {
 		RouteVertex B3 = rc.makeVertex(220f, 22f);
 		
 		//Connection 1 oneway
-		rc.addEdge(A1, A2, 20, false, false, false, false, "A1, A2");
-		rc.addEdge(A2, A3, 20, false, false, false, false, "A2, A3");
-		rc.addEdge(A3, A4, 20, false, false, false, false, "A3, A4");
-		rc.addEdge(A4, A5, 20, false, false, false, false, "A4, A5");
-		rc.addEdge(A5, A6, 20, false, false, false, false, "A5, A6");
+		rc.addEdge(A1, A2, 20, true, true, false, false, "A1, A2");
+		rc.addEdge(A2, A3, 20, true, true, false, false, "A2, A3");
+		rc.addEdge(A3, A4, 20, true, true, false, false, "A3, A4");
+		rc.addEdge(A4, A5, 20, true, true, false, false, "A4, A5");
+		rc.addEdge(A5, A6, 20, true, false, false, false, "A5, A6");
 		
 		rc.addEdge(A6, A5, 20, false, false, false, false, "A6, A5");
 		rc.addEdge(A5, A4, 20, false, false, false, false, "A5, A4");

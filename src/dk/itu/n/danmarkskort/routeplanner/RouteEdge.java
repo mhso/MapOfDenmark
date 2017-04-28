@@ -41,6 +41,10 @@ public class RouteEdge implements KDComparable{
 			break;
 		case SPEED_CAR: result = getWeightBySpeed();
 			break;
+		case DISTANCE_BIKE: result = getDistance();
+			break;
+		case DISTANCE_WALK: result = getDistance();
+			break;
 		default:
 			break;
     	}
