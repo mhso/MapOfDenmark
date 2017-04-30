@@ -16,12 +16,8 @@ public class RouteController {
 	private List<RouteEdge> routeEdges;
 	private List<RouteVertex> vertices;
 	private RouteGraph routeGraph;
-<<<<<<< HEAD
-	private boolean debug = false;
-=======
 	private boolean debug = true;
 	KDTree<RouteEdge> edgeTree;
->>>>>>> branch 'develop' of https://github.itu.dk/fand/BFST17_DK_Kort
 	
 	public RouteController(){
 		vertexCount = 0;
