@@ -16,7 +16,7 @@ public class RouteController {
 	private List<RouteEdge> routeEdges;
 	private List<RouteVertex> vertices;
 	private RouteGraph routeGraph;
-	private boolean debug = true;
+	private boolean debug = false;
 	
 	public RouteController(){
 		vertexCount = 0;

@@ -35,69 +35,31 @@ public class RouteControllerTest {
 		rc.addEdge(A2, A3, 20, true, true, false, false, "A2, A3");
 		rc.addEdge(A3, A4, 20, true, true, false, false, "A3, A4");
 		rc.addEdge(A4, A5, 20, true, true, false, false, "A4, A5");
-		rc.addEdge(A5, A6, 20, true, false, false, false, "A5, A6");
+		rc.addEdge(A5, A6, 20, true, true, false, false, "A5, A6");
 		
-		rc.addEdge(A6, A5, 20, false, false, false, false, "A6, A5");
-		rc.addEdge(A5, A4, 20, false, false, false, false, "A5, A4");
-		rc.addEdge(A4, A3, 20, false, false, false, false, "A4, A3");
-		rc.addEdge(A3, A2, 20, false, false, false, false, "A3, A2");
-		rc.addEdge(A2, A1, 20, false, false, false, false, "A2, A1");
+		//Connection 2
+		rc.addEdge(A4, B1, 20, true, true, false, false, "A4, B1");
+		rc.addEdge(B1, B2, 20, true, true, false, false, "B1, B2");
+		rc.addEdge(B2, B3, 20, true, true, false, false, "B2, B3");
 		
-//		//Connection 2
-//		rc.addEdge(A4, B1, 20, false, false, false, false, "A4, B1");
-//		rc.addEdge(B1, B2, 20, false, false, false, false, "B1, B2");
-//		rc.addEdge(B2, B3, 20, false, false, false, false, "B2, B3");
-//		
-//		//Connection 3
-//		rc.addEdge(B3, B2, 20, false, false, false, false, "B3, B2");
-//		rc.addEdge(B1, B3, 20, false, false, false, false, "B1, B3");
-//		rc.addEdge(B3, A4, 20, false, false, false, false, "B3, A4");
-//		rc.addEdge(B3, A6, 20, false, false, false, false, "B3, A6");
-//		rc.addEdge(A6, B2, 20, false, false, false, false, "A6, B2");
+		rc.addEdge(B3, A5, 20, true, true, false, false, "B3,A5");
 		
-		Iterable<RouteEdge> A1_A6 = rc.getRoute(A1, A6, WeightEnum.DISTANCE_CAR);
-		System.out.println("SHOW ME THE ROUTE A1 -> A6");
-		for(RouteEdge e : A1_A6){
-			System.out.println(e.toStringDesr());
-		}
 		
-		Iterable<RouteEdge> A6_A1 = rc.getRoute(A6, A1, WeightEnum.DISTANCE_CAR);
-		System.out.println("SHOW ME THE ROUTE A6 -> A1");
-		for(RouteEdge e : A6_A1){
-			System.out.println(e.toStringDesr());
-		}
-		
-//		Iterable<RouteEdge> A1_B3 = rc.getRoute(A1, B3, WeightEnum.DISTANCE);
-//		System.out.println("SHOW ME THE ROUTE A1 -> B3");
-//		for(RouteEdge e : A1_B3){
-//			System.out.println(e.toStringDesr());
-//		}
-//		
-//		Iterable<RouteEdge> A2_A6 = rc.getRoute(A2, A6, WeightEnum.DISTANCE);
-//		System.out.println("SHOW ME THE ROUTE A2 -> A6");
-//		for(RouteEdge e : A2_A6){
-//			System.out.println(e.toStringDesr());
-//		}
-//		
-//		Iterable<RouteEdge> A5_A6 = rc.getRoute(A5, A6, WeightEnum.DISTANCE);
-//		System.out.println("SHOW ME THE ROUTE A5 -> A6");
-//		for(RouteEdge e : A5_A6){
-//			System.out.println(e.toStringDesr());
-//		}
-//		
-//		Iterable<RouteEdge> B3_A1 = rc.getRoute(B3, A1, WeightEnum.DISTANCE);
-//		System.out.println("SHOW ME THE ROUTE B3 -> A1");
-//		for(RouteEdge e : B3_A1){
-//			System.out.println(e.toStringDesr());
-//		}
-//		
-//		Iterable<RouteEdge> B3_A6 = rc.getRoute(B3, A6, WeightEnum.DISTANCE);
-//		System.out.println("SHOW ME THE ROUTE B3 -> A1");
-//		for(RouteEdge e : B3_A6){
-//			System.out.println(e.toStringDesr());
-//		}
-		
+		printResult(A1, A6, "A1->A6, DISTANCE_CAR", WeightEnum.DISTANCE_CAR);
+		printResult(A1, A6, "A1->A6, SPEED_CAR", WeightEnum.SPEED_CAR);
+				
 		fail("Not yet implemented");
+	}
+
+	private void printResult(RouteVertex A1, RouteVertex A6, String fromToStr, WeightEnum weightEnum) {
+		Iterable<RouteEdge> result = rc.getRoute(A1, A6, weightEnum);
+		System.out.println("SHOW ME THE ROUTE " + fromToStr);
+		double distSum = 0;
+		for(RouteEdge e : result){
+			distSum += e.getWeight(WeightEnum.DISTANCE_CAR);
+			System.out.println(e.toStringDesr());
+		}
+		System.out.println(fromToStr + " dist: " + distSum);
 	}
 
 }

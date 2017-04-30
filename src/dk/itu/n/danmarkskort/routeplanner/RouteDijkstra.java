@@ -5,6 +5,7 @@ public class RouteDijkstra {
     private RouteEdge[] edgeTo;    			// edgeTo[v] = last edge on shortest s->v path
     private IndexMinPQ<Double> pq;    		// priority queue of vertices
     private WeightEnum weightEnum;
+    private boolean debug = false;
 
     /**
      * Computes a shortest-paths tree from the source vertex {@code s} to every other
@@ -91,7 +92,7 @@ public class RouteDijkstra {
         if (!hasPathTo(vertexId)) return null;
         Stack<RouteEdge> path = new Stack<RouteEdge>();
         for (RouteEdge edge = edgeTo[vertexId]; edge != null; edge = edgeTo[edge.getFromId()]) {
-        	System.out.println("debug pathTo: " + edge.toString());
+        	if(debug)System.out.println("debug pathTo: " + edge.toString());
             path.push(edge);
         }
         return path;
