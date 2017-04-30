@@ -57,4 +57,10 @@ public class Queue implements Runnable {
 		thread.start();
 	}
 	
+	public int size() {
+		int size = 0;
+		for(TaskPriority priority : tasks.keySet()) size += tasks.get(priority).size();
+		return size;
+	}
+	
 }
