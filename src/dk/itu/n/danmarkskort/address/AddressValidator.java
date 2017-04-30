@@ -137,9 +137,6 @@ public class AddressValidator {
 	
 	
 	private static String rxHousenumber123 = ".*\\s[0-9]{1,3}";
-	private static String rxHousenumber123AB = rxHousenumber123 + "[A-Z]{0,2}";
-	private static String rxHousenumber123AB_123AB = rxHousenumber123AB + "-" + rxHousenumber123AB;
-	private static String rxHousenumberAll = "(rxHousenumber123)|(rxHousenumber123AB)|(rxHousenumber123AB_123AB)";
 	
 	public static final Pattern PAT_FINDHOUSENUMBER = Pattern.compile("(.*)(?<housenumber>"+rxHousenumber123+"\\s)(.*)");
 	public static String findHousenumber(String inputStr){

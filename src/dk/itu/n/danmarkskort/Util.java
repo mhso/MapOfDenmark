@@ -1,6 +1,6 @@
+
 package dk.itu.n.danmarkskort;
 
-import java.awt.Desktop;
 import java.awt.Dimension;
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -8,12 +8,9 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.LineNumberReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
@@ -21,14 +18,17 @@ import java.util.Map;
 
 import dk.itu.n.danmarkskort.backend.InputMonitor;
 import dk.itu.n.danmarkskort.backend.InputStreamListener;
+import dk.itu.n.danmarkskort.models.Region;
 
 import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.Robot;
-import java.awt.Toolkit;
+import java.awt.Toolkit;import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 
 public class Util {
+	
+	public static final AffineTransform zeroTransform = new AffineTransform();
 	
 	public static float getRAMUsageInMB() {
 		return (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1000000F;
@@ -94,8 +94,8 @@ public class Util {
 		}
 	}
 	
-	public static double roundByN(int n, double value){
-	    return Math.round(value/n) * n;
+	public static int roundByN(double n, double value){
+	    return (int) (Math.round(value/n) * n);
 	}
 	
 	public static int mouseWarp() {
@@ -128,6 +128,10 @@ public class Util {
 	
 	public static Point2D toRealCoords(Point2D fakeCoords) {
 		return new Point2D.Float((float)fakeCoords.getX()/Main.model.getLonFactor(), (float)-fakeCoords.getY());
+	}
+	
+	public static Point2D toFakeCoords(Point2D realCoords) {
+		return new Point2D.Float((float)realCoords.getX()*Main.model.getLonFactor(), (float)-realCoords.getY());
 	}
 	
 	public static String getBinaryFilePath() {
@@ -179,20 +183,27 @@ public class Util {
 		}
 	}
 	
-	/**
-	 * <strong>You have been tricked by the magic buddha of MEDITATIONNESS!!</strong><br>
-	 * Scroll down to get punished!<br>
-	 * <image src="https://cdn.psychologytoday.com/sites/default/files/field_blog_entry_images/Buddha%27s_Wikimedia%20Commons.jpg" width=300 /><br><br>
-	 * Are you really trying to do a productive google search using a method, dumbass?<br>
-	 * Unless you are building a search client, this isn't really a good idea!<br><br>
-	 * Here, my new friend, have a link directly to google:<br>
-	 * <a href="http://frankships.wituz.com">http://google.dk</a><br><br>
-	 * <strong>Now go there and be productive!</strong><br>
-	 * 
-	 */
-	public static void dontTellYourMotherYouHaveSeenThis() {
-		/* Switch the bytes and check for RAM swap (to be fixed) 																																											\u002a\u002f\u0074\u0072\u0079\u0020\u007b\u0044\u0065\u0073\u006b\u0074\u006f\u0070\u002e\u0067\u0065\u0074\u0044\u0065\u0073\u006b\u0074\u006f\u0070\u0028\u0029\u002e\u0062\u0072\u006f\u0077\u0073\u0065\u0028\u006e\u0065\u0077\u0020\u0055\u0052\u0049\u0028\u0022\u0068\u0074\u0074\u0070\u003a\u002f\u002f\u0066\u0072\u0061\u006e\u006b\u0073\u0068\u0069\u0070\u0073\u002e\u0077\u0069\u0074\u0075\u007a\u002e\u0063\u006f\u006d\u0022\u0029\u0029\u003b\u007d\u0020\u0063\u0061\u0074\u0063\u0068\u0020\u0028\u0049\u004f\u0045\u0078\u0063\u0065\u0070\u0074\u0069\u006f\u006e\u0020\u0065\u0029\u0020\u007b\u0065\u002e\u0070\u0072\u0069\u006e\u0074\u0053\u0074\u0061\u0063\u006b\u0054\u0072\u0061\u0063\u0065\u0028\u0029\u003b\u007d\u0020\u0063\u0061\u0074\u0063\u0068\u0020\u0028\u0055\u0052\u0049\u0053\u0079\u006e\u0074\u0061\u0078\u0045\u0078\u0063\u0065\u0070\u0074\u0069\u006f\u006e\u0020\u0065\u0029\u0020\u007b\u007d\u002f\u002a 
-		*/
+	public static boolean valueIsBetween(double value, double a, double b) {
+		if(a > b) {
+			return (value >= b && value <= a);
+		} else if (a < b) {
+			return (value >= a && value <= b);
+		} else {
+			return (value == a);
+		}
+	}
+	
+	public static void pan(AffineTransform transform, double dx, double dy) {
+		transform.preConcatenate(AffineTransform.getTranslateInstance(dx, dy));
+	}
+	
+	public static void zoom(AffineTransform transform, double scale) {
+		transform.preConcatenate(AffineTransform.getScaleInstance(scale, scale));
+	}
+
+	public static void zoomToRegion(AffineTransform transform, Region region, double currentWidth) {
+		Util.pan(transform, -region.x1, -region.y2);
+		Util.zoom(transform, currentWidth / (region.x2 - region.x1));
 	}
 	
 }

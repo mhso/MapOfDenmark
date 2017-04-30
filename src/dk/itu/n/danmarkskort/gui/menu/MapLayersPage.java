@@ -24,7 +24,7 @@ public class MapLayersPage extends JPanel {
     private DropdownMenu menu;
     
     public MapLayersPage(DropdownMenu menu) {
-    	style = new Style();
+    	style = Main.style;
     	this.menu = menu;
         setOpaque(false);
         setLayout(new BorderLayout(0, 0));
@@ -224,9 +224,7 @@ public class MapLayersPage extends JPanel {
 		dialog.setVisible(true);
     }
 
-	private void initContentPanel(JPanel panel){
-    	
-    }
+	private void initContentPanel(JPanel panel) {}
 	
 	private class WayTypeCustomize implements ActionListener {
 		private WayType wayType;
@@ -237,7 +235,6 @@ public class MapLayersPage extends JPanel {
 			this.action = action;
 		}
 		
-		@Override
 		public void actionPerformed(ActionEvent e) {
 			if(action.equals("default")) GraphicRepresentation.setDefault(wayType);
 			else if(action.equals("override")) GraphicRepresentation.addToOverriddenSpecs(wayType);

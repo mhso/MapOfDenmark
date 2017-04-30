@@ -1,6 +1,7 @@
 package dk.itu.n.danmarkskort.gui;
 
 import dk.itu.n.danmarkskort.Main;
+import dk.itu.n.danmarkskort.Util;
 import dk.itu.n.danmarkskort.address.Address;
 import dk.itu.n.danmarkskort.gui.map.PinPoint;
 import dk.itu.n.danmarkskort.gui.menu.DropdownMenu;
@@ -28,20 +29,19 @@ public class TopPanel extends JPanel {
     private DropdownAddressSearch dropSuggestions;
     private DropdownMenu dropMenu;
     private JTextField input;
-    private JPanel searchInputWrapper, topParent;
+    private JPanel searchInputWrapper, topParent, top;
     private JButton menu;
     private List<String> dropSuggestionsList;
 
-    public TopPanel(Style style) {
-    	dropSuggestionsList = new ArrayList<String>();
-        this.style = style;
+    public TopPanel() {
+    	dropSuggestionsList = new ArrayList<>();
+        this.style = Main.style;
         setOpaque(false);
 
         topParent = new JPanel(new BorderLayout());
         topParent.setBorder(BorderFactory.createLineBorder(style.panelBG(), style.topPanelBorderWidth(), false));
-        topParent.setOpaque(false);
 
-        JPanel top = new JPanel(new GridBagLayout());
+        top = new JPanel(new GridBagLayout());
         top.setBackground(style.panelBG());
         top.setBorder(null);
         GridBagConstraints gbc = new GridBagConstraints();
@@ -142,19 +142,25 @@ public class TopPanel extends JPanel {
             dropMenu.showDropdown(menu);
         });
 
-        search.addActionListener(e -> searchForAddress(input.getText()));
+        search.addActionListener(e -> {
+        	System.out.println(input.getText());
+        	searchForAddress(input.getText());
+        });
 
         // adding drop down functionality
-        ((AbstractDocument) input.getDocument()).setDocumentFilter(new TopPanel.SearchFilter());
+        ((AbstractDocument) input.getDocument()).setDocumentFilter(new SearchFilter());
     }
 
-    // Skal nok flyttes senere, for at overholde MVC
+    public void repaintPanels() {
+        topParent.repaint();
+    }
+
     public void searchForAddress(String address) {
-    	if(!address.trim().isEmpty()) {
+    	if(!address.isEmpty()) {
     		Address addr = SearchController.getSearchFieldAddressObj(address);
         	if(addr != null ) { 
         		System.out.println("Toppanel->searchForAddress: "+addr.toString());
-        		panZoomToCoordinates(addr.getLonLat());
+        		panZoomToCoordinates(addr.getLonLatAsPoint());
         	} else {
         		JOptionPane.showMessageDialog(null, "No match found.", "Missing information", JOptionPane.INFORMATION_MESSAGE);
         	}
@@ -163,12 +169,11 @@ public class TopPanel extends JPanel {
     	}
     }
 
-    private void panZoomToCoordinates(float[] lonLat) {
-		// TODO Auto-generated method stub
-    	System.out.println("Toppanel->panZoomToCoordinats (lon, lat): (" + lonLat[0] + ", " + lonLat[1] + ")");
-    	String pinPointName = "SearchLocation - (" + lonLat[0] + ", " + lonLat[1] + ")";
-    	Main.pinPointManager.addPinPoint(pinPointName, new PinPoint(Main.map.toScreenCoords(new Point2D.Float(lonLat[0], lonLat[1])), pinPointName));
-    	Main.map.panToPosition(new Point2D.Float(lonLat[0], lonLat[1]));
+    private void panZoomToCoordinates(Point2D.Float input) {
+    	System.out.println("Toppanel->panZoomToCoordinats (lon, lat): " + input.toString() + "\n -->, real (lon, lat): " + Util.toRealCoords(input));
+    	String pinPointName = "SearchLocation - " + input.toString();
+    	Main.pinPointManager.addPinPoint(pinPointName, new PinPoint(Main.map.toScreenCoords(input), pinPointName));
+    	Main.map.panToPosition(new Point2D.Float(input.x, input.y));
     	Main.mainPanel.repaint();
 	}
 
@@ -213,14 +218,13 @@ public class TopPanel extends JPanel {
          */
         @Override
         public void remove(FilterBypass fb, int offset, int length) throws BadLocationException {
-            super.remove(fb, offset, length);
+        	super.remove(fb, offset, length);
             dropdownSuggestions(offset - 1, input.getText());
         }
 
         @Override
         public void replace(FilterBypass fb, int offset, int length, String newText,
                             AttributeSet attr) throws BadLocationException {
-
             super.replace(fb, offset, length, newText, attr);
             dropdownSuggestions(offset, input.getText());
         }
@@ -235,19 +239,4 @@ public class TopPanel extends JPanel {
             }
         }
     }
-    
-//    private void swingSearch(String text){
-//	    SwingWorker worker = new SwingWorker<List<String>, Void>() {
-//	        @Override
-//	        public List<String> doInBackground() {
-//	            return dropSuggestionsList = SearchController.getSearchFieldSuggestions(text);
-//	        }
-//	
-//	        @Override
-//	        public void done() {
-//	        	populateSuggestions(dropSuggestionsList);
-//	        }
-//	    };
-//	    worker.execute();
-//    }
 }

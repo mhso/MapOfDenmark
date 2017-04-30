@@ -7,6 +7,11 @@ import dk.itu.n.danmarkskort.DKConstants;
 import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.Util;
 import dk.itu.n.danmarkskort.gui.map.CanvasListener;
+import dk.itu.n.danmarkskort.kdtree.KDTree;
+import dk.itu.n.danmarkskort.models.ParsedItem;
+import dk.itu.n.danmarkskort.models.ParsedNode;
+import dk.itu.n.danmarkskort.models.ParsedWay;
+import dk.itu.n.danmarkskort.models.WayType;
 
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
@@ -25,13 +30,29 @@ public class BottomPanel extends JPanel implements CanvasListener {
 	Style style;
     private JLabel scale;
 	private JLabel coordsLabel;
+	private JLabel nearestStreetLabel;
 	private JSlider zoomSlider;
+    private JPanel southLeftPanel;
+    private JPanel southCenterPanel;
+    private JButton buttonCentreView;
 
-    public BottomPanel(Style style) {
+	private WayType[] highways = new WayType[]{
+            WayType.HIGHWAY_MOTORWAY,
+            WayType.HIGHWAY_TRUNK,
+            WayType.HIGHWAY_PRIMARY,
+            WayType.HIGHWAY_SECONDARY,
+            WayType.HIGHWAY_TERTIARY,
+            WayType.HIGHWAY_RESIDENTIAL,
+            WayType.HIGHWAY_SERVICE,
+            WayType.HIGHWAY_UNDEFINED,
+            WayType.HIGHWAY_UNCLASSIFIED,
+            WayType.HIGHWAY_PEDESTRIAN};
+
+    public BottomPanel() {
     	setBorder(new EmptyBorder(0, 10, 0, 10));
     	setOpaque(false);
     	
-        this.style = style;
+        this.style = Main.style;
 
         setLayout(new BorderLayout());
 
@@ -45,7 +66,7 @@ public class BottomPanel extends JPanel implements CanvasListener {
         JPanel leftPanel = new JPanel(new BorderLayout());
         leftPanel.setOpaque(false);
         
-        JPanel southLeftPanel = new JPanel();
+        southLeftPanel = new JPanel();
         southLeftPanel.setLayout(new BorderLayout());
         southLeftPanel.setBackground(style.panelBG());
         leftPanel.add(southLeftPanel, BorderLayout.SOUTH);
@@ -69,7 +90,7 @@ public class BottomPanel extends JPanel implements CanvasListener {
         centerPanel.setBorder(new EmptyBorder(0, DKConstants.WINDOW_WIDTH/2-PANEL_SIZE/2, 0, Main.window.getWidth()/2-PANEL_SIZE/2));
         centerPanel.setLayout(new BorderLayout());
         
-        JPanel southCenterPanel = new JPanel();
+        southCenterPanel = new JPanel();
         southCenterPanel.setLayout(new BorderLayout());
         southCenterPanel.setBorder(new EtchedBorder(EtchedBorder.RAISED, BORDER_HIGHTLIGHT, BORDER_SHADOW));
         southCenterPanel.setBackground(style.panelBG());
@@ -80,7 +101,7 @@ public class BottomPanel extends JPanel implements CanvasListener {
         coordsLabel.setHorizontalAlignment(SwingConstants.CENTER);
         southCenterPanel.add(coordsLabel, BorderLayout.CENTER);
         
-        JLabel nearestStreetLabel = new JLabel("<html><body><u>Streetname</u></body></html>");
+        nearestStreetLabel = new JLabel("Street");
         nearestStreetLabel.setForeground(Color.WHITE);
         nearestStreetLabel.setHorizontalAlignment(SwingConstants.CENTER);
         southCenterPanel.add(nearestStreetLabel, BorderLayout.SOUTH);
@@ -118,7 +139,7 @@ public class BottomPanel extends JPanel implements CanvasListener {
         
         rightParent.add(zoomSlider, BorderLayout.SOUTH);
         
-        JButton buttonCentreView = style.centerViewButton();
+        buttonCentreView = style.centerViewButton();
         buttonCentreView.setBorder(new EtchedBorder(EtchedBorder.RAISED, BORDER_HIGHTLIGHT, BORDER_SHADOW));
         buttonCentreView.addActionListener(e -> {
             Main.map.zoomToBounds();
@@ -145,8 +166,41 @@ public class BottomPanel extends JPanel implements CanvasListener {
     @Override
     public void onMouseMoved() {
     	Point2D mousePoint = Util.toRealCoords(Main.map.getGeographicalMousePosition());
-    	coordsLabel.setText("Lon: " + String.format("%.4f", mousePoint.getX()) + ", Lat: " + 
-    			String.format("%.4f", mousePoint.getY()));
+    	coordsLabel.setText("Lat: " + 
+    			String.format("%.6f", mousePoint.getY()) + ", Lon: " + String.format("%.6f", mousePoint.getX()));
+
+    	if(Main.nearest) {
+    		ParsedNode query = new ParsedNode(Main.map.getGeographicalMousePosition());
+            ParsedWay nearest = null;
+            double shortest = Double.POSITIVE_INFINITY;
+            WayType type = null;
+            for(WayType waytype: highways) {
+                KDTree<ParsedItem> tree = Main.model.enumMapKD.get(waytype);
+                if(tree == null) continue;
+                ParsedItem candidate = tree.nearest(query);
+                if(candidate == null) continue;
+                else {
+                    double distance = KDTree.shortestDistance(query, candidate.getCoords());
+                    if (distance < shortest) {
+                        shortest = distance;
+                        nearest = (ParsedWay) candidate;
+                        type = waytype;
+                    }
+                }
+            }
+            String text = " ";
+            if(nearest != null) {
+            	if(Main.map.getHighlightedShape() == null || 
+            			nearest.getShape().getBounds2D().getCenterX() != Main.map.getHighlightedShape().getBounds2D().getCenterX()) {
+            		Main.map.highlightWay(type, nearest.getShape());
+            	}
+            	if(nearest.getName() != null) text = nearest.getName();
+            }
+            nearestStreetLabel.setText(text);
+
+//            ParsedNode lonLat = new ParsedNode(Main.map.getGeographicalMousePosition());
+//            if(lonLat != null)Main.routeController.searchEdgesKDTree(lonLat);
+        }
     }
     
     @Override
@@ -182,4 +236,11 @@ public class BottomPanel extends JPanel implements CanvasListener {
 			Main.map.pan(canvasCenter.getX(), canvasCenter.getY());
 		}	
 	}
+
+	public void repaintPanels() {
+        zoomSlider.repaint();
+        southLeftPanel.repaint();
+        southCenterPanel.repaint();
+        buttonCentreView.repaint();
+    }
 }

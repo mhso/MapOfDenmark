@@ -2,13 +2,15 @@ package dk.itu.n.danmarkskort.backend;
 
 import dk.itu.n.danmarkskort.DKConstants;
 import dk.itu.n.danmarkskort.Main;
-import dk.itu.n.danmarkskort.MemoryUtil;
 import dk.itu.n.danmarkskort.models.*;
 import dk.itu.n.danmarkskort.kdtree.*;
 
+import dk.itu.n.danmarkskort.routeplanner.RouteController;
+import dk.itu.n.danmarkskort.routeplanner.RouteVertex;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
+import java.awt.geom.Point2D;
 import java.io.Serializable;
 import java.util.*;
 
@@ -20,7 +22,7 @@ public class OSMParser extends SAXAdapter implements Serializable {
     private transient NodeMap nodeMap;
     private transient HashMap<Long, ParsedWay> temporaryWayReferences;
     private transient HashMap<Long, ParsedRelation> temporaryRelationReferences;
-    private transient HashMap<ParsedNode, ParsedWay> coastlineMap;
+    private transient HashMap<Point2D.Float, ParsedWay> coastlineMap;
 
     private transient EnumMap<WayType, ArrayList<ParsedItem>> enumMap;
     public EnumMap<WayType, KDTree<ParsedItem>> enumMapKD;
@@ -31,10 +33,19 @@ public class OSMParser extends SAXAdapter implements Serializable {
     private transient ParsedAddress address;
 
     private transient WayType waytype;
+    private transient ArrayList<Point2D.Float> currentNodes;
+
     private transient String name;
-    private transient Integer maxSpeed;
-    private transient boolean oneWay;
-    private ArrayList<ParsedNode> currentNodes;
+    private transient boolean isHighway;
+    private transient boolean isArea;
+    private transient boolean bicycle;
+    private transient boolean forward;
+    private transient boolean backward;
+    private transient boolean motorvehicle;
+    private transient boolean toGraph;
+    private transient int maxSpeed;
+    private transient RouteController route;
+    private transient HashMap<Point2D.Float, RouteVertex> vertexMap;
 
     private transient boolean finished = false;
     private transient OSMReader reader;
@@ -49,13 +60,16 @@ public class OSMParser extends SAXAdapter implements Serializable {
         temporaryRelationReferences = new HashMap<>();
         coastlineMap = new HashMap<>();
         currentNodes = new ArrayList<>();
+        vertexMap = new HashMap<>();
         enumMap = new EnumMap<>(WayType.class);
+        route = Main.routeController;
 
         for(WayType waytype : WayType.values()) enumMap.put(waytype, new ArrayList<>());
 
         finished = false;
         Main.log("Parsing started.");
-        if(Main.debug) System.gc();
+
+        resetValues();
     }
 
     public void endDocument() throws SAXException {
@@ -77,8 +91,7 @@ public class OSMParser extends SAXAdapter implements Serializable {
             }
             else {
                 ArrayList<ParsedItem> current = enumMap.get(wt);
-                if (current.isEmpty()) tree = null;
-                else if (current.size() < DKConstants.KD_SIZE) tree = new KDTreeLeaf<>(current);
+                if(current.isEmpty()) tree = null;
                 else tree = new KDTreeNode<>(current);
             }
             enumMap.remove(wt);
@@ -88,7 +101,7 @@ public class OSMParser extends SAXAdapter implements Serializable {
         Main.log("Deleting nodes, adding float[] coords");
         for(Map.Entry<WayType, KDTree<ParsedItem>> entry : enumMapKD.entrySet()) {
             KDTree<ParsedItem> current = entry.getValue();
-            if(current != null) for (ParsedItem item : current) item.nodesToCoords();
+            if(current != null) for(ParsedItem item : current) item.nodesToCoords();
         }
 
 
@@ -154,49 +167,9 @@ public class OSMParser extends SAXAdapter implements Serializable {
                 }
                 break;
             case "tag":
-                String k = atts.getValue("k");
+                String k = atts.getValue("k").trim();
                 String v = atts.getValue("v").trim();
-                if(node != null) {
-                    switch(k) {
-                        case "addr:city":
-                            if (address == null) address = new ParsedAddress();
-                            address.setCity(v);
-                            break;
-                        case "addr:postcode":
-                            if (address == null) address = new ParsedAddress();
-                            address.setPostcode(v);
-                            break;
-                        case "addr:housenumber":
-                            if (address == null) address = new ParsedAddress();
-                            address.setHousenumber(v);
-                            break;
-                        case "addr:street":
-                            if (address == null) address = new ParsedAddress();
-                            address.setStreet(v);
-                            break;
-                    }
-                    break;
-                }
-                else {
-                    waytype = ParserUtil.tagToType(k, v, waytype);
-                    switch (k) {
-                        case "name":
-                            name = v;
-                            break;
-                        case "maxspeed":
-                            try{
-                                maxSpeed = Integer.parseInt(v);
-                            }
-                            catch (NumberFormatException e) {
-                                // do nothing
-                            }
-                            break;
-                        case "oneway":
-                            if(v.equals("yes")) oneWay = true;
-                            break;
-                    }
-                }
-                break;
+                parseTagInformation(k, v);
         }
     }
 
@@ -205,8 +178,36 @@ public class OSMParser extends SAXAdapter implements Serializable {
             case "relation":
             case "way":
             case "node":
+                checkForWeirdStuff();
+                if(isHighway) addToGraph();
                 addCurrent();
                 break;
+        }
+    }
+
+    private void checkForWeirdStuff() {
+    }
+
+    private void addToGraph() {
+        checkMaxSpeed();
+        if(!toGraph) return;
+
+        if(maxSpeed == 0) Main.log(waytype);
+
+        for(int i = 0; i < currentNodes.size() - 1; i++) {
+            Point2D.Float firstNode = currentNodes.get(i);
+            Point2D.Float secondNode = currentNodes.get(i + 1);
+            RouteVertex first = vertexMap.get(firstNode);
+            RouteVertex second = vertexMap.get(secondNode);
+            if(first == null) {
+                first = route.makeVertex(firstNode.x, firstNode.y);
+                vertexMap.put(firstNode, first);
+            }
+            if(second == null) {
+                second = route.makeVertex(secondNode.x, secondNode.y);
+                vertexMap.put(secondNode, second);
+            }
+            route.addEdge(first, second, maxSpeed, forward, backward, motorvehicle, bicycle, name);
         }
     }
 
@@ -231,13 +232,13 @@ public class OSMParser extends SAXAdapter implements Serializable {
         }
 
         if(address != null && Main.saveParsedAddresses) {
-            if(node != null) address.setCoords(node.getPoint());
+            if(node != null) address.setCoords(node);
             else if (way != null) address.setWay(way);
             else if (relation != null) address.setRelation(relation);
             Main.addressController.addressParsed(address);
             for(OSMParserListener listener : reader.parserListeners) listener.onParsingGotItem(address);
         }
-        cleanUp();
+        resetValues();
     }
 
     private KDTree<ParsedItem> getCoastlines() {
@@ -259,14 +260,14 @@ public class OSMParser extends SAXAdapter implements Serializable {
             combined.addAll(connected);
             HashSet<ParsedWay> fixed = ParserUtil.fixUnconnectedCoastlines(unconnected);
             combined.addAll(fixed);
-            tree = new KDTreeLeaf<ParsedItem>(combined);
+            tree = new KDTreeNode<>(combined);
         }
         else tree = null;
         coastlineMap = null;
         return tree;
     }
 
-    private void cleanUp() {
+    private void resetValues() {
         way = null;
         relation = null;
         address = null;
@@ -274,13 +275,20 @@ public class OSMParser extends SAXAdapter implements Serializable {
 
         waytype = null;
         name = null;
-        oneWay = false;
-        maxSpeed = null;
+        maxSpeed = 0;
 
+        forward = true;
+        backward = true;
+        bicycle = true;
+        motorvehicle = true;
+        isArea = false;
+        isHighway = false;
+        toGraph = false;
         currentNodes = new ArrayList<>();
     }
 
     private void temporaryClean() {
+
         nodeMap = null;
         temporaryWayReferences = null;
         temporaryRelationReferences = null;
@@ -320,5 +328,295 @@ public class OSMParser extends SAXAdapter implements Serializable {
 
     public float getLonFactor() {
         return lonFactor;
+    }
+
+    public void parseTagInformation(String k, String v) {
+        if(waytype == WayType.COASTLINE) return;
+        if(node != null) {
+            switch(k) {
+                case "addr:city":
+                    if (address == null) address = new ParsedAddress();
+                    address.setCity(v);
+                    return;
+                case "addr:postcode":
+                    if (address == null) address = new ParsedAddress();
+                    address.setPostcode(v);
+                    return;
+                case "addr:housenumber":
+                    if (address == null) address = new ParsedAddress();
+                    address.setHousenumber(v);
+                    return;
+                case "addr:street":
+                    if (address == null) address = new ParsedAddress();
+                    address.setStreet(v);
+                    return;
+            }
+        }
+
+        switch (k) {
+            case "highway":
+                if(!v.equals("pier")) {
+                    isHighway = true;
+                    toGraph = true;
+                }
+                switch(v) {
+                    case "motorway_link":
+                    case "motorway":
+                        waytype = WayType.HIGHWAY_MOTORWAY;
+                        break;
+                    case "trunk_link":
+                    case "trunk":
+                        waytype = WayType.HIGHWAY_TRUNK;
+                        break;
+                    case "primary_link":
+                    case "primary":
+                        waytype = WayType.HIGHWAY_PRIMARY;
+                        break;
+                    case "secondary_link":
+                    case "secondary":
+                        waytype = WayType.HIGHWAY_SECONDARY;
+                        break;
+                    case "tertiary_link":
+                    case "tertiary":
+                        waytype = WayType.HIGHWAY_TERTIARY;
+                        break;
+                    case "residential":
+                        waytype = WayType.HIGHWAY_RESIDENTIAL;
+                        break;
+                    case "pedestrian":
+                        if(isArea) waytype = WayType.PEDESTRIAN_AREA;
+                        else waytype = WayType.HIGHWAY_PEDESTRIAN;
+                        break;
+                    case "unclassified":
+                        waytype = WayType.HIGHWAY_UNCLASSIFIED;
+                        break;
+                    case "service":
+                        waytype = WayType.HIGHWAY_SERVICE;
+                        break;
+                    case "cycleway":
+                        waytype = WayType.HIGHWAY_CYCLEWAY;
+                        break;
+                    case "traffic_signal":
+                        break;
+                    case "path":
+                    case "footway":
+                    case "bridleway":
+                    case "track":
+                    case "steps":
+                        waytype = WayType.HIGHWAY_FOOTWAY;
+                        break;
+                    default:
+                        waytype = WayType.HIGHWAY_UNDEFINED;
+                        break;
+                }
+                break;
+            case "building":
+                switch (v) {
+                    case "school":
+                        waytype = WayType.BUILDING_SCHOOL;
+                        break;
+                    case "train_station":
+                        waytype = WayType.TRAIN_STATION;
+                        break;
+                    case "roof":
+                        waytype = WayType.ROOF;
+                        break;
+                    default:
+                        waytype = WayType.BUILDING;
+                        break;
+                }
+            case "landuse":
+                switch(v) {
+                    case "residential":
+                        waytype = WayType.RESIDENTIAL;
+                        break;
+                    case "farmland":
+                        waytype = WayType.FARMLAND;
+                        break;
+                    case "forest":
+                        waytype = WayType.FOREST;
+                        break;
+                    case "industrial":
+                        waytype = WayType.INDUSTRIAL;
+                        break;
+                    case "recreation_ground":
+                    case "grass":
+                        waytype = WayType.GRASS;
+                        break;
+                    case "retail":
+                        waytype = WayType.RETAIL;
+                        break;
+                    case "military":
+                        waytype = WayType.MILITARY;
+                        break;
+                    case "cemetery":
+                        waytype = WayType.CEMETERY;
+                        break;
+                    case "orchard":
+                        waytype = WayType.ORCHARD;
+                        break;
+                    case "allotments":
+                        waytype = WayType.ALLOTMENTS;
+                        break;
+                    case "construction":
+                        waytype = WayType.CONSTRUCTION;
+                        break;
+                    case "railway":
+                        waytype = WayType.RAILWAY;
+                        break;
+                }
+                break;
+            case "natural":
+                switch(v) {
+                    case "water":
+                        waytype = WayType.WATER;
+                        break;
+                    case "coastline":
+                        waytype = WayType.COASTLINE;
+                        break;
+                    case "scrub":
+                        waytype = WayType.SCRUB;
+                        break;
+                    case "wood":
+                        waytype = WayType.WOOD;
+                        break;
+                    case "wetland":
+                        waytype = WayType.WETLAND;
+                        break;
+                    case "sand":
+                        waytype = WayType.SAND;
+                        break;
+                }
+                break;
+            case "railway":
+                switch(v) {
+                	case "rail":
+                		waytype = WayType.RAIL;
+                		break;
+                    case "light_rail":
+                        waytype = WayType.LIGHT_RAIL;
+                        break;
+                    case "platform":
+                        waytype = WayType.PLATFORM;
+                        break;
+                }
+                break;
+            case "man_made":
+                switch(v) {
+                    case "breakwater":
+                        waytype = WayType.BREAKWATER;
+                        break;
+                    case "pier":
+                        waytype = WayType.PIER;
+                        break;
+                    case "embankment":
+                        waytype = WayType.EMBANKMENT;
+                        break;
+                }
+                break;
+            case "waterway":
+                switch(v) {
+                    case "stream":
+                        waytype =  WayType.WATER_STREAM;
+                        break;
+                    case "river":
+                        waytype =  WayType.WATER_RIVER;
+                        break;
+                }
+                break;
+            case "leisure":
+                switch(v) {
+                    case "stadium":
+                        waytype = WayType.STADIUM;
+                        break;
+                    case "park":
+                    case "garden":
+                        waytype = WayType.PARK;
+                        break;
+                    case "playground":
+                        waytype = WayType.PLAYGROUND;
+                        break;
+                    case "track":
+                    case "pitch":
+                        waytype = WayType.SPORT;
+                        break;
+                }
+                break;
+            case "amenity":
+                switch(v) {
+                    case "parking":
+                        waytype = WayType.PARKING;
+                        break;
+                }
+                break;
+            case "oneway":
+                switch(v) {
+                    case "yes":
+                        backward = false;
+                        break;
+                    case "-1":
+                        forward = false;
+                        break;
+                }
+                break;
+            case "name":
+                name = v;
+                if(way != null) way.setName(v);
+                break;
+            case "maxspeed":
+                try{
+                    maxSpeed = Integer.parseInt(v);
+                }
+                catch (NumberFormatException e) {
+                    maxSpeed = 0;
+                }
+                break;
+            case "bicycle":
+                switch(v) {
+                    case "no":
+                        bicycle = false;
+                        break;
+                }
+                break;
+            case "area":
+                isArea = true;
+                break;
+        }
+    }
+
+    private void checkMaxSpeed() {
+        switch(waytype) {
+            case HIGHWAY_SERVICE:
+            case HIGHWAY_FOOTWAY:
+                toGraph = false;
+                return;
+            case HIGHWAY_CYCLEWAY:
+            case PEDESTRIAN_AREA:
+            case HIGHWAY_PEDESTRIAN:
+                if(!bicycle) toGraph = false;
+                motorvehicle = false;
+                if(maxSpeed == 0) maxSpeed = 30; // is not relevant, as we never use this when calculating bike routes
+                break;
+            case HIGHWAY_MOTORWAY:
+                if(maxSpeed == 0) maxSpeed = 130;
+                bicycle = false;
+                break;
+            case HIGHWAY_TRUNK:
+            case HIGHWAY_PRIMARY:
+                bicycle = false;
+                if(maxSpeed == 0) maxSpeed = 90;
+                break;
+            case HIGHWAY_SECONDARY:
+                if(maxSpeed == 0) maxSpeed = 80;
+                break;
+            case HIGHWAY_TERTIARY:
+            case HIGHWAY_RESIDENTIAL:
+            case HIGHWAY_UNCLASSIFIED:
+            case HIGHWAY_UNDEFINED:
+                if(maxSpeed == 0) maxSpeed = 50;
+                break;
+            default:
+                toGraph = false;
+        }
     }
 }

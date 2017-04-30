@@ -7,6 +7,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
+import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.models.RouteEnum;
 
 public class RouteImageSplit {
@@ -20,7 +21,8 @@ public class RouteImageSplit {
 	
 	private void createSubImages() {
 		try {
-			mainImage = ImageIO.read(new File("resources/routeplanner/routing-sprite-osm_medium.png"));
+			if(Main.production) mainImage = ImageIO.read(getClass().getResourceAsStream("/resources/routeplanner/routing-sprite-osm_medium.png"));
+			else mainImage = ImageIO.read(new File("resources/routeplanner/routing-sprite-osm_medium.png"));
 			int subImageWidth = mainImage.getWidth() / (NUMBER_OF_SUBIMAGES);
 			int subImageX = 0;
 			for(int i = 0; i < NUMBER_OF_SUBIMAGES; i++) {

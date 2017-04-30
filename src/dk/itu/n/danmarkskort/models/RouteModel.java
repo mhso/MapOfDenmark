@@ -1,26 +1,22 @@
 package dk.itu.n.danmarkskort.models;
 
 public class RouteModel {
-	private final String DESCRIPTION, DISTANCE;
+	private final String DESCRIPTION;
+	private double distance;
 	private final RouteEnum DIRECTION;
 	
-	public RouteModel(RouteEnum direction, String description, String distance){
+	public RouteModel(RouteEnum direction, String description, double distance){
 		DIRECTION = direction;
 		DESCRIPTION = getStepDescription(direction, description);
-		DISTANCE = distance;
+		this.distance = distance;
 	}
 
-	public String getDescription() {
-		return DESCRIPTION;
-	}
+	public String getDescription() { return DESCRIPTION; }
 
-	public String getDistance() {
-		return DISTANCE;
-	}
+	public double getDistance() { return distance; }
+	public void setDistance(double distance) { this.distance = distance; }
 
-	public RouteEnum getDirection() {
-		return DIRECTION;
-	}
+	public RouteEnum getDirection() { return DIRECTION; }
 	
 	private String getStepDescription(RouteEnum routeEnum, String description){
 		String stepDirection = "";

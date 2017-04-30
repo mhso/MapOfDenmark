@@ -34,6 +34,7 @@
 		<type name="HIGHWAY_UNDEFINED"/>
 		<type name="HIGHWAY_SECONDARY"/>
 		<type name="HIGHWAY_TERTIARY"/>
+		<type name="RAIL"/>
 		<type name="LIGHT_RAIL"/>
 		<type name="RAILWAY"/>
 		<type name="PLATFORM"/>
@@ -45,6 +46,8 @@
 		<type name="SPORT"/>
 		<type name="HIGHWAY_RESIDENTIAL"/>
 		<type name="HIGHWAY_UNCLASSIFIED"/>
+		<type name="HIGHWAY_PEDESTRIAN"/>
+		<type name="PEDESTRIAN_AREA"/>
 	</zoomlevel>
 	<zoomlevel level="12">
 		<type name="BUILDING"/>

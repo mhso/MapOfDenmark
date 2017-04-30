@@ -1,9 +1,13 @@
 package dk.itu.n.danmarkskort.gui;
 
+import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.extras.AlphaImageIcon;
+
+import javax.imageio.ImageIO;
 import javax.swing.*;
 
 import java.awt.*;
+import java.io.IOException;
 
 public class CustomButton extends JButton {
 	private static final long serialVersionUID = 8833927450795701033L;
@@ -21,7 +25,14 @@ public class CustomButton extends JButton {
     	this.alpha = alpha;
     	this.alphaHover = alphaHover;
     	this.bg = bg;
-        icon = new ImageIcon(filename);
+        if(Main.production) {
+			try {
+				icon = new ImageIcon(ImageIO.read(getClass().getResourceAsStream("/"+filename)));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+        }
+		else icon = new ImageIcon(filename);
         setAlphaIcon(icon);
     }
     

@@ -1,6 +1,8 @@
 package dk.itu.n.danmarkskort.address;
 
+import java.awt.geom.Point2D;
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -200,34 +202,34 @@ public class AddressHolder implements Serializable {
 			RegionFloat pcR = pc.getRegion();
 			if(pcR.isWithin(input)){
 				regions.put(pc.getRegion(), pc);
-				System.out.println("MATCH: ADD: " + pc.getPostcode());
 			}
 		}
 		return regions;
 	}
 	
-	public Map<RegionFloat, Housenumber> searchRegionHousenumbers(RegionFloat input){	
-		Map<RegionFloat, Housenumber> regions = new HashMap<RegionFloat, Housenumber>();
-		for(Postcode pc : searchRegionWithin(input).values()) {
+	public Map<RegionFloat, Housenumber> searchRegionHousenumbers(RegionFloat region){	
+		for(Postcode pc : searchRegionWithin(region).values()) {
 			float expanVal = 0.0f;
-			for(int i=0; i<100; i++) {
-				RegionFloat r = new RegionFloat(input.x1 - expanVal, input.y1 - expanVal, input.x2 + expanVal, input.y2 + expanVal);
+			for(int i=0; i<10000; i++) {
+				RegionFloat r = new RegionFloat(region.x1 - expanVal, region.y1 - expanVal, region.x2 + expanVal, region.y2 + expanVal);
 				for(Street st : pc.searchRegionWithin(r).values()){
-					regions.putAll(st.searchRegionWithin(r));
+					Map<RegionFloat, Housenumber> regions = st.searchRegionWithin(r);
+					if(!regions.isEmpty()) System.out.println("searchRegionHousenumbers succes!");
+					if(!regions.isEmpty()) return regions;
 				}
-				expanVal = expanVal + 0.0000100f;
+				System.out.println("searchRegionHousenumbers expand!" + r.toString());
+				expanVal = expanVal + 	0.000100f;
 			}
 		}
-		return regions;
+		return Collections.emptyMap();
 	}
 	
-	public Housenumber searchHousenumber(float[] lonLat){
-		RegionFloat input = new RegionFloat(lonLat[0], lonLat[1], lonLat[0], lonLat[1]);
+	public Housenumber searchHousenumber(Point2D.Float lonLat){
+		RegionFloat input = new RegionFloat(lonLat.x, lonLat.y, lonLat.x, lonLat.y);
 		for(Postcode pc : searchRegionWithin(input).values()) {
 			for(Street st : pc.searchRegionWithin(input).values()){
 				for(Housenumber hn : st.searchRegionWithin(input).values()){
-					float[] hnLonLat = hn.getLonLat();
-					if(hnLonLat[0] == lonLat[0] && hnLonLat[0] == lonLat[0]) {
+					if(hn.getLon() == lonLat.x && hn.getLat() == lonLat.y) {
 						return hn;
 					}
 				}

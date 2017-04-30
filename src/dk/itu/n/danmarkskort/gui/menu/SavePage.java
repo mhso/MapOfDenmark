@@ -19,7 +19,7 @@ public class SavePage extends JPanel  {
 	private Style style;
 	
     public SavePage() {
-    	style = new Style();
+    	style = Main.style;
         setOpaque(false);
         setLayout(new BorderLayout(0, 0));
         

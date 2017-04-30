@@ -1,53 +1,49 @@
 package dk.itu.n.danmarkskort.routeplanner;
 
+import java.awt.geom.Point2D;
+
+import dk.itu.n.danmarkskort.kdtree.KDComparable;
 import dk.itu.n.danmarkskort.models.ReuseStringObj;
-import dk.itu.n.danmarkskort.models.WayType;
 
-public class RouteEdge {
+public class RouteEdge implements KDComparable{
 	private final RouteVertex from, to;
-	private int maxSpeed;
-	private final boolean forwardAllowed, backwardAllowed;
+	private RouteEdgeMeta routeEdgeMeta;
 	private final String description;
-	private final WayType wayType;
 
-	public RouteEdge(RouteVertex from, RouteVertex to, int maxSpeed, boolean forwardAllowed, boolean backwardAllowed, String description, WayType wayType){
+	public RouteEdge(RouteVertex from, RouteVertex to, RouteEdgeMeta routeEdgeMeta, String description){
 		if (from.getId() < 0) throw new IllegalArgumentException("Vertex names must be nonnegative integers");
         if (to.getId() < 0) throw new IllegalArgumentException("Vertex names must be nonnegative integers");
-        if (maxSpeed <= 0) throw new IllegalArgumentException("maxSpeed is 0, must be nonnegative integer");
-		
+        if (routeEdgeMeta.getMaxSpeed() <= 0) throw new IllegalArgumentException("maxSpeed is 0, must be positive integer");
 		this.from = from;
 		this.to = to;
-		this.maxSpeed = maxSpeed;
-		this.forwardAllowed = forwardAllowed;
-		this.backwardAllowed = backwardAllowed;
+		this.routeEdgeMeta = routeEdgeMeta;
 		this.description = ReuseStringObj.make(description);
-		this.wayType = wayType;
 	}
 	
-	public int getMaxSpeed() { return maxSpeed; }
+	public int getMaxSpeed() { return routeEdgeMeta.getMaxSpeed(); }
 	public RouteVertex getFrom() { return from; }
 	public RouteVertex getTo() { return to; }
 	public int getFromId() { return from.getId(); }
 	public int getToId() { return to.getId(); }
-	public boolean isForwardAllowed() { return forwardAllowed; }
-	public boolean isBackwardAllowed() {return backwardAllowed;	}
+	public boolean isForwardAllowed() { return routeEdgeMeta.isForwardAllowed(); }
+	public boolean isBackwardAllowed() {return routeEdgeMeta.isBackwardAllowed();	}
 	public String getDescription(){ return description; }
-	public WayType getWayType(){ return wayType; }
 
-	private double distance(){
-//		return Math.sqrt(Math.pow((to.getX() - from.getX()), 2) + Math.pow((to.getY() - from.getY()), 2));
-		return from.getDistance(to);
-	}
+	private double distance(){ return from.distance(to); }
 	
-	public double getWeightByDistance(){ return distance(); }
-	public double getWeightBySpeed(){ return distance() / (double)maxSpeed; }
+	public double getDistance(){ return distance(); }
+	public double getWeightBySpeed(){ return distance() / (double)routeEdgeMeta.getMaxSpeed(); }
 	
 	public double getWeight(WeightEnum weightEnum){
     	double result = 0;
     	switch(weightEnum) {
-		case DISTANCE: result = getWeightByDistance();
+		case DISTANCE_CAR: result = getDistance();
 			break;
-		case SPEED: result = getWeightBySpeed();
+		case SPEED_CAR: result = getWeightBySpeed();
+			break;
+		case DISTANCE_BIKE: result = getDistance();
+			break;
+		case DISTANCE_WALK: result = getDistance();
 			break;
 		default:
 			break;
@@ -56,6 +52,29 @@ public class RouteEdge {
     }
 	
 	public String toString() {
-		return from.getId() + "->" + to.getId();
+		return from.getId() + " [" + from.toString() + "] ->" + to.getId()+ " [" + to.toString() + "]\n";
 	}
+	
+	public String toStringDesr() {
+		return from.getId() + " -> " + to.getId() + " [ " + description + " ]";
+	}
+
+	@Override
+	public Point2D.Float getFirstNode() {
+		return from;
+	}
+
+	@Override
+	public Point2D.Float[] getNodes() {
+		return new Point2D.Float[] {from, to};
+	}
+
+	@Override
+	public float[] getCoords() {
+		return new float[] {from.x, from.y, to.x, to.y};
+	}
+	
+	
+
+	
 }

@@ -1,13 +1,11 @@
 package dk.itu.n.danmarkskort.models;
 
-import dk.itu.n.danmarkskort.Main;
+import dk.itu.n.danmarkskort.kdtree.KDTree;
 
 import java.awt.*;
 import java.awt.geom.Path2D;
-import java.lang.reflect.Array;
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 
 public class ParsedRelation extends ParsedWay {
@@ -36,13 +34,30 @@ public class ParsedRelation extends ParsedWay {
     }
 
     @Override
-    public ParsedNode[] getNodes() {
-        ArrayList<ParsedNode> arrList = new ArrayList<>();
-        if(inners.size() > 0 && outers.size() > 0) {
-            for(ParsedItem outer: outers) arrList.addAll(Arrays.asList(outer.getNodes()));
-            for(ParsedItem inner: inners) arrList.addAll(Arrays.asList(inner.getNodes()));
+    public Point2D.Float[] getNodes() {
+        Point2D.Float[] nodeArr = new Point2D.Float[size()];
+        int i = 0;
+        for(ParsedItem inner: inners) {
+            for(int j = 0; j < inner.getNodes().length; j++, i++) nodeArr[i] = inner.getNodes()[j];
         }
-        return arrList.toArray(new ParsedNode[arrList.size()]);
+        for(ParsedItem outer: outers) {
+            for(int k = 0; k < outer.getNodes().length; k++, i++) nodeArr[i] = outer.getNodes()[k];
+        }
+        return nodeArr;
+    }
+
+
+    @Override
+    public float[] getCoords() {
+        float[] coordArr = new float[size()];
+        int i = 0;
+        for(ParsedItem inner: inners) {
+            for(int j = 0; j < inner.getCoords().length; j++, i++) coordArr[i] = inner.getCoords()[j];
+        }
+        for(ParsedItem outer: outers) {
+            for(int k = 0; k < outer.getCoords().length; k++, i++) coordArr[i] = outer.getCoords()[k];
+        }
+        return coordArr;
     }
 
     @Override
@@ -65,7 +80,7 @@ public class ParsedRelation extends ParsedWay {
     // FIXME: also, not sure if inners and nothingerners should also be connected like this?
     public void correctOuters() {
         if(outers.size() == 0) return;
-        HashMap<ParsedNode, ParsedWay> tempWayMap = new HashMap<>();
+        HashMap<Point2D, ParsedWay> tempWayMap = new HashMap<>();
         ArrayList<ParsedWay> corrected = new ArrayList<>();
         for(ParsedWay outer: outers) {
             ParsedWay candidateBefore = tempWayMap.remove(outer.getFirstNode());
@@ -113,7 +128,7 @@ public class ParsedRelation extends ParsedWay {
     }
 
     @Override
-    public ParsedNode getFirstNode() {
+    public Point2D.Float getFirstNode() {
         if(nodes != null && nodes.length > 0) return nodes[0];
         else if(outers.size() > 0) return outers.get(0).getFirstNode();
         else if(inners.size() > 0) return inners.get(0).getFirstNode();
@@ -126,9 +141,17 @@ public class ParsedRelation extends ParsedWay {
     	if(nodes != null && nodes.length > 0) nodeAmount = nodes.length;
 
     	return "ParsedRelation [" + "id=" + getID()
-                + ", firstLon=" + getFirstNode().getLon()
-                + ", firstLat=" + getFirstNode().getLat()
+                + ", firstLon=" + getFirstNode().getX()
+                + ", firstLat=" + getFirstNode().getY()
                 + ", nodeAmount=" + nodeAmount
                 + ", itemAmount=" + (inners.size() + outers.size()) + "]";
+    }
+
+    @Override
+    public int size() {
+        int size = 0;
+        for(ParsedItem inner: inners) size += inner.size();
+        for(ParsedItem outer: outers) size += outer.size();
+        return size;
     }
 }

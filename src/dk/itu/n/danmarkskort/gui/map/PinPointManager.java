@@ -3,11 +3,15 @@ package dk.itu.n.danmarkskort.gui.map;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 import javax.imageio.ImageIO;
 
@@ -60,19 +64,43 @@ public class PinPointManager implements Serializable {
 	public void loadIcon() {
 		try {
 			if(systemIcons == null) systemIcons = new ArrayList<BufferedImage>();
-			icon = ImageIO.read(new File("resources/icons/pin.png"));
-			File[] fileList = new File("resources/icons/default_pins").listFiles();
-			if(fileList == null) {
-				Main.log("No system pin images were found.");
-				return;
-			}
-			for(File file : fileList) {
-				BufferedImage image = ImageIO.read(file);
-				if(image == null) Main.log("(PinPoint) Could not load " + file.toString());
-				else systemIcons.add(image);
+			if(Main.production) icon = ImageIO.read(getClass().getResourceAsStream("/resources/icons/pin.png"));
+			else icon = ImageIO.read(new File("resources/icons/pin.png"));
+			if(Main.production) loadIconsFromJar();
+			else {
+				File[] fileList = new File("resources/icons/default_pins").listFiles();
+				if(fileList == null) {
+					Main.log("No system pin images were found.");
+					return;
+				}
+				for(File file : fileList) {
+					BufferedImage image = ImageIO.read(file);
+					if(image == null) Main.log("(PinPoint) Could not load " + file.toString());
+					else systemIcons.add(image);
+				}
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+	}
+	
+	private void loadIconsFromJar() {
+		// Found at: http://stackoverflow.com/questions/11012819/how-can-i-get-a-resource-folder-from-inside-my-jar-file
+		JarFile jar = null;
+		try {
+			jar = new JarFile(new File((getClass().getProtectionDomain().getCodeSource().getLocation().getPath())));
+			final Enumeration<JarEntry> entries = jar.entries(); //gives ALL entries in jar
+		    while(entries.hasMoreElements()) {
+		        final String name = entries.nextElement().getName();
+		        if (name.startsWith("resources/icons/default_pins/")) { //filter according to the path
+		            BufferedImage image = ImageIO.read(getClass().getResourceAsStream("/"+name));
+					if(image == null) Main.log("(PinPoint) Could not load " + name);
+					else systemIcons.add(image);
+		        }
+		    }
+		    jar.close();
+		} catch (IOException e1) {
+			e1.printStackTrace();
 		}
 	}
 	
@@ -134,6 +162,7 @@ public class PinPointManager implements Serializable {
 	public boolean removePinPoint(PinPoint pinPoint) {
 		if(pinPoints.containsValue(pinPoint)) {
 			pinPoints.remove(pinPoint.getName());
+			save();
 			return true;
 		} else return false;
 	}
@@ -148,7 +177,6 @@ public class PinPointManager implements Serializable {
 		if(systemPinPoints.containsKey(name)) return false;
 		systemPinPoints.put(name, pinPoint);
 		Main.mainPanel.repaint();
-		save();
 		return true;
 	}
 	

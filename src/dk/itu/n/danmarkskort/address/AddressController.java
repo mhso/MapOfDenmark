@@ -3,8 +3,8 @@ package dk.itu.n.danmarkskort.address;
 import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.TimerUtil;
 import dk.itu.n.danmarkskort.models.ParsedAddress;
-import dk.itu.n.danmarkskort.models.RegionFloat;
 
+import java.awt.geom.Point2D;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -34,9 +34,10 @@ public class AddressController {
 	}
 	
 	public List<String> getSearchSuggestions(String find, long limitAmountOfResults){ return addressSuggestion.searchSuggestions(find, limitAmountOfResults); }
+	public List<String> getSearchSuggestions(Point2D.Float find, long limitAmountOfResults){ return searchSuggestions(find, limitAmountOfResults); }
+	
 	
 	public Address getSearchResult(String find){
-		
 		Address addrBuild = AddressParser.parse(find, false);
 		Map<String, Postcode> list;
 		list = addressHolder.search(addrBuild,
@@ -68,19 +69,11 @@ public class AddressController {
 		return null;
 	}
 	
-	public Address getSearchResult(float[] lonLat){
-		return addressRegionSearch.getSearchResult(lonLat);
-	}
-	
-	public Address getNearstSearchResult(RegionFloat input){
-		return addressRegionSearch.getNearstSearchResult(input);
-	}
-	
-	public List<String> searchSuggestions(RegionFloat input, long limitAmountOfResults){
+	public List<String> searchSuggestions(Point2D.Float input, long limitAmountOfResults){
 		 return addressRegionSearch.searchSuggestions(input, limitAmountOfResults);
 	}
 	
-	public void addAddress(float[] lonLat, String street, String housenumber, String postcode, String city){
+	public void addAddress(Point2D.Float lonLat, String street, String housenumber, String postcode, String city){
 		Postcode pc = addressHolder.postcodes.get(postcode);
 		if(pc == null) pc = new Postcode(postcode, city);
 		pc.addAddress(street, housenumber, lonLat);
@@ -92,17 +85,14 @@ public class AddressController {
 	public void addressParsed(ParsedAddress addr) {
 		timerUtilA.on();
         if(addr != null) {
-			float[] lonLat = new float[] {addr.getFirstLon(), addr.getFirstLat()};
-			
-			//if(debug) if(addr.getPostcode() != null && !addr.getPostcode().matches("(^[0-9]{4}$)")) System.out.println("Postcode sucks: " + addr.toStringParted());
-			
+        	Point2D.Float lonLat = new Point2D.Float(addr.getFirstLon(), addr.getFirstLat());
+	
 			if(AddressValidator.isAddressMinimum(addr.getStreet(), addr.getHousenumber(), addr.getPostcode())){
 				if(AddressValidator.isCityname(addr.getCity())) {
 					addAddress(lonLat, addr.getStreet(), addr.getHousenumber(), addr.getPostcode(), addr.getCity());
 				} else {
 					addAddress(lonLat, addr.getStreet(), addr.getHousenumber(), addr.getPostcode(), null);
 				}
-				//if(debug) if(addr.getStreet().matches(".*[0-9].*")) System.out.println("lvl1 " + addr.toStringParted());
 				acceptLvl1++;
 			}else if(AddressValidator.isAddressMinimum(
         				AddressValidator.prepStreetname(addr.getStreet()),

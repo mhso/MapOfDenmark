@@ -1,17 +1,19 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?><theme version="0.3">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<theme version="0.3">
 	<defaultfont fontcolor="000000" fontsize="60"/>
+	<bgcolor color="18135B"/>
 	<lines>
 		<line>
 			<type name="HIGHWAY_MOTORWAY"/>
-			<innercolor color="FF0000"/>
-			<outercolor color="660000"/>
+			<innercolor color="EC8E9F"/>
+			<outercolor color="E32F6B"/>
 			<lineproperties linewidth="90"/>
 			<layer layer="5"/>
 		</line>
 		<line>
 			<type name="HIGHWAY_TRUNK"/>
-			<innercolor color="CE4A4A"/>
-			<outercolor color="B52929"/>
+			<innercolor color="FEB19B"/>
+			<outercolor color="CF5638"/>
 			<lineproperties linewidth="90"/>
 			<layer layer="5"/>
 		</line>
@@ -61,51 +63,71 @@
 			<type name="HIGHWAY_FOOTWAY"/>
 			<innercolor color="0066CC"/>
 			<outercolor color="001933"/>
-			<lineproperties linedash="5, 5" linewidth="10"/>
+			<lineproperties linedash="5, 5" borderdash="true" linewidth="10"/>
 			<layer layer="3"/>
 		</line>
 		<line>
 			<type name="HIGHWAY_CYCLEWAY"/>
 			<innercolor color="0000FF"/>
 			<outercolor color="000000"/>
-			<lineproperties linedash="5, 5" linewidth="10"/>
+			<lineproperties linedash="5, 5" borderdash="true" linewidth="10"/>
 			<layer layer="3"/>
 		</line>
 	</lines>
 	<areas>
 		<area>
+			<type name="WATER"/>
+			<innercolor color="252572"/>
+			<layer layer="2"/>
+		</area>
+		<area>
 			<type name="COASTLINE"/>
-			<innercolor color="F0F0E6"/>
+			<innercolor color="333333"/>
 			<layer layer="1"/>
 		</area>
 		<area>
 			<type name="BUILDING"/>
-			<innercolor color="C0C0C0"/>
-			<outercolor color="606060"/>
+			<innercolor color="F5F57A"/>
+			<outercolor color="666600"/>
 			<layer layer="5"/>
 		</area>
 		<area>
 			<type name="GRASS"/>
-			<innercolor color="00CC00"/>
-			<outercolor color="003300"/>
+			<innercolor color="394848"/>
+			<outercolor color="000000"/>
 			<layer layer="3"/>
+		</area>
+		<area>
+			<type name="WOOD"/>
+			<innercolor color="8BA282"/>
+			<layer layer="2"/>
 		</area>
 		<area>
 			<type name="SPORT"/>
-			<innercolor color="00FF99"/>
-			<outercolor color="003300"/>
+			<innercolor color="555555"/>
+			<outercolor color="000000"/>
 			<layer layer="3"/>
 		</area>
 		<area>
+			<type name="SCRUB"/>
+			<innercolor color="829282"/>
+			<layer layer="2"/>
+		</area>
+		<area>
+			<type name="FARMLAND"/>
+			<innercolor color="B7AF93"/>
+			<layer layer="2"/>
+		</area>
+		<area>
 			<type name="PARK"/>
-			<innercolor color="33FF33"/>
+			<innercolor color="394848"/>
 			<outercolor color="003333"/>
 			<layer layer="3"/>
 		</area>
 		<area>
 			<type name="FOREST"/>
-			<innercolor color="006600"/>
-			<outercolor color="003300"/>
+			<innercolor color="1A1A1A"/>
+			<outercolor color="000000"/>
 			<layer layer="3"/>
 		</area>
 	</areas>
