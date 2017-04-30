@@ -100,6 +100,9 @@ public class WindowLauncher extends JFrame {
 		});
 		
 		JScrollPane scroll = new JScrollPane(binFilesList);
+		scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+		scroll.getVerticalScrollBar().setUnitIncrement(6);
+		scroll.getVerticalScrollBar().setUI(new CustomScrollBarUI(style));
 		scroll.setBorder(null);
 		panelParsedFiles.add(scroll);
 		
@@ -230,6 +233,7 @@ public class WindowLauncher extends JFrame {
 		panel.setBackground(outerColor);
 		centerPanel.setBackground(outerColor);
 		panelParsedFiles.setBackground(outerColor);
+		scroll.getViewport().setBackground(outerColor);
 		binFilesList.setBackground(innerColor);
 		scroll.setBackground(innerColor);
 		panelCurrentFile.setBackground(outerColor);
