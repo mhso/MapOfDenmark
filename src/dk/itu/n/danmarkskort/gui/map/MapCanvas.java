@@ -9,8 +9,6 @@ import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.Shape;
 import java.awt.geom.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
@@ -21,7 +19,6 @@ import java.util.List;
 import java.util.Observable;
 
 import javax.swing.JPanel;
-import javax.swing.Timer;
 
 import dk.itu.n.danmarkskort.DKConstants;
 import dk.itu.n.danmarkskort.Main;
@@ -46,7 +43,6 @@ public class MapCanvas extends JPanel {
 
 	private WaytypeGraphicSpec currentWTGSpec;
 	private boolean zoomChanged;
-	private boolean isInitialized = false;
 	
 	private List<CanvasListener> listeners = new ArrayList<>();
 	private List<WaytypeGraphicSpec> wayTypesVisible;
@@ -73,7 +69,7 @@ public class MapCanvas extends JPanel {
 	public void addCanvasListener(CanvasListener l) {
 		listeners.add(l);
 	}
-
+	
 	public AffineTransform getTransform() {
 		return transform;
 	}
@@ -117,18 +113,25 @@ public class MapCanvas extends JPanel {
             KDTree<ParsedItem> kdTree = Main.model.enumMapKD.get(wayTypeGraphic.getWayType());
             if (kdTree == null) continue;
             //if (currentWTGSpec.getOuterColor() != null) {
+            if (currentWTGSpec instanceof GraphicSpecArea) {
+                currentWTGSpec.transformPrimary(g2d);
+                for (Iterator<ParsedItem> i = kdTree.iterator(currentRegion); i.hasNext(); ) {
+                    ParsedItem item = i.next();
+                    g2d.fill(item.getShape());
+                    shapesDrawn++;
+                }
+            }
+        }
+        for (WaytypeGraphicSpec wayTypeGraphic : wayTypesVisible) {
+            currentWTGSpec = wayTypeGraphic;
+            KDTree<ParsedItem> kdTree = Main.model.enumMapKD.get(wayTypeGraphic.getWayType());
+            if (kdTree == null) continue;
+            //if (currentWTGSpec.getOuterColor() != null) {
             if (currentWTGSpec instanceof GraphicSpecLine) {
                 currentWTGSpec.transformOutline(g2d);
                 for (Iterator<ParsedItem> i = kdTree.iterator(currentRegion); i.hasNext(); ) {
                     ParsedItem item = i.next();
                     g2d.draw(item.getShape());
-                    shapesDrawn++;
-                }
-            } else if (currentWTGSpec instanceof GraphicSpecArea) {
-                currentWTGSpec.transformPrimary(g2d);
-                for (Iterator<ParsedItem> i = kdTree.iterator(currentRegion); i.hasNext(); ) {
-                    ParsedItem item = i.next();
-                    g2d.fill(item.getShape());
                     shapesDrawn++;
                 }
             }
@@ -212,8 +215,7 @@ public class MapCanvas extends JPanel {
         background.lineTo(region.x2, region.y2);
         background.lineTo(region.x1, region.y2);
         background.lineTo(region.x1, region.y1);
-
-
+        
         if(Main.model.enumMapKD.containsKey(WayType.COASTLINE) ){
         	g2d.setColor(GraphicRepresentation.getCanvasBGColor());
         }
@@ -427,10 +429,9 @@ public class MapCanvas extends JPanel {
 		pan(-mapRegion.x1, -mapRegion.y2);
 		zoom(getWidth() / (mapRegion.x2 - mapRegion.x1));
 		if(!Main.tileController.isInitialized) Main.tileController.initialize();
-		isInitialized = true;
 	}
 	
-	public void setupDone() {	
+	public void setupDone() {
 		zoomToBounds();
 		for(CanvasListener listener : listeners) listener.onSetupDone();
 	}

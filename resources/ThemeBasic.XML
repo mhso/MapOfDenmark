@@ -62,13 +62,13 @@
 		<line>
 			<type name="HIGHWAY_FOOTWAY"/>
 			<innercolor color="B7B393"/>
-			<lineproperties linedash="5, 5" linewidth="8"/>
+			<lineproperties linedash="5, 5" borderdash="true" linewidth="8"/>
 			<layer layer="3"/>
 		</line>
 		<line>
 			<type name="HIGHWAY_CYCLEWAY"/>
 			<innercolor color="939FB7"/>
-			<lineproperties linedash="5, 5" linewidth="8"/>
+			<lineproperties linedash="5, 5" borderdash="true" linewidth="8"/>
 			<layer layer="3"/>
 		</line>
 		<line>
@@ -84,6 +84,13 @@
 			<outercolor color="A5A5A5"/>
 			<lineproperties linewidth="20"/>
 			<layer layer="3"/>
+		</line>
+		<line>
+			<type name="RAIL"/>
+			<innercolor color="F6EBEB"/>
+			<outercolor color="6D6D6D"/>
+			<lineproperties linedash="5, 8" borderdash="false" lineend="BUTT" linejoin="BEVEL" linewidth="12"/>
+			<layer layer="2"/>
 		</line>
 		<line>
 			<type name="LIGHT_RAIL"/>

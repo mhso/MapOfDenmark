@@ -248,7 +248,12 @@ public class WindowLauncher extends JFrame {
 		
 		setLocationRelativeTo(null);
 		setVisible(true);
-		contentPane.requestFocusInWindow();
+		EventQueue.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				buttonLaunch.requestFocusInWindow();
+			}
+		});
 	}
 	
 	private void launch() {

@@ -151,7 +151,7 @@ public class LoadPage extends JPanel  {
 		if (fcVal == JFileChooser.APPROVE_OPTION) {
 			File file = fc.getSelectedFile();
 			
-			Main.startup(new String[]{file.getAbsolutePath()});
+			Main.launch(new String[]{file.getAbsolutePath()});
 			Main.window.add(Main.createFrameComponents());
 			Main.window.revalidate();
 			Main.map.setupDone();
@@ -165,7 +165,7 @@ public class LoadPage extends JPanel  {
 		fc.setAcceptAllFileFilterUsed(false);
 		fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		fc.setFileFilter(new FileNameExtensionFilter("Map Files", "osm", "zip", "bin"));
-		fc.setCurrentDirectory(new File(System.getProperty("user.home")));
+		fc.setCurrentDirectory(new File(System.getProperty("user.dir")));
 		return fc;
 	}
 

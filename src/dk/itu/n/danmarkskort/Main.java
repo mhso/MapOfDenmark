@@ -95,7 +95,7 @@ public class Main {
 			@Override
 			public void run() {
 				osmReader.parseFile(args[0]);
-				main();
+				if(window == null) main();
 		        shutdown();
 			}
 		};
@@ -122,7 +122,8 @@ public class Main {
         window.setIconImage(style.frameIcon());
         window.add(createFrameComponents());
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        window.setPreferredSize(new Dimension(DKConstants.WINDOW_WIDTH, DKConstants.WINDOW_HEIGHT));  
+        window.setPreferredSize(new Dimension(DKConstants.WINDOW_WIDTH, DKConstants.WINDOW_HEIGHT));
+        if(userPreferences.isMaximizeOnStartup()) window.setExtendedState(window.getExtendedState() | JFrame.MAXIMIZED_BOTH);
         window.addComponentListener(new ComponentListener() {
             public void componentResized(ComponentEvent e) {         
             	Main.windowResized(e);

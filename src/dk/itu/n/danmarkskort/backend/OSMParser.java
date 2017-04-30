@@ -491,6 +491,9 @@ public class OSMParser extends SAXAdapter implements Serializable {
                 break;
             case "railway":
                 switch(v) {
+                	case "rail":
+                		waytype = WayType.RAIL;
+                		break;
                     case "light_rail":
                         waytype = WayType.LIGHT_RAIL;
                         break;
