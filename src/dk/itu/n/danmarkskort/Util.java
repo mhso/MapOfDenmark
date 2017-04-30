@@ -1,3 +1,4 @@
+
 package dk.itu.n.danmarkskort;
 
 import java.awt.Dimension;
@@ -17,6 +18,7 @@ import java.util.Map;
 
 import dk.itu.n.danmarkskort.backend.InputMonitor;
 import dk.itu.n.danmarkskort.backend.InputStreamListener;
+import dk.itu.n.danmarkskort.models.Region;
 
 import java.awt.MouseInfo;
 import java.awt.Point;
@@ -25,6 +27,8 @@ import java.awt.Toolkit;import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 
 public class Util {
+	
+	public static final AffineTransform zeroTransform = new AffineTransform();
 	
 	public static float getRAMUsageInMB() {
 		return (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1000000F;
@@ -90,14 +94,8 @@ public class Util {
 		}
 	}
 	
-	public static int roundByN(int n, double value){
+	public static int roundByN(double n, double value){
 	    return (int) (Math.round(value/n) * n);
-	}
-	
-	public static double distanceInMeters(Point2D p1, Point2D p2) {
-		double latM = 1000*((p2.getY()-p1.getY())*110.574);
-        double lonM = 1000*((p2.getX()-p1.getX())*111.320*Math.cos(Math.toRadians(p2.getY())));
-        return Math.sqrt((lonM * lonM) + (latM * latM));
 	}
 	
 	public static int mouseWarp() {
@@ -130,10 +128,6 @@ public class Util {
 	
 	public static Point2D toRealCoords(Point2D fakeCoords) {
 		return new Point2D.Float((float)fakeCoords.getX()/Main.model.getLonFactor(), (float)-fakeCoords.getY());
-	}
-	
-	public static Point2D toFakeCoords(Point2D realCoords) {
-		return new Point2D.Float((float)realCoords.getX()*Main.model.getLonFactor(), (float)-realCoords.getY());
 	}
 	
 	public static String getBinaryFilePath() {
@@ -203,4 +197,9 @@ public class Util {
 		transform.preConcatenate(AffineTransform.getScaleInstance(scale, scale));
 	}
 
+	public static void zoomToRegion(AffineTransform transform, Region region, double currentWidth) {
+		Util.pan(transform, -region.x1, -region.y2);
+		Util.zoom(transform, currentWidth / (region.x2 - region.x1));
+	}
+	
 }

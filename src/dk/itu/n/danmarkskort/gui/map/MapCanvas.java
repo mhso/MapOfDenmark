@@ -25,6 +25,8 @@ import javax.swing.Timer;
 
 import dk.itu.n.danmarkskort.DKConstants;
 import dk.itu.n.danmarkskort.Main;
+import dk.itu.n.danmarkskort.Util;
+import dk.itu.n.danmarkskort.gui.map.multithreading.Tile;
 import dk.itu.n.danmarkskort.kdtree.KDTree;
 import dk.itu.n.danmarkskort.mapgfx.GraphicRepresentation;
 import dk.itu.n.danmarkskort.mapgfx.GraphicSpecArea;
@@ -34,9 +36,7 @@ import dk.itu.n.danmarkskort.models.ParsedItem;
 import dk.itu.n.danmarkskort.models.Region;
 import dk.itu.n.danmarkskort.models.WayType;
 
-public class MapCanvas extends JPanel implements ActionListener {
-
-	private static final long serialVersionUID = -4476997375977002964L;
+public class MapCanvas extends JPanel {
 
 	private AffineTransform transform = new AffineTransform();
 	private AffineTransform actualTransform = new AffineTransform();
@@ -46,21 +46,17 @@ public class MapCanvas extends JPanel implements ActionListener {
 
 	private WaytypeGraphicSpec currentWTGSpec;
 	private boolean zoomChanged;
-
-	private BufferedMapManager imageManager = null;
-	private Point2D zero;
-
+	private boolean isInitialized = false;
+	
 	private List<CanvasListener> listeners = new ArrayList<>();
 	private List<WaytypeGraphicSpec> wayTypesVisible;
 	
 	public boolean scaleCurrentLayer = false;
-	private Timer zoomTimer;
+
 	private Shape currentHighlighedShape;
 	private WayType currentHighlighedWaytype;
 	
 	public MapCanvas() {
-		zoomTimer = new Timer(200, this);
-		zoomTimer.setRepeats(false);
 		new MapMouseController(this);
 		setDoubleBuffered(true);
 	}
@@ -77,25 +73,18 @@ public class MapCanvas extends JPanel implements ActionListener {
 	public void addCanvasListener(CanvasListener l) {
 		listeners.add(l);
 	}
-	
-	public void forceRepaint() {
-		zoomChanged = true;
-		imageManager.forceFullRepaint();
-		repaint();
-	}
 
 	public AffineTransform getTransform() {
 		return transform;
 	}
 	
+	public AffineTransform getActualTransform() {
+		return actualTransform;
+	}
+	
 	public void drawMap(Graphics2D g2d) {
 		if(Main.buffered) {
-			if(imageManager != null) {
-				if(scaleCurrentLayer) imageManager.drawOldImages(g2d);
-				else if(imageManager.isRepainting()) imageManager.drawOldImages(g2d);
-				else imageManager.draw(g2d);
-				//drawMapShapes(g2d);
-			}
+			Main.tileController.draw(g2d);
 		} else {
 			drawMapShapes(g2d);
 		}
@@ -118,20 +107,9 @@ public class MapCanvas extends JPanel implements ActionListener {
 		if(zoomChanged) wayTypesVisible = getOnScreenGraphicsForCurrentZoom();
 		shapesDrawn = 0;
 		if(wayTypesVisible == null) return;
+
         Region currentRegion = getGeographicalRegion();
-        if(Main.debugExtra && !Main.buffered) {
-            double x1 = currentRegion.x1;
-            double x2 = currentRegion.x2;
-            double y1 = currentRegion.y1;
-            double y2 = currentRegion.y2;
-            double width = currentRegion.getWidth();
-            double height = currentRegion.getHeight();
-            currentRegion = new Region(
-                    x1 + (width * 0.25),
-                    y1 + (height * 0.25),
-                    x2 - (width * 0.25),
-                    y2 - (height * 0.25));
-        }
+
 
         // drawing all the outlines, if the current WayTypeGraphicSpec has one
         for (WaytypeGraphicSpec wayTypeGraphic : wayTypesVisible) {
@@ -170,16 +148,59 @@ public class MapCanvas extends JPanel implements ActionListener {
                 }
             }
         }
-        if(Main.debugExtra && !Main.buffered) {
-            g2d.setStroke(new BasicStroke(0.0001f));
-            g2d.setColor(Color.BLACK);
-            Path2D box = new Path2D.Float();
-            box.moveTo(currentRegion.x1, currentRegion.y1);
-            box.lineTo(currentRegion.x1, currentRegion.y2);
-            box.lineTo(currentRegion.x2, currentRegion.y2);
-            box.lineTo(currentRegion.x2, currentRegion.y1);
-            box.lineTo(currentRegion.x1, currentRegion.y1);
-            g2d.draw(box);
+    }
+	
+	public void drawMapShapesForTile(Tile tile) {
+		if(tile.isRendered()) return;
+		Graphics2D g2d = (Graphics2D)tile.getGraphics();
+		drawBackground(g2d);
+		Region tileRegion = tile.getGeographicalRegion();
+		Region currentRegion = new Region(tileRegion.x1, tileRegion.y1 + tileRegion.getHeight(), tileRegion.x2, tileRegion.y2 + tileRegion.getHeight());
+		
+		g2d.setTransform(tile.getTransform());
+		if(antiAlias) g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		else g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
+		drawMapRegion(g2d);
+		if(zoomChanged) wayTypesVisible = getOnScreenGraphicsForCurrentZoom();
+		shapesDrawn = 0;
+		if(wayTypesVisible == null) return;
+
+        // drawing all the outlines, if the current WayTypeGraphicSpec has one
+        for (WaytypeGraphicSpec wayTypeGraphic : wayTypesVisible) {
+            currentWTGSpec = wayTypeGraphic;
+            KDTree<ParsedItem> kdTree = Main.model.enumMapKD.get(wayTypeGraphic.getWayType());
+            if (kdTree == null) continue;
+            //if (currentWTGSpec.getOuterColor() != null) {
+            if (currentWTGSpec instanceof GraphicSpecLine) {
+                currentWTGSpec.transformOutline(g2d);
+                for (Iterator<ParsedItem> i = kdTree.iterator(currentRegion); i.hasNext(); ) {
+                    ParsedItem item = i.next();
+                    g2d.draw(item.getShape());
+                    shapesDrawn++;
+                }
+            } else if (currentWTGSpec instanceof GraphicSpecArea) {
+                currentWTGSpec.transformPrimary(g2d);
+                for (Iterator<ParsedItem> i = kdTree.iterator(currentRegion); i.hasNext(); ) {
+                    ParsedItem item = i.next();
+                    g2d.fill(item.getShape());
+                    shapesDrawn++;
+                }
+            }
+        }
+
+        // draw or fill for all the different WaytypeGraphicsSpecs
+        for(WaytypeGraphicSpec wayTypeGraphic : wayTypesVisible) {
+            currentWTGSpec = wayTypeGraphic;
+            if (currentWTGSpec instanceof GraphicSpecLine) {
+                currentWTGSpec.transformPrimary(g2d);
+                KDTree<ParsedItem> kdTree = Main.model.enumMapKD.get(wayTypeGraphic.getWayType());
+                if (kdTree == null) continue;
+                for (Iterator<ParsedItem> i = kdTree.iterator(currentRegion); i.hasNext(); ) {
+                    ParsedItem item = i.next();
+                    g2d.draw(item.getShape());
+                    shapesDrawn++;
+                }
+            }
         }
     }
 
@@ -192,7 +213,7 @@ public class MapCanvas extends JPanel implements ActionListener {
         background.lineTo(region.x1, region.y2);
         background.lineTo(region.x1, region.y1);
 
-        // backgroundcolor for the map. If there's a coastline use the water innercolor, otherwise use the coastline innercolor
+
         if(Main.model.enumMapKD.containsKey(WayType.COASTLINE) ){
         	g2d.setColor(GraphicRepresentation.getCanvasBGColor());
         }
@@ -255,17 +276,16 @@ public class MapCanvas extends JPanel implements ActionListener {
 		repair();
 		transform.preConcatenate(AffineTransform.getTranslateInstance(dx, dy));
 		actualTransform.preConcatenate(AffineTransform.getTranslateInstance(dx, dy));
-		if(Main.buffered && imageManager != null) imageManager.pan(dx, dy);
+		if(Main.tileController.isInitialized()) {
+			if(Main.tileController.updateTilePos()) {
+				Main.tileController.checkForNewTiles();
+			}
+		}
 		repaint();
 	}
 	
 	public void purePan(double dx, double dy) { //Only pans map temporary without automatic repaint.
 		transform.preConcatenate(AffineTransform.getTranslateInstance(dx, dy));
-	}
-	
-	public void purePanToTile(Point tilePosition) {
-		transform.preConcatenate(AffineTransform.getTranslateInstance(-transform.getTranslateX(), -transform.getTranslateY()));
-		transform.preConcatenate(AffineTransform.getTranslateInstance(zero.getX() + -tilePosition.getX() * getWidth(), zero.getY() + -tilePosition.getY() * getHeight()));
 	}
 	
 	public void purePanToPosition(Point2D position) {
@@ -300,6 +320,12 @@ public class MapCanvas extends JPanel implements ActionListener {
 		return new Region(topLeft.getX(), topLeft.getY(), bottomRight.getX(), bottomRight.getY());
 	}
 	
+	public Region getActualGeographicalRegion() {
+		Point2D topLeft = toActualModelCoords(new Point2D.Double(0, 0));
+		Point2D bottomRight = toActualModelCoords(new Point2D.Double(getWidth(), getHeight()));
+		return new Region(topLeft.getX(), topLeft.getY(), bottomRight.getX(), bottomRight.getY());
+	}
+	
 	public Point2D getRelativeMousePosition() {
 		Point mousePositionScreen = MouseInfo.getPointerInfo().getLocation();
 		Point mapCanvasPosition = getLocationOnScreen();
@@ -315,34 +341,30 @@ public class MapCanvas extends JPanel implements ActionListener {
 	}
 	
 	public void zoom(double factor) {
+		
 		double zoomBefore = getZoom();
 		double scaleBefore = getZoomRaw();
-		repair();
-		transform.preConcatenate(AffineTransform.getScaleInstance(factor, factor));
-		actualTransform.preConcatenate(AffineTransform.getScaleInstance(factor, factor));
+		Util.zoom(transform, factor);
+		Util.zoom(actualTransform, factor);
+		if(Main.tileController.isInitialized()) Main.tileController.zoom(factor);
 		double scaleAfter = getZoomRaw();
-		if(getZoom() > MAX_ZOOM) {
-			transform.preConcatenate(AffineTransform.getScaleInstance(scaleBefore/scaleAfter, scaleBefore/scaleAfter));
-			actualTransform.preConcatenate(AffineTransform.getScaleInstance(scaleBefore/scaleAfter, scaleBefore/scaleAfter));
+		if(getZoom() > MAX_ZOOM || getZoom() < 1) {
+			Util.zoom(transform, scaleBefore/scaleAfter);
+			Util.zoom(transform, scaleBefore/scaleAfter);		
+			if(Main.tileController.isInitialized()) Main.tileController.zoom(scaleBefore/scaleAfter);
 		}
-		else if(getZoom() < 1) {
-			transform.preConcatenate(AffineTransform.getScaleInstance(scaleBefore/scaleAfter, scaleBefore/scaleAfter));
-			actualTransform.preConcatenate(AffineTransform.getScaleInstance(scaleBefore/scaleAfter, scaleBefore/scaleAfter));
-		}
-
+		
+		
 		for(CanvasListener listener : listeners) listener.onZoom();
+		
 		if(zoomBefore != getZoom()) {
+			
 			zoomChanged = true;
 			for(CanvasListener listener : listeners) listener.onZoomLevelChanged();
 		}
 		
-		if(imageManager != null && !this.scaleCurrentLayer) {
-			imageManager.storeZoomImages();
-		}
-		if(imageManager != null) imageManager.zoom(factor);
-		this.scaleCurrentLayer = true;
 		
-		zoomTimer.restart();
+
 		repaint();
 	}
 	
@@ -364,6 +386,14 @@ public class MapCanvas extends JPanel implements ActionListener {
 		try {
 			return transform.inverseTransform(relativeToMapCanvasPosition, null);
 		} catch (NoninvertibleTransformException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	public Point2D toActualModelCoords(Point2D relativeToMapCanvasPosition) {
+		try {
+			return actualTransform.inverseTransform(relativeToMapCanvasPosition, null);
+		} catch(Exception e) {
 			throw new RuntimeException(e);
 		}
 	}
@@ -391,31 +421,23 @@ public class MapCanvas extends JPanel implements ActionListener {
 	public double getZoomRaw() {
 		return transform.getScaleX();
 	}
-
-	public Point2D getZero() {
-		return zero;
-	}
 	
 	public void zoomToBounds() {
 		Region mapRegion = Main.model.getMapRegion();
 		pan(-mapRegion.x1, -mapRegion.y2);
 		zoom(getWidth() / (mapRegion.x2 - mapRegion.x1));
+		if(!Main.tileController.isInitialized) Main.tileController.initialize();
+		isInitialized = true;
 	}
 	
 	public void setupDone() {	
 		zoomToBounds();
-		if(Main.buffered) {
-			zero = new Point2D.Double(transform.getTranslateX(), transform.getTranslateY());
-			imageManager = new BufferedMapManager();
-			imageManager.forceFullRepaint();
-		}
 		for(CanvasListener listener : listeners) listener.onSetupDone();
 	}
-
-	public void actionPerformed(ActionEvent e) {
-		zero = new Point2D.Double(transform.getTranslateX(), transform.getTranslateY());
-		scaleCurrentLayer = false;
-		if(imageManager != null)imageManager.forceFullRepaint();
+	
+	@Deprecated
+	public void forceRepaint() {
+		
 	}
 
 }
