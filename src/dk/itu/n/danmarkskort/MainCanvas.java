@@ -48,5 +48,7 @@ public class MainCanvas extends JPanel {
     	guiManager = new GUIManager();
         add(guiManager);
     }
+
+    public GUIManager getGuiManager() { return guiManager; }
     
 }

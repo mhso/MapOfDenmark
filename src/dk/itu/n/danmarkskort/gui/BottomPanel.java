@@ -32,6 +32,10 @@ public class BottomPanel extends JPanel implements CanvasListener {
 	private JLabel coordsLabel;
 	private JLabel nearestStreetLabel;
 	private JSlider zoomSlider;
+    private JPanel southLeftPanel;
+    private JPanel southCenterPanel;
+    private JButton buttonCentreView;
+
 	private WayType[] highways = new WayType[]{
             WayType.HIGHWAY_MOTORWAY,
             WayType.HIGHWAY_TRUNK,
@@ -42,7 +46,6 @@ public class BottomPanel extends JPanel implements CanvasListener {
             WayType.HIGHWAY_SERVICE,
             WayType.HIGHWAY_UNDEFINED,
             WayType.HIGHWAY_UNCLASSIFIED,
-            WayType.PEDESTRIAN_AREA,
             WayType.HIGHWAY_PEDESTRIAN};
 
     public BottomPanel() {
@@ -63,7 +66,7 @@ public class BottomPanel extends JPanel implements CanvasListener {
         JPanel leftPanel = new JPanel(new BorderLayout());
         leftPanel.setOpaque(false);
         
-        JPanel southLeftPanel = new JPanel();
+        southLeftPanel = new JPanel();
         southLeftPanel.setLayout(new BorderLayout());
         southLeftPanel.setBackground(style.panelBG());
         leftPanel.add(southLeftPanel, BorderLayout.SOUTH);
@@ -87,7 +90,7 @@ public class BottomPanel extends JPanel implements CanvasListener {
         centerPanel.setBorder(new EmptyBorder(0, DKConstants.WINDOW_WIDTH/2-PANEL_SIZE/2, 0, Main.window.getWidth()/2-PANEL_SIZE/2));
         centerPanel.setLayout(new BorderLayout());
         
-        JPanel southCenterPanel = new JPanel();
+        southCenterPanel = new JPanel();
         southCenterPanel.setLayout(new BorderLayout());
         southCenterPanel.setBorder(new EtchedBorder(EtchedBorder.RAISED, BORDER_HIGHTLIGHT, BORDER_SHADOW));
         southCenterPanel.setBackground(style.panelBG());
@@ -136,7 +139,7 @@ public class BottomPanel extends JPanel implements CanvasListener {
         
         rightParent.add(zoomSlider, BorderLayout.SOUTH);
         
-        JButton buttonCentreView = style.centerViewButton();
+        buttonCentreView = style.centerViewButton();
         buttonCentreView.setBorder(new EtchedBorder(EtchedBorder.RAISED, BORDER_HIGHTLIGHT, BORDER_SHADOW));
         buttonCentreView.addActionListener(e -> {
             Main.map.zoomToBounds();
@@ -190,7 +193,7 @@ public class BottomPanel extends JPanel implements CanvasListener {
             	Main.map.highlightWay(type, nearest.getShape());
             	if(nearest.getName() != null) text = nearest.getName();
             }
-            nearestStreetLabel.setText(text  + ", "+ shortest);
+            nearestStreetLabel.setText(text);
 
 //            ParsedNode lonLat = new ParsedNode(Main.map.getGeographicalMousePosition());
 //            if(lonLat != null)Main.routeController.searchEdgesKDTree(lonLat);
@@ -230,4 +233,11 @@ public class BottomPanel extends JPanel implements CanvasListener {
 			Main.map.pan(canvasCenter.getX(), canvasCenter.getY());
 		}	
 	}
+
+	public void repaintPanels() {
+        zoomSlider.repaint();
+        southLeftPanel.repaint();
+        southCenterPanel.repaint();
+        buttonCentreView.repaint();
+    }
 }

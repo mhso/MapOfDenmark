@@ -17,9 +17,10 @@ import dk.itu.n.danmarkskort.routeplanner.RouteController;
 
 public class Main {
 
-	public final static String APP_NAME = "MuskMaps";
+	public final static String APP_NAME = "yakMaps";
 	public final static String APP_VERSION = "0.7";
-	public final static boolean debug = false;
+	public final static boolean debug = true;
+	public final static boolean debugExtra = true;
 	public final static boolean production = false;
 	public final static boolean buffered = false;
 	public final static boolean saveParsedAddresses = true;
