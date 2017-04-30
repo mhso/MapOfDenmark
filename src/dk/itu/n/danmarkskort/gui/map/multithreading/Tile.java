@@ -76,7 +76,7 @@ public class Tile {
 	public boolean isUseless() {
 		Point viewPoint = Main.tileController.getTilePos();
 		viewPoint = new Point(viewPoint.x, viewPoint.y - 1);	
-		
+		return false;
 	}
 	
 }
