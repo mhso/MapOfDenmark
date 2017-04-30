@@ -425,6 +425,7 @@ public class OSMParser extends SAXAdapter implements Serializable {
                         waytype = WayType.BUILDING;
                         break;
                 }
+                break;
             case "landuse":
                 switch(v) {
                     case "residential":
