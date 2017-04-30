@@ -139,18 +139,25 @@ public class MapCanvas extends JPanel implements ActionListener {
             KDTree<ParsedItem> kdTree = Main.model.enumMapKD.get(wayTypeGraphic.getWayType());
             if (kdTree == null) continue;
             //if (currentWTGSpec.getOuterColor() != null) {
+            if (currentWTGSpec instanceof GraphicSpecArea) {
+                currentWTGSpec.transformPrimary(g2d);
+                for (Iterator<ParsedItem> i = kdTree.iterator(currentRegion); i.hasNext(); ) {
+                    ParsedItem item = i.next();
+                    g2d.fill(item.getShape());
+                    shapesDrawn++;
+                }
+            }
+        }
+        for (WaytypeGraphicSpec wayTypeGraphic : wayTypesVisible) {
+            currentWTGSpec = wayTypeGraphic;
+            KDTree<ParsedItem> kdTree = Main.model.enumMapKD.get(wayTypeGraphic.getWayType());
+            if (kdTree == null) continue;
+            //if (currentWTGSpec.getOuterColor() != null) {
             if (currentWTGSpec instanceof GraphicSpecLine) {
                 currentWTGSpec.transformOutline(g2d);
                 for (Iterator<ParsedItem> i = kdTree.iterator(currentRegion); i.hasNext(); ) {
                     ParsedItem item = i.next();
                     g2d.draw(item.getShape());
-                    shapesDrawn++;
-                }
-            } else if (currentWTGSpec instanceof GraphicSpecArea) {
-                currentWTGSpec.transformPrimary(g2d);
-                for (Iterator<ParsedItem> i = kdTree.iterator(currentRegion); i.hasNext(); ) {
-                    ParsedItem item = i.next();
-                    g2d.fill(item.getShape());
                     shapesDrawn++;
                 }
             }
@@ -191,7 +198,7 @@ public class MapCanvas extends JPanel implements ActionListener {
         background.lineTo(region.x2, region.y2);
         background.lineTo(region.x1, region.y2);
         background.lineTo(region.x1, region.y1);
-
+        
         // backgroundcolor for the map. If there's a coastline use the water innercolor, otherwise use the coastline innercolor
         if(Main.model.enumMapKD.containsKey(WayType.COASTLINE) ){
         	g2d.setColor(GraphicRepresentation.getCanvasBGColor());
@@ -402,7 +409,7 @@ public class MapCanvas extends JPanel implements ActionListener {
 		zoom(getWidth() / (mapRegion.x2 - mapRegion.x1));
 	}
 	
-	public void setupDone() {	
+	public void setupDone() {
 		zoomToBounds();
 		if(Main.buffered) {
 			zero = new Point2D.Double(transform.getTranslateX(), transform.getTranslateY());

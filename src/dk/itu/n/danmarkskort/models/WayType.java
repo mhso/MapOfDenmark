@@ -62,6 +62,7 @@ public enum WayType {
 	WATER_RIVER,		// Flod.
 
 	// Railway:
+	RAIL,				// intercity tog (vidst nok).
 	LIGHT_RAIL,			// s-tog, og lignende tog
 	PLATFORM,			// tog-perron
 

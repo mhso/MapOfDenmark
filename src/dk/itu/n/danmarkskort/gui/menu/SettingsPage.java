@@ -30,7 +30,6 @@ public class SettingsPage extends JPanel {
 	private static final long serialVersionUID = 4642167284178775315L;
 	private Style style;
 	private JPanel panelCenter;
-	private JButton defaultMapFileButton;
 	private DropdownMenu menu;
     
     public SettingsPage(DropdownMenu menu) {
@@ -242,9 +241,24 @@ public class SettingsPage extends JPanel {
         JLabel defaultMapFileLabel = new JLabel("Default Map File:");
         defaultMapFilePanel.add(defaultMapFileLabel, BorderLayout.WEST);
         
-        defaultMapFileButton = new JButton(Main.userPreferences.getDefaultMapFile());
-        defaultMapFileButton.addActionListener(e -> showParsedFilesDialog());
-        defaultMapFilePanel.add(defaultMapFileButton, BorderLayout.EAST);
+        JComboBox<String> defaultMapFileBox = new JComboBox<>(getParsedFiles());
+        defaultMapFileBox.addActionListener(e -> {
+        	Main.userPreferences.setDefaultMapFile(defaultMapFileBox.getSelectedItem().toString());
+        	Util.writeObjectToFile(Main.userPreferences, DKConstants.USERPREF_PATH);
+        });
+        defaultMapFileBox.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				menu.blockVisibility(true);
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				menu.blockVisibility(false);
+			}
+        });
+        defaultMapFileBox.setSelectedItem(Main.userPreferences.getDefaultMapFile());
+        defaultMapFilePanel.add(defaultMapFileBox, BorderLayout.EAST);
         
         centerPanel.add(Box.createRigidArea(new Dimension(20, 20)));
         
@@ -273,7 +287,8 @@ public class SettingsPage extends JPanel {
 			}
         });
         defaultMapThemeBox.setSelectedItem(Main.userPreferences.getDefaultTheme());
-        defaultMapThemePanel.add(defaultMapThemeBox);
+        defaultMapThemeBox.setPreferredSize(new Dimension(defaultMapFileBox.getPreferredSize()));
+        defaultMapThemePanel.add(defaultMapThemeBox, BorderLayout.EAST);
         
         centerPanel.add(Box.createRigidArea(new Dimension(20, 20)));
         
@@ -285,7 +300,7 @@ public class SettingsPage extends JPanel {
         JLabel maximizeLabel = new JLabel("Maximize On Startup: ");
         maximizeOnStartupPanel.add(maximizeLabel, BorderLayout.WEST);
         
-        JRadioButton maximizeButton = new JRadioButton();
+        JCheckBox maximizeButton = new JCheckBox();
         maximizeButton.addActionListener(e -> {
         	Main.userPreferences.setMaximizeOnStartup(maximizeButton.isSelected());
         	Util.writeObjectToFile(Main.userPreferences, DKConstants.USERPREF_PATH);
@@ -305,42 +320,6 @@ public class SettingsPage extends JPanel {
         buttonBack.addActionListener(e -> showDefaultPanel());
         buttonBack.setFont(new Font("Tahoma", Font.PLAIN, 13));
         panelSouth.add(buttonBack, BorderLayout.WEST);
-    }
-    
-    private void showParsedFilesDialog() {
-    	JDialog dialog = new JDialog(Main.window);
-    	JPanel contentPane = (JPanel) dialog.getContentPane();
-    	contentPane.setLayout(new BorderLayout());
-    	
-    	JList<String> binFilesList = new JList<>(getParsedFiles());
-		binFilesList.setBorder(new MatteBorder(1, 1, 1, 1, (Color) Color.WHITE));
-		binFilesList.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		binFilesList.setSelectionBackground(new Color(130, 173, 198));
-		binFilesList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		DefaultListCellRenderer dlcr = (DefaultListCellRenderer)binFilesList.getCellRenderer();
-		dlcr.setHorizontalAlignment(SwingConstants.CENTER);
-		
-		binFilesList.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				if(e.getClickCount() == 2) {
-					defaultMapFileButton.setText(binFilesList.getSelectedValue());
-					Main.userPreferences.setDefaultMapFile(binFilesList.getSelectedValue());
-					Util.writeObjectToFile(Main.userPreferences, DKConstants.USERPREF_PATH);
-					dialog.dispose();
-				}
-			}
-		});
-    	
-    	JScrollPane scroll = new JScrollPane(binFilesList);
-    	scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-    	contentPane.add(scroll);
-    	
-    	dialog.setPreferredSize(new Dimension(300, 300));
-    	dialog.pack();
-    	
-    	dialog.setLocationRelativeTo(null);
-    	dialog.setVisible(true);
     }
     
     private String[] getParsedFiles() {

@@ -63,14 +63,14 @@
 			<type name="HIGHWAY_FOOTWAY"/>
 			<innercolor color="0066CC"/>
 			<outercolor color="001933"/>
-			<lineproperties linedash="5, 5" linewidth="10"/>
+			<lineproperties linedash="5, 5" borderdash="true" linewidth="10"/>
 			<layer layer="3"/>
 		</line>
 		<line>
 			<type name="HIGHWAY_CYCLEWAY"/>
 			<innercolor color="0000FF"/>
 			<outercolor color="000000"/>
-			<lineproperties linedash="5, 5" linewidth="10"/>
+			<lineproperties linedash="5, 5" borderdash="true" linewidth="10"/>
 			<layer layer="3"/>
 		</line>
 	</lines>

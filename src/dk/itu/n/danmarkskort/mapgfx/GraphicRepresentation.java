@@ -1,5 +1,6 @@
 package dk.itu.n.danmarkskort.mapgfx;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -304,6 +305,19 @@ public class GraphicRepresentation {
 					GraphicSpecLine gsl = (GraphicSpecLine) gs;
 					gsl.setLineWidth(lineWidth);
 					gsl.setDashArr(dashArr);
+					if(atts.getValue("lineend") != null) {
+						String endType = atts.getValue("lineend");
+						if(endType.equalsIgnoreCase("BUTT")) gsl.setLineEnd(BasicStroke.CAP_BUTT);
+						else if(endType.equalsIgnoreCase("ROUND")) gsl.setLineEnd(BasicStroke.CAP_ROUND);
+						else if(endType.equalsIgnoreCase("SQUARE")) gsl.setLineEnd(BasicStroke.CAP_SQUARE);
+					}
+					if(atts.getValue("linejoin") != null) {
+						String joinType = atts.getValue("linejoin");
+						if(joinType.equalsIgnoreCase("BEVEL")) gsl.setLineEnd(BasicStroke.JOIN_BEVEL);
+						else if(joinType.equalsIgnoreCase("ROUND")) gsl.setLineEnd(BasicStroke.JOIN_ROUND);
+						else if(joinType.equalsIgnoreCase("MITER")) gsl.setLineEnd(BasicStroke.JOIN_MITER);
+					}
+					if(atts.getValue("borderdash") != null) gsl.setBorderDashed(Boolean.parseBoolean(atts.getValue("borderdash")));
 				break;
 				case "fontcolor":
 					GraphicSpecLabel gsla = (GraphicSpecLabel) gs;

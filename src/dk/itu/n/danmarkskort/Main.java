@@ -1,6 +1,8 @@
 package dk.itu.n.danmarkskort;
 
 import java.awt.Dimension;
+import java.awt.Toolkit;
+
 import javax.swing.*;
 
 import dk.itu.n.danmarkskort.address.AddressController;
@@ -57,7 +59,6 @@ public class Main {
 	
 	public static void launch(String[] args) {
 		startup(args);
-		
 	}
 
 	public static void startup(String[] args) {
@@ -92,7 +93,7 @@ public class Main {
 			@Override
 			public void run() {
 				osmReader.parseFile(args[0]);
-				main();
+				if(window == null) main();
 		        shutdown();
 			}
 		};
@@ -122,6 +123,7 @@ public class Main {
         window.add(createFrameComponents());
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setPreferredSize(new Dimension(DKConstants.WINDOW_WIDTH, DKConstants.WINDOW_HEIGHT));
+        if(userPreferences.isMaximizeOnStartup()) window.setExtendedState(window.getExtendedState() | JFrame.MAXIMIZED_BOTH);
         window.pack();
 		window.setLocationRelativeTo(null);
         window.setVisible(true);
