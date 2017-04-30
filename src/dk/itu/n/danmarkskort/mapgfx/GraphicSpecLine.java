@@ -9,28 +9,30 @@ import dk.itu.n.danmarkskort.DKConstants;
 public class GraphicSpecLine extends WaytypeGraphicSpec {
 	private float lineWidth;
 	private float[] dashArr;
+	private boolean borderDash;
+	private int lineEnd = BasicStroke.CAP_ROUND;
+	private int lineJoin = BasicStroke.JOIN_ROUND;
 
 	public void transformPrimary(Graphics2D graphics) {
 		super.transformPrimary(graphics);
 		BasicStroke stroke = null;
 		if(dashArr == null) {
-			stroke = new BasicStroke(lineWidth, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+			stroke = new BasicStroke(lineWidth, lineEnd, lineJoin);
 		}
 		else {
-			stroke = new BasicStroke(lineWidth, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 0.00008f, dashArr, 0.0f);
+			stroke = new BasicStroke(lineWidth, lineEnd, lineJoin, 0.00008f, dashArr, 0.0f);
 		}
 		graphics.setStroke(stroke);
-		
 	}
 	
 	public void transformOutline(Graphics2D graphics) {
 		super.transformOutline(graphics);
 		BasicStroke stroke = null;
-		if(dashArr == null) {
-			stroke = new BasicStroke(lineWidth+DKConstants.LINE_OUTLINE_WIDTH, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+		if(!borderDash) {
+			stroke = new BasicStroke(lineWidth+DKConstants.LINE_OUTLINE_WIDTH, lineEnd, lineJoin);
 		}
 		else {
-			stroke = new BasicStroke(lineWidth, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 0.00008f, dashArr, 0.0f);
+			stroke = new BasicStroke(lineWidth+DKConstants.LINE_OUTLINE_WIDTH, lineEnd, lineJoin, 0.00008f, dashArr, 0.0f);
 		}
 		graphics.setStroke(stroke);
 	}
@@ -41,6 +43,10 @@ public class GraphicSpecLine extends WaytypeGraphicSpec {
 	
 	public float[] getDashArr() {
 		return dashArr;
+	}
+	
+	public boolean isBorderDashed() {
+		return borderDash;
 	}
 	
 	public void setLineWidth(float lineWidth) {
@@ -54,6 +60,26 @@ public class GraphicSpecLine extends WaytypeGraphicSpec {
                 this.dashArr[i] *= DKConstants.LINE_OUTLINE_WIDTH;
             }
         }
+	}
+	
+	public void setBorderDashed(boolean dashed) {
+		borderDash = dashed;
+	}
+	
+	public int getLineEnd() {
+		return lineEnd;
+	}
+
+	public void setLineEnd(int lineEnd) {
+		this.lineEnd = lineEnd;
+	}
+
+	public int getLineJoin() {
+		return lineJoin;
+	}
+
+	public void setLineJoin(int lineJoin) {
+		this.lineJoin = lineJoin;
 	}
 	
 	public String toString() {
