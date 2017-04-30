@@ -8,17 +8,17 @@ import javax.swing.JPanel;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import java.awt.Font;
 import java.awt.Image;
 
 import javax.swing.JScrollPane;
 
+import dk.itu.n.danmarkskort.Main;
+import dk.itu.n.danmarkskort.gui.Style;
 import dk.itu.n.danmarkskort.models.RouteEnum;
 import dk.itu.n.danmarkskort.models.RouteModel;
 
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
-import java.awt.Toolkit;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JCheckBox;
@@ -72,7 +72,7 @@ public class RoutePlannerMain {
 	 */
 	private void initialize() {
 		frmRouteplanner = new JFrame();
-		frmRouteplanner.setIconImage(Toolkit.getDefaultToolkit().getImage("resources/icons/map-icon.png"));
+		frmRouteplanner.setIconImage(Main.style.frameIcon());
 		frmRouteplanner.setTitle("Route planner");
 		frmRouteplanner.setBounds(100, 100, 800, 900);
 		frmRouteplanner.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -193,14 +193,14 @@ public class RoutePlannerMain {
 	private static List<RouteModel> demo(){
 		List<RouteModel> routeModels = new ArrayList<RouteModel>();
 		
-		routeModels.add(new RouteModel(RouteEnum.CONTINUE_ON, "Roskildevej", "600m"));
-		routeModels.add(new RouteModel(RouteEnum.TURN_LEFT, "Roskildevej", "600m"));
-		routeModels.add(new RouteModel(RouteEnum.CONTINUE_ON, "H. Hansenvej", "250m"));
-		routeModels.add(new RouteModel(RouteEnum.TURN_RIGHT, "Postmosen", "250m"));
-		routeModels.add(new RouteModel(RouteEnum.TURN_RIGHT, "Blågårdsgade", "250m"));
-		routeModels.add(new RouteModel(RouteEnum.CONTINUE_ON, "Sverigesvej", "250m"));
-		routeModels.add(new RouteModel(RouteEnum.TURN_RIGHT, "Amagerbrogade", "1,5Km"));
-		routeModels.add(new RouteModel(RouteEnum.AT_DESTINATION, "Rosenhaven 1", ""));
+		routeModels.add(new RouteModel(RouteEnum.CONTINUE_ON, "Roskildevej", 600));
+		routeModels.add(new RouteModel(RouteEnum.TURN_LEFT, "Roskildevej", 600));
+		routeModels.add(new RouteModel(RouteEnum.CONTINUE_ON, "H. Hansenvej", 250));
+		routeModels.add(new RouteModel(RouteEnum.TURN_RIGHT, "Postmosen", 250));
+		routeModels.add(new RouteModel(RouteEnum.TURN_RIGHT, "Blågårdsgade", 250));
+		routeModels.add(new RouteModel(RouteEnum.CONTINUE_ON, "Sverigesvej", 250));
+		routeModels.add(new RouteModel(RouteEnum.TURN_RIGHT, "Amagerbrogade", 1500));
+		routeModels.add(new RouteModel(RouteEnum.AT_DESTINATION, "Rosenhaven 1", -1));
 		return routeModels;
 	}
 }

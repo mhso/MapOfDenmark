@@ -1,6 +1,7 @@
 package dk.itu.n.danmarkskort.backend;
 
 import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -23,7 +24,13 @@ import dk.itu.n.danmarkskort.MemoryUtil;
 import dk.itu.n.danmarkskort.TimerUtil;
 import dk.itu.n.danmarkskort.Util;
 
-// This class can parse an OSM file, and turn it into tile files. 
+/**
+ * This class recieves a map file (osm, zip or bin) and either loads from binary, from a Zip Inputstream or
+ * from an Open Street Map XML file. This class also manages Inputstream Listeners, that send events to anyone
+ * listening on the parsing.
+ * 
+ * @author Team N @ ITU
+ */
 public class OSMReader {
 	
 	public List<OSMParserListener> parserListeners = new ArrayList<OSMParserListener>();
@@ -70,14 +77,19 @@ public class OSMReader {
 		parseMemory.on();
 
 		if(fileName.endsWith(".bin")) {
-			try {
-				for(Path checkSumDir : Files.newDirectoryStream(Paths.get("parsedOSMFiles"))) {
-					for(Path parsedFile : Files.newDirectoryStream(checkSumDir)) {
-						if(parsedFile.toString().equals(fileName)) currentChecksum = checkSumDir.toFile().getName();
+			if(Main.production && new File(fileName).getName().equals("default.bin")) {
+				fileName = getClass().getResource(fileName).toString();
+			}
+			else {
+				try {
+					for(Path checkSumDir : Files.newDirectoryStream(Paths.get("parsedOSMFiles"))) {
+						for(Path parsedFile : Files.newDirectoryStream(checkSumDir)) {
+							if(parsedFile.toString().equals(fileName)) currentChecksum = checkSumDir.toFile().getName();
+						}
 					}
+				} catch (IOException e) {
+					e.printStackTrace();
 				}
-			} catch (IOException e) {
-				e.printStackTrace();
 			}
 			BinaryWrapper binary = (BinaryWrapper) Util.readObjectFromFile(fileName, inputListeners);
 			Main.model = binary.getModel();

@@ -7,11 +7,11 @@ import java.awt.Graphics2D;
 import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.RenderingHints;
+import java.awt.Shape;
 import java.awt.geom.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.Line2D;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
@@ -52,6 +52,9 @@ public class MapCanvas extends JPanel {
 	private List<WaytypeGraphicSpec> wayTypesVisible;
 	
 	public boolean scaleCurrentLayer = false;
+
+	private Shape currentHighlighedShape;
+	private WayType currentHighlighedWaytype;
 	
 	public MapCanvas() {
 		new MapMouseController(this);
@@ -94,18 +97,19 @@ public class MapCanvas extends JPanel {
 	public void repaintPinPoints() {
 		repaint();
 	}
-	
+
 	public void drawMapShapes(Graphics2D g2d) {
+		drawBackground(g2d);
 		g2d.setTransform(transform);
-		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		if(antiAlias) g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		else g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
 		drawMapRegion(g2d);
 		if(zoomChanged) wayTypesVisible = getOnScreenGraphicsForCurrentZoom();
 		shapesDrawn = 0;
-
 		if(wayTypesVisible == null) return;
-        //drawBackground(g2d);
 
         Region currentRegion = getGeographicalRegion();
+
 
         // drawing all the outlines, if the current WayTypeGraphicSpec has one
         for (WaytypeGraphicSpec wayTypeGraphic : wayTypesVisible) {
@@ -162,6 +166,20 @@ public class MapCanvas extends JPanel {
 		if(wayTypesVisible == null) return;
         drawBackground(g2d);
 
+        if(Main.debugExtra && !Main.buffered) {
+            double x1 = currentRegion.x1;
+            double x2 = currentRegion.x2;
+            double y1 = currentRegion.y1;
+            double y2 = currentRegion.y2;
+            double width = currentRegion.getWidth();
+            double height = currentRegion.getHeight();
+            currentRegion = new Region(
+                    x1 + (width * 0.25),
+                    y1 + (height * 0.25),
+                    x2 - (width * 0.25),
+                    y2 - (height * 0.25));
+        }
+
         // drawing all the outlines, if the current WayTypeGraphicSpec has one
         for (WaytypeGraphicSpec wayTypeGraphic : wayTypesVisible) {
             currentWTGSpec = wayTypeGraphic;
@@ -199,9 +217,19 @@ public class MapCanvas extends JPanel {
                 }
             }
         }
+        if(Main.debugExtra && !Main.buffered) {
+            g2d.setStroke(new BasicStroke(0.0001f));
+            g2d.setColor(Color.BLACK);
+            Path2D box = new Path2D.Float();
+            box.moveTo(currentRegion.x1, currentRegion.y1);
+            box.lineTo(currentRegion.x1, currentRegion.y2);
+            box.lineTo(currentRegion.x2, currentRegion.y2);
+            box.lineTo(currentRegion.x2, currentRegion.y1);
+            box.lineTo(currentRegion.x1, currentRegion.y1);
+            g2d.draw(box);
+        }
     }
 
-	// This method is probably not the best. We should "just" change the entire background for et mapcanvas instead, if possible
 	private void drawBackground(Graphics2D g2d) {
         Region region = Main.model.getMapRegion();
         Path2D background = new Path2D.Double();
@@ -211,18 +239,20 @@ public class MapCanvas extends JPanel {
         background.lineTo(region.x1, region.y2);
         background.lineTo(region.x1, region.y1);
 
-        // backgroundcolor for the map. If there's a coastline use the water innercolor, otherwise use the coastline innercolor
-        if(Main.model.enumMapKD.containsKey(WayType.COASTLINE) ){//&& Main.model.enumMapKD.get(WayType.COASTLINE).size() > 0) {
-        	g2d.setColor(new Color(110, 192, 255));
-        } else g2d.setColor(new Color(240, 240, 230));
 
-        g2d.fill(background);
+        if(Main.model.enumMapKD.containsKey(WayType.COASTLINE) ){
+        	g2d.setColor(GraphicRepresentation.getCanvasBGColor());
+        }
+        else g2d.setColor(GraphicRepresentation.getCoastlineColor());
+		AffineTransform af = new AffineTransform();
+		g2d.setTransform(af);
+        g2d.fillRect(0, 0, getWidth(), getHeight());
     }
 
 	public List<WaytypeGraphicSpec> getOnScreenGraphicsForCurrentZoom() {
 		List<WaytypeGraphicSpec> wayTypeSpecs = GraphicRepresentation.getGraphicSpecs((int)getZoom());
 		zoomChanged = false;
-		if(wayTypeSpecs == null) return new ArrayList<WaytypeGraphicSpec>();
+		if(wayTypeSpecs == null) return new ArrayList<>();
 		return wayTypeSpecs;
 	}
 	
@@ -230,8 +260,42 @@ public class MapCanvas extends JPanel {
 		g2d.setColor(Color.RED);
 		g2d.setStroke(new BasicStroke(Float.MIN_VALUE));
 		Region mapRegion = Main.model.getMapRegion();
-		g2d.draw(new Line2D.Double(0, 0, mapRegion.x1, mapRegion.y1));
 		g2d.draw(new Rectangle2D.Double(mapRegion.x1, mapRegion.y1, mapRegion.getWidth(), mapRegion.getHeight()));
+	}
+	
+	public void highlightWay(WayType wayType, Shape shape) {
+		Graphics2D g2d = (Graphics2D) getGraphics();
+		g2d.setTransform(transform);
+		if(antiAlias) g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		else g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
+		List<WaytypeGraphicSpec> wgs = getOnScreenGraphicsForCurrentZoom();
+		for(WaytypeGraphicSpec spec : wgs) {
+			if(currentHighlighedShape != null && spec.getWayType() == currentHighlighedWaytype) {
+				spec.transformPrimary(g2d);
+
+				if(spec instanceof GraphicSpecLine) g2d.draw(currentHighlighedShape);
+				else g2d.fill(currentHighlighedShape);
+			}
+			if(spec.getWayType() == wayType) {
+				spec.transformPrimary(g2d);
+				try {
+					float lineWidth = ((GraphicSpecLine) spec).getLineWidth() * 0.9f;
+					g2d.setStroke(new BasicStroke(lineWidth, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+				} catch (ClassCastException e) {
+					// do nothing
+				}
+				g2d.setColor(Color.ORANGE);
+				if(spec instanceof GraphicSpecLine) g2d.draw(shape);
+				else g2d.fill(shape);
+			}
+			Main.mainPanel.getGuiManager().repaintGUI();
+		}
+		currentHighlighedShape = shape;
+		currentHighlighedWaytype = wayType;
+	}
+	
+	public Shape getHighlightedShape() {
+		return currentHighlighedShape;
 	}
 	
 	public void pan(double dx, double dy) {
@@ -331,8 +395,8 @@ public class MapCanvas extends JPanel {
 	}
 	
 	public void snapToZoom(int zoomValue) {
-		double factor = 0.0;
-		int amount = 0;
+		double factor;
+		int amount;
 		if(zoomValue > getZoom()) {
 			factor = 1.5;
 			amount = (int)(zoomValue-getZoom());
@@ -395,10 +459,6 @@ public class MapCanvas extends JPanel {
 	public void setupDone() {	
 		zoomToBounds();
 		for(CanvasListener listener : listeners) listener.onSetupDone();
-	}
-	
-	public void forceRepaint() {
-		
 	}
 
 }

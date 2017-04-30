@@ -16,12 +16,12 @@ import dk.itu.n.danmarkskort.gui.map.PinPoint;
 import dk.itu.n.danmarkskort.gui.routeplanner.RoutePlannerMain;
 import dk.itu.n.danmarkskort.models.RouteEnum;
 import dk.itu.n.danmarkskort.models.RouteModel;
+import dk.itu.n.danmarkskort.routeplanner.WeightEnum;
 import dk.itu.n.danmarkskort.search.SearchController;
 
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -30,19 +30,29 @@ import java.util.List;
 
 public class RoutePage extends JPanel {
 	private static final long serialVersionUID = 6134418299293182669L;
-	Style style;
-    private JTextField txtAddrFrom;
-    private JTextField txtAddrTo;
-    JLabel lblAddrFromConfirmed, lblAddrToConfirmed;
-    private DropdownAddressSearch dropSuggestionsAddrFrom;
-    private DropdownAddressSearch dropSuggestionsAddrTo;
-    private final ImageIcon ADDR_ICON_VALID = new ImageIcon("resources/icons/happiness.png");	
-	private final ImageIcon ADDR_ICON_INVALID = new ImageIcon("resources/icons/sad_red.png");
+	private Style style;
+    private JTextField txtAddrFrom, txtAddrTo;
+    private JLabel lblAddrFromConfirmed, lblAddrToConfirmed;
+    private DropdownAddressSearch dropSuggestionsAddrFrom, dropSuggestionsAddrTo;
+    private ImageIcon ADDR_ICON_VALID, ADDR_ICON_INVALID;
 	private DropdownMenu menu;
+	private JRadioButton rdbtnCar, rdbtnBike, rdbtnWalk, rdbtnFastest, rdbtnShortest;
 	
     public RoutePage(DropdownMenu menu, String txtAddreToSetField) {
     	this.menu = menu;
-    	style = new Style();
+    	if(Main.production) {
+    		try {
+				ADDR_ICON_VALID = new ImageIcon(ImageIO.read(getClass().getResourceAsStream("/resources/icons/happiness.png")));
+				ADDR_ICON_INVALID = new ImageIcon(ImageIO.read(getClass().getResourceAsStream("/resources/icons/sad_red.png")));
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}	
+    	}
+    	else {
+    		ADDR_ICON_VALID = new ImageIcon("resources/icons/happiness.png");
+    		ADDR_ICON_INVALID = new ImageIcon("resources/icons/sad_red.png");
+    	}
+    	style = Main.style;
         setOpaque(false);
         setLayout(new BorderLayout(0, 0));
         
@@ -73,11 +83,10 @@ public class RoutePage extends JPanel {
         JPanel panelCenter = new JPanel();
         panelCenter.setBackground(style.menuContentBG());
         panelPage.add(panelCenter, BorderLayout.CENTER);
-        initContentPanel(panelCenter);
         GridBagLayout gbl_panelCenter = new GridBagLayout();
-        gbl_panelCenter.columnWidths = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+        gbl_panelCenter.columnWidths = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
         gbl_panelCenter.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0};
-        gbl_panelCenter.columnWeights = new double[]{0.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+        gbl_panelCenter.columnWeights = new double[]{0.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
         gbl_panelCenter.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
         panelCenter.setLayout(gbl_panelCenter);
         
@@ -92,7 +101,7 @@ public class RoutePage extends JPanel {
         
         txtAddrFrom = new JTextField();
         GridBagConstraints gbc_txtAddrfrom = new GridBagConstraints();
-        gbc_txtAddrfrom.gridwidth = 3;
+        gbc_txtAddrfrom.gridwidth = 4;
         gbc_txtAddrfrom.insets = new Insets(0, 0, 5, 5);
         gbc_txtAddrfrom.fill = GridBagConstraints.HORIZONTAL;
         gbc_txtAddrfrom.gridx = 1;
@@ -125,14 +134,14 @@ public class RoutePage extends JPanel {
         });
         
         
-        JButton btnS = new JButton();
-        btnS.addActionListener(e -> swapToFromFields());
+        JButton btnSwapToFrom = style.arrowUpDownButton();
+        btnSwapToFrom.addActionListener(e -> swapToFromFields());
         
         lblAddrFromConfirmed = new JLabel();
         lblAddrFromConfirmed.setIcon(ADDR_ICON_INVALID);
         GridBagConstraints gbc_lblAddrfromconfirmed = new GridBagConstraints();
         gbc_lblAddrfromconfirmed.insets = new Insets(0, 0, 5, 5);
-        gbc_lblAddrfromconfirmed.gridx = 4;
+        gbc_lblAddrfromconfirmed.gridx = 6;
         gbc_lblAddrfromconfirmed.gridy = 1;
         panelCenter.add(lblAddrFromConfirmed, gbc_lblAddrfromconfirmed);
         
@@ -140,18 +149,17 @@ public class RoutePage extends JPanel {
         lblAddrToConfirmed.setIcon(ADDR_ICON_INVALID);
         GridBagConstraints gbc_lblAddrToConfirmed = new GridBagConstraints();
         gbc_lblAddrToConfirmed.insets = new Insets(0, 0, 5, 5);
-        gbc_lblAddrToConfirmed.gridx = 4;
+        gbc_lblAddrToConfirmed.gridx = 6;
         gbc_lblAddrToConfirmed.gridy = 2;
         panelCenter.add(lblAddrToConfirmed, gbc_lblAddrToConfirmed);
         
-        btnS.setIcon(style.arrowUpDownButton());
-        GridBagConstraints gbc_btnS = new GridBagConstraints();
-        gbc_btnS.fill = GridBagConstraints.BOTH;
-        gbc_btnS.gridheight = 2;
-        gbc_btnS.insets = new Insets(0, 0, 5, 5);
-        gbc_btnS.gridx = 5;
-        gbc_btnS.gridy = 1;
-        panelCenter.add(btnS, gbc_btnS);
+        GridBagConstraints gbc_btnSwap = new GridBagConstraints();
+        gbc_btnSwap.fill = GridBagConstraints.BOTH;
+        gbc_btnSwap.gridheight = 2;
+        gbc_btnSwap.insets = new Insets(0, 0, 5, 5);
+        gbc_btnSwap.gridx = 7;
+        gbc_btnSwap.gridy = 1;
+        panelCenter.add(btnSwapToFrom, gbc_btnSwap);
         
         JLabel lblTo = new JLabel("To:");
         GridBagConstraints gbc_lblTo = new GridBagConstraints();
@@ -164,7 +172,7 @@ public class RoutePage extends JPanel {
         txtAddrTo = new JTextField();
         txtAddrTo.setText(txtAddreToSetField);
         GridBagConstraints gbc_txtAddreto = new GridBagConstraints();
-        gbc_txtAddreto.gridwidth = 3;
+        gbc_txtAddreto.gridwidth = 4;
         gbc_txtAddreto.insets = new Insets(0, 0, 5, 5);
         gbc_txtAddreto.fill = GridBagConstraints.HORIZONTAL;
         gbc_txtAddreto.gridx = 1;
@@ -199,9 +207,16 @@ public class RoutePage extends JPanel {
         JButton btnFind = new JButton("Find Route");
         btnFind.addActionListener( e -> openFindRoute());
         
-        JRadioButton rdbtnCar = new JRadioButton("Car");
+        rdbtnCar = new JRadioButton("Car");
         rdbtnCar.setBackground(style.menuContentBG());
         rdbtnCar.setSelected(true);
+        rdbtnCar.addActionListener(e -> {
+        	if(rdbtnCar.isSelected()) {
+        		rdbtnFastest.setSelected(true);
+        		rdbtnShortest.setEnabled(true);
+        		rdbtnFastest.setEnabled(true);
+        	}
+        });
         GridBagConstraints gbc_rdbtnCar = new GridBagConstraints();
         gbc_rdbtnCar.anchor = GridBagConstraints.WEST;
         gbc_rdbtnCar.insets = new Insets(0, 0, 5, 5);
@@ -209,20 +224,45 @@ public class RoutePage extends JPanel {
         gbc_rdbtnCar.gridy = 3;
         panelCenter.add(rdbtnCar, gbc_rdbtnCar);
         
-        JRadioButton rdbtnBike = new JRadioButton("Bike");
+        rdbtnBike = new JRadioButton("Bike");
         rdbtnBike.setBackground(style.menuContentBG());
+        rdbtnBike.addActionListener(e -> {
+        	if(rdbtnBike.isSelected()) {
+        		rdbtnShortest.setSelected(true);
+        		rdbtnShortest.setEnabled(false);
+        		rdbtnFastest.setEnabled(false);
+        	}
+        });
+        
         GridBagConstraints gbc_rdbtnBike = new GridBagConstraints();
-        gbc_rdbtnBike.anchor = GridBagConstraints.WEST;
+        gbc_rdbtnBike.anchor = GridBagConstraints.NORTHWEST;
         gbc_rdbtnBike.insets = new Insets(0, 0, 5, 5);
         gbc_rdbtnBike.gridx = 3;
         gbc_rdbtnBike.gridy = 3;
         panelCenter.add(rdbtnBike, gbc_rdbtnBike);
         
+        rdbtnWalk = new JRadioButton("Walk");
+        rdbtnWalk.setBackground(style.menuContentBG());
+        rdbtnWalk.addActionListener(e -> {
+        	if(rdbtnWalk.isSelected()) {
+        		rdbtnShortest.setSelected(true);
+        		rdbtnShortest.setEnabled(false);
+        		rdbtnFastest.setEnabled(false);
+        	}
+        });
+        GridBagConstraints gbc_rdbtnWalk = new GridBagConstraints();
+        gbc_rdbtnWalk.anchor = GridBagConstraints.NORTHWEST;
+        gbc_rdbtnWalk.insets = new Insets(0, 0, 5, 5);
+        gbc_rdbtnWalk.gridx = 4;
+        gbc_rdbtnWalk.gridy = 3;
+        panelCenter.add(rdbtnWalk, gbc_rdbtnWalk);
+        
         ButtonGroup radioButtonGroupMovementType = new ButtonGroup();
         radioButtonGroupMovementType.add(rdbtnCar);
         radioButtonGroupMovementType.add(rdbtnBike);
+        radioButtonGroupMovementType.add(rdbtnWalk);
         
-        JRadioButton rdbtnFastest = new JRadioButton("Fastest");
+        rdbtnFastest = new JRadioButton("Fastest");
         rdbtnFastest.setBackground(style.menuContentBG());
         rdbtnFastest.setSelected(true);
         GridBagConstraints gbc_rdbtnFastest = new GridBagConstraints();
@@ -232,10 +272,10 @@ public class RoutePage extends JPanel {
         gbc_rdbtnFastest.gridy = 4;
         panelCenter.add(rdbtnFastest, gbc_rdbtnFastest);
         
-        JRadioButton rdbtnShortest = new JRadioButton("Shortest");
+        rdbtnShortest = new JRadioButton("Shortest");
         rdbtnShortest.setBackground(style.menuContentBG());
         GridBagConstraints gbc_rdbtnShortest = new GridBagConstraints();
-        gbc_rdbtnShortest.anchor = GridBagConstraints.WEST;
+        gbc_rdbtnShortest.anchor = GridBagConstraints.NORTHWEST;
         gbc_rdbtnShortest.insets = new Insets(0, 0, 5, 5);
         gbc_rdbtnShortest.gridx = 3;
         gbc_rdbtnShortest.gridy = 4;
@@ -251,7 +291,7 @@ public class RoutePage extends JPanel {
         gbc_btnFind.gridx = 3;
         gbc_btnFind.gridy = 6;
         panelCenter.add(btnFind, gbc_btnFind);
-
+        
         validateToFromFields();
     }
     
@@ -265,7 +305,7 @@ public class RoutePage extends JPanel {
     private boolean validateToFromFields() {
     	boolean from = updateValidInputAddrTo(txtAddrFrom, lblAddrFromConfirmed);
     	boolean to = updateValidInputAddrTo(txtAddrTo, lblAddrToConfirmed);
-    	if(from == true && to == true) return true;
+    	if(from && to) return true;
     	return false;
 	}
     
@@ -286,27 +326,27 @@ public class RoutePage extends JPanel {
     
     private void openFindRoute(){
     	if(validateToFromFields()){
+    		WeightEnum weightEnum =  findWeightType();
+    		Address addrFrom = SearchController.getSearchFieldAddressObj(txtAddrFrom.getText());
+			Address addrTo = SearchController.getSearchFieldAddressObj(txtAddrTo.getText());
     		String routeDistance = "999";
     		BufferedImage bufferedImage = null;
-    		List<RouteModel> routemodels = demoRoute();
-			try {
-				bufferedImage = ImageIO.read(new File("resources/routeplanner/demo_routeplanner.PNG"));
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
     		
-			ArrayList<PinPoint> pinPoints = new ArrayList<PinPoint>();
-			
-			PinPoint from = new PinPoint(SearchController.getSearchFieldAddressObj(txtAddrFrom.getText()).getLonLatAsPoint(), txtAddrFrom.getText());
-			PinPoint to = new PinPoint(SearchController.getSearchFieldAddressObj(txtAddrTo.getText()).getLonLatAsPoint(), txtAddrTo.getText());
-			from.setIconIndex(5);
-			to.setIconIndex(6);
-			pinPoints.add(from);
-			pinPoints.add(to);
-			Main.pinPointManager.setTemporaryPinPoints(pinPoints);
-			
-    		RoutePlannerMain routePlannerMain =  new RoutePlannerMain(bufferedImage, txtAddrFrom.getText(), txtAddrTo.getText(), routeDistance, routemodels);
+    		List<RouteModel> routemodels = Main.routeController.makeRoute(addrFrom.getLonLatAsPoint(), addrTo.getLonLatAsPoint(), weightEnum);
+			if(!routemodels.isEmpty()){
+	    		try {
+					if(Main.production) bufferedImage = ImageIO.read(getClass().getResourceAsStream("/resources/routeplanner/demo_routeplanner.PNG"));
+					else bufferedImage = ImageIO.read(new File("resources/routeplanner/demo_routeplanner.PNG"));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				
+				makePinPoint(addrFrom, addrTo);
+				RoutePlannerMain routePlannerMain =  new RoutePlannerMain(bufferedImage, txtAddrFrom.getText(), txtAddrTo.getText(), routeDistance, routemodels);
+			}else {
+				menu.blockVisibility(true);
+	    		JOptionPane.showMessageDialog(this, "Unable to find a route, we're sorry.", "No route", JOptionPane.INFORMATION_MESSAGE);
+			}
     	} else if(!txtAddrFrom.getText().trim().isEmpty() && !txtAddrTo.getText().trim().isEmpty()) {
     		menu.blockVisibility(true);
     		JOptionPane.showMessageDialog(this, "To/From fields can't be empty.", "Missing information", JOptionPane.INFORMATION_MESSAGE);
@@ -315,24 +355,44 @@ public class RoutePage extends JPanel {
     		JOptionPane.showMessageDialog(this, "The address input not found,\n please refere to the smilyes.", "Wrong information", JOptionPane.INFORMATION_MESSAGE);
     	}
     }
+
+	private void makePinPoint(Address addrFrom, Address addrTo) {
+		ArrayList<PinPoint> pinPoints = new ArrayList<PinPoint>();
+		PinPoint pinPointFrom = new PinPoint(addrFrom.getLonLatAsPoint(), txtAddrFrom.getText());
+		PinPoint pinPointTo = new PinPoint(addrTo.getLonLatAsPoint(), txtAddrTo.getText());
+		pinPointFrom.setIconIndex(5);
+		pinPointTo.setIconIndex(6);
+		pinPoints.add(pinPointFrom);
+		pinPoints.add(pinPointTo);
+		Main.pinPointManager.setTemporaryPinPoints(pinPoints);
+	}
     
-    private List<RouteModel> demoRoute(){
-		List<RouteModel> routeModels = new ArrayList<RouteModel>();
-		
-		routeModels.add(new RouteModel(RouteEnum.CONTINUE_ON, "Roskildevej", "600m"));
-		routeModels.add(new RouteModel(RouteEnum.TURN_LEFT, "Roskildevej", "600m"));
-		routeModels.add(new RouteModel(RouteEnum.CONTINUE_ON, "H. Hansenvej", "250m"));
-		routeModels.add(new RouteModel(RouteEnum.TURN_RIGHT, "Postmosen", "250m"));
-		routeModels.add(new RouteModel(RouteEnum.TURN_RIGHT, "Blågårdsgade", "250m"));
-		routeModels.add(new RouteModel(RouteEnum.CONTINUE_ON, "Sverigesvej", "250m"));
-		routeModels.add(new RouteModel(RouteEnum.TURN_RIGHT, "Amagerbrogade", "1,5Km"));
-		routeModels.add(new RouteModel(RouteEnum.AT_DESTINATION, "Rosenhaven 1", ""));
-		return routeModels;
+    private WeightEnum findWeightType() {
+		if(rdbtnCar.isSelected() && rdbtnFastest.isSelected()){
+			return WeightEnum.SPEED_CAR;
+		}else if(rdbtnCar.isSelected() && rdbtnShortest.isSelected()){
+			return WeightEnum.DISTANCE_CAR;
+		}else if(rdbtnBike.isSelected()) {
+			return WeightEnum.DISTANCE_BIKE; 
+		}else{
+			//Walk
+			return WeightEnum.DISTANCE_WALK; 
+		}
 	}
 
-	private void initContentPanel(JPanel panel){
+	private List<RouteModel> demoRoute(){
+		List<RouteModel> routeModels = new ArrayList<RouteModel>();
 		
-    }
+		routeModels.add(new RouteModel(RouteEnum.CONTINUE_ON, "Roskildevej", 600));
+		routeModels.add(new RouteModel(RouteEnum.TURN_LEFT, "Roskildevej", 600));
+		routeModels.add(new RouteModel(RouteEnum.CONTINUE_ON, "H. Hansenvej", 250));
+		routeModels.add(new RouteModel(RouteEnum.TURN_RIGHT, "Postmosen", 250));
+		routeModels.add(new RouteModel(RouteEnum.TURN_RIGHT, "Blågårdsgade", 250));
+		routeModels.add(new RouteModel(RouteEnum.CONTINUE_ON, "Sverigesvej", 250));
+		routeModels.add(new RouteModel(RouteEnum.TURN_RIGHT, "Amagerbrogade", 1500));
+		routeModels.add(new RouteModel(RouteEnum.AT_DESTINATION, "Rosenhaven 1", -1));
+		return routeModels;
+	}
 	
 	public void populateSuggestions(DropdownAddressSearch das, JTextField textField, List<String> list) {
 		menu.blockVisibility(true);

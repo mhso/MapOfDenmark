@@ -1,12 +1,11 @@
 package dk.itu.n.danmarkskort.search;
 
+import java.awt.geom.Point2D;
 import java.util.List;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 import dk.itu.n.danmarkskort.Main;
+import dk.itu.n.danmarkskort.Util;
 import dk.itu.n.danmarkskort.address.Address;
-import dk.itu.n.danmarkskort.models.RegionFloat;
 
 public class SearchController{
 	
@@ -20,11 +19,7 @@ public class SearchController{
 		if(inputStr == null || inputStr.isEmpty()) return null;
 		
 		if(isCoordinates(inputStr)) {
-			String[] strArr = inputStr.split(", ");
-			float[] cord = new float[strArr.length];
-			for(int i=0; i<cord.length; i++) cord[i] = Float.parseFloat(strArr[i]);
-			return Main.addressController.searchSuggestions(
-					new RegionFloat(cord[0], cord[1], cord[0], cord[1]), limitAmountOfResults);
+			return Main.addressController.getSearchSuggestions(stringCordsToPointFloat(inputStr), limitAmountOfResults);
 		} else {
 			return Main.addressController.getSearchSuggestions(inputStr, limitAmountOfResults);
 		}
@@ -34,11 +29,11 @@ public class SearchController{
 		if(inputStr == null || inputStr.isEmpty()) return null;
 		
 		if(isCoordinates(inputStr)) {
-			String[] strArr = inputStr.split(", ");
-			float[] cord = new float[strArr.length];
-			for(int i=0; i<cord.length; i++) cord[i] = Float.parseFloat(strArr[i]);
-			return Main.addressController.getSearchResult(cord);
+			Main.log("Search for cords string");
+			//return Main.addressController.getNearstSearchResult(stringCordsToPointFloat(inputStr));
+			return null;
 		} else {
+			Main.log("Search for address string");
 			return Main.addressController.getSearchResult(inputStr);
 		}
 	}
@@ -48,6 +43,13 @@ public class SearchController{
 		String cordsRegex = cordRegex + "(\\,\\s)" + cordRegex;
 		if(inputStr.matches(cordsRegex)) return true;
 		return false;
-		
+	}
+	
+	private static Point2D.Float stringCordsToPointFloat(String inputStr){
+		String[] strArr = inputStr.split(", ");
+		float lat = Float.parseFloat(strArr[0]);
+		float lon = Float.parseFloat(strArr[1]);
+		Point2D fakeCoords = Util.toFakeCoords(new Point2D.Float(lon, lat));
+		return new Point2D.Float((float)fakeCoords.getX(), (float)fakeCoords.getY());
 	}
 }

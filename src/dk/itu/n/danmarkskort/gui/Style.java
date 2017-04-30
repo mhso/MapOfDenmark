@@ -1,7 +1,11 @@
 package dk.itu.n.danmarkskort.gui;
 
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
+
+import dk.itu.n.danmarkskort.Main;
+
 import java.awt.*;
 import java.awt.font.TextAttribute;
 import java.awt.image.BufferedImage;
@@ -18,8 +22,8 @@ public class Style {
                 dropdownItemBG, dropdownItemBGActive, dropdowItemTextColor, dropdownItemTextColorActive, launcherVersionText, launcherSelectionBG;
     private CustomButton searchButton, menuButton, routeButton, centerViewButton, zoomInButton, zoomOutButton,
             menuLayerButton, menuSaveButton, menuOpenButton, menuSettingsButton, menuRouteButton, menuInfoButton, 
-            menuPinPointButton;
-    private ImageIcon scaleIndicator, arrowUpDownButton, basicThemePreview, logo, launcherOptionsIcon, launcherLoadIcon;
+            menuPinPointButton, pinPointPanButton, pinPointDeleteButton, arrowUpDownButton;
+    private ImageIcon scaleIndicator, basicThemePreview, logo, launcherOptionsIcon, launcherLoadIcon;
     private Image frameIcon;
     private Font normalText, smallHeadline, mediumHeadline, largeHeadline, largeHeadlineSpacing;
 
@@ -62,31 +66,48 @@ public class Style {
         menuSettingsButton = new CustomButton("resources/icons/settings.png", menuAlpha, menuAlphaHover);
         menuRouteButton = new CustomButton("resources/icons/menuroute.png", menuAlpha, menuAlphaHover);
         menuInfoButton = new CustomButton("resources/icons/info.png", menuAlpha, menuAlphaHover);
-        menuPinPointButton = new CustomButton("resources/icons/info.png", menuAlpha, menuAlphaHover);
+        menuPinPointButton = new CustomButton("resources/icons/pinpointmenu.png", menuAlpha, menuAlphaHover);
+        
+        menuOpenButton = new CustomButton("resources/icons/open.png", menuAlpha, menuAlphaHover);
+        
+
+        arrowUpDownButton = new CustomButton("resources/icons/arrowupdown.png", menuAlpha, menuAlphaHover);
         
         centerViewButton = new CustomButton("resources/icons/target.png", alphaFloat, alphaHover, zoomButtonBG);
         zoomInButton = new CustomButton("resources/icons/zoomin.png", alphaFloat, alphaHover, zoomButtonBG);
         zoomOutButton = new CustomButton("resources/icons/zoomout.png", alphaFloat, alphaHover, zoomButtonBG);
+        
+        pinPointPanButton = new CustomButton("resources/icons/map-pin.png", menuAlpha, menuAlphaHover);
+        pinPointDeleteButton = new CustomButton("resources/icons/office-bin.png", menuAlpha, menuAlphaHover);
 
-        basicThemePreview = new ImageIcon("resources/icons/previewthemebasic.png");
+        basicThemePreview = getImageIcon("resources/icons/previewthemebasic.png");
         
-        scaleIndicator = new ImageIcon("resources/scale.png");
+        scaleIndicator = getImageIcon("resources/scale.png");
         
-        arrowUpDownButton = new ImageIcon("resources/icons/arrowupdown.png");
+        arrowUpDownButton = new CustomButton("resources/icons/arrowupdown.png", menuAlpha, menuAlphaHover);
         
-        frameIcon = Toolkit.getDefaultToolkit().getImage("resources/icons/map-icon.png");
+        if(Main.production) frameIcon = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/resources/icons/map-icon.png"));
+        else frameIcon = Toolkit.getDefaultToolkit().getImage("resources/icons/map-icon.png");
 
-        logo = new ImageIcon("resources/icons/logo.png");
+        logo = getImageIcon("resources/icons/logo.png");
         logo = new ImageIcon(logo.getImage().getScaledInstance(40, 40, BufferedImage.SCALE_SMOOTH));
-        launcherOptionsIcon = new ImageIcon("resources/icons/settings.png");
-        launcherLoadIcon = new ImageIcon("resources/icons/open.png");
+        launcherOptionsIcon = getImageIcon("resources/icons/settings.png");
+        launcherLoadIcon = getImageIcon("resources/icons/open.png");
 
 
         try {
-            normalText= Font.createFont(Font.TRUETYPE_FONT, new File("resources/fonts/Roboto-Regular.ttf")).deriveFont(16f);
-            smallHeadline = Font.createFont(Font.TRUETYPE_FONT, new File("resources/fonts/Roboto-Medium.ttf")).deriveFont(18f);
-            mediumHeadline = Font.createFont(Font.TRUETYPE_FONT, new File("resources/fonts/Roboto-Light.ttf")).deriveFont(20f);
-            largeHeadline = Font.createFont(Font.TRUETYPE_FONT, new File("resources/fonts/Roboto-Light.ttf")).deriveFont(42f);
+        	if(Main.production) {
+        		normalText= Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/resources/fonts/Roboto-Regular.ttf")).deriveFont(16f);
+                smallHeadline = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/resources/fonts/Roboto-Medium.ttf")).deriveFont(18f);
+                mediumHeadline = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/resources/fonts/Roboto-Light.ttf")).deriveFont(20f);
+                largeHeadline = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/resources/fonts/Roboto-Light.ttf")).deriveFont(42f);
+        	}
+        	else {
+        		normalText= Font.createFont(Font.TRUETYPE_FONT, new File("resources/fonts/Roboto-Regular.ttf")).deriveFont(16f);
+                smallHeadline = Font.createFont(Font.TRUETYPE_FONT, new File("resources/fonts/Roboto-Medium.ttf")).deriveFont(18f);
+                mediumHeadline = Font.createFont(Font.TRUETYPE_FONT, new File("resources/fonts/Roboto-Light.ttf")).deriveFont(20f);
+                largeHeadline = Font.createFont(Font.TRUETYPE_FONT, new File("resources/fonts/Roboto-Light.ttf")).deriveFont(42f);
+        	}
         } catch (FontFormatException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -96,6 +117,17 @@ public class Style {
         Map<TextAttribute, Object> attributes = new HashMap<>();
         attributes.put(TextAttribute.TRACKING, 0.1);
         largeHeadlineSpacing = largeHeadline.deriveFont(attributes);
+    }
+    
+    private ImageIcon getImageIcon(String fileName) {
+    	if(Main.production)
+			try {
+				return new ImageIcon(ImageIO.read(getClass().getResourceAsStream("/"+fileName)));
+			} catch (IOException e) {
+				e.printStackTrace();
+				return null;
+			}
+		else return new ImageIcon(fileName);
     }
 
     // Getters
@@ -131,12 +163,14 @@ public class Style {
     public CustomButton menuRouteButton() { return menuRouteButton; }
     public CustomButton menuInfoButton() { return menuInfoButton; }
     public CustomButton menuPinPointButton() { return menuPinPointButton; }
+    public CustomButton pinPointPanButton() { return pinPointPanButton; }
+    public CustomButton pinPointDeleteButton() { return pinPointDeleteButton; }
+    public CustomButton arrowUpDownButton() { return arrowUpDownButton; }
     
     public CustomToggleButton toggleButton() { return new CustomToggleButton(1.0f, 0.8f); }
     
     public ImageIcon basicThemePreview() { return basicThemePreview; }
     public ImageIcon scaleIndicator() { return scaleIndicator; }
-    public ImageIcon arrowUpDownButton() { return arrowUpDownButton; }
     
     public Image frameIcon() { return frameIcon; }
 

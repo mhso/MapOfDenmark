@@ -5,10 +5,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 
 import javax.swing.JDialog;
-import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import javax.swing.filechooser.FileNameExtensionFilter;
 
 import dk.itu.n.danmarkskort.DKConstants;
 import dk.itu.n.danmarkskort.Main;
@@ -17,13 +15,9 @@ import dk.itu.n.danmarkskort.Util;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import java.awt.Font;
-import java.awt.Toolkit;
-import java.io.File;
 
-import javax.swing.JButton;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import java.awt.Component;
 
 public class WindowLauncherConfigure extends JDialog {
 
@@ -36,7 +30,7 @@ public class WindowLauncherConfigure extends JDialog {
 		Style style = new Style();
 		setModal(true);
 		setBounds(100, 100, 450, 300);
-		setIconImage(Toolkit.getDefaultToolkit().getImage("resources/icons/map-icon.png"));
+		setIconImage(style.frameIcon());
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 10));

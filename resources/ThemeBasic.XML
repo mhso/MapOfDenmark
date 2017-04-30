@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <theme version="0.3">
 	<defaultfont fontcolor="000000" fontsize="60"/>
+	<bgcolor color="6EC0FF"/>
 	<lines>
 		<line>
 			<type name="HIGHWAY_MOTORWAY"/>
@@ -78,6 +79,13 @@
 			<layer layer="3"/>
 		</line>
 		<line>
+			<type name="HIGHWAY_PEDESTRIAN"/>
+			<innercolor color="DDDDE9"/>
+			<outercolor color="A5A5A5"/>
+			<lineproperties linewidth="20"/>
+			<layer layer="3"/>
+		</line>
+		<line>
 			<type name="LIGHT_RAIL"/>
 			<innercolor color="6D6D6D"/>
 			<lineproperties linewidth="8"/>
@@ -104,6 +112,11 @@
 			<type name="INDUSTRIAL"/>
 			<innercolor color="EBDBE8"/>
 			<layer layer="1"/>
+		</area>
+		<area>
+			<type name="PEDESTRIAN_AREA"/>
+			<innercolor color="DDDDE9"/>
+			<layer layer="2"/>
 		</area>
 		<area>
 			<type name="BUILDING"/>

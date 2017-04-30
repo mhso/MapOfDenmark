@@ -3,11 +3,12 @@ package dk.itu.n.danmarkskort.gui;
 import java.awt.*;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 
 import dk.itu.n.danmarkskort.Main;
 
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
@@ -25,13 +26,13 @@ public class WindowLauncher extends JFrame {
 	private JLabel labelSelectedFile;
 	private String selectedFilePath;
 	private JButton buttonLaunch;
+	private JLabel labelSelectedFileHeader;
 	
 	public WindowLauncher() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		//setBounds(100, 100, 450,);
 		Style style = new Style();
 		setTitle("Launcher");
-		setIconImage(Toolkit.getDefaultToolkit().getImage("resources/icons/map-icon.png"));
+		setIconImage(style.frameIcon());
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(style.margin(), 0, 0, 0));
 		contentPane.setLayout(new BorderLayout(0, 0));
@@ -88,6 +89,13 @@ public class WindowLauncher extends JFrame {
 				labelSelectedFile.setText(binFilesList.getSelectedValue());
 				selectedFilePath = binFiles.get(binFilesList.getSelectedIndex()).toString();
 				if(!buttonLaunch.isEnabled()) enableLaunchButton(true);
+				if(e.getClickCount() == 2) launch();
+			}
+		});
+		binFilesList.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if(!binFilesList.isSelectionEmpty()) launch();
 			}
 		});
 		
@@ -100,20 +108,15 @@ public class WindowLauncher extends JFrame {
 		centerPanel.add(panelCurrentFile, BorderLayout.SOUTH);
 		panelCurrentFile.setLayout(new BorderLayout(0, 5));
 		
-		JLabel labelSelectedFileHeader = new JLabel("Selected File");
+		labelSelectedFileHeader = new JLabel("Selected File");
 		labelSelectedFileHeader.setHorizontalAlignment(SwingConstants.CENTER);
 		labelSelectedFileHeader.setFont(style.normalText());
 		panelCurrentFile.add(labelSelectedFileHeader, BorderLayout.NORTH);
 		
 		buttonLaunch = new JButton("Launch");
-		
-		if (binFiles.isEmpty()) {
-			labelSelectedFileHeader.setText("No map files found, load a new one from 'Configure' menu.");
-			enableLaunchButton(false);
-		}
-		else if(selectedFilePath == null) {
-			labelSelectedFile.setText("Default Map Not Found.");
-			enableLaunchButton(false);
+		if(selectedFilePath == null) {
+			selectedFilePath = "resources/default.bin";
+			labelSelectedFile.setText("default.bin (default)");
 		}
 		
 		labelSelectedFile.setOpaque(true);
@@ -128,18 +131,22 @@ public class WindowLauncher extends JFrame {
 		panelBottom.setLayout(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
 
-
-
-		buttonLaunch.addActionListener(e -> {
-			dispose();
-			Main.launch(new String[]{selectedFilePath});
-		});
+		buttonLaunch.addActionListener(e -> launch());
 		buttonLaunch.setFont(style.mediumHeadline());
         buttonLaunch.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, style.panelBG()));
         buttonLaunch.setPreferredSize(new Dimension(buttonLaunch.getPreferredSize().width, 40));
         buttonLaunch.setBackground(style.launcherSelectionBG());
         buttonLaunch.setForeground(Color.BLACK);
         buttonLaunch.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        
+        contentPane.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if(e.getKeyCode() == KeyEvent.VK_ENTER && buttonLaunch.isEnabled()) {
+					buttonLaunch.doClick();
+				}
+			}
+		});
         gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.weightx = 1;
 		gbc.gridx = 2;
@@ -150,7 +157,7 @@ public class WindowLauncher extends JFrame {
 		buttonConfigure.setFont(style.mediumHeadline());
 		buttonConfigure.setIcon(style.launcherOptionsIcon());
 		buttonConfigure.setBackground(style.inputFieldBG());
-		buttonConfigure.setForeground(style.panelTextColor());
+		buttonConfigure.setForeground(style.panelTextColor().darker());
 		buttonConfigure.setCursor(new Cursor(Cursor.HAND_CURSOR));
         buttonConfigure.setBorder(BorderFactory.createMatteBorder(1, 0, 0,0, style.panelBG()));
         buttonConfigure.setPreferredSize(new Dimension(buttonConfigure.getPreferredSize().width, 40));
@@ -165,7 +172,7 @@ public class WindowLauncher extends JFrame {
 		buttonLoadFile.setFont(style.mediumHeadline());
 		buttonLoadFile.setIcon(style.launcherLoadIcon());
 		buttonLoadFile.setBackground(style.inputFieldBG());
-		buttonLoadFile.setForeground(style.panelTextColor());
+		buttonLoadFile.setForeground(style.panelTextColor().darker());
 		buttonLoadFile.setCursor(new Cursor(Cursor.HAND_CURSOR));
 		buttonLoadFile.setPreferredSize(new Dimension(buttonLoadFile.getPreferredSize().width, 40));
         buttonLoadFile.setBorder(BorderFactory.createMatteBorder(1, 1, 0, 1, style.panelBG()));
@@ -174,22 +181,26 @@ public class WindowLauncher extends JFrame {
             @Override
             public void mouseEntered(MouseEvent e) {
                 buttonLoadFile.setBackground(style.panelBG());
+				buttonLoadFile.setForeground(style.panelTextColor());
             }
             @Override
             public void mouseExited(MouseEvent e) {
                 buttonLoadFile.setBackground(style.inputFieldBG());
-            }
+				buttonLoadFile.setForeground(style.panelTextColor().darker());
+			}
         });
 
         buttonConfigure.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
                 buttonConfigure.setBackground(style.panelBG());
+				buttonConfigure.setForeground(style.panelTextColor());
             }
             @Override
             public void mouseExited(MouseEvent e) {
                 buttonConfigure.setBackground(style.inputFieldBG());
-            }
+				buttonConfigure.setForeground(style.panelTextColor().darker());
+			}
         });
 
         buttonLaunch.addMouseListener(new MouseAdapter() {
@@ -201,6 +212,12 @@ public class WindowLauncher extends JFrame {
             public void mouseExited(MouseEvent e) {
                 buttonLaunch.setBackground(style.launcherSelectionBG());
             }
+        });
+        buttonLaunch.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if(e.getKeyCode() == KeyEvent.VK_ENTER && buttonLaunch.isEnabled()) buttonLaunch.doClick();
+			}
         });
 
 		// Colors and stuff
@@ -220,7 +237,7 @@ public class WindowLauncher extends JFrame {
 		panelBottom.setBackground(outerColor);
 		
 		labelHeaderName.setForeground(style.panelTextColor());
-		labelHeaderVersion.setForeground(style.launcherVersionText());
+		labelHeaderVersion.setForeground(style.launcherVersionText().darker());
 		labelParsedMaps.setForeground(style.launcherVersionText());
 		labelSelectedFileHeader.setForeground(style.launcherVersionText());
 		binFilesList.setForeground(new Color(200, 200, 200));
@@ -231,12 +248,20 @@ public class WindowLauncher extends JFrame {
 		
 		setLocationRelativeTo(null);
 		setVisible(true);
+		contentPane.requestFocusInWindow();
+	}
+	
+	private void launch() {
+		dispose();
+		Main.launch(new String[]{selectedFilePath});
 	}
 
 	public void setSelectedFile(String fileName) {
+		labelSelectedFileHeader.setText("Selected File");
 		labelSelectedFile.setText(fileName);
 		selectedFilePath = fileName;
 		if(!buttonLaunch.isEnabled()) enableLaunchButton(true);
+		buttonLaunch.requestFocusInWindow();
 	}
 	
 	private void enableLaunchButton(boolean enable) {
@@ -247,6 +272,10 @@ public class WindowLauncher extends JFrame {
 	
 	private String[] getParsedFiles() {
 		binFiles = new ArrayList<>();
+		if(Main.production) {
+			selectedFilePath = "/resources/default.bin";
+			labelSelectedFile.setText("default.bin (default)");
+		}		
 		try {
 			for(Path entry : Files.newDirectoryStream(Paths.get("parsedOSMFiles"))) {
 				for(Path binFile : Files.newDirectoryStream(entry)) {
@@ -279,7 +308,6 @@ public class WindowLauncher extends JFrame {
 			File file = fc.getSelectedFile();
 
 			setSelectedFile(file.getAbsolutePath());
-			//dispose();
 		}
 	}
 

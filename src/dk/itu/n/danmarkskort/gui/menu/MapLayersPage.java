@@ -24,7 +24,7 @@ public class MapLayersPage extends JPanel {
     private DropdownMenu menu;
     
     public MapLayersPage(DropdownMenu menu) {
-    	style = new Style();
+    	style = Main.style;
     	this.menu = menu;
         setOpaque(false);
         setLayout(new BorderLayout(0, 0));
