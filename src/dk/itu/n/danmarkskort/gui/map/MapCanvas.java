@@ -153,32 +153,17 @@ public class MapCanvas extends JPanel {
 	public void drawMapShapesForTile(Tile tile) {
 		if(tile.isRendered()) return;
 		Graphics2D g2d = (Graphics2D)tile.getGraphics();
-		
+		drawBackground(g2d);
 		Region tileRegion = tile.getGeographicalRegion();
 		Region currentRegion = new Region(tileRegion.x1, tileRegion.y1 + tileRegion.getHeight(), tileRegion.x2, tileRegion.y2 + tileRegion.getHeight());
 		
 		g2d.setTransform(tile.getTransform());
-		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		if(antiAlias) g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		else g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
 		drawMapRegion(g2d);
 		if(zoomChanged) wayTypesVisible = getOnScreenGraphicsForCurrentZoom();
 		shapesDrawn = 0;
-
 		if(wayTypesVisible == null) return;
-        drawBackground(g2d);
-
-        if(Main.debugExtra && !Main.buffered) {
-            double x1 = currentRegion.x1;
-            double x2 = currentRegion.x2;
-            double y1 = currentRegion.y1;
-            double y2 = currentRegion.y2;
-            double width = currentRegion.getWidth();
-            double height = currentRegion.getHeight();
-            currentRegion = new Region(
-                    x1 + (width * 0.25),
-                    y1 + (height * 0.25),
-                    x2 - (width * 0.25),
-                    y2 - (height * 0.25));
-        }
 
         // drawing all the outlines, if the current WayTypeGraphicSpec has one
         for (WaytypeGraphicSpec wayTypeGraphic : wayTypesVisible) {
@@ -216,17 +201,6 @@ public class MapCanvas extends JPanel {
                     shapesDrawn++;
                 }
             }
-        }
-        if(Main.debugExtra && !Main.buffered) {
-            g2d.setStroke(new BasicStroke(0.0001f));
-            g2d.setColor(Color.BLACK);
-            Path2D box = new Path2D.Float();
-            box.moveTo(currentRegion.x1, currentRegion.y1);
-            box.lineTo(currentRegion.x1, currentRegion.y2);
-            box.lineTo(currentRegion.x2, currentRegion.y2);
-            box.lineTo(currentRegion.x2, currentRegion.y1);
-            box.lineTo(currentRegion.x1, currentRegion.y1);
-            g2d.draw(box);
         }
     }
 
@@ -459,6 +433,11 @@ public class MapCanvas extends JPanel {
 	public void setupDone() {	
 		zoomToBounds();
 		for(CanvasListener listener : listeners) listener.onSetupDone();
+	}
+	
+	@Deprecated
+	public void forceRepaint() {
+		
 	}
 
 }
