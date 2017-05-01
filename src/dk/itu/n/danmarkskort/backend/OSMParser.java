@@ -612,6 +612,7 @@ public class OSMParser extends SAXAdapter implements Serializable {
     private void checkMaxSpeed() {
         switch(waytype) {
             case HIGHWAY_SERVICE:
+                toGraph = false;
                 break;
             case HIGHWAY_FOOTWAY:
                 bicycle = false;
