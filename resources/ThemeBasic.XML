@@ -93,6 +93,13 @@
 			<layer layer="2"/>
 		</line>
 		<line>
+			<type name="RAIL"/>
+			<innercolor color="F6EBEB"/>
+			<outercolor color="6D6D6D"/>
+			<lineproperties linedash="5, 8" borderdash="false" lineend="BUTT" linejoin="BEVEL" linewidth="12"/>
+			<layer layer="2"/>
+		</line>
+		<line>
 			<type name="LIGHT_RAIL"/>
 			<innercolor color="6D6D6D"/>
 			<lineproperties linewidth="8"/>
@@ -128,6 +135,7 @@
 		<area>
 			<type name="BUILDING"/>
 			<innercolor color="CACACA"/>
+			<outercolor color="666666"/>
 			<layer layer="5"/>
 		</area>
 		<area>
@@ -173,6 +181,7 @@
 		<area>
 			<type name="SPORT"/>
 			<innercolor color="AAE0CB"/>
+			<outercolor color="455C54"/>
 			<layer layer="3"/>
 		</area>
 		<area>

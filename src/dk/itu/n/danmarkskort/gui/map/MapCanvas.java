@@ -32,6 +32,7 @@ import dk.itu.n.danmarkskort.mapgfx.WaytypeGraphicSpec;
 import dk.itu.n.danmarkskort.models.ParsedItem;
 import dk.itu.n.danmarkskort.models.Region;
 import dk.itu.n.danmarkskort.models.WayType;
+import dk.itu.n.danmarkskort.routeplanner.RouteEdge;
 
 public class MapCanvas extends JPanel {
 
@@ -51,6 +52,7 @@ public class MapCanvas extends JPanel {
 
 	private Shape currentHighlighedShape;
 	private WayType currentHighlighedWaytype;
+	private RouteEdge[] currentRoute;
 	
 	public MapCanvas() {
 		new MapMouseController(this);
@@ -112,12 +114,16 @@ public class MapCanvas extends JPanel {
             currentWTGSpec = wayTypeGraphic;
             KDTree<ParsedItem> kdTree = Main.model.enumMapKD.get(wayTypeGraphic.getWayType());
             if (kdTree == null) continue;
-            //if (currentWTGSpec.getOuterColor() != null) {
             if (currentWTGSpec instanceof GraphicSpecArea) {
-                currentWTGSpec.transformPrimary(g2d);
                 for (Iterator<ParsedItem> i = kdTree.iterator(currentRegion); i.hasNext(); ) {
-                    ParsedItem item = i.next();
-                    g2d.fill(item.getShape());
+                	currentWTGSpec.transformPrimary(g2d);
+                	ParsedItem item = i.next();
+                    Shape s = item.getShape();
+                    g2d.fill(s);
+                    if (currentWTGSpec.getOuterColor() != null) {
+                    	currentWTGSpec.transformOutline(g2d);
+                     	g2d.draw(s);
+                    }
                     shapesDrawn++;
                 }
             }
@@ -173,12 +179,16 @@ public class MapCanvas extends JPanel {
             currentWTGSpec = wayTypeGraphic;
             KDTree<ParsedItem> kdTree = Main.model.enumMapKD.get(wayTypeGraphic.getWayType());
             if (kdTree == null) continue;
-            //if (currentWTGSpec.getOuterColor() != null) {
             if (currentWTGSpec instanceof GraphicSpecArea) {
-                currentWTGSpec.transformPrimary(g2d);
                 for (Iterator<ParsedItem> i = kdTree.iterator(currentRegion); i.hasNext(); ) {
-                    ParsedItem item = i.next();
-                    g2d.fill(item.getShape());
+                	currentWTGSpec.transformPrimary(g2d);
+                	ParsedItem item = i.next();
+                    Shape s = item.getShape();
+                    g2d.fill(s);
+                    if (currentWTGSpec.getOuterColor() != null) {
+                    	currentWTGSpec.transformOutline(g2d);
+                     	g2d.draw(s);
+                    }
                     shapesDrawn++;
                 }
             }
@@ -275,6 +285,32 @@ public class MapCanvas extends JPanel {
 		}
 		currentHighlighedShape = shape;
 		currentHighlighedWaytype = wayType;
+	}
+	
+	private void drawRouteEdges(RouteEdge[] edges) {
+		currentRoute = edges;
+		for(RouteEdge edge : edges) drawRouteEdge(edge);
+	}
+	
+	private void drawRouteEdge(RouteEdge edge) {
+		Path2D path = new Path2D.Float(Path2D.WIND_EVEN_ODD);
+		path.moveTo(edge.getFrom().getX(), edge.getFrom().getY());
+		path.lineTo(edge.getTo().getX(), edge.getTo().getY());
+		Graphics2D g2d = (Graphics2D) getGraphics();
+		g2d.setTransform(transform);
+		if(antiAlias) g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		else g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
+		g2d.setStroke(new BasicStroke(0.000008f));
+		g2d.setColor(Color.BLUE);
+		g2d.draw(path);
+	}
+	
+	public void setRoute(RouteEdge[] edges) {
+		currentRoute = edges;
+	}
+	
+	public RouteEdge[] getRoute() {
+		return currentRoute;
 	}
 	
 	public Shape getHighlightedShape() {
