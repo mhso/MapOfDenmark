@@ -42,6 +42,7 @@ public class OSMParser extends SAXAdapter implements Serializable {
     private transient boolean forward;
     private transient boolean backward;
     private transient boolean motorvehicle;
+    private transient boolean walk;
     private transient boolean toGraph;
     private transient int maxSpeed;
     private transient RouteController route;
@@ -207,7 +208,7 @@ public class OSMParser extends SAXAdapter implements Serializable {
                 second = route.makeVertex(secondNode.x, secondNode.y);
                 vertexMap.put(secondNode, second);
             }
-            route.addEdge(first, second, maxSpeed, forward, backward, motorvehicle, bicycle, name);
+            route.addEdge(first, second, maxSpeed, forward, backward, motorvehicle, bicycle, walk, name);
         }
     }
 
@@ -284,6 +285,7 @@ public class OSMParser extends SAXAdapter implements Serializable {
         isArea = false;
         isHighway = false;
         toGraph = false;
+        walk = true;
         currentNodes = new ArrayList<>();
     }
 
@@ -581,29 +583,56 @@ public class OSMParser extends SAXAdapter implements Serializable {
             case "area":
                 isArea = true;
                 break;
+            case "foot":
+                switch (v) {
+                    case "yes":
+                        walk = true;
+                        break;
+                    case "no":
+                        walk = false;
+                        break;
+                }
+                break;
+            case "sidewalk":
+                switch(v) {
+                    case "none":
+                        walk = false;
+                        break;
+                    case "both":
+                    case "right":
+                    case "left":
+                        walk = true;
+                        break;
+                }
+                break;
         }
     }
 
     private void checkMaxSpeed() {
         switch(waytype) {
             case HIGHWAY_SERVICE:
+                break;
             case HIGHWAY_FOOTWAY:
-                toGraph = false;
-                return;
-            case HIGHWAY_CYCLEWAY:
+                bicycle = false;
             case PEDESTRIAN_AREA:
             case HIGHWAY_PEDESTRIAN:
-                if(!bicycle) toGraph = false;
+                walk = true;
+                if(maxSpeed == 0) maxSpeed = 6;
+                motorvehicle = false;
+                break;
+            case HIGHWAY_CYCLEWAY:
                 motorvehicle = false;
                 if(maxSpeed == 0) maxSpeed = 30; // is not relevant, as we never use this when calculating bike routes
                 break;
             case HIGHWAY_MOTORWAY:
                 if(maxSpeed == 0) maxSpeed = 130;
                 bicycle = false;
+                walk = false;
                 break;
             case HIGHWAY_TRUNK:
             case HIGHWAY_PRIMARY:
                 bicycle = false;
+                walk = false;
                 if(maxSpeed == 0) maxSpeed = 90;
                 break;
             case HIGHWAY_SECONDARY:
