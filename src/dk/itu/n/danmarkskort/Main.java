@@ -1,7 +1,6 @@
 package dk.itu.n.danmarkskort;
 
 import java.awt.Dimension;
-import java.awt.Toolkit;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import javax.swing.*;
@@ -133,7 +132,6 @@ public class Main {
 
         window.pack();
 		window.setLocationRelativeTo(null);
-		
         window.setVisible(true);
         map.setupDone();
     }
