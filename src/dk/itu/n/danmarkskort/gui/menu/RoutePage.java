@@ -333,7 +333,7 @@ public class RoutePage extends JPanel {
     		BufferedImage bufferedImage = null;
     		
     		List<RouteModel> routemodels = Main.routeController.makeRoute(addrFrom.getLonLatAsPoint(), addrTo.getLonLatAsPoint(), weightEnum);
-			if(!routemodels.isEmpty()){
+    		if(!routemodels.isEmpty()){
 	    		try {
 					if(Main.production) bufferedImage = ImageIO.read(getClass().getResourceAsStream("/resources/routeplanner/demo_routeplanner.PNG"));
 					else bufferedImage = ImageIO.read(new File("resources/routeplanner/demo_routeplanner.PNG"));
@@ -361,7 +361,7 @@ public class RoutePage extends JPanel {
 		PinPoint pinPointFrom = new PinPoint(addrFrom.getLonLatAsPoint(), txtAddrFrom.getText());
 		PinPoint pinPointTo = new PinPoint(addrTo.getLonLatAsPoint(), txtAddrTo.getText());
 		pinPointFrom.setIconIndex(5);
-		pinPointTo.setIconIndex(6);
+		pinPointTo.setIconIndex(1);
 		pinPoints.add(pinPointFrom);
 		pinPoints.add(pinPointTo);
 		Main.pinPointManager.setTemporaryPinPoints(pinPoints);

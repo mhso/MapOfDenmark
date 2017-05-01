@@ -92,6 +92,9 @@ public class MapCanvas extends JPanel {
 			Main.pinPointManager.drawPinPoints(g2d);
 			Main.pinPointManager.drawSystemPinPoints(g2d);
 		}
+		if(currentRoute != null) {
+			drawRouteEdges(g2d, currentRoute);
+		}
 	}
 	
 	public void repaintPinPoints() {
@@ -307,16 +310,15 @@ public class MapCanvas extends JPanel {
 		currentHighlighedWaytype = wayType;
 	}
 	
-	private void drawRouteEdges(RouteEdge[] edges) {
+	public void drawRouteEdges(Graphics2D g2d, RouteEdge[] edges) {
 		currentRoute = edges;
-		for(RouteEdge edge : edges) drawRouteEdge(edge);
+		for(RouteEdge edge : edges) drawRouteEdge(g2d, edge);
 	}
 	
-	private void drawRouteEdge(RouteEdge edge) {
+	public void drawRouteEdge(Graphics2D g2d, RouteEdge edge) {
 		Path2D path = new Path2D.Float(Path2D.WIND_EVEN_ODD);
 		path.moveTo(edge.getFrom().getX(), edge.getFrom().getY());
 		path.lineTo(edge.getTo().getX(), edge.getTo().getY());
-		Graphics2D g2d = (Graphics2D) getGraphics();
 		g2d.setTransform(transform);
 		if(antiAlias) g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		else g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);

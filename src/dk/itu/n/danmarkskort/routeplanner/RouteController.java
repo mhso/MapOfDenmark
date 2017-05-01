@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.kdtree.KDTree;
 import dk.itu.n.danmarkskort.kdtree.KDTreeNode;
 import dk.itu.n.danmarkskort.models.ReuseRouteEdgeMetaObj;
@@ -105,17 +106,8 @@ public class RouteController {
 				+ " getNumOfRouteEdges=" + getNumOfRouteEdges();
 	}
 	
-	public RouteVertex demoFindVertex(float[] lonLat){
-		for(RouteVertex rv : vertices){
-			System.out.println("demoFindVertex, compare: x" + lonLat[0] + " = " + rv.x +", " + lonLat[1] + " = " + rv.y);
-			if(rv.isEqualPoint(new Point2D.Float(lonLat[0], lonLat[1]))) return rv;
-		}
-		return null;
-	}
-	
 	public RouteEdge searchEdgesKDTree(Point2D.Float lonLat){
-		//KDTree<RouteEdge> kdTree = new KDTreeNode<>(routeEdges);
-		
+		if(routeGraph == null) makeGraph();
 		if(debug) {
 			System.out.println("debug searchEdgesKDTree: \n"
 					+ "input para: " + lonLat
@@ -131,8 +123,6 @@ public class RouteController {
 		return null;
 	}
 
-
-	
 	public List<RouteModel> makeRoute(Point2D.Float from, Point2D.Float to, WeightEnum weightEnum){
 		List<RouteModel> routeModels = new ArrayList<RouteModel>();
 		RouteEdge fromEdge = searchEdgesKDTree(from);
@@ -152,6 +142,7 @@ public class RouteController {
 			if(debug && edges != null)System.out.println("debug makeRoute IterableEdges!!!");
 			RouteModel lastModel = null;
 			double distSum = 0;
+			int sizeOfEdges = 0;
 			for(RouteEdge edge : edges){
 				if(debug)System.out.println("debug makeRoute foreach: " + edge.toString());
 				RouteEnum routeEnum = RouteEnum.CONTINUE_ON;
@@ -165,7 +156,12 @@ public class RouteController {
 					lastModel = routeModel;
 					routeModels.add(routeModel);
 				}
+				sizeOfEdges++;
 			}
+			RouteEdge[] edgeArr = new RouteEdge[sizeOfEdges];
+			int i = 0;
+			for(RouteEdge edge : edges){ edgeArr[i++] =  edge;}
+			Main.map.setRoute(edgeArr);
 			if(debug) {
 				System.out.println("debug makeRoute return found edges! size: " + routeModels.size());
 			}

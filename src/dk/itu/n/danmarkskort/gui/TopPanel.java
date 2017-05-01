@@ -172,9 +172,17 @@ public class TopPanel extends JPanel {
     private void panZoomToCoordinates(Point2D.Float input) {
     	System.out.println("Toppanel->panZoomToCoordinats (lon, lat): " + input.toString() + "\n -->, real (lon, lat): " + Util.toRealCoords(input));
     	String pinPointName = "SearchLocation - " + input.toString();
-    	Main.pinPointManager.addPinPoint(pinPointName, new PinPoint(Main.map.toScreenCoords(input), pinPointName));
+    	makePinPoint(input, pinPointName);
     	Main.map.panToPosition(new Point2D.Float(input.x, input.y));
     	Main.mainPanel.repaint();
+	}
+    
+    private void makePinPoint(Point2D inputScreenCords, String pinPointName) {
+		ArrayList<PinPoint> pinPoints = new ArrayList<PinPoint>();
+		PinPoint pinPoint = new PinPoint(inputScreenCords, pinPointName);
+		pinPoint.setIconIndex(5);
+		pinPoints.add(pinPoint);
+		Main.pinPointManager.setTemporaryPinPoints(pinPoints);
 	}
 
 	public void populateSuggestions(List<String> list) {
