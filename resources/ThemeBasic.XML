@@ -128,6 +128,7 @@
 		<area>
 			<type name="BUILDING"/>
 			<innercolor color="CACACA"/>
+			<outercolor color="666666"/>
 			<layer layer="5"/>
 		</area>
 		<area>
@@ -173,6 +174,7 @@
 		<area>
 			<type name="SPORT"/>
 			<innercolor color="AAE0CB"/>
+			<outercolor color="455C54"/>
 			<layer layer="3"/>
 		</area>
 		<area>
