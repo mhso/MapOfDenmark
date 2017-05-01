@@ -142,6 +142,7 @@ public class RouteController {
 			if(debug && edges != null)System.out.println("debug makeRoute IterableEdges!!!");
 			RouteModel lastModel = null;
 			double distSum = 0;
+			int sizeOfEdges = 0;
 			for(RouteEdge edge : edges){
 				if(debug)System.out.println("debug makeRoute foreach: " + edge.toString());
 				RouteEnum routeEnum = RouteEnum.CONTINUE_ON;
@@ -155,7 +156,12 @@ public class RouteController {
 					lastModel = routeModel;
 					routeModels.add(routeModel);
 				}
+				sizeOfEdges++;
 			}
+			RouteEdge[] edgeArr = new RouteEdge[sizeOfEdges];
+			int i = 0;
+			for(RouteEdge edge : edges){ edgeArr[i++] =  edge;}
+			Main.map.setRoute(edgeArr);
 			if(debug) {
 				System.out.println("debug makeRoute return found edges! size: " + routeModels.size());
 			}
