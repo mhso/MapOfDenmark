@@ -27,9 +27,11 @@ import dk.itu.n.danmarkskort.gui.map.multithreading.Tile;
 import dk.itu.n.danmarkskort.kdtree.KDTree;
 import dk.itu.n.danmarkskort.mapgfx.GraphicRepresentation;
 import dk.itu.n.danmarkskort.mapgfx.GraphicSpecArea;
+import dk.itu.n.danmarkskort.mapgfx.GraphicSpecLabel;
 import dk.itu.n.danmarkskort.mapgfx.GraphicSpecLine;
 import dk.itu.n.danmarkskort.mapgfx.WaytypeGraphicSpec;
 import dk.itu.n.danmarkskort.models.ParsedItem;
+import dk.itu.n.danmarkskort.models.ParsedPlace;
 import dk.itu.n.danmarkskort.models.Region;
 import dk.itu.n.danmarkskort.models.WayType;
 import dk.itu.n.danmarkskort.routeplanner.RouteEdge;
@@ -211,6 +213,15 @@ public class MapCanvas extends JPanel {
         // draw or fill for all the different WaytypeGraphicsSpecs
         for(WaytypeGraphicSpec wayTypeGraphic : wayTypesVisible) {
             currentWTGSpec = wayTypeGraphic;
+            if(currentWTGSpec instanceof GraphicSpecLabel) {
+            	currentWTGSpec.transformPrimary(g2d);
+            	KDTree<ParsedPlace> kdTree = Main.model.enumMapPlacesKD.get(wayTypeGraphic.getWayType());
+            	if(kdTree == null) continue;
+            	for(ParsedPlace place : kdTree) {
+            		//System.out.println("Name: " + place.getName() + ", x: " + place.x + ", y: " + place.y);
+            		g2d.drawString(place.getName(), place.x, place.y);
+            	}
+            }
             if (currentWTGSpec instanceof GraphicSpecLine) {
                 currentWTGSpec.transformPrimary(g2d);
                 KDTree<ParsedItem> kdTree = Main.model.enumMapKD.get(wayTypeGraphic.getWayType());

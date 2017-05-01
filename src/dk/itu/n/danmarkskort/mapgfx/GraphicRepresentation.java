@@ -319,12 +319,8 @@ public class GraphicRepresentation {
 					}
 					if(atts.getValue("borderdash") != null) gsl.setBorderDashed(Boolean.parseBoolean(atts.getValue("borderdash")));
 				break;
-				case "fontcolor":
-					GraphicSpecLabel gsla = (GraphicSpecLabel) gs;
-					gsla.setFontColor(parseColor(atts.getValue("fontcolor")));
-				break;
 				case "fontsize":
-					gsla = (GraphicSpecLabel) gs;
+					GraphicSpecLabel gsla = (GraphicSpecLabel) gs;
 					gsla.setFontSize(Integer.parseInt(atts.getValue("fontsize")));
 				break;
 			}

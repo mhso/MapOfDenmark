@@ -4,12 +4,17 @@ import java.awt.Shape;
 import java.awt.geom.Point2D;
 import java.awt.geom.Point2D.Float;
 
-public class ParsedPlace extends Point2D.Float {
+import dk.itu.n.danmarkskort.kdtree.KDComparable;
+
+public class ParsedPlace extends Point2D.Float implements KDComparable {
+	public static final int TOWN = 0;
+	public static final int SUBURB = 1;
+	
 	private String name;
 	private int population;
-	private int nodeId;
 	
-	public ParsedPlace(float x, float y) {
+	public ParsedPlace(String name, int type, float x, float y) {
+		this.name = name;
 		setLocation(x, y);
 	}
 	
@@ -19,5 +24,24 @@ public class ParsedPlace extends Point2D.Float {
 	
 	public int getPopulation() {
 		return population;
+	}
+	
+	public String getName() {
+		return name;
+	}
+
+	@Override
+	public Float getFirstNode() {
+		return this;
+	}
+
+	@Override
+	public Float[] getNodes() {
+		return new Point2D.Float[]{this};
+	}
+
+	@Override
+	public float[] getCoords() {
+		return new float[]{x, y};
 	}
 }
