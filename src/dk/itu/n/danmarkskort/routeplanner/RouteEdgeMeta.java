@@ -12,7 +12,7 @@ public class RouteEdgeMeta {
 		this.backwardAllowed = backwardAllowed;
 		this.carsAllowed = carsAllowed;
 		this.bikesAllowed = bikesAllowed;
-		this.walkAllowed = bikesAllowed;
+		this.walkAllowed = walkAllowed;
 	}
 
 	public int getMaxSpeed() { return maxSpeed; }

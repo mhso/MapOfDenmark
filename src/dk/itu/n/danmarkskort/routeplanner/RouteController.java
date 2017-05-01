@@ -105,17 +105,7 @@ public class RouteController {
 				+ " getNumOfRouteEdges=" + getNumOfRouteEdges();
 	}
 	
-	public RouteVertex demoFindVertex(float[] lonLat){
-		for(RouteVertex rv : vertices){
-			System.out.println("demoFindVertex, compare: x" + lonLat[0] + " = " + rv.x +", " + lonLat[1] + " = " + rv.y);
-			if(rv.isEqualPoint(new Point2D.Float(lonLat[0], lonLat[1]))) return rv;
-		}
-		return null;
-	}
-	
 	public RouteEdge searchEdgesKDTree(Point2D.Float lonLat){
-		//KDTree<RouteEdge> kdTree = new KDTreeNode<>(routeEdges);
-		
 		if(debug) {
 			System.out.println("debug searchEdgesKDTree: \n"
 					+ "input para: " + lonLat
@@ -131,8 +121,6 @@ public class RouteController {
 		return null;
 	}
 
-
-	
 	public List<RouteModel> makeRoute(Point2D.Float from, Point2D.Float to, WeightEnum weightEnum){
 		List<RouteModel> routeModels = new ArrayList<RouteModel>();
 		RouteEdge fromEdge = searchEdgesKDTree(from);
