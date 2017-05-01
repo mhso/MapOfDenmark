@@ -89,7 +89,7 @@ public class Style {
         if(Main.production) frameIcon = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/resources/icons/map-icon.png"));
         else frameIcon = Toolkit.getDefaultToolkit().getImage("resources/icons/map-icon.png");
 
-        logo = getImageIcon("resources/icons/logo.png");
+        logo = getImageIcon("resources/icons/map-icon.png");
         logo = new ImageIcon(logo.getImage().getScaledInstance(40, 40, BufferedImage.SCALE_SMOOTH));
         launcherOptionsIcon = getImageIcon("resources/icons/settings.png");
         launcherLoadIcon = getImageIcon("resources/icons/open.png");
