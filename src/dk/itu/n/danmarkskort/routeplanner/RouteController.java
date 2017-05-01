@@ -39,9 +39,9 @@ public class RouteController {
 	}
 	
 	public void addEdge(RouteVertex fromVertex, RouteVertex toVertex, Integer maxSpeed,
-			boolean forwardAllowed, boolean backwardAllowed, boolean carsAllowed, boolean bikesAllowed, String description){
+			boolean forwardAllowed, boolean backwardAllowed, boolean carsAllowed, boolean bikesAllowed, boolean walkAllowed, String description){
 		RouteEdgeMeta routeEdgeMeta = new RouteEdgeMeta(maxSpeed, forwardAllowed, backwardAllowed,
-				carsAllowed, bikesAllowed);
+				carsAllowed, bikesAllowed, walkAllowed);
 		RouteEdgeMeta reuseRouteEdgeMeta = ReuseRouteEdgeMetaObj.make(routeEdgeMeta);
 		if(forwardAllowed){
 			if(debug && description != null && description.startsWith("Amagerbrogade"))System.out.println("debug addEdge forward: " + description);
@@ -68,14 +68,14 @@ public class RouteController {
 	
 	public Iterable<RouteEdge> getRoute(RouteVertex from, RouteVertex to, WeightEnum weightEnum){
 		if(routeGraph == null) makeGraph();
-		RouteDijkstra routeDijkstra = new RouteDijkstra(routeGraph, from.getId(), weightEnum);
-		if(debug) System.out.println("debug getRoute: " + routeDijkstra);
+		RouteDijkstra routeDijkstra = new RouteDijkstra(routeGraph, from.getId(), to.getId(), weightEnum);
+		//if(debug) System.out.println("debug getRoute: " + routeDijkstra);
 		return routeDijkstra.pathTo(to.getId());
 	}
 	
 	public boolean hasRoute(RouteVertex from, RouteVertex to, WeightEnum weightEnum){
 		if(routeGraph == null) makeGraph();
-		RouteDijkstra routeDijkstra = new RouteDijkstra(routeGraph, from.getId(), weightEnum);
+		RouteDijkstra routeDijkstra = new RouteDijkstra(routeGraph, from.getId(), to.getId(), weightEnum);
 		return routeDijkstra.hasPathTo(to.getId());
 	}
 
