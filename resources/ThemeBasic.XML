@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <theme version="0.3">
-	<defaultfont fontcolor="000000" fontsize="60"/>
+	<defaultfont fontcolor="000000" fontsize="20"/>
 	<bgcolor color="6EC0FF"/>
 	<lines>
 		<line>
@@ -203,12 +203,10 @@
 	<labels>
 		<label>
 			<type name="PLACE_TOWN"/>
-			<innercolor color="EC8E9F"/>
 			<layer layer="5"/>
 		</label>
 		<label>
 			<type name="PLACE_SUBURB"/>
-			<innercolor color="EC8E9F"/>
 			<layer layer="5"/>
 		</label>
 	</labels>

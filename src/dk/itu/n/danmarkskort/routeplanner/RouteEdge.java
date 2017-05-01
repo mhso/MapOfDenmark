@@ -1,11 +1,13 @@
 package dk.itu.n.danmarkskort.routeplanner;
 
 import java.awt.geom.Point2D;
+import java.io.Serializable;
 
 import dk.itu.n.danmarkskort.kdtree.KDComparable;
 import dk.itu.n.danmarkskort.models.ReuseStringObj;
 
-public class RouteEdge implements KDComparable{
+public class RouteEdge implements KDComparable, Serializable {
+	private static final long serialVersionUID = 7080914394280747088L;
 	private final RouteVertex from, to;
 	private RouteEdgeMeta routeEdgeMeta;
 	private final String description;

@@ -16,6 +16,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Map;
 
+import dk.itu.n.danmarkskort.backend.BinaryWrapper;
 import dk.itu.n.danmarkskort.backend.InputMonitor;
 import dk.itu.n.danmarkskort.backend.InputStreamListener;
 import dk.itu.n.danmarkskort.models.Region;
@@ -145,6 +146,20 @@ public class Util {
 		String simpleFileName = file.getName().substring(0, file.getName().length()-4);
 		return "parsedOSMFiles/"+Main.osmReader.getChecksum()+"/" + 
 				simpleFileName + ".bin";
+	}
+	
+	public static void extractAllFromBinary(BinaryWrapper binary) {
+		Main.model = binary.getModel();
+		Main.addressController.setAddressHolder(binary.getAddressHolder());
+		Main.routeController.setEdgeTree(binary.getEdgeTree());
+		Main.routeController.setGraph(binary.getRouteGraph());
+	}
+	
+	public static void addAllToBinary(BinaryWrapper binary) {
+		binary.setModel(Main.model);
+        binary.setAddressHolder(Main.addressController.getAddressHolder());
+        binary.setEdgeTree(Main.routeController.getEdgeTree());
+        binary.setRouteGraph(Main.routeController.getGraph());
 	}
 	
 	public static boolean writeObjectToFile(Object object, String filename) {

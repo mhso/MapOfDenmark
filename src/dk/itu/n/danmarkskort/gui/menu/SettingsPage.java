@@ -241,7 +241,7 @@ public class SettingsPage extends JPanel {
         JLabel defaultMapFileLabel = new JLabel("Default Map File:");
         defaultMapFilePanel.add(defaultMapFileLabel, BorderLayout.WEST);
         
-        JComboBox<String> defaultMapFileBox = new JComboBox<>(getParsedFiles());
+        JComboBox<String> defaultMapFileBox = new JComboBox(getParsedFiles());
         defaultMapFileBox.addActionListener(e -> {
         	Main.userPreferences.setDefaultMapFile(defaultMapFileBox.getSelectedItem().toString());
         	Util.writeObjectToFile(Main.userPreferences, DKConstants.USERPREF_PATH);
@@ -270,7 +270,7 @@ public class SettingsPage extends JPanel {
         JLabel defaultMapThemeLabel = new JLabel("Default Map Theme:");
         defaultMapThemePanel.add(defaultMapThemeLabel, BorderLayout.WEST);
         
-        JComboBox<String> defaultMapThemeBox = new JComboBox<>(new String[]{"Basic", "Colorblind"});
+        JComboBox<String> defaultMapThemeBox = new JComboBox(new String[]{"Basic", "Colorblind"});
         defaultMapThemeBox.addActionListener(e -> {
         	Main.userPreferences.setDefaultTheme(defaultMapThemeBox.getSelectedItem().toString());
         	Util.writeObjectToFile(Main.userPreferences, DKConstants.USERPREF_PATH);
@@ -310,6 +310,23 @@ public class SettingsPage extends JPanel {
         maximizeOnStartupPanel.add(maximizeButton, BorderLayout.EAST);
         
         centerPanel.add(Box.createRigidArea(new Dimension(20, 20)));
+        
+        JPanel highlightRoadPanel = new JPanel();
+        highlightRoadPanel.setOpaque(false);
+        centerPanel.add(highlightRoadPanel);
+        highlightRoadPanel.setLayout(new BorderLayout(15, 0));
+        
+        JLabel highlightLabel = new JLabel("Hightlight Nearest Road");
+        highlightRoadPanel.add(highlightLabel, BorderLayout.WEST);
+        
+        JCheckBox highlightButton = new JCheckBox();
+        highlightButton.addActionListener(e -> {
+        	Main.userPreferences.setHighlightNearestRoad(highlightButton.isSelected());
+        	Util.writeObjectToFile(Main.userPreferences, DKConstants.USERPREF_PATH);
+        });
+        highlightButton.setBackground(panelCenter.getBackground());
+        highlightButton.setSelected(Main.userPreferences.isHighlightingNearestRoad());
+        highlightRoadPanel.add(highlightButton, BorderLayout.EAST);
         
         JPanel panelSouth = new JPanel();
         panelSouth.setOpaque(false);

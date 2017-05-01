@@ -1,12 +1,12 @@
 package dk.itu.n.danmarkskort.models;
 
-import java.awt.Shape;
 import java.awt.geom.Point2D;
-import java.awt.geom.Point2D.Float;
+import java.io.Serializable;
 
 import dk.itu.n.danmarkskort.kdtree.KDComparable;
 
 public class ParsedPlace extends Point2D.Float implements KDComparable {
+	private static final long serialVersionUID = 3611768063854888413L;
 	public static final int TOWN = 0;
 	public static final int SUBURB = 1;
 	

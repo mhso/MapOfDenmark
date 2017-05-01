@@ -100,6 +100,24 @@ public class RouteController {
 		return vertices;
 	}
 	
+	public KDTree<RouteEdge> getEdgeTree() {
+		if(edgeTree == null) makeGraph();
+		return edgeTree;
+	}
+	
+	public RouteGraph getGraph() {
+		if(routeGraph == null) makeGraph();
+		return routeGraph;
+	}
+	
+	public void setEdgeTree(KDTree<RouteEdge> edgeTree) {
+		this.edgeTree = edgeTree;
+	}
+	
+	public void setGraph(RouteGraph graph) {
+		routeGraph = graph;
+	}
+	
 	public String toString() {
 		return "RouteController: vertexCount=" + vertexCount
 				+ " getNumOfVertices=" + getNumOfVertices()

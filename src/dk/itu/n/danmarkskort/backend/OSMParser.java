@@ -26,8 +26,8 @@ public class OSMParser extends SAXAdapter implements Serializable {
 
     private transient EnumMap<WayType, ArrayList<ParsedItem>> enumMap;
     private transient EnumMap<WayType, ArrayList<ParsedPlace>> places;
-    public EnumMap<WayType, KDTree<ParsedItem>> enumMapKD;
-    public EnumMap<WayType, KDTree<ParsedPlace>> enumMapPlacesKD;
+    private EnumMap<WayType, KDTree<ParsedItem>> enumMapKD;
+    private EnumMap<WayType, KDTree<ParsedPlace>> enumMapPlacesKD;
 
     private transient ParsedWay way;
     private transient ParsedRelation relation;
@@ -264,8 +264,6 @@ public class OSMParser extends SAXAdapter implements Serializable {
             for(OSMParserListener listener : reader.parserListeners) listener.onParsingGotItem(address);
         }
         if(place != null) {
-        	System.out.println(waytype);
-        	System.out.println(place);
         	places.get(waytype).add(place);
         }
         resetValues();
@@ -360,6 +358,14 @@ public class OSMParser extends SAXAdapter implements Serializable {
 
     public float getLonFactor() {
         return lonFactor;
+    }
+    
+    public EnumMap<WayType, KDTree<ParsedItem>> getEnumMapKD() {
+    	return enumMapKD;
+    }
+    
+    public EnumMap<WayType, KDTree<ParsedPlace>> getEnumMapPlacesKD() {
+    	return enumMapPlacesKD;
     }
 
     public void parseTagInformation(String k, String v) {
