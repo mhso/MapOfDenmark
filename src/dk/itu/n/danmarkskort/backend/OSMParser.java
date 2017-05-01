@@ -23,6 +23,7 @@ public class OSMParser extends SAXAdapter implements Serializable {
     private transient HashMap<Long, ParsedWay> temporaryWayReferences;
     private transient HashMap<Long, ParsedRelation> temporaryRelationReferences;
     private transient HashMap<Point2D.Float, ParsedWay> coastlineMap;
+    private transient HashMap<Long, ParsedPlace> temporaryPlaceReferences;
 
     private transient EnumMap<WayType, ArrayList<ParsedItem>> enumMap;
     public EnumMap<WayType, KDTree<ParsedItem>> enumMapKD;
@@ -31,6 +32,7 @@ public class OSMParser extends SAXAdapter implements Serializable {
     private transient ParsedRelation relation;
     private transient ParsedNode node;
     private transient ParsedAddress address;
+    private transient ParsedPlace place;
 
     private transient WayType waytype;
     private transient ArrayList<Point2D.Float> currentNodes;
@@ -58,6 +60,7 @@ public class OSMParser extends SAXAdapter implements Serializable {
         nodeMap = new NodeMap();
         temporaryWayReferences = new HashMap<>();
         temporaryRelationReferences = new HashMap<>();
+        temporaryPlaceReferences = new HashMap<>();
         coastlineMap = new HashMap<>();
         currentNodes = new ArrayList<>();
         vertexMap = new HashMap<>();
@@ -350,6 +353,15 @@ public class OSMParser extends SAXAdapter implements Serializable {
                     if (address == null) address = new ParsedAddress();
                     address.setStreet(v);
                     return;
+                case "place":
+                	switch(v) {
+                		case "town":
+                			place = new ParsedPlace(node.x, node.y);
+                        	temporaryPlaceReferences.put(null, place);
+                			return;
+                		case "suburb":
+                			return;
+                	}
             }
         }
 
