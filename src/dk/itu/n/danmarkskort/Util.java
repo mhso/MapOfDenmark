@@ -126,6 +126,12 @@ public class Util {
 		}
 	}
 	
+	public static double distanceInMeters(Point2D p1, Point2D p2) {
+        double latM = 1000*((p2.getY()-p1.getY())*110.574);
+        double lonM = 1000*((p2.getX()-p1.getX())*111.320*Math.cos(Math.toRadians(p2.getY())));
+        return Math.sqrt((lonM * lonM) + (latM * latM));
+    }
+	
 	public static Point2D toRealCoords(Point2D fakeCoords) {
 		return new Point2D.Float((float)fakeCoords.getX()/Main.model.getLonFactor(), (float)-fakeCoords.getY());
 	}
