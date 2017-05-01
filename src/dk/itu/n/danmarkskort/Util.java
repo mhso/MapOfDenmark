@@ -94,8 +94,8 @@ public class Util {
 		}
 	}
 	
-	public static int roundByN(double n, double value){
-	    return (int) (Math.round(value/n) * n);
+	public static double roundByN(double n, double value){
+	    return Math.round(value/n) * n;
 	}
 	
 	public static int mouseWarp() {

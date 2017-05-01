@@ -4,6 +4,7 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,8 +26,10 @@ public class TileController implements ActionListener {
 	public boolean isInitialized, blur;
 	public Queue tileQueue;
 	public HashMap<String, Tile> tiles;
-	public double imageScale;
+	public double imageScale, tileX, tileY;
 	public Timer blurTimer;
+	public AffineTransform tileTransform;
+	public boolean blockNextPan = false;
 	
 	public TileController() {
 		isInitialized = false;
@@ -44,12 +47,14 @@ public class TileController implements ActionListener {
 		imageScale = 1;
 		blurTimer = new Timer(500, this);
 		blurTimer.setRepeats(false);
-		
-		// Debug tiles start
+
 		Tile tile = new Tile(new Point(0, -1));
 		tiles.put(tile.getKey(), tile);
-		queueTile(tile, TaskPriority.MEDIUM, true);
-		// Debug tiles end
+		queueTile(tile, TaskPriority.MEDIUM, true, false);
+		tileTransform = new AffineTransform();
+		
+		tileX = 0;
+		tileY = 0;
 		
 		isInitialized = true;
 	}
@@ -71,9 +76,8 @@ public class TileController implements ActionListener {
 	public boolean updateTilePos() {
 		boolean outcome;
 		
-		Region view = Main.map.getActualGeographicalRegion();
-		int x = (int) (Util.roundByN(getGeographicalTileWidth(), view.x1 - zero.getX()) / getGeographicalTileWidth());
-		int y = (int) (Util.roundByN(getGeographicalTileHeight(), view.y1 - zero.getY()) / getGeographicalTileHeight());
+		int x = (int) tileX;
+		int y = (int) tileY;
 		outcome = (x != tilePos.x || y != tilePos.y);
 		tilePos = new Point(x, y);
 		
@@ -88,10 +92,11 @@ public class TileController implements ActionListener {
 		return tilePos;
 	}
 	
-	public void queueTile(Tile tile, TaskPriority priority, boolean repaintAfterRender) {
+	public void queueTile(Tile tile, TaskPriority priority, boolean repaintAfterRender, boolean swapWhenDone) {
 		TileRenderTask task = new TileRenderTask(tile);
 		task.setRepaintWhenDone(repaintAfterRender);
 		task.setPriority(priority);
+		task.setSwapWhenDone(swapWhenDone);
 		tileQueue.addTask(task);
 	}
 	
@@ -126,7 +131,12 @@ public class TileController implements ActionListener {
 	
 	public void draw(Graphics2D g2d) {
 		if(!isInitialized()) return;
-		for(Tile tile : tiles.values()) tile.draw(g2d);
+		String[] tileKeys = tiles.keySet().toArray(new String[tiles.size()]);
+		for(String key : tileKeys) {
+			Tile tile = tiles.get(key);
+			if(tile == null) continue;
+			tile.draw(g2d);
+		}
 	}
 	
 	public boolean isBlurred() {
@@ -144,9 +154,18 @@ public class TileController implements ActionListener {
 		tiles.clear();
 		imageScale = 1;
 		
-		Tile tile = new Tile(new Point(0, -1));
-		tiles.put(tile.getKey(), tile);
-		queueTile(tile, TaskPriority.HIGHEST, true);
+		Tile tileView = new Tile(new Point(0, -1));
+		tiles.put(tileView.getKey(), tileView);
+		queueTile(tileView, TaskPriority.HIGH, true, false);
+		
+		for(int x=-1; x<2; x++) {
+			for(int y=-2; y<1; y++) {
+				if(x == 0 && y == -1) continue;
+				Tile tile = new Tile(new Point(x, y));
+				tiles.put(tile.getKey(), tile);
+				queueTile(tile, TaskPriority.MEDIUM, true, false);
+			}
+		}
 		
 		blur = false;
 	}
@@ -160,23 +179,54 @@ public class TileController implements ActionListener {
 		tiles.put(tileNew.getKey(), tileNew);
 	}
 	
-	public void swapTileWithUselessTile(Tile tile) {
+	public void swapTileWithUselessTile(Tile newTile) {
 		
+		String[] tileKeys = tiles.keySet().toArray(new String[tiles.size()]);
+		
+		for(String key : tileKeys) {
+			Tile oldTile = tiles.get(key);
+			if(oldTile == null) continue;
+			if(oldTile.isUseless()) {
+				swapTile(oldTile, newTile);
+				return;
+			}
+		}
 	}
 	
 	public void checkForNewTiles() {
 		List<Tile> newTiles = getNewTiles();
+		for(Tile tile : newTiles) {
+			queueTile(tile, TaskPriority.HIGHEST, true, true);
+		}
 	}
 	
 	public List<Tile> getNewTiles() {
 		List<Tile> newTiles = new ArrayList<Tile>();
-		for(int x=-1; x<2; x++) {
-			for(int y=-2; y<1; y++) {
+		for(int x=tilePos.x-1; x<tilePos.x+2; x++) {
+			for(int y=tilePos.y-2; y<tilePos.y+1; y++) {
 				Tile tile = new Tile(new Point(x, y));
 				if(!tiles.containsKey(tile.getKey())) newTiles.add(tile);
 			}
 		}
 		return newTiles;
+	}
+	
+	public void pan(double tx, double ty) {
+		if(blockNextPan) {
+			blockNextPan = false;
+			return;
+		}
+		
+		tileTransform.translate(tx, ty);
+		
+		tileX = -Util.roundByN(0.5, tileTransform.getTranslateX() / getTileWidth());
+		tileY = -Util.roundByN(0.5, tileTransform.getTranslateY() / getTileHeight());
+		
+	}
+	
+	public void resetTileTransform() {
+		tileTransform = new AffineTransform();
+		blockNextPan = true;
 	}
 	
 }

@@ -67,16 +67,12 @@ public class Tile {
 		g2d.setTransform(new AffineTransform());
 		g2d.drawImage(image, (int)pixelRegion.x1, (int)(pixelRegion.y1+pixelRegion.getHeight()), (int)(pixelRegion.getWidth() * scale), (int)(pixelRegion.getHeight() * scale), null);
 		
-		// Debug
-		g2d.setColor(Color.RED);
-		g2d.setStroke(new BasicStroke(Float.MIN_VALUE));
-		g2d.drawRect((int)pixelRegion.x1, (int)(pixelRegion.y1+pixelRegion.getHeight()), (int)(pixelRegion.getWidth() * scale), (int)(pixelRegion.getHeight() * scale));
 	}
 	
 	public boolean isUseless() {
 		Point viewPoint = Main.tileController.getTilePos();
-		viewPoint = new Point(viewPoint.x, viewPoint.y - 1);	
-		return false;
+		viewPoint = new Point(viewPoint.x, viewPoint.y - 1);
+		return (Math.abs(pos.x - viewPoint.x) > 1 || Math.abs(pos.y - viewPoint.y) > 1);
 	}
 	
 }
