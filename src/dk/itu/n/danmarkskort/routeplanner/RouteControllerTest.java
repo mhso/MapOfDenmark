@@ -49,46 +49,51 @@ public class RouteControllerTest {
 		rc.addEdge(C1, C2, 20, true, false, true, true, false, "C1->C2");
 		rc.addEdge(C2, A3, 20, true, true, true, true, false, "C2<->A3");
 		
-		rc.addEdge(B2, C1, 20, false, true, false, true, false, "B2<-C1");
+		rc.addEdge(B2, C1, 20, true, true, false, true, false, "B2<->C1");
 		
 		
-//		printResult(A1, A6, "A1->A6, DISTANCE_CAR", WeightEnum.DISTANCE_CAR);
-//		printResult(A1, A6, "A1->A6, SPEED_CAR", WeightEnum.SPEED_CAR);
-//		
-//		printResult(A1, B3, "A1->B3, DISTANCE_CAR", WeightEnum.DISTANCE_CAR);
-//		printResult(B3, A1, "B3->A1, SPEED_CAR", WeightEnum.SPEED_CAR);
-//		
-//		printResult(C1, C2, "C1->C2, DISTANCE_CAR", WeightEnum.DISTANCE_CAR);
-//		printResult(C1, C2, "C1->C2, SPEED_CAR", WeightEnum.SPEED_CAR);
-//		printResult(C2, C1, "C2->C1, DISTANCE_CAR", WeightEnum.DISTANCE_CAR);
-//		printResult(C2, C1, "C2->C1, SPEED_CAR", WeightEnum.SPEED_CAR);
-//		
-//		printResult(A6, B2, "A6->B2, DISTANCE_CAR", WeightEnum.DISTANCE_CAR);
-//		printResult(A6, B2, "A6->B2, SPEED_CAR", WeightEnum.SPEED_CAR);
-//		printResult(B2, A6, "B2->A6, DISTANCE_CAR", WeightEnum.DISTANCE_CAR);
-//		printResult(B2, A6, "B2->A6, SPEED_CAR", WeightEnum.SPEED_CAR);
-//		printResult(B2, A6, "B2->A6, SPEED_CAR", WeightEnum.SPEED_CAR);
-		testAll(B2, A6, "B2->A6");
+		System.out.println(testAll(A1, A6, "A1->A6"));
+		System.out.println(testAll(A6, A1, "A1->A6"));
+				
+		System.out.println(testAll(A1, B3, "A1->B3"));
+		System.out.println(testAll(B3, A1, "B3->A1"));
+				
+		System.out.println(testAll(C1, C2, "C1->C2"));
+		System.out.println(testAll(C2, C1, "C2->C1"));
+				
+		System.out.println(testAll(A6, B2, "A6->B2"));
+		System.out.println(testAll(B2, A6, "B2->A6"));
 				
 		fail("Not yet implemented");
 	}
 
-	private String testAll(RouteVertex A1, RouteVertex A6, String fromToStr){
+	private String testAll(RouteVertex from, RouteVertex to, String fromToStr){
+		
+		String DISTANCE_CAR = getResult(from, to, fromToStr, WeightEnum.DISTANCE_CAR);
+		String SPEED_CAR = getResult(from, to, fromToStr, WeightEnum.SPEED_CAR);
+		String DISTANCE_BIKE = getResult(from, to, fromToStr, WeightEnum.DISTANCE_BIKE);
+		String DISTANCE_WALK = getResult(from, to, fromToStr, WeightEnum.DISTANCE_WALK);
 		
 		StringBuilder sb = new StringBuilder();
-		sb.append("-- ROUTE " +fromToStr + " --");
+		sb.append("\n-- ROUTE " +fromToStr + " --");
 		sb.append("\n---> ");
-		sb.append("DISTANCE_CAR: " + getResult(A1, A6, fromToStr, WeightEnum.DISTANCE_CAR));
+		sb.append("DISTANCE_CAR: " + DISTANCE_CAR);
 		sb.append("\n---> ");
-		sb.append("SPEED_CAR: " + getResult(A1, A6, fromToStr, WeightEnum.SPEED_CAR));
+		sb.append("SPEED_CAR: " + SPEED_CAR);
 		sb.append("\n---> ");
-		sb.append("DISTANCE_BIKE: " + getResult(A1, A6, fromToStr, WeightEnum.DISTANCE_BIKE));
+		sb.append("DISTANCE_BIKE: " + DISTANCE_BIKE);
 		sb.append("\n---> ");
-		sb.append("DISTANCE_WALK: " + getResult(A1, A6, fromToStr, WeightEnum.DISTANCE_WALK));
+		sb.append("DISTANCE_WALK: " + DISTANCE_WALK);
 		sb.append("\n");
 		System.out.println(sb.toString());
 		
-		return sb.toString();
+		
+		return strToBool(DISTANCE_CAR) + ", " + strToBool(SPEED_CAR) + ", " + strToBool(DISTANCE_BIKE) + ", " + strToBool(DISTANCE_WALK);
+	}
+	
+	private boolean strToBool(String input){
+		if(input.equals("NO ROUTE")) return false;
+		return true;
 	}
 	
 	private String getResult(RouteVertex A1, RouteVertex A6, String fromToStr, WeightEnum weightEnum) {

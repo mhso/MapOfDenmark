@@ -66,6 +66,6 @@ public class RoutePartStep extends JPanel {
 	
 	private String makeDistance(double input){
 		if(input == -1) return "";
-		return input + "";
+		return String.format("%.2f", input) + "";
 	}
 }
