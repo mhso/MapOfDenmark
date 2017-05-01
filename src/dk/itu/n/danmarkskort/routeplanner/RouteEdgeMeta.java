@@ -25,5 +25,4 @@ public class RouteEdgeMeta {
 	public String getKey(){
 		return maxSpeed + "_" + forwardAllowed + "_" + backwardAllowed + "_" + carsAllowed + "_" + bikesAllowed + "_" + walkAllowed;
 	}
-	
 }

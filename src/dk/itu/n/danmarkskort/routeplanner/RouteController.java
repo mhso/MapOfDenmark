@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.kdtree.KDTree;
 import dk.itu.n.danmarkskort.kdtree.KDTreeNode;
 import dk.itu.n.danmarkskort.models.ReuseRouteEdgeMetaObj;
@@ -106,6 +107,7 @@ public class RouteController {
 	}
 	
 	public RouteEdge searchEdgesKDTree(Point2D.Float lonLat){
+		if(routeGraph == null) makeGraph();
 		if(debug) {
 			System.out.println("debug searchEdgesKDTree: \n"
 					+ "input para: " + lonLat
