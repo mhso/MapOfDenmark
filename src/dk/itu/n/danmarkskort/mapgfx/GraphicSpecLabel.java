@@ -5,7 +5,6 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 
 import dk.itu.n.danmarkskort.DKConstants;
-import dk.itu.n.danmarkskort.Main;
 
 public class GraphicSpecLabel extends WaytypeGraphicSpec {
 	private int fontSize;
@@ -21,6 +20,11 @@ public class GraphicSpecLabel extends WaytypeGraphicSpec {
 	public void transformPrimary(Graphics2D graphics) {
 		super.transformPrimary(graphics);
 		graphics.setFont(font);
+	}
+	
+	public void transformOutline(Graphics2D graphics) {
+		super.transformOutline(graphics);
+		graphics.setFont(font.deriveFont((fontSize*DKConstants.FONTSIZE_MAGNIFYING_VALUE)+DKConstants.FONT_OUTLINE_WIDTH));
 	}
 	
 	public void setFontSize(int fontSize) {

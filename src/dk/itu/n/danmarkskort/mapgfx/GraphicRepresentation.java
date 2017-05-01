@@ -52,6 +52,19 @@ public class GraphicRepresentation {
 		return cummulativeList;
 	}
 	
+	public static List<WayType> getWaytypesForZoom(int zoomLevel) {
+		zoomLevel -= 1;
+		List<WayType> cummulativeList = new ArrayList<>();
+		for(WaytypeGraphicSpec spec : overriddenSpecs) cummulativeList.add(spec.getWayType());
+		for(int i = zoomLevel; i >= 0; i--) {
+			for(WaytypeGraphicSpec wgs : zoomLevelArr[i]) {
+				if(!wgs.isFiltered() && !overriddenSpecs.contains(wgs)) cummulativeList.add(wgs.getWayType());
+			}
+		}
+		cummulativeList.sort(null);
+		return cummulativeList;
+	}
+	
 	/**
 	 * Add a WayType to Overridden Graphic Specifications, meaning the Graphic Specification for this WayType will be drawn at any zoom level.
 	 * 

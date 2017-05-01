@@ -226,11 +226,14 @@ public class MapCanvas extends JPanel {
         for(WaytypeGraphicSpec wayTypeGraphic : wayTypesVisible) {
             currentWTGSpec = wayTypeGraphic;
             if(currentWTGSpec instanceof GraphicSpecLabel) {
-            	currentWTGSpec.transformPrimary(g2d);
             	KDTree<ParsedPlace> kdTree = Main.model.getEnumMapPlacesKD().get(wayTypeGraphic.getWayType());
             	if(kdTree == null) continue;
+            	currentWTGSpec.transformOutline(g2d);
             	for(ParsedPlace place : kdTree) {
-            		//System.out.println("Name: " + place.getName() + ", x: " + place.x + ", y: " + place.y);
+            		g2d.drawString(place.getName(), place.x, place.y);
+            	}
+            	currentWTGSpec.transformPrimary(g2d);
+            	for(ParsedPlace place : kdTree) {
             		g2d.drawString(place.getName(), place.x, place.y);
             	}
             }
@@ -280,6 +283,7 @@ public class MapCanvas extends JPanel {
 	}
 	
 	public void highlightWay(WayType wayType, Shape shape) {
+		if(!GraphicRepresentation.getWaytypesForZoom((int)getZoom()).contains(wayType)) return;
 		Graphics2D g2d = (Graphics2D) getGraphics();
 		g2d.setTransform(transform);
 		if(antiAlias) g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);

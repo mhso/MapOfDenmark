@@ -207,6 +207,7 @@
 		</label>
 		<label>
 			<type name="PLACE_SUBURB"/>
+			<outercolor color="FFFFFF"/>
 			<layer layer="5"/>
 		</label>
 	</labels>
