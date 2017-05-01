@@ -10,7 +10,7 @@ public class GraphicSpecLabel extends WaytypeGraphicSpec {
 	
 	public GraphicSpecLabel(int fontSize, Color fontColor) {
 		this.fontSize = fontSize;
-		font = new Font("Tahoma", Font.PLAIN, (int)fontSize);
+		font = new Font("Tahoma", Font.BOLD, fontSize);
 		//font = font.deriveFont(fontSize*0.00001f);
 	}
 
@@ -22,5 +22,9 @@ public class GraphicSpecLabel extends WaytypeGraphicSpec {
 	
 	public void setFontSize(int fontSize) {
 		this.fontSize = fontSize;
+	}
+	
+	public String toString() {
+		return super.toString() + ", type=label, fontSize=" + fontSize;
 	}
 }

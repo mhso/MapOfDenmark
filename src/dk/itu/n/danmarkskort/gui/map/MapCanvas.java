@@ -220,6 +220,7 @@ public class MapCanvas extends JPanel {
             	for(ParsedPlace place : kdTree) {
             		//System.out.println("Name: " + place.getName() + ", x: " + place.x + ", y: " + place.y);
             		g2d.drawString(place.getName(), place.x, place.y);
+            		System.out.println(toModelCoords(place));
             	}
             }
             if (currentWTGSpec instanceof GraphicSpecLine) {
