@@ -26,7 +26,7 @@ public class RouteEdge implements KDComparable{
 	public int getFromId() { return from.getId(); }
 	public int getToId() { return to.getId(); }
 	public boolean isForwardAllowed() { return routeEdgeMeta.isForwardAllowed(); }
-	public boolean isBackwardAllowed() {return routeEdgeMeta.isBackwardAllowed();	}
+	public boolean isBackwardAllowed() {return routeEdgeMeta.isBackwardAllowed(); }
 	public String getDescription(){ return description; }
 
 	private double distance(){ return from.distance(to); }
@@ -51,12 +51,30 @@ public class RouteEdge implements KDComparable{
     	return result;
     }
 	
+	public boolean isTravelTypeAllowed(WeightEnum weightEnum){
+		boolean result = false;
+		switch(weightEnum){
+		case DISTANCE_BIKE: if(routeEdgeMeta.isBikesAllowed()) { result = true; }
+			break;
+		case DISTANCE_CAR: if(routeEdgeMeta.isCarsAllowed()) { result = true; }
+			break;
+		case DISTANCE_WALK: if(routeEdgeMeta.isWalkAllowed()) { result = true; }
+			break;
+		case SPEED_CAR: if(routeEdgeMeta.isCarsAllowed()) { result = true; }
+			break;
+		default:
+			break;
+		}
+		//System.out.println("Result: " + result + ", Type: " + weightEnum.toString());
+		return result;
+	}
+	
 	public String toString() {
 		return from.getId() + " [" + from.toString() + "] ->" + to.getId()+ " [" + to.toString() + "]\n";
 	}
 	
 	public String toStringDesr() {
-		return from.getId() + " -> " + to.getId() + " [ " + description + " ]";
+		return "[ " + description + " ]";
 	}
 
 	@Override

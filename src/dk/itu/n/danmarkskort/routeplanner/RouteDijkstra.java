@@ -5,16 +5,21 @@ public class RouteDijkstra {
     private RouteEdge[] edgeTo;    			// edgeTo[v] = last edge on shortest s->v path
     private IndexMinPQ<Double> pq;    		// priority queue of vertices
     private WeightEnum weightEnum;
+    private boolean debug = false;
+    private int source, target;
 
     /**
      * Computes a shortest-paths tree from the source vertex {@code s} to every other
      * vertex in the edge-weighted digraph {@code G}.
      * @param  graph the edge-weighted digraph
-     * @param  sourceVetex the source vertex
+     * @param  source the source vertex
      * @throws IllegalArgumentException if an edge weight is negative
      * @throws IllegalArgumentException unless {@code 0 <= s < V}
      */
-    public RouteDijkstra(RouteGraph graph, int sourceVetex, WeightEnum weightEnum) {
+    public RouteDijkstra(RouteGraph graph, int sourceVertex, int targetVertex, WeightEnum weightEnum) {
+    	this.source =  sourceVertex;
+    	this.target =  targetVertex;
+    	
     	this.weightEnum = weightEnum;
         for (RouteEdge edge : graph.edges()) {
             if (edge.getWeight(weightEnum) < 0)
@@ -24,23 +29,30 @@ public class RouteDijkstra {
         distTo = new double[graph.getNumOfVertices()];
         edgeTo = new RouteEdge[graph.getNumOfVertices()];
 
-        validateVertex(sourceVetex);
+        validateVertex(source);
 
         for (int v = 0; v < graph.getNumOfVertices(); v++)
             distTo[v] = Double.POSITIVE_INFINITY;
-        distTo[sourceVetex] = 0.0;
+        distTo[source] = 0.0;
 
         // relax vertices in order of distance from s
         pq = new IndexMinPQ<Double>(graph.getNumOfVertices());
-        pq.insert(sourceVetex, distTo[sourceVetex]);
+        pq.insert(source, distTo[source]);
         while (!pq.isEmpty()) {
             int v = pq.delMin();
-            for (RouteEdge edge : graph.adjacent(v))
-                relax(edge);
+            if(v == target) { 
+            	//System.out.println("Target found, we can stop now.");
+            	break;
+            }
+            
+            for (RouteEdge edge : graph.adjacent(v)) {
+            	if(edge.isTravelTypeAllowed(weightEnum))
+            		relax(edge);
+            }
         }
 
         // check optimality conditions
-        assert check(graph, sourceVetex);
+        //assert check(graph, source);
     }
 
     // relax edge e and update pq if changed
@@ -91,7 +103,7 @@ public class RouteDijkstra {
         if (!hasPathTo(vertexId)) return null;
         Stack<RouteEdge> path = new Stack<RouteEdge>();
         for (RouteEdge edge = edgeTo[vertexId]; edge != null; edge = edgeTo[edge.getFromId()]) {
-        	System.out.println("debug pathTo: " + edge.toString());
+        	if(debug)System.out.println("debug pathTo: " + edge.toString());
             path.push(edge);
         }
         return path;
