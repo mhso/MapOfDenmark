@@ -148,7 +148,16 @@ public class MapCanvas extends JPanel {
         // draw or fill for all the different WaytypeGraphicsSpecs
         for(WaytypeGraphicSpec wayTypeGraphic : wayTypesVisible) {
             currentWTGSpec = wayTypeGraphic;
-            if (currentWTGSpec instanceof GraphicSpecLine) {
+            if(currentWTGSpec instanceof GraphicSpecLabel) {
+            	currentWTGSpec.transformPrimary(g2d);
+            	KDTree<ParsedPlace> kdTree = Main.model.enumMapPlacesKD.get(wayTypeGraphic.getWayType());
+            	if(kdTree == null) continue;
+            	for(ParsedPlace place : kdTree) {
+            		//System.out.println("Name: " + place.getName() + ", x: " + place.x + ", y: " + place.y);
+            		g2d.drawString(place.getName(), place.x, place.y);
+            	}
+            }
+            else if (currentWTGSpec instanceof GraphicSpecLine) {
                 currentWTGSpec.transformPrimary(g2d);
                 KDTree<ParsedItem> kdTree = Main.model.enumMapKD.get(wayTypeGraphic.getWayType());
                 if (kdTree == null) continue;
@@ -220,7 +229,6 @@ public class MapCanvas extends JPanel {
             	for(ParsedPlace place : kdTree) {
             		//System.out.println("Name: " + place.getName() + ", x: " + place.x + ", y: " + place.y);
             		g2d.drawString(place.getName(), place.x, place.y);
-            		System.out.println(toModelCoords(place));
             	}
             }
             if (currentWTGSpec instanceof GraphicSpecLine) {
