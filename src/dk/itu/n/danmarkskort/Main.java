@@ -1,7 +1,6 @@
 package dk.itu.n.danmarkskort;
 
 import java.awt.Dimension;
-import java.awt.Toolkit;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import javax.swing.*;
@@ -21,7 +20,7 @@ import dk.itu.n.danmarkskort.routeplanner.RouteController;
 
 public class Main {
 
-	public final static String APP_NAME = "yakMaps";
+	public final static String APP_NAME = "Yak Maps";
 	public final static String APP_VERSION = "0.7";
 	public final static boolean debug = true;
 	public final static boolean debugExtra = false;

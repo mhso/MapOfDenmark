@@ -229,7 +229,7 @@ public class MapCanvas extends JPanel {
         else g2d.setColor(GraphicRepresentation.getCoastlineColor());
 		AffineTransform af = new AffineTransform();
 		g2d.setTransform(af);
-        g2d.fillRect(0, 0, getWidth(), getHeight());
+        g2d.fillRect(-100, -100, getWidth() + 200, getHeight() + 200);
     }
 
 	public List<WaytypeGraphicSpec> getOnScreenGraphicsForCurrentZoom() {
@@ -286,6 +286,7 @@ public class MapCanvas extends JPanel {
 		transform.preConcatenate(AffineTransform.getTranslateInstance(dx, dy));
 		actualTransform.preConcatenate(AffineTransform.getTranslateInstance(dx, dy));
 		if(Main.tileController.isInitialized()) {
+			Main.tileController.pan(dx, dy);
 			if(Main.tileController.updateTilePos()) {
 				Main.tileController.checkForNewTiles();
 			}
@@ -362,12 +363,16 @@ public class MapCanvas extends JPanel {
 			Util.zoom(transform, scaleBefore/scaleAfter);		
 			if(Main.tileController.isInitialized()) Main.tileController.zoom(scaleBefore/scaleAfter);
 		}
-		
+		scaleAfter = getZoomRaw();
 		
 		for(CanvasListener listener : listeners) listener.onZoom();
 		
+		if(scaleBefore != scaleAfter) {
+			if(Main.tileController.isInitialized) Main.tileController.resetTileTransform();
+			Main.log("Resetting tile transform.");
+		}
+		
 		if(zoomBefore != getZoom()) {
-			
 			zoomChanged = true;
 			for(CanvasListener listener : listeners) listener.onZoomLevelChanged();
 		}
