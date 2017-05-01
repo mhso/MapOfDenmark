@@ -65,7 +65,9 @@ public class Tile {
 		Region pixelRegion = getGeographicalRegion().toPixelRegion();
 		double scale = Main.tileController.getImageScale();
 		g2d.setTransform(new AffineTransform());
-		g2d.drawImage(image, (int)pixelRegion.x1, (int)(pixelRegion.y1+pixelRegion.getHeight()), (int)(pixelRegion.getWidth() * scale), (int)(pixelRegion.getHeight() * scale), null);
+		double offsetX = pixelRegion.getWidth() * (scale-1);
+		double offsetY = pixelRegion.getHeight() * (scale-1);
+		g2d.drawImage(image, (int)(pixelRegion.x1), (int)(pixelRegion.y1+pixelRegion.getHeight()), (int)(pixelRegion.getWidth() * scale), (int)(pixelRegion.getHeight() * scale), null);
 		
 	}
 	

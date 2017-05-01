@@ -17,6 +17,7 @@ public class DropdownRightClick extends CustomDropdown {
 		addItem("Create temporary pinpoint here");
 		addItem("Route from here");
 		addItem("Route to here");
+		addItem("Find tweets near this position");
 	}
 	
 	public void onClick(String text) {
@@ -40,6 +41,10 @@ public class DropdownRightClick extends CustomDropdown {
 		}
 		else if(text.equals("Route to here")) {
 			
+		} else if(text.equals("Find tweets near this position")) {
+			Point2D mousePoint = Util.toRealCoords(Main.map.getGeographicalMousePosition());
+			String url = "https://twitter.com/search?l=&q=near%3A%22" + mousePoint.getY() + "%2C" + mousePoint.getX() + "%20%22%20within%3A15mi&src=typd";
+			Util.openWebpage(url);
 		}
 	}
 }

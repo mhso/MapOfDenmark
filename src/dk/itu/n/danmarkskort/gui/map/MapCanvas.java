@@ -405,7 +405,6 @@ public class MapCanvas extends JPanel {
 		
 		if(scaleBefore != scaleAfter) {
 			if(Main.tileController.isInitialized) Main.tileController.resetTileTransform();
-			Main.log("Resetting tile transform.");
 		}
 		
 		if(zoomBefore != getZoom()) {

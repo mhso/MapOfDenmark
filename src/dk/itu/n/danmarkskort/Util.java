@@ -1,6 +1,7 @@
 
 package dk.itu.n.danmarkskort;
 
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -11,6 +12,7 @@ import java.io.IOException;
 import java.io.LineNumberReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
@@ -204,6 +206,14 @@ public class Util {
 	public static void zoomToRegion(AffineTransform transform, Region region, double currentWidth) {
 		Util.pan(transform, -region.x1, -region.y2);
 		Util.zoom(transform, currentWidth / (region.x2 - region.x1));
+	}
+	
+	public static void openWebpage(String urlString) {
+	    try {
+	        Desktop.getDesktop().browse(new URL(urlString).toURI());
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
 	}
 	
 }
