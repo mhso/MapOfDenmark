@@ -3,6 +3,7 @@ package dk.itu.n.danmarkskort.routeplanner;
 import java.awt.geom.Point2D;
 import java.io.Serializable;
 
+import dk.itu.n.danmarkskort.Util;
 import dk.itu.n.danmarkskort.kdtree.KDComparable;
 import dk.itu.n.danmarkskort.models.ReuseStringObj;
 
@@ -31,7 +32,7 @@ public class RouteEdge implements KDComparable, Serializable {
 	public boolean isBackwardAllowed() {return routeEdgeMeta.isBackwardAllowed(); }
 	public String getDescription(){ return description; }
 
-	private double distance(){ return from.distance(to); }
+	private double distance(){ return Util.distanceInMeters(from, to); }
 	
 	public double getDistance(){ return distance(); }
 	public double getWeightBySpeed(){ return distance() / (double)routeEdgeMeta.getMaxSpeed(); }

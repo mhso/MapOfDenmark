@@ -148,25 +148,30 @@ public class RouteController {
 		}
 		
 		if(fromEdge != null && toEdge != null && hasRoute(fromEdge.getFrom(), toEdge.getFrom(), weightEnum)) {
-			if(debug)System.out.println("debug makeRoute hasRoute!!!");
+			//if(debug)System.out.println("debug makeRoute hasRoute!!!");
 			Iterable<RouteEdge> edges = getRoute(fromEdge.getFrom(), toEdge.getFrom(), weightEnum);
 			
-			if(debug && edges != null)System.out.println("debug makeRoute IterableEdges!!!");
+			//if(debug && edges != null)System.out.println("debug makeRoute IterableEdges!!!");
+			RouteEdge lastEdge = null;
 			RouteModel lastModel = null;
 			double distSum = 0;
 			int sizeOfEdges = 0;
 			for(RouteEdge edge : edges){
-				if(debug)System.out.println("debug makeRoute foreach: " + edge.toString());
+				//if(debug)System.out.println("debug makeRoute foreach: " + edge.toString());
 				RouteEnum routeEnum = RouteEnum.CONTINUE_ON;
-				
-				if(lastModel != null && edge.getDescription().equals(lastModel.getDescription())) {
+				//if(lastModel == null) System.out.println("lastModel is null..");
+				if(lastModel != null && edge.getDescription().equals(lastEdge.getDescription())) {
+					//System.out.println(edge.getDescription() + " = " + lastEdge.getDescription());
 					distSum += edge.getDistance();
 					lastModel.setDistance(distSum);
+					System.out.println("RouteController-> streetname is the same...");
 				}else{
 					distSum = 0;
 					RouteModel routeModel = new RouteModel(routeEnum, edge.getDescription(), edge.getDistance());
 					lastModel = routeModel;
+					lastEdge = edge;
 					routeModels.add(routeModel);
+					//System.out.println("RouteController-> streetname is new...");
 				}
 				sizeOfEdges++;
 			}
@@ -175,7 +180,7 @@ public class RouteController {
 			for(RouteEdge edge : edges){ edgeArr[i++] =  edge;}
 			Main.map.setRoute(edgeArr);
 			if(debug) {
-				System.out.println("debug makeRoute return found edges! size: " + routeModels.size());
+				//System.out.println("debug makeRoute return found edges! size: " + routeModels.size());
 			}
 			return routeModels;
 		}
