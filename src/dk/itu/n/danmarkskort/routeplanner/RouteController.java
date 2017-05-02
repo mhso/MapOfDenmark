@@ -166,7 +166,6 @@ public class RouteController {
 					//System.out.println(edge.getDescription() + " = " + lastEdge.getDescription());
 					distSum += edge.getDistance();
 					lastModel.setDistance(distSum);
-					//System.out.println("RouteController-> streetname is the same...");
 				}else{
 					distSum = 0;
 					RouteModel routeModel = new RouteModel(routeEnum, edge.getDescription(), edge.getDistance());
