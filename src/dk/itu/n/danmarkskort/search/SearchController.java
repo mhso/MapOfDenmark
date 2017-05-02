@@ -19,7 +19,7 @@ public class SearchController{
 		if(inputStr == null || inputStr.isEmpty()) return null;
 		
 		if(isCoordinates(inputStr)) {
-			return Main.addressController.getSearchSuggestions(stringCordsToPointFloat(inputStr), limitAmountOfResults);
+			return Main.addressController.getSearchSuggestions(stringCordsToPointFloat(inputStr));
 		} else {
 			return Main.addressController.getSearchSuggestions(inputStr, limitAmountOfResults);
 		}
@@ -30,8 +30,7 @@ public class SearchController{
 		
 		if(isCoordinates(inputStr)) {
 			Main.log("Search for cords string");
-			//return Main.addressController.getNearstSearchResult(stringCordsToPointFloat(inputStr));
-			return null;
+			return Main.addressController.getSearchResult(stringCordsToPointFloat(inputStr));
 		} else {
 			Main.log("Search for address string");
 			return Main.addressController.getSearchResult(inputStr);

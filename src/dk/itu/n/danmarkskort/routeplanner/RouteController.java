@@ -59,8 +59,7 @@ public class RouteController {
 	public void makeGraph(){
 		routeGraph = new RouteGraph(vertexCount);
 		for(RouteEdge edge : routeEdges) routeGraph.addEdge(edge);
-		edgeTree = new KDTreeNode<>(routeEdges);
-		
+		edgeTree = new KDTreeNode<>(routeEdges);	
 		cleanUp();
 	}
 	

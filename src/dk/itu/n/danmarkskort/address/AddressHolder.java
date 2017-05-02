@@ -1,7 +1,9 @@
 package dk.itu.n.danmarkskort.address;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -18,6 +20,16 @@ public class AddressHolder implements Serializable {
 	public Postcode getPostcode(String postcode) {
 		if(postcode == null) return null;
 		return postcodes.get(postcode.toLowerCase());
+	}
+	
+	public List<Housenumber> getHousenumbers(){
+		List<Housenumber> result = new ArrayList<Housenumber>();
+		for(Postcode postcode : postcodes.values()){
+			for(Street street : postcode.getStreets().values()){
+				result.addAll(street.getHousenumbers().values());
+			}
+		}
+		return result;
 	}
 	
 	public int count(){
