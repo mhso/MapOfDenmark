@@ -28,9 +28,6 @@ public class Main {
 	public final static boolean saveParsedAddresses = true;
 	public final static boolean useLauncher = true;
 	public final static boolean nearest = true;
-	
-	public static boolean binaryfile = true;
-	public static boolean forceParsing;
 
 	public static OSMReader osmReader;
 	public static JFrame window;
@@ -53,7 +50,6 @@ public class Main {
 			userPreferences = new UserPreferences();
 			Util.writeObjectToFile(Main.userPreferences, DKConstants.USERPREF_PATH);
 		}
-		forceParsing = userPreferences.isForcingParsing();
         if(useLauncher || args.length < 1) new WindowLauncher();
         else launch(args);
 	}

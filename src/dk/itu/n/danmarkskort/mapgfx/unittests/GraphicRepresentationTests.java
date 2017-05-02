@@ -43,7 +43,7 @@ public class GraphicRepresentationTests {
 	
 	@Test
 	public void testGraphicOuterColor() {
-		assertNotNull(GraphicRepresentation.getGraphicSpecs(1).get(0).getOuterColor());
+		assertNotNull(GraphicRepresentation.getGraphicSpecs(2).get(12).getOuterColor());
 	}
 	
 	@Test
@@ -58,28 +58,34 @@ public class GraphicRepresentationTests {
 	
 	@Test
 	public void testGraphicLineInstance() {
-		assertTrue(GraphicRepresentation.getGraphicSpecs(3).get(0) instanceof GraphicSpecLine);
+		assertTrue(GraphicRepresentation.getGraphicSpecs(2).get(12) instanceof GraphicSpecLine);
 	}
 	
 	@Test
 	public void testGraphicLineWidth() {
-		GraphicSpecLine gsl = (GraphicSpecLine) GraphicRepresentation.getGraphicSpecs(1).get(0);
+		GraphicSpecLine gsl = (GraphicSpecLine) GraphicRepresentation.getGraphicSpecs(2).get(12);
 		assertTrue(gsl.getLineWidth() > 0);
 	}
 	
 	@Test
 	public void testGraphicLineArr() {
-		GraphicSpecLine gsl = (GraphicSpecLine) GraphicRepresentation.getGraphicSpecs(15).get(0);
+		GraphicSpecLine gsl = (GraphicSpecLine) GraphicRepresentation.getGraphicSpecs(15).get(15);
 		assertNotNull(gsl.getDashArr());
 	}
 	
 	@Test
 	public void testGraphicAreaNotNull() {
-		assertNotNull(GraphicRepresentation.getGraphicSpecs(1).get(1));
+		assertNotNull(GraphicRepresentation.getGraphicSpecs(2).get(0));
 	}
 	
 	@Test
 	public void testGraphicAreaInstance() {
 		assertTrue(GraphicRepresentation.getGraphicSpecs(1).get(1) instanceof GraphicSpecArea);
+	}
+	
+	@Test
+	public void testReturnSpecificSpecType() {
+		assertTrue(GraphicRepresentation.getSpecificSpec(GraphicRepresentation.getGraphicSpecs(5), 
+				GraphicSpecLine.class).get(0) instanceof GraphicSpecLine);
 	}
 }

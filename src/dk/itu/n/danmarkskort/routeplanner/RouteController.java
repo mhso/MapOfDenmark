@@ -24,7 +24,6 @@ public class RouteController {
 		vertexCount = 0;
 		routeEdges = new ArrayList<RouteEdge>();
 		vertices = new ArrayList<RouteVertex>();
-		routeGraph = null;
 	}
 	
 	/**
@@ -68,14 +67,12 @@ public class RouteController {
 	}
 	
 	public Iterable<RouteEdge> getRoute(RouteVertex from, RouteVertex to, WeightEnum weightEnum){
-		if(routeGraph == null) makeGraph();
 		RouteDijkstra routeDijkstra = new RouteDijkstra(routeGraph, from.getId(), to.getId(), weightEnum);
 		//if(debug) System.out.println("debug getRoute: " + routeDijkstra);
 		return routeDijkstra.pathTo(to.getId());
 	}
 	
 	public boolean hasRoute(RouteVertex from, RouteVertex to, WeightEnum weightEnum){
-		if(routeGraph == null) makeGraph();
 		RouteDijkstra routeDijkstra = new RouteDijkstra(routeGraph, from.getId(), to.getId(), weightEnum);
 		return routeDijkstra.hasPathTo(to.getId());
 	}
@@ -100,6 +97,22 @@ public class RouteController {
 		return vertices;
 	}
 	
+	public KDTree<RouteEdge> getEdgeTree() {
+		return edgeTree;
+	}
+	
+	public RouteGraph getGraph() {
+		return routeGraph;
+	}
+	
+	public void setEdgeTree(KDTree<RouteEdge> edgeTree) {
+		this.edgeTree = edgeTree;
+	}
+	
+	public void setGraph(RouteGraph graph) {
+		routeGraph = graph;
+	}
+	
 	public String toString() {
 		return "RouteController: vertexCount=" + vertexCount
 				+ " getNumOfVertices=" + getNumOfVertices()
@@ -107,7 +120,6 @@ public class RouteController {
 	}
 	
 	public RouteEdge searchEdgesKDTree(Point2D.Float lonLat){
-		if(routeGraph == null) makeGraph();
 		if(debug) {
 			System.out.println("debug searchEdgesKDTree: \n"
 					+ "input para: " + lonLat

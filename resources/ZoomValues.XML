@@ -14,6 +14,8 @@
 		<type name="HIGHWAY_TRUNK"/>
 	</zoomlevel>
 	<zoomlevel level="3">	
+		<type name="PLACE_TOWN"/>
+		<type name="PLACE_SUBURB"/>
 	</zoomlevel>
 	<zoomlevel level="4">
 	</zoomlevel>

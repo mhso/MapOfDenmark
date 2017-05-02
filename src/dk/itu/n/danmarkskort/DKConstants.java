@@ -14,9 +14,10 @@ public class DKConstants {
 	public final static int WINDOW_WIDTH = 1000, WINDOW_HEIGHT = 800;
 	
 	/**
-	 * The factor that Theme line width values gets magnified by.
+	 * The factor that Theme line width and font size values get magnified by.
 	 */
-	public static final float LINE_MAGNIFYING_VALUE = 0.000001f, LINE_OUTLINE_WIDTH = 0.000005f;
+	public static final float LINE_MAGNIFYING_VALUE = 0.000001f, LINE_OUTLINE_WIDTH = 0.000005f, 
+			FONTSIZE_MAGNIFYING_VALUE = 0.00008f, FONT_OUTLINE_WIDTH = 0.000012f;
 	
 	/**
 	 * Standard size of KD-Tree leaves.

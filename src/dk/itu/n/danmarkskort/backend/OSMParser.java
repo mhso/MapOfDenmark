@@ -25,12 +25,15 @@ public class OSMParser extends SAXAdapter implements Serializable {
     private transient HashMap<Point2D.Float, ParsedWay> coastlineMap;
 
     private transient EnumMap<WayType, ArrayList<ParsedItem>> enumMap;
-    public EnumMap<WayType, KDTree<ParsedItem>> enumMapKD;
+    private transient EnumMap<WayType, ArrayList<ParsedPlace>> places;
+    private EnumMap<WayType, KDTree<ParsedItem>> enumMapKD;
+    private EnumMap<WayType, KDTree<ParsedPlace>> enumMapPlacesKD;
 
     private transient ParsedWay way;
     private transient ParsedRelation relation;
     private transient ParsedNode node;
     private transient ParsedAddress address;
+    private transient ParsedPlace place;
 
     private transient WayType waytype;
     private transient ArrayList<Point2D.Float> currentNodes;
@@ -59,6 +62,7 @@ public class OSMParser extends SAXAdapter implements Serializable {
         nodeMap = new NodeMap();
         temporaryWayReferences = new HashMap<>();
         temporaryRelationReferences = new HashMap<>();
+        places = new EnumMap<>(WayType.class);
         coastlineMap = new HashMap<>();
         currentNodes = new ArrayList<>();
         vertexMap = new HashMap<>();
@@ -66,6 +70,8 @@ public class OSMParser extends SAXAdapter implements Serializable {
         route = Main.routeController;
 
         for(WayType waytype : WayType.values()) enumMap.put(waytype, new ArrayList<>());
+        places.put(WayType.PLACE_TOWN, new ArrayList<>());
+        places.put(WayType.PLACE_SUBURB, new ArrayList<>());
 
         finished = false;
         Main.log("Parsing started.");
@@ -82,21 +88,39 @@ public class OSMParser extends SAXAdapter implements Serializable {
 
         temporaryClean();
         enumMapKD = new EnumMap<>(WayType.class);
+        enumMapPlacesKD = new EnumMap<>(WayType.class);
         Main.log("Splitting data into KDTrees");
 
         for(WayType wt : WayType.values()) {
-            KDTree<ParsedItem> tree;
+            KDTree<ParsedItem> tree = null;
             if(wt == WayType.COASTLINE) {
                 tree = getCoastlines();
                 coastlineMap = null;
+            }
+            else if(wt == WayType.PLACE_TOWN || wt == WayType.PLACE_SUBURB) {
+            	if(!places.isEmpty()) {
+                	KDTree<ParsedPlace> townsTree;
+                	ArrayList<ParsedPlace> towns = places.get(WayType.PLACE_TOWN);
+                	if(towns.isEmpty()) townsTree = null;
+                	else townsTree = new KDTreeNode<>(towns);
+                	
+                	KDTree<ParsedPlace> suburbsTree;
+                	ArrayList<ParsedPlace> suburbs = places.get(WayType.PLACE_SUBURB);
+                	if(suburbs.isEmpty()) suburbsTree = null;
+                	else suburbsTree = new KDTreeNode<>(suburbs);
+                	
+                	enumMapPlacesKD.put(WayType.PLACE_TOWN, townsTree);
+                	enumMapPlacesKD.put(WayType.PLACE_SUBURB, suburbsTree);
+                }
             }
             else {
                 ArrayList<ParsedItem> current = enumMap.get(wt);
                 if(current.isEmpty()) tree = null;
                 else tree = new KDTreeNode<>(current);
             }
+            
             enumMap.remove(wt);
-            enumMapKD.put(wt, tree);
+            if(tree != null) enumMapKD.put(wt, tree);
         }
 
         Main.log("Deleting nodes, adding float[] coords");
@@ -105,13 +129,15 @@ public class OSMParser extends SAXAdapter implements Serializable {
             if(current != null) for(ParsedItem item : current) item.nodesToCoords();
         }
 
-
         Main.log("Deleting old references");
         for(Map.Entry<WayType, KDTree<ParsedItem>> entry : enumMapKD.entrySet()) {
             KDTree<ParsedItem> current = entry.getValue();
             if(current != null) for (ParsedItem item : current) item.deleteOldRefs();
         }
-
+        
+        Main.log("Creating route graph");
+        route.makeGraph();
+        
         for(OSMParserListener listener : reader.parserListeners) listener.onParsingFinished();
         Main.addressController.onLWParsingFinished();
         finalClean();
@@ -239,6 +265,9 @@ public class OSMParser extends SAXAdapter implements Serializable {
             Main.addressController.addressParsed(address);
             for(OSMParserListener listener : reader.parserListeners) listener.onParsingGotItem(address);
         }
+        if(place != null) {
+        	places.get(waytype).add(place);
+        }
         resetValues();
     }
 
@@ -273,6 +302,7 @@ public class OSMParser extends SAXAdapter implements Serializable {
         relation = null;
         address = null;
         node = null;
+        place = null;
 
         waytype = null;
         name = null;
@@ -331,6 +361,14 @@ public class OSMParser extends SAXAdapter implements Serializable {
     public float getLonFactor() {
         return lonFactor;
     }
+    
+    public EnumMap<WayType, KDTree<ParsedItem>> getEnumMapKD() {
+    	return enumMapKD;
+    }
+    
+    public EnumMap<WayType, KDTree<ParsedPlace>> getEnumMapPlacesKD() {
+    	return enumMapPlacesKD;
+    }
 
     public void parseTagInformation(String k, String v) {
         if(waytype == WayType.COASTLINE) return;
@@ -352,9 +390,29 @@ public class OSMParser extends SAXAdapter implements Serializable {
                     if (address == null) address = new ParsedAddress();
                     address.setStreet(v);
                     return;
+                case "name":
+                	name = v;
+                	break;
+                case "place":
+                	switch(v) {
+                		case "town":
+                			place = new ParsedPlace(name, ParsedPlace.TOWN, node.x, node.y);
+                			waytype = WayType.PLACE_TOWN;
+                			return;
+                		case "suburb":
+                			place = new ParsedPlace(name, ParsedPlace.SUBURB, node.x, node.y);
+                			waytype = WayType.PLACE_SUBURB;
+                			return;
+                	}
             }
         }
-
+        if(place != null) {
+        	switch(k) {
+	        	case "population":
+	            	place.setPopulation(Integer.parseInt(v));
+	            	break;
+        	}
+        }
         switch (k) {
             case "highway":
                 if(!v.equals("pier")) {
