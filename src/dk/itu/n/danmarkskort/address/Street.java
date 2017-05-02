@@ -48,19 +48,6 @@ public class Street implements Serializable {
 		}
 		return region;
 	}
-	
-	public Map<RegionFloat, Housenumber> searchRegionWithin(RegionFloat input){
-		Map<RegionFloat, Housenumber> regions = new HashMap<RegionFloat, Housenumber>();
-		for(Housenumber hn : housenumbers.values()) {
-			RegionFloat hnR =  new RegionFloat(hn.getLon(), hn.getLat(), hn.getLon(), hn.getLat());
-			if(hnR.isWithin(input)){
-				regions.put(hnR, hn);
-				System.out.println("Street -> searchRegionWithin: " + input.toString());
-				System.out.println("Street -> house: " + hn.toString());
-			}
-		}
-		return regions;
-	}
 
 	public Map<String, Housenumber> getHousenumbers() { return housenumbers; }
 	

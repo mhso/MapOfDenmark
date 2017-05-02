@@ -16,13 +16,11 @@ public class AddressController {
 	private TimerUtil timerUtilB = new TimerUtil();
 	private PostcodeCityBestMatch postcodeCityBestMatch;
 	private AddressSuggestion addressSuggestion;
-	private AddressRegionSearch addressRegionSearch;
 	private boolean debug = false;
 	
 	public AddressController(){
 		postcodeCityBestMatch = new PostcodeCityBestMatch();
 		addressSuggestion = new AddressSuggestion();
-		addressRegionSearch = new AddressRegionSearch();
 	}
 	
 	public AddressHolder getAddressHolder() {
@@ -34,7 +32,7 @@ public class AddressController {
 	}
 	
 	public List<String> getSearchSuggestions(String find, long limitAmountOfResults){ return addressSuggestion.searchSuggestions(find, limitAmountOfResults); }
-	public List<String> getSearchSuggestions(Point2D.Float find, long limitAmountOfResults){ return searchSuggestions(find, limitAmountOfResults); }
+	public List<String> getSearchSuggestions(Point2D.Float find, long limitAmountOfResults){ return null; }
 	
 	
 	public Address getSearchResult(String find){
@@ -69,9 +67,9 @@ public class AddressController {
 		return null;
 	}
 	
-	public List<String> searchSuggestions(Point2D.Float input, long limitAmountOfResults){
-		 return addressRegionSearch.searchSuggestions(input, limitAmountOfResults);
-	}
+//	public List<String> searchSuggestions(Point2D.Float input, long limitAmountOfResults){
+//		 return addressRegionSearch.searchSuggestions(input, limitAmountOfResults);
+//	}
 	
 	public void addAddress(Point2D.Float lonLat, String street, String housenumber, String postcode, String city){
 		Postcode pc = addressHolder.postcodes.get(postcode);
