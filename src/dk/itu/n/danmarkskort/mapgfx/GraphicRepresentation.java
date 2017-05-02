@@ -52,17 +52,13 @@ public class GraphicRepresentation {
 		return cummulativeList;
 	}
 	
-	public static List<WayType> getWaytypesForZoom(int zoomLevel) {
-		zoomLevel -= 1;
-		List<WayType> cummulativeList = new ArrayList<>();
-		for(WaytypeGraphicSpec spec : overriddenSpecs) cummulativeList.add(spec.getWayType());
-		for(int i = zoomLevel; i >= 0; i--) {
-			for(WaytypeGraphicSpec wgs : zoomLevelArr[i]) {
-				if(!wgs.isFiltered() && !overriddenSpecs.contains(wgs)) cummulativeList.add(wgs.getWayType());
-			}
+	public static List<WaytypeGraphicSpec> getSpecificSpec(List<WaytypeGraphicSpec> allSpecs, 
+			Class<? extends WaytypeGraphicSpec> searchClass) {
+		List<WaytypeGraphicSpec> result = new ArrayList<>();
+		for(WaytypeGraphicSpec spec : allSpecs) {
+			if(spec.getClass() == searchClass) result.add(spec);
 		}
-		cummulativeList.sort(null);
-		return cummulativeList;
+		return result;
 	}
 	
 	/**

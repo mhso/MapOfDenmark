@@ -129,13 +129,15 @@ public class OSMParser extends SAXAdapter implements Serializable {
             if(current != null) for(ParsedItem item : current) item.nodesToCoords();
         }
 
-
         Main.log("Deleting old references");
         for(Map.Entry<WayType, KDTree<ParsedItem>> entry : enumMapKD.entrySet()) {
             KDTree<ParsedItem> current = entry.getValue();
             if(current != null) for (ParsedItem item : current) item.deleteOldRefs();
         }
-
+        
+        Main.log("Creating route graph");
+        route.makeGraph();
+        
         for(OSMParserListener listener : reader.parserListeners) listener.onParsingFinished();
         Main.addressController.onLWParsingFinished();
         finalClean();
