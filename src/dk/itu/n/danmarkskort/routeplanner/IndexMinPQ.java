@@ -1,10 +1,12 @@
 package dk.itu.n.danmarkskort.routeplanner;
 
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class IndexMinPQ<Key extends Comparable<Key>> implements Iterable<Integer> {
-    private int maxN;        // maximum number of elements on PQ
+public class IndexMinPQ<Key extends Comparable<Key>> implements Iterable<Integer>, Serializable {
+	private static final long serialVersionUID = -2577636856958292518L;
+	private int maxN;        // maximum number of elements on PQ
     private int n;           // number of elements on PQ
     private int[] pq;        // binary heap using 1-based indexing
     private int[] qp;        // inverse of pq - qp[pq[i]] = pq[qp[i]] = i

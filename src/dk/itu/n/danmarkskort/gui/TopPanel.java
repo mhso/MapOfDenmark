@@ -53,43 +53,23 @@ public class TopPanel extends JPanel {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         top.add(menu, gbc);
 
-        input = new JTextField(30);
+        JButton search = style.searchButton();
+        search.setToolTipText("Search");
+        
+        searchInputWrapper = new JPanel(new GridBagLayout());
+        searchInputWrapper.setBackground(style.inputFieldBG());
+        GridBagConstraints searchInputGBC = new GridBagConstraints();
+        
+        dropSuggestions = new DropdownAddressSearch(searchInputWrapper, style);
+        
+        input = new SearchField(dropSuggestions, dropSuggestionsList, search);
+        input.setColumns(30);
         input.setBorder(BorderFactory.createEmptyBorder(style.smallMargin(), style.smallMargin(), style.smallMargin(), style.smallMargin()));
         input.setFont(new Font("sans serif", Font.PLAIN, 14));
         input.setForeground(style.panelTextColor());
         input.setOpaque(false);
         input.setBackground(new Color(0,0,0,0));
         input.setCaretColor(style.panelTextColor());
-        input.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(KeyEvent e) {
-				if(!dropSuggestions.isEmpty()) {
-					if(e.getKeyCode() == KeyEvent.VK_DOWN) {
-						if(dropSuggestions.getSelectedIndex() < dropSuggestions.getComponents().length-1) {	
-							dropSuggestions.setSelectedElement(dropSuggestions.getSelectedIndex()+1);
-						}
-					}
-					else if(e.getKeyCode() == KeyEvent.VK_UP) {
-						if(dropSuggestions.getSelectedIndex() > 0) {
-							dropSuggestions.setSelectedElement(dropSuggestions.getSelectedIndex()-1);
-						}
-					}
-					else if(e.getKeyCode() == KeyEvent.VK_ENTER) {
-						if(dropSuggestions.getSelectedIndex() > 0) {
-							dropSuggestions.itemClicked();
-						}
-					}
-				}
-			}
-        	
-        });
-
-        JButton search = style.searchButton();
-        search.setToolTipText("Search");
-
-        searchInputWrapper = new JPanel(new GridBagLayout());
-        searchInputWrapper.setBackground(style.inputFieldBG());
-        GridBagConstraints searchInputGBC = new GridBagConstraints();
 
         searchInputWrapper.add(input, searchInputGBC);
         searchInputGBC.insets = new Insets(0, 0, 0, 10);
@@ -110,7 +90,6 @@ public class TopPanel extends JPanel {
         topParent.add(top);
         add(topParent);
         
-        dropSuggestions = new DropdownAddressSearch(searchInputWrapper, style);
         dropMenu = new DropdownMenu(this, style);
         
         menu.addMouseListener(new MouseAdapter() {
@@ -143,7 +122,7 @@ public class TopPanel extends JPanel {
         });
 
         search.addActionListener(e -> {
-        	System.out.println(input.getText());
+        	Main.log(input.getText());
         	searchForAddress(input.getText());
         });
 
@@ -153,6 +132,8 @@ public class TopPanel extends JPanel {
 
     public void repaintPanels() {
         topParent.repaint();
+        dropMenu.repaint();
+        dropSuggestions.repaint();
     }
 
     public void searchForAddress(String address) {
@@ -170,10 +151,11 @@ public class TopPanel extends JPanel {
     }
 
     private void panZoomToCoordinates(Point2D.Float input) {
-    	System.out.println("Toppanel->panZoomToCoordinats (lon, lat): " + input.toString() + "\n -->, real (lon, lat): " + Util.toRealCoords(input));
+    	Main.log("Toppanel->panZoomToCoordinats (lon, lat): " + input.toString() + "\n -->, real (lon, lat): " + Util.toRealCoords(input));
     	String pinPointName = "SearchLocation - " + input.toString();
     	makePinPoint(input, pinPointName);
     	Main.map.panToPosition(new Point2D.Float(input.x, input.y));
+    	Main.mainPanel.revalidate();
     	Main.mainPanel.repaint();
 	}
     
@@ -194,7 +176,7 @@ public class TopPanel extends JPanel {
     }
 
 	public DropdownMenu getDropMenu() {
-		return  dropMenu;
+		return dropMenu;
 	}
 	
 	public JButton getMenuButton() {
@@ -240,7 +222,8 @@ public class TopPanel extends JPanel {
         public void dropdownSuggestions(int offset, String text) {
         	
             if(offset > 1 && text.length() > 1) {
-              	dropSuggestionsList = SearchController.getSearchFieldSuggestions(text);
+            	dropSuggestionsList.removeAll(dropSuggestionsList);
+              	dropSuggestionsList.addAll(SearchController.getSearchFieldSuggestions(text));
             	populateSuggestions(dropSuggestionsList);
             } else {
                 dropSuggestions.setVisible(false);

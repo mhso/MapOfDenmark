@@ -92,8 +92,7 @@ public class OSMReader {
 				}
 			}
 			BinaryWrapper binary = (BinaryWrapper) Util.readObjectFromFile(fileName, inputListeners);
-			Main.model = binary.getModel();
-			Main.addressController.setAddressHolder(binary.getAddressHolder());
+			Util.extractAllFromBinary(binary);
 			for(InputStreamListener listener : inputListeners) listener.onSetupDone();
 		}
 		else {
@@ -102,11 +101,10 @@ public class OSMReader {
             } catch (NoSuchAlgorithmException | IOException e1) {
                 e1.printStackTrace();
             }
-			if (!Main.forceParsing && Main.binaryfile && checkSumExists(currentChecksum)) {
+			if (!Main.userPreferences.isForcingParsing() && !Main.userPreferences.isSavingToBinary() && checkSumExists(currentChecksum)) {
 	                fileName = Util.getBinaryFilePath();
 	                BinaryWrapper binary = (BinaryWrapper) Util.readObjectFromFile(fileName, inputListeners);
-	                Main.model = binary.getModel();
-	                Main.addressController.setAddressHolder(binary.getAddressHolder());
+	                Util.extractAllFromBinary(binary);
 	                for (InputStreamListener listener : inputListeners) listener.onSetupDone();
 			}  
             else {
@@ -137,7 +135,7 @@ public class OSMReader {
                     }
                 }
             	
-                if(Main.binaryfile) {
+                if(Main.userPreferences.isSavingToBinary()) {
                     String path = "parsedOSMFiles/" + currentChecksum + "/";
                     try {
                     	Path filePath = Paths.get(path);
@@ -146,8 +144,7 @@ public class OSMReader {
                         e.printStackTrace();
                     }
                     BinaryWrapper binary = new BinaryWrapper();
-                    binary.setModel(Main.model);
-                    binary.setAddressHolder(Main.addressController.getAddressHolder());
+                    Util.addAllToBinary(binary);
                     Util.writeObjectToFile(binary, Util.getBinaryFilePath());
                 }
             }

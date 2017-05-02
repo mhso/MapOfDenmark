@@ -52,6 +52,15 @@ public class GraphicRepresentation {
 		return cummulativeList;
 	}
 	
+	public static List<WaytypeGraphicSpec> getSpecificSpec(List<WaytypeGraphicSpec> allSpecs, 
+			Class<? extends WaytypeGraphicSpec> searchClass) {
+		List<WaytypeGraphicSpec> result = new ArrayList<>();
+		for(WaytypeGraphicSpec spec : allSpecs) {
+			if(spec.getClass() == searchClass) result.add(spec);
+		}
+		return result;
+	}
+	
 	/**
 	 * Add a WayType to Overridden Graphic Specifications, meaning the Graphic Specification for this WayType will be drawn at any zoom level.
 	 * 
@@ -319,12 +328,8 @@ public class GraphicRepresentation {
 					}
 					if(atts.getValue("borderdash") != null) gsl.setBorderDashed(Boolean.parseBoolean(atts.getValue("borderdash")));
 				break;
-				case "fontcolor":
-					GraphicSpecLabel gsla = (GraphicSpecLabel) gs;
-					gsla.setFontColor(parseColor(atts.getValue("fontcolor")));
-				break;
 				case "fontsize":
-					gsla = (GraphicSpecLabel) gs;
+					GraphicSpecLabel gsla = (GraphicSpecLabel) gs;
 					gsla.setFontSize(Integer.parseInt(atts.getValue("fontsize")));
 				break;
 			}

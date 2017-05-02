@@ -1,15 +1,18 @@
 package dk.itu.n.danmarkskort.routeplanner;
 
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class Bag<Item> implements Iterable<Item> {
-    private Node<Item> first;    // beginning of bag
+public class Bag<Item> implements Iterable<Item>, Serializable {
+	private static final long serialVersionUID = -5648041223161713171L;
+	private Node<Item> first;    // beginning of bag
     private int n;               // number of elements in bag
 
     // helper linked list class
-    private static class Node<Item> {
-        private Item item;
+    private static class Node<Item> implements Serializable {
+		private static final long serialVersionUID = 7316071526210409989L;
+		private Item item;
         private Node<Item> next;
     }
 

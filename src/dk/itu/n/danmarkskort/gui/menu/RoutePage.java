@@ -11,6 +11,7 @@ import javax.swing.text.DocumentFilter;
 import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.address.Address;
 import dk.itu.n.danmarkskort.gui.DropdownAddressSearch;
+import dk.itu.n.danmarkskort.gui.SearchField;
 import dk.itu.n.danmarkskort.gui.Style;
 import dk.itu.n.danmarkskort.gui.map.PinPoint;
 import dk.itu.n.danmarkskort.gui.routeplanner.RoutePlannerMain;
@@ -37,9 +38,11 @@ public class RoutePage extends JPanel {
     private ImageIcon ADDR_ICON_VALID, ADDR_ICON_INVALID;
 	private DropdownMenu menu;
 	private JRadioButton rdbtnCar, rdbtnBike, rdbtnWalk, rdbtnFastest, rdbtnShortest;
+	private List<String> dropSuggestionsList;
 	
     public RoutePage(DropdownMenu menu, String txtAddreToSetField) {
     	this.menu = menu;
+    	dropSuggestionsList = new ArrayList<>();
     	if(Main.production) {
     		try {
 				ADDR_ICON_VALID = new ImageIcon(ImageIO.read(getClass().getResourceAsStream("/resources/icons/happiness.png")));
@@ -99,7 +102,9 @@ public class RoutePage extends JPanel {
         gbc_lblFrom.gridy = 1;
         panelCenter.add(lblFrom, gbc_lblFrom);
         
-        txtAddrFrom = new JTextField();
+        dropSuggestionsAddrFrom = new DropdownAddressSearch(style);
+        
+        txtAddrFrom = new SearchField(dropSuggestionsAddrFrom, dropSuggestionsList, null);
         GridBagConstraints gbc_txtAddrfrom = new GridBagConstraints();
         gbc_txtAddrfrom.gridwidth = 4;
         gbc_txtAddrfrom.insets = new Insets(0, 0, 5, 5);
@@ -107,32 +112,9 @@ public class RoutePage extends JPanel {
         gbc_txtAddrfrom.gridx = 1;
         gbc_txtAddrfrom.gridy = 1;
         panelCenter.add(txtAddrFrom, gbc_txtAddrfrom);
-        dropSuggestionsAddrFrom = new DropdownAddressSearch(txtAddrFrom, style);
         ((AbstractDocument) txtAddrFrom.getDocument()).setDocumentFilter(new SearchFilter(txtAddrFrom, dropSuggestionsAddrFrom));
-        txtAddrFrom.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(KeyEvent e) {
-				if(!dropSuggestionsAddrFrom.isEmpty()) {
-					if(e.getKeyCode() == KeyEvent.VK_DOWN) {
-						if(dropSuggestionsAddrFrom.getSelectedIndex() < dropSuggestionsAddrFrom.getComponents().length-1) {	
-							dropSuggestionsAddrFrom.setSelectedElement(dropSuggestionsAddrFrom.getSelectedIndex()+1);
-						}
-					}
-					else if(e.getKeyCode() == KeyEvent.VK_UP) {
-						if(dropSuggestionsAddrFrom.getSelectedIndex() > 0) {
-							dropSuggestionsAddrFrom.setSelectedElement(dropSuggestionsAddrFrom.getSelectedIndex()-1);
-						}
-					}
-					else if(e.getKeyCode() == KeyEvent.VK_ENTER) {
-						if(dropSuggestionsAddrFrom.getSelectedIndex() > 0) {
-							dropSuggestionsAddrFrom.itemClicked();
-						}
-					}
-				}
-			}
-        	
-        });
         
+        dropSuggestionsAddrFrom.setWidthComponent(txtAddrFrom);
         
         JButton btnSwapToFrom = style.arrowUpDownButton();
         btnSwapToFrom.addActionListener(e -> swapToFromFields());
@@ -169,7 +151,9 @@ public class RoutePage extends JPanel {
         gbc_lblTo.gridy = 2;
         panelCenter.add(lblTo, gbc_lblTo);
         
-        txtAddrTo = new JTextField();
+        dropSuggestionsAddrTo = new DropdownAddressSearch(style);
+        
+        txtAddrTo = new SearchField(dropSuggestionsAddrTo, dropSuggestionsList, null);
         txtAddrTo.setText(txtAddreToSetField);
         GridBagConstraints gbc_txtAddreto = new GridBagConstraints();
         gbc_txtAddreto.gridwidth = 4;
@@ -178,31 +162,9 @@ public class RoutePage extends JPanel {
         gbc_txtAddreto.gridx = 1;
         gbc_txtAddreto.gridy = 2;
         panelCenter.add(txtAddrTo, gbc_txtAddreto);
-        dropSuggestionsAddrTo = new DropdownAddressSearch(txtAddrTo, style);
         ((AbstractDocument) txtAddrTo.getDocument()).setDocumentFilter(new SearchFilter(txtAddrTo, dropSuggestionsAddrTo));
-        txtAddrTo.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(KeyEvent e) {
-				if(!dropSuggestionsAddrTo.isEmpty()) {
-					if(e.getKeyCode() == KeyEvent.VK_DOWN) {
-						if(dropSuggestionsAddrTo.getSelectedIndex() < dropSuggestionsAddrTo.getComponents().length-1) {	
-							dropSuggestionsAddrTo.setSelectedElement(dropSuggestionsAddrTo.getSelectedIndex()+1);
-						}
-					}
-					else if(e.getKeyCode() == KeyEvent.VK_UP) {
-						if(dropSuggestionsAddrTo.getSelectedIndex() > 0) {
-							dropSuggestionsAddrTo.setSelectedElement(dropSuggestionsAddrTo.getSelectedIndex()-1);
-						}
-					}
-					else if(e.getKeyCode() == KeyEvent.VK_ENTER) {
-						if(dropSuggestionsAddrTo.getSelectedIndex() > 0) {
-							dropSuggestionsAddrTo.itemClicked();
-						}
-					}
-				}
-			}
-        	
-        });
+        
+        dropSuggestionsAddrTo.setWidthComponent(txtAddrTo);
         
         JButton btnFind = new JButton("Find Route");
         btnFind.addActionListener( e -> openFindRoute());
@@ -447,7 +409,9 @@ public class RoutePage extends JPanel {
         
         public void dropdownSuggestions(int offset, String text) {
             if(offset > 1) {
-                populateSuggestions(das, input, SearchController.getSearchFieldSuggestions(text));
+            	dropSuggestionsList.removeAll(dropSuggestionsList);
+              	dropSuggestionsList.addAll(SearchController.getSearchFieldSuggestions(text));
+            	populateSuggestions(das, input, dropSuggestionsList);
                 revalidate();
                 repaint();
             } else {
