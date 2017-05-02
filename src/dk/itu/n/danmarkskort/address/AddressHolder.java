@@ -1,8 +1,6 @@
 package dk.itu.n.danmarkskort.address;
 
-import java.awt.geom.Point2D;
 import java.io.Serializable;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
