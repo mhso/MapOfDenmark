@@ -404,7 +404,7 @@ public class MapCanvas extends JPanel {
 		for(CanvasListener listener : listeners) listener.onZoom();
 		
 		if(scaleBefore != scaleAfter) {
-			if(Main.tileController.isInitialized) Main.tileController.resetTileTransform();
+			if(Main.tileController.isInitialized()) Main.tileController.resetTileTransform();
 		}
 		
 		if(zoomBefore != getZoom()) {
@@ -475,7 +475,7 @@ public class MapCanvas extends JPanel {
 		Region mapRegion = Main.model.getMapRegion();
 		pan(-mapRegion.x1, -mapRegion.y2);
 		zoom(getWidth() / (mapRegion.x2 - mapRegion.x1));
-		if(!Main.tileController.isInitialized) Main.tileController.initialize();
+		if(!Main.tileController.isInitialized()) Main.tileController.initialize();
 	}
 	
 	public void setupDone() {

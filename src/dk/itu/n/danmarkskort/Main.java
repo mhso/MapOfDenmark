@@ -124,11 +124,11 @@ public class Main {
         window.setPreferredSize(new Dimension(DKConstants.WINDOW_WIDTH, DKConstants.WINDOW_HEIGHT));
         if(userPreferences.isMaximizeOnStartup()) window.setExtendedState(window.getExtendedState() | JFrame.MAXIMIZED_BOTH);
         window.addComponentListener(new ComponentListener() {
-            public void componentResized(ComponentEvent e) {         
-            	Main.windowResized(e);
-            }public void componentHidden(ComponentEvent arg0) {}public void componentMoved(ComponentEvent arg0) {}public void componentShown(ComponentEvent arg0) {}
+            public void componentResized(ComponentEvent e) {Main.windowResized(e);}
+            public void componentHidden(ComponentEvent arg0) {}
+            public void componentMoved(ComponentEvent arg0) {}
+            public void componentShown(ComponentEvent arg0) {}
         });
-
         window.pack();
 		window.setLocationRelativeTo(null);
         window.setVisible(true);

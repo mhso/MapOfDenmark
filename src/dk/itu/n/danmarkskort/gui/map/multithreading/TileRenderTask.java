@@ -20,9 +20,6 @@ public class TileRenderTask extends Task {
 		if(repaintWhenDone) Main.mainPanel.repaint();
 	}
 
-	public void onRunStart() {}
-	public void onRunEnd() {}
-
 	public void setRepaintWhenDone(boolean repaintWhenDone) {
 		this.repaintWhenDone = repaintWhenDone;
 	}
@@ -30,5 +27,8 @@ public class TileRenderTask extends Task {
 	public void setSwapWhenDone(boolean swapWhenDone) {
 		this.swapWhenDone = swapWhenDone;
 	}
+	
+	public void onRunStart() {}
+	public void onRunEnd() {}
 	
 }
