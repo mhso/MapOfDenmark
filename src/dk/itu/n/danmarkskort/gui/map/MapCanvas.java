@@ -14,6 +14,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -36,6 +37,7 @@ import dk.itu.n.danmarkskort.models.ParsedPlace;
 import dk.itu.n.danmarkskort.models.Region;
 import dk.itu.n.danmarkskort.models.WayType;
 import dk.itu.n.danmarkskort.routeplanner.RouteEdge;
+import dk.itu.n.danmarkskort.routeplanner.WeightEnum;
 
 public class MapCanvas extends JPanel {
 
@@ -58,7 +60,7 @@ public class MapCanvas extends JPanel {
 
 	private Shape currentHighlighedShape;
 	private WayType currentHighlighedWaytype;
-	private RouteEdge[] currentRoute;
+	private List<RouteEdge> currentRoute;
 	
 	public MapCanvas() {
 		new MapMouseController(this);
@@ -343,7 +345,11 @@ public class MapCanvas extends JPanel {
 		currentHighlighedWaytype = wayType;
 	}
 	
-	private void drawRouteEdges(Graphics2D g2d, RouteEdge[] edges) {
+	public void drawRouteEdge(RouteEdge edge) {
+		drawRouteEdge((Graphics2D)getGraphics(), edge);
+	}
+	
+	private void drawRouteEdges(Graphics2D g2d, List<RouteEdge> edges) {
 		currentRoute = edges;
 		for(RouteEdge edge : edges) drawRouteEdge(g2d, edge);
 	}
@@ -357,19 +363,58 @@ public class MapCanvas extends JPanel {
 		else g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
 		g2d.setStroke(new BasicStroke((float)(0.0009f*1.5/getZoom())));
 		g2d.setColor(Color.BLUE);
+		
+		if(Main.debug) {
+			if(edge.isTravelTypeAllowed(WeightEnum.DISTANCE_CAR)  && 
+					edge.isTravelTypeAllowed(WeightEnum.DISTANCE_BIKE)) g2d.setColor(Color.MAGENTA);
+			
+			else if(edge.isTravelTypeAllowed(WeightEnum.DISTANCE_CAR)  && 
+					edge.isTravelTypeAllowed(WeightEnum.DISTANCE_WALK)) g2d.setColor(Color.GREEN);
+			
+			else if(edge.isTravelTypeAllowed(WeightEnum.DISTANCE_WALK)  && 
+					edge.isTravelTypeAllowed(WeightEnum.DISTANCE_BIKE)) g2d.setColor(Color.PINK);
+			
+			else if(edge.isTravelTypeAllowed(WeightEnum.DISTANCE_BIKE)) g2d.setColor(Color.ORANGE);
+			else if(edge.isTravelTypeAllowed(WeightEnum.DISTANCE_CAR)) g2d.setColor(Color.RED);
+			else if(edge.isTravelTypeAllowed(WeightEnum.DISTANCE_WALK)) g2d.setColor(Color.YELLOW);
+		}
+		
 		g2d.draw(path);
 	}
 	
-	public void setRoute(RouteEdge[] edges) {
+	public void addRouteEdge(RouteEdge edge) {
+		if(currentRoute == null) currentRoute = new ArrayList<>();
+		currentRoute.add(edge);
+	}
+	
+	public void setRoute(List<RouteEdge> edges) {
 		currentRoute = edges;
 	}
 	
-	public RouteEdge[] getRoute() {
+	public List<RouteEdge> getRoute() {
 		return currentRoute;
 	}
 	
 	public Shape getHighlightedShape() {
 		return currentHighlighedShape;
+	}
+	
+	public BufferedImage getRoutePreviewImage(Point2D.Float from, Point2D.Float to) {
+		final double MARGIN = 1.05;
+		double x1 = Math.min(from.getX(), to.getX());
+		x1 -= x1*MARGIN - x1;
+		double y1 = Math.min(from.getY(), to.getY());
+		y1 -= y1*MARGIN - y1;
+		double x2 = Math.max(from.getX(), to.getX())*MARGIN;
+		double y2 = Math.max(from.getY(), to.getY())*MARGIN;
+		Region region = new Region(x1, y1, x2, y2);
+		
+		zoomToRegion(region);
+		
+		Graphics2D g2d = (Graphics2D) getGraphics();
+		BufferedImage image = new BufferedImage(800, 600, BufferedImage.TYPE_INT_ARGB);
+//		image.createGraphics().drawImage(image, 0, 0, null);
+		return image;
 	}
 	
 	public void pan(double dx, double dy) {
@@ -531,11 +576,19 @@ public class MapCanvas extends JPanel {
 		Region mapRegion = Main.model.getMapRegion();
 		pan(-mapRegion.x1, -mapRegion.y2);
 		zoom(getWidth() / (mapRegion.x2 - mapRegion.x1));
-		if(!Main.tileController.isInitialized) Main.tileController.initialize();
+	}
+	
+	public void zoomToRegion(Region region) {
+		transform.setTransform(new AffineTransform());
+		actualTransform.setTransform(new AffineTransform());
+		pan(-region.x1, -region.y2);
+		zoom(getWidth() / (region.x2 - region.x1));
+		System.out.println(getGeographicalRegion());
 	}
 	
 	public void setupDone() {
 		zoomToBounds();
+		if(!Main.tileController.isInitialized) Main.tileController.initialize();
 		for(CanvasListener listener : listeners) listener.onSetupDone();
 	}
 	

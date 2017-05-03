@@ -53,7 +53,6 @@ public class RouteController {
 			RouteEdge edge = new RouteEdge(toVertex, fromVertex, reuseRouteEdgeMeta, description);
 			routeEdges.add(edge);
 		}
-	
 	}
 	
 	public void makeGraph(){
@@ -159,6 +158,7 @@ public class RouteController {
 			double distSum = 0;
 			int sizeOfEdges = 0;
 			for(RouteEdge edge : edges){
+				Main.map.addRouteEdge(edge);
 				//if(debug)System.out.println("debug makeRoute foreach: " + edge.toString());
 				RouteEnum routeEnum = RouteEnum.CONTINUE_ON;
 				//if(lastModel == null) System.out.println("lastModel is null..");
@@ -176,10 +176,6 @@ public class RouteController {
 				}
 				sizeOfEdges++;
 			}
-			RouteEdge[] edgeArr = new RouteEdge[sizeOfEdges];
-			int i = 0;
-			for(RouteEdge edge : edges){ edgeArr[i++] =  edge;}
-			Main.map.setRoute(edgeArr);
 			if(debug) {
 				//System.out.println("debug makeRoute return found edges! size: " + routeModels.size());
 			}
