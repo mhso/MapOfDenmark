@@ -3,6 +3,7 @@ package dk.itu.n.danmarkskort.mapgfx;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
+import java.awt.font.FontRenderContext;
 
 import dk.itu.n.danmarkskort.DKConstants;
 import dk.itu.n.danmarkskort.Main;
@@ -25,7 +26,6 @@ public class GraphicSpecLabel extends WaytypeGraphicSpec {
 	
 	public void transformOutline(Graphics2D graphics) {
 		super.transformOutline(graphics);
-		
 		graphics.setFont(font);
 	}
 	
