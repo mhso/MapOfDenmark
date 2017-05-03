@@ -85,6 +85,7 @@ public class RoutePartBasic extends JPanel {
 		int pos = 1;
 		parent.add(this);
 		for(RouteModel rm : routeModels){
+			
 			totalDist += rm.getDistance();
 			parent.add(new RoutePartStep(pos++, routeImageSplit.getStepIcon(rm.getDirection()), rm));
 		}

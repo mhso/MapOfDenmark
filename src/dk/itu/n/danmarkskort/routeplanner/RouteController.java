@@ -4,8 +4,10 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Vector;
 
 import dk.itu.n.danmarkskort.Main;
+import dk.itu.n.danmarkskort.Util;
 import dk.itu.n.danmarkskort.kdtree.KDTree;
 import dk.itu.n.danmarkskort.kdtree.KDTreeNode;
 import dk.itu.n.danmarkskort.models.ReuseRouteEdgeMetaObj;
@@ -140,9 +142,9 @@ public class RouteController {
 					distSum = 0;
 					RouteModel routeModel = new RouteModel(routeEnum, edge.getDescription(), edge.getDistance());
 					lastModel = routeModel;
-					lastEdge = edge;
 					routeModels.add(routeModel);
 				}
+				lastEdge = edge;
 				sizeOfEdges++;
 			}
 			RouteEdge[] edgeArr = new RouteEdge[sizeOfEdges];
@@ -154,8 +156,32 @@ public class RouteController {
 		return Collections.emptyList();
 	}
 
-	private RouteEnum calcDirectionType(RouteEdge lastEdge, RouteEdge edge) {
+	private RouteEnum calcDirectionType(RouteEdge edge, RouteEdge lastEdge) {
 		RouteEnum routeEnum = RouteEnum.CONTINUE_ON;
+		if(lastEdge == null){
+			return RouteEnum.START_AT;
+		}
+		if(lastEdge != null && edge != null){
+			double v1v2Angle = angleBetween2Edges(lastEdge.getFrom(), lastEdge.getTo(), edge.getTo());
+			int v1v2AngleInt = (int)v1v2Angle;
+			String v2StrAngleStr = String.format("%.1f", v1v2Angle); 
+			
+			if(v1v2AngleInt < 0) v1v2AngleInt = 360 + v1v2AngleInt;
+			
+			if(v1v2AngleInt > 45 && v1v2AngleInt < 180){
+				routeEnum = RouteEnum.TURN_RIGHT;
+			} else if(v1v2AngleInt > 180){
+				routeEnum = RouteEnum.TURN_LEFT;
+			} else {
+				routeEnum = RouteEnum.CONTINUE_ON;
+			}
+			System.out.println("v: " + v1v2AngleInt + " ( " + v2StrAngleStr + " )" + ", " + routeEnum.toString() + " til " + edge.getDescription());
+		}
 		return routeEnum;
+	}
+	
+	private double angleBetween2Edges(Point2D.Float center, Point2D.Float current, Point2D.Float previous) {
+		  return Math.toDegrees(Math.atan2(current.x - center.x,current.y - center.y) -
+		                        Math.atan2(previous.x - center.x,previous.y - center.y));
 	}
 }
