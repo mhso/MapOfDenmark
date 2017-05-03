@@ -2,9 +2,14 @@ package dk.itu.n.danmarkskort.address;
 
 import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.TimerUtil;
+import dk.itu.n.danmarkskort.kdtree.KDTree;
+import dk.itu.n.danmarkskort.kdtree.KDTreeNode;
 import dk.itu.n.danmarkskort.models.ParsedAddress;
+import dk.itu.n.danmarkskort.routeplanner.RouteEdge;
+import dk.itu.n.danmarkskort.routeplanner.RouteGraph;
 
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -16,13 +21,12 @@ public class AddressController {
 	private TimerUtil timerUtilB = new TimerUtil();
 	private PostcodeCityBestMatch postcodeCityBestMatch;
 	private AddressSuggestion addressSuggestion;
-	private AddressRegionSearch addressRegionSearch;
+	private KDTree<Housenumber> housenumberTree;
 	private boolean debug = false;
 	
 	public AddressController(){
 		postcodeCityBestMatch = new PostcodeCityBestMatch();
 		addressSuggestion = new AddressSuggestion();
-		addressRegionSearch = new AddressRegionSearch();
 	}
 	
 	public AddressHolder getAddressHolder() {
@@ -34,7 +38,12 @@ public class AddressController {
 	}
 	
 	public List<String> getSearchSuggestions(String find, long limitAmountOfResults){ return addressSuggestion.searchSuggestions(find, limitAmountOfResults); }
-	public List<String> getSearchSuggestions(Point2D.Float find, long limitAmountOfResults){ return searchSuggestions(find, limitAmountOfResults); }
+	public List<String> getSearchSuggestions(Point2D.Float find){
+		List<String> result = new ArrayList<String>();
+		Housenumber hn = searchHousenumberKDTree(find);
+		if(hn != null) result.add(hn.toString());
+		return result;
+	}
 	
 	
 	public Address getSearchResult(String find){
@@ -68,9 +77,23 @@ public class AddressController {
 		}
 		return null;
 	}
+
+	public Address getSearchResult(Point2D.Float find){
+		Housenumber hn = searchHousenumberKDTree(find);
+		if(hn == null) return null;
+		Address addr = AddressParser.parse(hn.toString(), false);
+		addr.setLonLat(hn.getLonLat());
+		return addr;
+	}
 	
-	public List<String> searchSuggestions(Point2D.Float input, long limitAmountOfResults){
-		 return addressRegionSearch.searchSuggestions(input, limitAmountOfResults);
+	public Housenumber searchHousenumberKDTree(Point2D.Float lonLat){		
+		if(lonLat != null) {
+			Housenumber hn = housenumberTree.nearest(lonLat);
+			if(hn != null) { System.out.println("RouteController found house: " + hn.toString()); }
+			else { System.out.println("No edge found"); }
+			return hn;
+		}
+		return null;
 	}
 	
 	public void addAddress(Point2D.Float lonLat, String street, String housenumber, String postcode, String city){
@@ -120,6 +143,9 @@ public class AddressController {
 			entry.getValue().setCity(postcodeCityBestMatch.getMatch(entry.getKey()));
 		}
 		postcodeCityBestMatch.cleanup();
+		
+		makeTree();
+		
 		timerUtilB.off();
 		Main.log("Addresses PostcodeCityCombination time: " + timerUtilB.toString());
 		Main.log("Addresses (accepted): " + getAddressSize());
@@ -128,5 +154,11 @@ public class AddressController {
 	
 	public int getAddressSize() {
 		return addressHolder.count();
+	}
+	
+	private void makeTree(){
+		List<Housenumber> housenumbers = addressHolder.getHousenumbers();
+		System.out.println("AddressController -> MakeTree size: " + housenumbers.size());
+		housenumberTree = new KDTreeNode<>(housenumbers);
 	}
 }

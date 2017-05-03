@@ -66,6 +66,7 @@ public class RoutePartStep extends JPanel {
 	
 	private String makeDistance(double input){
 		if(input == -1) return "";
-		return String.format("%.2f", input) + "";
+		if(input / 1000 > 1.0) return String.format("%.1f", input / 1000) + " km.";
+		return String.format("%.0f", input) + " meter";
 	}
 }

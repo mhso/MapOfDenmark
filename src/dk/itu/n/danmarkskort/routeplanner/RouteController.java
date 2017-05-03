@@ -59,11 +59,13 @@ public class RouteController {
 	public void makeGraph(){
 		routeGraph = new RouteGraph(vertexCount);
 		for(RouteEdge edge : routeEdges) routeGraph.addEdge(edge);
-		edgeTree = new KDTreeNode<>(routeEdges);
+		edgeTree = new KDTreeNode<>(routeEdges);	
+		cleanUp();
 	}
 	
 	public void cleanUp(){
 		routeEdges = null;
+		vertices = null;
 	}
 	
 	public Iterable<RouteEdge> getRoute(RouteVertex from, RouteVertex to, WeightEnum weightEnum){
@@ -164,7 +166,6 @@ public class RouteController {
 					//System.out.println(edge.getDescription() + " = " + lastEdge.getDescription());
 					distSum += edge.getDistance();
 					lastModel.setDistance(distSum);
-					System.out.println("RouteController-> streetname is the same...");
 				}else{
 					distSum = 0;
 					RouteModel routeModel = new RouteModel(routeEnum, edge.getDescription(), edge.getDistance());

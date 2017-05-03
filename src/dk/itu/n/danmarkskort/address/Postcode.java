@@ -44,18 +44,6 @@ public class Postcode implements Serializable {
 		return region;
 	}
 	
-	public Map<RegionFloat, Street> searchRegionWithin(RegionFloat input){
-		Map<RegionFloat, Street> regions = new HashMap<RegionFloat, Street>();
-		for(Street st : streets.values()) {
-			RegionFloat stR = st.getRegion();
-			if(stR.isWithin(input)){
-				regions.put(st.getRegion(), st);
-				if(debug) System.out.println("MATCH: ADD: " + st.getStreet());
-			}
-		}
-		return regions;
-	}
-	
 	public int count(){
 		int size = 0;
 		for(Street st : streets.values()) size += st.count();
