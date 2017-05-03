@@ -15,6 +15,7 @@ import dk.itu.n.danmarkskort.gui.map.MapCanvas;
 import dk.itu.n.danmarkskort.gui.map.PinPointManager;
 import dk.itu.n.danmarkskort.gui.map.multithreading.TileController;
 import dk.itu.n.danmarkskort.mapgfx.GraphicRepresentation;
+import dk.itu.n.danmarkskort.models.ReuseStringObj;
 import dk.itu.n.danmarkskort.models.UserPreferences;
 import dk.itu.n.danmarkskort.routeplanner.RouteController;
 
@@ -62,6 +63,7 @@ public class Main {
 		addressController  =  new AddressController();
 		osmReader = new OSMReader();
 		model = new OSMParser(osmReader);
+		
 		routeController = new RouteController();
 		style = new Style();
 		if(args.length > 0) prepareParser(args);
@@ -88,7 +90,8 @@ public class Main {
 		Runnable r = new Runnable() {
 			@Override
 			public void run() {
-				osmReader.parseFile(args[0]);
+				osmReader.parseFile(args[0], model);
+				ReuseStringObj.clear();
 				if(window == null) main();
 		        shutdown();
 			}
