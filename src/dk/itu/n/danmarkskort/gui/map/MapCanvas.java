@@ -46,7 +46,7 @@ public class MapCanvas extends JPanel {
 	public static final int MAX_ZOOM = 20;
 
 	private WaytypeGraphicSpec currentWTGSpec;
-	private boolean zoomChanged;
+	private boolean zoomChanged = true;
 
 	private List<CanvasListener> listeners = new ArrayList<>();
 	private List<WaytypeGraphicSpec> wayTypesVisible;
@@ -90,7 +90,7 @@ public class MapCanvas extends JPanel {
 		if(Main.buffered) {
 			Main.tileController.draw(g2d);
 		} else {
-			drawMapShapes(g2d);
+			drawMapShapes(g2d, getGeographicalRegion(), transform);
 		}
 		if(Main.pinPointManager != null) {
 			Main.pinPointManager.drawPinPoints(g2d);
@@ -105,9 +105,10 @@ public class MapCanvas extends JPanel {
 		repaint();
 	}
 
-	public void drawMapShapes(Graphics2D g2d) {
+	public void drawMapShapes(Graphics2D g2d, Region region, AffineTransform at) {
+		Region currentRegion = region;
 		drawBackground(g2d);
-		g2d.setTransform(transform);
+		g2d.setTransform(at);
 		if(antiAlias) g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		else g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
 		drawMapRegion(g2d);
@@ -120,7 +121,6 @@ public class MapCanvas extends JPanel {
 		}
 		shapesDrawn = 0;
 
-        Region currentRegion = getGeographicalRegion();
         if(Main.debugExtra && !Main.buffered) {
             double x1 = currentRegion.x1;
             double x2 = currentRegion.x2;
@@ -226,85 +226,10 @@ public class MapCanvas extends JPanel {
 	public void drawMapShapesForTile(Tile tile) {
 		if(tile.isRendered()) return;
 		Graphics2D g2d = (Graphics2D)tile.getGraphics();
-		drawBackground(g2d);
 		Region tileRegion = tile.getGeographicalRegion();
 		Region currentRegion = new Region(tileRegion.x1, tileRegion.y1 + tileRegion.getHeight(), tileRegion.x2, tileRegion.y2 + tileRegion.getHeight());
-		
-		g2d.setTransform(tile.getTransform());
-		if(antiAlias) g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		else g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
-		drawMapRegion(g2d);
-		
-		if(zoomChanged) {
-			wayTypesVisible = getOnScreenGraphicsForCurrentZoom();
-			if(wayTypesVisible == null) return;
-			areasVisible = GraphicRepresentation.getSpecificSpec(wayTypesVisible, GraphicSpecArea.class);
-	        linesVisible = GraphicRepresentation.getSpecificSpec(wayTypesVisible, GraphicSpecLine.class);
-	        labelsVisible = GraphicRepresentation.getSpecificSpec(wayTypesVisible, GraphicSpecLabel.class);
-		}
-		shapesDrawn = 0;
-		
-		 // drawing all areas
-        for (WaytypeGraphicSpec wayTypeArea : areasVisible) {
-            currentWTGSpec = wayTypeArea;
-            KDTree<ParsedItem> kdTree = Main.model.getEnumMapKD().get(wayTypeArea.getWayType());
-            if (kdTree == null) continue;
-            for(ParsedItem item : kdTree) {
-            	currentWTGSpec.transformPrimary(g2d);
-                Shape s = item.getShape();
-                g2d.fill(s);
-                if (currentWTGSpec.getOuterColor() != null) {
-                	currentWTGSpec.transformOutline(g2d);
-                 	g2d.draw(s);
-                }
-                shapesDrawn++;
-            }
-        }
-        // Drawing all line outlines
-        for (WaytypeGraphicSpec wayTypeLine : linesVisible) {
-        	if(wayTypeLine.getOuterColor() == null) continue;
-            currentWTGSpec = wayTypeLine;
-            KDTree<ParsedItem> kdTree = Main.model.getEnumMapKD().get(wayTypeLine.getWayType());
-            if (kdTree == null) continue;
-            currentWTGSpec.transformOutline(g2d);
-            for(ParsedItem item : kdTree) {
-                g2d.draw(item.getShape());
-                shapesDrawn++;
-            }
-        }
-
-        // draw inner part of all lines.
-        for(WaytypeGraphicSpec wayTypeLine : linesVisible) {
-            currentWTGSpec = wayTypeLine;
-            if (currentWTGSpec instanceof GraphicSpecLine) {
-                currentWTGSpec.transformPrimary(g2d);
-                KDTree<ParsedItem> kdTree = Main.model.getEnumMapKD().get(wayTypeLine.getWayType());
-                if (kdTree == null) continue;
-                for (Iterator<ParsedItem> i = kdTree.iterator(currentRegion); i.hasNext(); ) {
-                    ParsedItem item = i.next();
-                    g2d.draw(item.getShape());
-                    shapesDrawn++;
-                }
-            }
-        }
-        
-        // draw all labels
-        for(WaytypeGraphicSpec wayTypeLabel : labelsVisible) {
-        	currentWTGSpec = wayTypeLabel;
-        	KDTree<ParsedPlace> kdTree = Main.model.getEnumMapPlacesKD().get(wayTypeLabel.getWayType());
-        	if(kdTree == null) continue;
-        	if(currentWTGSpec.getOuterColor() != null) {
-        		currentWTGSpec.transformOutline(g2d);
-        		for(ParsedPlace place : kdTree) {
-            		g2d.drawString(place.getName(), place.x, place.y);
-            	}
-        	}
-        	currentWTGSpec.transformPrimary(g2d);
-    		for(ParsedPlace place : kdTree) {
-    			g2d.drawString(place.getName(), place.x, place.y);
-        		shapesDrawn++;
-    		}
-        }
+		AffineTransform at = tile.getTransform();
+		drawMapShapes(g2d, currentRegion, at);
     }
 
 	private void drawBackground(Graphics2D g2d) {
