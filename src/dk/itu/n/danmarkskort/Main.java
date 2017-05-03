@@ -24,11 +24,11 @@ public class Main {
 	public final static boolean debug = true;
 	public final static boolean debugExtra = false;
 	public final static boolean production = false;
-	public final static boolean buffered = true;
+	public final static boolean buffered = false;
 	public final static boolean saveParsedAddresses = true;
-	public final static boolean useLauncher = true;
 	public final static boolean nearest = true;
 
+	public static boolean useLauncher = true;
 	public static OSMReader osmReader;
 	public static JFrame window;
 	public static OSMParser model;
@@ -41,7 +41,6 @@ public class Main {
 	public static RouteController routeController;
 	public static Style style;
 	
-	@SuppressWarnings("unused")
 	public static void main(String[] args) {
 		System.setProperty("awt.useSystemAAFontSettings","on");
 		System.setProperty("swing.aatext", "true");

@@ -205,14 +205,10 @@ public class OSMParser extends SAXAdapter implements Serializable {
             case "relation":
             case "way":
             case "node":
-                checkForWeirdStuff();
                 if(isHighway) addToGraph();
                 addCurrent();
                 break;
         }
-    }
-
-    private void checkForWeirdStuff() {
     }
 
     private void addToGraph() {
