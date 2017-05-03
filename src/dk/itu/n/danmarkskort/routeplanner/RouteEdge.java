@@ -94,8 +94,4 @@ public class RouteEdge implements KDComparable, Serializable {
 	public float[] getCoords() {
 		return new float[] {from.x, from.y, to.x, to.y};
 	}
-	
-	
-
-	
 }

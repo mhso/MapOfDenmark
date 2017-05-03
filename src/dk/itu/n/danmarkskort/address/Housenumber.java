@@ -1,11 +1,12 @@
 package dk.itu.n.danmarkskort.address;
 
+import dk.itu.n.danmarkskort.kdtree.KDComparable;
 import dk.itu.n.danmarkskort.models.ReuseStringObj;
 
 import java.awt.geom.Point2D;
 import java.io.Serializable;
 
-public class Housenumber implements Serializable {
+public class Housenumber implements KDComparable, Serializable {
 	private static final long serialVersionUID = -8400619618776493401L;
 	private float lon, lat;
 	private String housenumber;
@@ -27,5 +28,20 @@ public class Housenumber implements Serializable {
 	
 	public String toString(){
 		return street.getStreet() + " " + getHousenumber() + ", " + getPostcode().getPostcode() + " " + getPostcode().getCity();
+	}
+	
+	@Override
+	public Point2D.Float getFirstNode() {
+		return getLonLat();
+	}
+
+	@Override
+	public Point2D.Float[] getNodes() {
+		return new Point2D.Float[] {getLonLat()};
+	}
+
+	@Override
+	public float[] getCoords() {
+		return new float[] {lon, lat};
 	}
 }
