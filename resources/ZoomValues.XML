@@ -31,7 +31,6 @@
 	</zoomlevel>
 	<zoomlevel level="9">
 		<type name="PARK"/>
-		<type name="CEMETERY"/>
 		<type name="CONSTRUCTION"/>
 		<type name="HIGHWAY_UNDEFINED"/>
 		<type name="HIGHWAY_SECONDARY"/>
@@ -40,27 +39,28 @@
 		<type name="LIGHT_RAIL"/>
 		<type name="RAILWAY"/>
 		<type name="PLATFORM"/>
-		<type name="SCRUB"/>
 	</zoomlevel>
 	<zoomlevel level="10">
 	</zoomlevel>
 	<zoomlevel level="11">
-		<type name="SPORT"/>
 		<type name="HIGHWAY_RESIDENTIAL"/>
 		<type name="HIGHWAY_UNCLASSIFIED"/>
-		<type name="HIGHWAY_PEDESTRIAN"/>
-		<type name="PEDESTRIAN_AREA"/>
 	</zoomlevel>
 	<zoomlevel level="12">
-		<type name="BUILDING"/>
 	</zoomlevel>
 	<zoomlevel level="13">
 		<type name="HIGHWAY_PATH"/>
 		<type name="PARKING"/>
+		<type name="CEMETERY"/>
+		<type name="BUILDING"/>
+		<type name="HIGHWAY_PEDESTRIAN"/>
+		<type name="PEDESTRIAN_AREA"/>
+		<type name="SPORT"/>
 	</zoomlevel>
 	<zoomlevel level="14">
 	</zoomlevel>
 	<zoomlevel level="15">
+		<type name="SCRUB"/>
 		<type name="HIGHWAY_SERVICE"/>
 		<type name="HIGHWAY_CYCLEWAY"/>
 		<type name="HIGHWAY_FOOTWAY"/>

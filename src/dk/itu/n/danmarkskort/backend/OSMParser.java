@@ -399,6 +399,9 @@ public class OSMParser extends SAXAdapter implements Serializable {
                 			place = new ParsedPlace(name, ParsedPlace.SUBURB, node.x, node.y);
                 			waytype = WayType.PLACE_SUBURB;
                 			return;
+                        case "square":
+                            isArea = true;
+                            break;
                 	}
             }
         }
