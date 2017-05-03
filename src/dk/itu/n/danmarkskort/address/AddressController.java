@@ -104,7 +104,7 @@ public class AddressController {
 		postcodeCityBestMatch.add(postcode,  city);
 	}
 	
-	private int acceptLvl1 = 0, acceptLvl2 = 0, acceptNot = 0;
+	private int acceptLvl1 = 0, acceptLvl2 = 0;
 	public void addressParsed(ParsedAddress addr) {
 		timerUtilA.on();
         if(addr != null) {
@@ -127,7 +127,6 @@ public class AddressController {
     				AddressValidator.prepPostcode(addr.getPostcode()), null);
         	acceptLvl2++;
 			} else {
-					acceptNot++;
 					addressesNotAcceptedCount++;
          }        	
 			lonLat = null;
@@ -136,7 +135,7 @@ public class AddressController {
 
 	public void onLWParsingFinished() {
 		timerUtilA.off();
-		if(debug) System.out.print("acceptLvl1: " + acceptLvl1 + ", acceptLvl2: " + acceptLvl2 + ", acceptNot: " + acceptNot);
+		if(debug) System.out.print("acceptLvl1: " + acceptLvl1 + ", acceptLvl2: " + acceptLvl2);
 		Main.log("Addresses parse first to last time: " + timerUtilA.toString());
 		timerUtilB.on();
 		for(Entry<String, Postcode> entry : addressHolder.postcodes.entrySet()){

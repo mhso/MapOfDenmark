@@ -23,7 +23,6 @@ public class AddressValidator {
 	private final static Pattern PAT_HOUSENUMBER = Pattern.compile(RGX_HOUSENUMBER);
 	private final static Pattern PAT_POSTCODE = Pattern.compile(RGX_POSTCODE);
 	private final static Pattern PAT_CITY = Pattern.compile(RGX_CITY);
-	private static boolean debug = false;
 	
 	public AddressValidator(){
 	}
@@ -175,21 +174,12 @@ public class AddressValidator {
 				prepStr = prepStr.toUpperCase();
 				prepStr = prepStr.replaceAll("[^0-9A-Z\\s\\-]", " ");
 				prepStr = cleanExcessSpaces(prepStr);
-				
 				prepStr = parseAddressSide(prepStr);
 				prepStr = cleanAddressSide(prepStr);
 				prepStr = parseAddressFloor(prepStr);
 				prepStr = cleanAddressFloor(prepStr);
-				
-				//if(debug) System.out.println("prepHousenumber2, before: " + number + " after: " + prepStr);
 				prepStr = replaceContractNumAlpha(prepStr);
-				//if(debug) System.out.println("prepHousenumber2, before: " + number + " after: " + prepStr);
 				prepStr = removeEverythingAfterFirstSpace(prepStr);
-				//if(debug) System.out.println("prepHousenumber2, before: " + number + " after: " + prepStr);
-	//			prepStr = replaceDashSpaces(prepStr);
-	//			prepStr = cleanExcessSpaces(prepStr);
-	//			//prepStr = removeSpaces(prepStr);
-				if(debug) System.out.println("prepHousenumber2, before: " + number + " after: " + prepStr);
 				return splitUppercaseLetters(prepStr);
 			}
 		}
@@ -238,9 +228,7 @@ public class AddressValidator {
 		if(postcode != null && !postcode.isEmpty()) {
 			Matcher matcher = PAT_POSTCODE.matcher(postcode);
 			if(matcher.matches()) { 
-				//System.out.println(postcode);
 				return true; }
-			//System.out.println("IsNotPostcode: " + postcode);
 		}
 		return false;
 	}
