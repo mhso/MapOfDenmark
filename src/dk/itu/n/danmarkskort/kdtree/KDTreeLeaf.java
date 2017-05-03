@@ -35,7 +35,8 @@ public class KDTreeLeaf<T extends KDComparable> extends KDTree<T> {
 
     @Override
     public List<KDComparable[]> getItems(Region reg) {
-        return getAllItems();
+        if(overlaps(reg)) return getAllItems();
+        else return Collections.emptyList();
     }
 
     @Override
