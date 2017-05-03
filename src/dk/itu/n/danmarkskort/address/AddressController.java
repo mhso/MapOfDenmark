@@ -5,6 +5,7 @@ import dk.itu.n.danmarkskort.TimerUtil;
 import dk.itu.n.danmarkskort.kdtree.KDTree;
 import dk.itu.n.danmarkskort.kdtree.KDTreeNode;
 import dk.itu.n.danmarkskort.models.ParsedAddress;
+import dk.itu.n.danmarkskort.models.ReuseStringObj;
 import dk.itu.n.danmarkskort.routeplanner.RouteEdge;
 import dk.itu.n.danmarkskort.routeplanner.RouteGraph;
 

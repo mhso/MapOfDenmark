@@ -325,6 +325,7 @@ public class OSMParser extends SAXAdapter implements Serializable {
     }
 
     private void finalClean() {
+    	ReuseStringObj.clear();
         System.gc();
     }
     

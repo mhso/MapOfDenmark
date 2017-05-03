@@ -70,6 +70,7 @@ public class RouteController {
 	public void cleanUp(){
 		routeEdges = null;
 		vertices = null;
+		ReuseRouteEdgeMetaObj.clear();
 	}
 	
 	public Iterable<RouteEdge> getRoute(RouteVertex from, RouteVertex to, WeightEnum weightEnum){
