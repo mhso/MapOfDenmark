@@ -6,7 +6,6 @@ import java.awt.event.ComponentListener;
 import javax.swing.*;
 
 import dk.itu.n.danmarkskort.address.AddressController;
-import dk.itu.n.danmarkskort.backend.OSMAddressParser;
 import dk.itu.n.danmarkskort.backend.OSMParser;
 import dk.itu.n.danmarkskort.backend.OSMReader;
 import dk.itu.n.danmarkskort.gui.Style;
