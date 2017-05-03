@@ -156,4 +156,41 @@ public class KDTreeNode<T extends KDComparable> extends KDTree<T> {
         // maybe nothing of interest found (it could be null, but it could also be amazing)
         return candidate;
     }
+    
+    protected int nodeSize(int currentDepth) {
+    	currentDepth++;
+    	currentDepth = leftChild.nodeSize(currentDepth);
+    	currentDepth = rightChild.nodeSize(currentDepth);
+    	return currentDepth;
+    }
+    
+    protected int nodeSizeAt(int depth, int currentDepth, int currentSize) {
+    	currentDepth++;
+    	if(depth == currentDepth) {
+    		currentSize++;
+    	}
+    	else {
+    		if(leftChild != null) currentSize = leftChild.nodeSizeAt(depth, currentDepth, currentSize);
+    		if(rightChild != null) currentSize = rightChild.nodeSizeAt(depth, currentDepth, currentSize);
+    		
+    	}
+    	return currentSize;
+    }
+    
+    protected int leafSize(int currentDepth) {
+    	if(leftChild != null) currentDepth = leftChild.leafSize(currentDepth);
+    	if(rightChild != null) currentDepth = rightChild.leafSize(currentDepth);
+    	return currentDepth;
+    }
+    
+    protected int size(int currentSize) {
+    	if(leftChild != null) currentSize = leftChild.size(currentSize);
+    	if(rightChild != null) currentSize = rightChild.size(currentSize);
+    	return currentSize;
+    }
+    
+    public String toString() {
+    	return "KDTreeNode [leftSplit=" + leftSplit + ", rightSplit=" + rightSplit + ", leftChild=\n" +
+    			leftChild.toString() + ", rightChild=\n" + rightChild.toString() + "]";
+    }
 }
