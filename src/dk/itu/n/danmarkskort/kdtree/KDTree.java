@@ -16,6 +16,34 @@ public abstract class KDTree<T extends KDComparable> implements Serializable, It
     abstract List<KDComparable[]> getItems(Region reg, boolean sortByLon);
 
     abstract List<KDComparable[]> getAllItems();
+    
+    public int nodeSize() {
+    	return nodeSize(0);
+    }
+    
+    protected int nodeSize(int currentSize) {
+    	return currentSize;
+    }
+    
+    public int nodeSizeAt(int depth) {
+    	return nodeSizeAt(depth, 0, 0);
+    }
+    
+    protected abstract int nodeSizeAt(int depth, int currentDepth, int currentSize);
+    
+    public int leafSize() {
+    	return leafSize(0);
+    }
+    
+    public int size() {
+    	return size(0);
+    }
+    
+    protected int size(int currentSize) {
+    	return currentSize;
+    }
+    
+    protected abstract int leafSize(int currentSize);
 
     public Iterator<T> iterator() { return new KDTreeIterator(); }
 
@@ -107,7 +135,6 @@ public abstract class KDTree<T extends KDComparable> implements Serializable, It
     public static double shortestDistance(Point2D.Float query, float[] coords) {
         double shortestDistance = Double.POSITIVE_INFINITY;
         for(int i = 0; i < coords.length - 2; i+=2) {
-            //double distance = KDTree.calcDistance(query, new Point2D.Float(coords[i], coords[i+1]));
             double distance = KDTree.distancePointToLine(
                     new Point2D.Float(coords[i], coords[i+1]),
                     new Point2D.Float(coords[i+2], coords[i+3]),
