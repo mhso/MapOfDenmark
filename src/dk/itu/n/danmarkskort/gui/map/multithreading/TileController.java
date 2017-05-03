@@ -68,6 +68,7 @@ public class TileController implements ActionListener {
 	}
 	
 	public void zoom(double scale) {
+		if(!Main.buffered) return;
 		imageScale *= scale;
 		if(!isBlurred()) blur();
 		blurTimer.restart();
@@ -194,6 +195,7 @@ public class TileController implements ActionListener {
 	}
 	
 	public void checkForNewTiles() {
+		if(!Main.buffered) return;
 		List<Tile> newTiles = getNewTiles();
 		for(Tile tile : newTiles) {
 			queueTile(tile, TaskPriority.HIGHEST, true, true);
@@ -212,6 +214,7 @@ public class TileController implements ActionListener {
 	}
 	
 	public void pan(double tx, double ty) {
+		if(!Main.buffered) return;
 		if(blockNextPan) {
 			blockNextPan = false;
 			return;
