@@ -108,7 +108,7 @@ public class AddressController {
 	public void addressParsed(ParsedAddress addr) {
 		timerUtilA.on();
         if(addr != null) {
-        	Point2D.Float lonLat = new Point2D.Float(addr.getFirstLon(), addr.getFirstLat());
+        	Point2D.Float lonLat = new Point2D.Float(addr.getLon(), addr.getLat());
 	
 			if(AddressValidator.isAddressMinimum(addr.getStreet(), addr.getHousenumber(), addr.getPostcode())){
 				if(AddressValidator.isCityname(addr.getCity())) {

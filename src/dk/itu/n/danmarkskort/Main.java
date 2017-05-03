@@ -6,6 +6,7 @@ import java.awt.event.ComponentListener;
 import javax.swing.*;
 
 import dk.itu.n.danmarkskort.address.AddressController;
+import dk.itu.n.danmarkskort.backend.OSMAddressParser;
 import dk.itu.n.danmarkskort.backend.OSMParser;
 import dk.itu.n.danmarkskort.backend.OSMReader;
 import dk.itu.n.danmarkskort.gui.Style;
@@ -63,6 +64,7 @@ public class Main {
 		addressController  =  new AddressController();
 		osmReader = new OSMReader();
 		model = new OSMParser(osmReader);
+		
 		routeController = new RouteController();
 		style = new Style();
 		if(args.length > 0) prepareParser(args);
@@ -89,7 +91,7 @@ public class Main {
 		Runnable r = new Runnable() {
 			@Override
 			public void run() {
-				osmReader.parseFile(args[0]);
+				osmReader.parseFile(args[0], model);
 				if(window == null) main();
 		        shutdown();
 			}

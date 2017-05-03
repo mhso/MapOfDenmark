@@ -9,9 +9,7 @@ import dk.itu.n.danmarkskort.address.Address;
 
 public class SearchController{
 	
-	private SearchController(){
-		
-	}
+	private SearchController(){ }
 	
 	public static List<String> getSearchFieldSuggestions(String inputStr){
 		long limitAmountOfResults = 10;
@@ -29,10 +27,10 @@ public class SearchController{
 		if(inputStr == null || inputStr.isEmpty()) return null;
 		
 		if(isCoordinates(inputStr)) {
-			Main.log("Search for cords string");
+			//Main.log("Search for cords string");
 			return Main.addressController.getSearchResult(stringCordsToPointFloat(inputStr));
 		} else {
-			Main.log("Search for address string");
+			//Main.log("Search for address string");
 			return Main.addressController.getSearchResult(inputStr);
 		}
 	}
