@@ -40,6 +40,13 @@ public class AddressController {
 		addressHolder = holder;
 	}
 	
+	public KDTree<Housenumber> gethousenumberTree(){
+		return housenumberTree;
+	}
+	public void setHousenumberTree(KDTree<Housenumber> housenumberTree){
+		this.housenumberTree = housenumberTree;
+	}
+	
 	public List<String> getSearchSuggestions(String find, long limitAmountOfResults){ return addressSuggestion.searchSuggestions(find, limitAmountOfResults); }
 	public List<String> getSearchSuggestions(Point2D.Float find){
 		List<String> result = new ArrayList<String>();

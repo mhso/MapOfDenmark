@@ -322,8 +322,8 @@ public class RoutePage extends JPanel {
 		ArrayList<PinPoint> pinPoints = new ArrayList<PinPoint>();
 		PinPoint pinPointFrom = new PinPoint(addrFrom.getLonLatAsPoint(), txtAddrFrom.getText());
 		PinPoint pinPointTo = new PinPoint(addrTo.getLonLatAsPoint(), txtAddrTo.getText());
-		pinPointFrom.setIconIndex(5);
-		pinPointTo.setIconIndex(1);
+		pinPointFrom.setIconIndex(13);
+		pinPointTo.setIconIndex(14);
 		pinPoints.add(pinPointFrom);
 		pinPoints.add(pinPointTo);
 		Main.pinPointManager.setTemporaryPinPoints(pinPoints);

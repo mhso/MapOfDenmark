@@ -151,6 +151,7 @@ public class Util {
 	public static void extractAllFromBinary(BinaryWrapper binary) {
 		Main.model = binary.getModel();
 		Main.addressController.setAddressHolder(binary.getAddressHolder());
+		Main.addressController.setHousenumberTree(binary.getHousenumberTree());
 		Main.routeController.setEdgeTree(binary.getEdgeTree());
 		Main.routeController.setGraph(binary.getRouteGraph());
 	}
@@ -159,6 +160,7 @@ public class Util {
 		binary.setModel(Main.model);
         binary.setAddressHolder(Main.addressController.getAddressHolder());
         binary.setEdgeTree(Main.routeController.getEdgeTree());
+        binary.setHousenumberTree(Main.addressController.gethousenumberTree());
         binary.setRouteGraph(Main.routeController.getGraph());
 	}
 	
