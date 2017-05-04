@@ -8,7 +8,6 @@ import dk.itu.n.danmarkskort.Util;
 import dk.itu.n.danmarkskort.address.Address;
 
 public class SearchController{
-	
 	private SearchController(){ }
 	
 	public static List<String> getSearchFieldSuggestions(String inputStr){
@@ -34,7 +33,7 @@ public class SearchController{
 	}
 	
 	private static boolean isCoordinates(String inputStr){
-		String cordRegex = "((\\-{0,1})([0-9]{1,3})(\\.)(\\-{0,1})([0-9]{5,7}))";
+		String cordRegex = "((\\-{0,1})([0-9]{1,3})(\\.)(\\-{0,1})([0-9]{5,9}))";
 		String cordsRegex = cordRegex + "(\\,\\s)" + cordRegex;
 		if(inputStr.matches(cordsRegex)) return true;
 		return false;
