@@ -257,6 +257,22 @@ public class RoutePage extends JPanel {
         validateToFromFields();
     }
     
+    public void setFromText(String from) {
+    	txtAddrFrom.setText(from);
+    }
+    
+    public void setToText(String to) {
+    	txtAddrTo.setText(to);
+    }
+    
+    public boolean isFromFieldEmpty() {
+    	return txtAddrFrom.getText().isEmpty();
+    }
+    
+    public boolean isToFieldEmpty() {
+    	return txtAddrTo.getText().isEmpty();
+    }
+    
     private void swapToFromFields() {
     	String addrFromTemp = txtAddrFrom.getText();
     	txtAddrFrom.setText(txtAddrTo.getText());
