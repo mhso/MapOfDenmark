@@ -92,10 +92,10 @@ public class DropdownMenu extends CustomDropdown {
         wrapper.add(menuItems, gbcContainer);
     }
     
-    public void openRoutePage(String fromText, String toText) {
+    public void openRoutePage(String fromText, String toText, boolean forceReplace) {
     	addToContentPane(routePage);
-    	if(fromText != null && routePage.isFromFieldEmpty()) routePage.setFromText(fromText);
-    	if(toText != null && routePage.isToFieldEmpty()) routePage.setToText(toText);
+    	if(fromText != null && (routePage.isFromFieldEmpty() || forceReplace)) routePage.setFromText(fromText);
+    	if(toText != null && (routePage.isToFieldEmpty() || forceReplace)) routePage.setToText(toText);
     }
 
     private void addcontentPane() {

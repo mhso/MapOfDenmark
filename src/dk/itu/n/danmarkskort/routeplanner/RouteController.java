@@ -160,7 +160,6 @@ public class RouteController {
 				sizeOfEdges++;
 			}
 			routeRegion = new Region(routeBounds[0], routeBounds[1], routeBounds[2], routeBounds[3]);
-			System.out.println(routeRegion);
 			return routeModels;
 		}
 		return Collections.emptyList();

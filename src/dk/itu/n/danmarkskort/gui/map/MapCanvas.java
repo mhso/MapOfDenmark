@@ -373,12 +373,11 @@ public class MapCanvas extends JPanel {
 		double x2 = routeRegion.x1 + distX;
 		double y1 = routeRegion.y2 - distY;
 		double y2 = routeRegion.y1 + distY;
-		Region region = new Region(x1, y1, x2, y2-((y2-y1)/1.25));
+		Region region = new Region(x1, y1, x2, y2);
 		System.out.println(region);
-		
 		AffineTransform newTransform = new AffineTransform();
 		if(routeRegion.y2-routeRegion.y1 < routeRegion.x2-routeRegion.x1) Util.zoomToRegion(newTransform, region, getWidth());
-		else Util.zoomToRegion(newTransform, region, getHeight());
+		else Util.zoomToRegionY(newTransform, region, getHeight());
 		
 		transform.setTransform(newTransform);
 		actualTransform.setTransform(newTransform);

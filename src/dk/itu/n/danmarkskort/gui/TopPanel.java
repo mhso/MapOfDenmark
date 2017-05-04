@@ -119,8 +119,8 @@ public class TopPanel extends JPanel {
 			public void mousePressed(MouseEvent e) {
 				if(!dropMenu.isVisible()) {
 					dropMenu.blockVisibility(false);
-					if(input.getText() == null || input.getText().isEmpty()) dropMenu.openRoutePage(null, null);
-					else dropMenu.openRoutePage(null, input.getText());
+					if(input.getText() == null || input.getText().isEmpty()) dropMenu.openRoutePage(null, null, false);
+					else dropMenu.openRoutePage(null, input.getText(), false);
 		            dropMenu.showDropdown(menu);
 				}
 			}
