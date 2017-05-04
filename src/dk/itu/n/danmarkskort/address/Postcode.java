@@ -16,7 +16,6 @@ public class Postcode implements Serializable {
 	private String postcode, city;
 	private Map<String, Street> streets;
 	private RegionFloat region;
-	private boolean debug = false;
 	
 	Postcode(String postcode, String city){
 		this.postcode = ReuseStringObj.make(postcode);
@@ -108,7 +107,7 @@ public class Postcode implements Serializable {
 					result.put(entry.getKey(), entry.getValue());
 				}
 			} catch (StringIndexOutOfBoundsException e) {
-				//e.printStackTrace();
+
 			}
 		}
 		return result;

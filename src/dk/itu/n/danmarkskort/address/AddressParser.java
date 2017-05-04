@@ -76,9 +76,6 @@ public class AddressParser {
 				if(!searchMode) return addrBuild;
 			}
 		}
-		//throw new IllegalArgumentException("Cannot parse Address: " + input);
-		//System.out.println("Cannot parse Address: " + inputAddress);
-		//System.out.println("Clean parse Address: " + input);
 		if(searchMode) return addrBuild;
 		return null;
 	}

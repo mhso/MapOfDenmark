@@ -14,7 +14,7 @@ public class ParsedPlace extends Point2D.Float implements KDComparable {
 	private int population;
 	
 	public ParsedPlace(String name, int type, float x, float y) {
-		this.name = name;
+		this.name = ReuseStringObj.make(name);
 		setLocation(x, y);
 	}
 	

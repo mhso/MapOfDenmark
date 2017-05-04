@@ -15,4 +15,8 @@ public class ReuseStringObj {
 				return strObj;
 		}
 	}
+	
+	public static void clear(){
+		map.clear();
+	}
 }

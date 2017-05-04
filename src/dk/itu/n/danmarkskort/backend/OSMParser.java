@@ -256,8 +256,6 @@ public class OSMParser extends SAXAdapter implements Serializable {
 
         if(address != null && Main.saveParsedAddresses) {
             if(node != null) address.setCoords(node);
-            else if (way != null) address.setWay(way);
-            else if (relation != null) address.setRelation(relation);
             Main.addressController.addressParsed(address);
             for(OSMParserListener listener : reader.parserListeners) listener.onParsingGotItem(address);
         }
@@ -296,7 +294,7 @@ public class OSMParser extends SAXAdapter implements Serializable {
     private void resetValues() {
         way = null;
         relation = null;
-        address = null;
+        //address = null;
         node = null;
         place = null;
 
@@ -323,6 +321,7 @@ public class OSMParser extends SAXAdapter implements Serializable {
     }
 
     private void finalClean() {
+    	ReuseStringObj.clear();
         System.gc();
     }
     
@@ -399,6 +398,9 @@ public class OSMParser extends SAXAdapter implements Serializable {
                 			place = new ParsedPlace(name, ParsedPlace.SUBURB, node.x, node.y);
                 			waytype = WayType.PLACE_SUBURB;
                 			return;
+                        case "square":
+                            isArea = true;
+                            break;
                 	}
             }
         }

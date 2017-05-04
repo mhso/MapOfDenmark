@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.ZipInputStream;
 
+import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
@@ -43,9 +44,9 @@ public class OSMReader {
 		initialize();
 	}
 	
-	public OSMReader(String fileName) {
-		initialize();
-		parseFile(fileName);
+	public OSMReader(String fileName, ContentHandler contentHandler) {
+		this();
+		parseFile(fileName, contentHandler);
 	}
 	
 	public void initialize() {
@@ -68,7 +69,7 @@ public class OSMReader {
 		return fileName;
 	}
 	
-	public void parseFile(String fileName) {
+	public void parseFile(String fileName, ContentHandler contentHandler) {
 		this.fileName = fileName;
 		
 		TimerUtil parseTimer = new TimerUtil();
@@ -114,7 +115,7 @@ public class OSMReader {
                     	else inputStream = new FileInputStream(fileName);
                         InputMonitor monitor = new InputMonitor(inputStream, fileName);
                         for (InputStreamListener inListener : inputListeners) monitor.addListener(inListener);
-                        loadOSM(new InputSource(monitor), fileName);
+                        loadOSM(new InputSource(monitor), fileName, contentHandler);
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     }
@@ -127,7 +128,7 @@ public class OSMReader {
                         ZipInputStream zip = new ZipInputStream(new BufferedInputStream(monitor));
                         zip.getNextEntry();
                         for (InputStreamListener inListener : inputListeners) monitor.addListener(inListener);
-                        loadOSM(new InputSource(zip), fileName);
+                        loadOSM(new InputSource(zip), fileName, contentHandler);
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     } catch (IOException e) {
@@ -159,10 +160,10 @@ public class OSMReader {
 		Main.logRamUsage();
 	}
 
-	private void loadOSM(InputSource source, String fileName) {
+	private void loadOSM(InputSource source, String fileName, ContentHandler contentHandler) {
 		try {
 			XMLReader reader = XMLReaderFactory.createXMLReader();
-			reader.setContentHandler(Main.model);
+			reader.setContentHandler(contentHandler);
 			reader.parse(source);
 		} catch (SAXException | IOException e) {
 			e.printStackTrace();
