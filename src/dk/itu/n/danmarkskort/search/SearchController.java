@@ -27,10 +27,8 @@ public class SearchController{
 		if(inputStr == null || inputStr.isEmpty()) return null;
 		
 		if(isCoordinates(inputStr)) {
-			//Main.log("Search for cords string");
 			return Main.addressController.getSearchResult(stringCordsToPointFloat(inputStr));
 		} else {
-			//Main.log("Search for address string");
 			return Main.addressController.getSearchResult(inputStr);
 		}
 	}
@@ -46,7 +44,10 @@ public class SearchController{
 		String[] strArr = inputStr.split(", ");
 		float lat = Float.parseFloat(strArr[0]);
 		float lon = Float.parseFloat(strArr[1]);
-		Point2D fakeCoords = Util.toFakeCoords(new Point2D.Float(lon, lat));
+		Point2D realCoords = new Point2D.Float(lon, lat);
+		Point2D fakeCoords = Util.toFakeCoords(realCoords);
+		System.out.println(realCoords);
+		System.out.println(fakeCoords);
 		return new Point2D.Float((float)fakeCoords.getX(), (float)fakeCoords.getY());
 	}
 }
