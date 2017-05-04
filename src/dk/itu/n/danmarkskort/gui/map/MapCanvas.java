@@ -400,7 +400,7 @@ public class MapCanvas extends JPanel {
 	}
 	
 	public BufferedImage getRoutePreviewImage(Point2D.Float from, Point2D.Float to) {
-		final double MARGIN = 1.05;
+		final double MARGIN = 1.02;
 		double x1 = Math.min(from.getX(), to.getX());
 		x1 -= x1*MARGIN - x1;
 		double y1 = Math.min(from.getY(), to.getY());
@@ -579,8 +579,7 @@ public class MapCanvas extends JPanel {
 	}
 	
 	public void zoomToRegion(Region region) {
-		transform.setTransform(new AffineTransform());
-		actualTransform.setTransform(new AffineTransform());
+		System.out.println(region);
 		pan(-region.x1, -region.y2);
 		zoom(getWidth() / (region.x2 - region.x1));
 		System.out.println(getGeographicalRegion());

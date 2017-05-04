@@ -15,8 +15,6 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.DocumentFilter;
 
 import java.awt.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
@@ -116,9 +114,30 @@ public class TopPanel extends JPanel {
         	}
         });
         
+        route.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				if(!dropMenu.isVisible()) {
+					dropMenu.blockVisibility(false);
+					dropMenu.addToContentPane(new RoutePage(dropMenu, input.getText()));
+		            dropMenu.showDropdown(menu);
+				}
+			}
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				dropMenu.blockVisibility(true);
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				if(dropMenu.isVisible()) dropMenu.blockVisibility(false);
+			}
+        });
+        
         route.addActionListener(e -> {
-            dropMenu.addToContentPane(new RoutePage(dropMenu, input.getText()));
-            dropMenu.showDropdown(menu);
+        	if(dropMenu.isVisible() && dropMenu.isPopUpBlocked()) {
+        		dropMenu.blockVisibility(false);
+				dropMenu.setVisible(false);
+        	}
         });
 
         search.addActionListener(e -> {
