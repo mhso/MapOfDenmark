@@ -20,6 +20,7 @@ public class RouteEdge implements KDComparable, Serializable {
 		this.from = from;
 		this.to = to;
 		this.routeEdgeMeta = routeEdgeMeta;
+		if(description == null || description.trim().isEmpty()) description = "Ukendt vej";
 		this.description = ReuseStringObj.make(description);
 	}
 	
