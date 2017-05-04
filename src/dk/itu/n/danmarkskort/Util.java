@@ -227,4 +227,8 @@ public class Util {
 		Util.zoom(transform, currentWidth / (region.x2 - region.x1));
 	}
 	
+	public static void zoomToRegionY(AffineTransform transform, Region region, double currentHeight) {
+		Util.pan(transform, -region.y1, -region.x2);
+		Util.zoom(transform, currentHeight / (region.y2 - region.y1));
+	}
 }

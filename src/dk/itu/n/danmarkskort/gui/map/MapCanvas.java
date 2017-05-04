@@ -326,7 +326,7 @@ public class MapCanvas extends JPanel {
 		g2d.setTransform(transform);
 		if(antiAlias) g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		else g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
-		g2d.setStroke(new BasicStroke((float)(0.0009f*1.5/getZoom())));
+		g2d.setStroke(new BasicStroke((float)(0.0010f*1.5/getZoom())));
 		g2d.setColor(Color.BLUE);
 		
 		if(Main.debug) {
@@ -364,33 +364,24 @@ public class MapCanvas extends JPanel {
 		return currentHighlighedShape;
 	}
 	
-	public BufferedImage getRoutePreviewImage(Point2D.Float from, Point2D.Float to) {
-		final double MARGIN = 1.30;
-		double dx1 = Math.min(from.getX(), to.getX());
-		double dy1 = Math.max(from.getY(), to.getY());
-		double dx2 = Math.max(from.getX(), to.getX());
-		double dy2 = Math.min(from.getY(), to.getY());
-		System.out.println(new Region(dx1, dy1, dx2, dy2));
-		double distX = (dx2-dx1)*MARGIN;
-		double distY = (dy2-dy1)*MARGIN;
-		double x2 = dx1 + distX;
-		double x1 = dx2 - distX;
-		double y2 = dy1 + distY;
-		double y1 = dy2 - distY;
-		Region region = new Region(x1, y2, x2, y1);
+	public BufferedImage getRoutePreviewImage(Region routeRegion) {
+		final double MARGIN = 1.50;
+		
+		double distX = (routeRegion.x2-routeRegion.x1)*MARGIN;
+		double distY = (routeRegion.y2-routeRegion.y1)*MARGIN;
+		double x1 = routeRegion.x2 - distX;
+		double x2 = routeRegion.x1 + distX;
+		double y1 = routeRegion.y2 - distY;
+		double y2 = routeRegion.y1 + distY;
+		Region region = new Region(x1, y1, x2, y2-((y2-y1)/1.25));
 		System.out.println(region);
 		
 		AffineTransform newTransform = new AffineTransform();
-		Util.zoomToRegion(newTransform, region, getWidth());
+		if(routeRegion.y2-routeRegion.y1 < routeRegion.x2-routeRegion.x1) Util.zoomToRegion(newTransform, region, getWidth());
+		else Util.zoomToRegion(newTransform, region, getHeight());
 		
 		transform.setTransform(newTransform);
 		actualTransform.setTransform(newTransform);
-		Region view = getActualGeographicalRegion();
-		System.out.println(transform.getTranslateY());
-		Point2D panPoint = toActualScreenCoords(new Point2D.Double(view.getMiddlePoint().getX(), 
-				view.y2-view.getMiddlePoint().getY()));
-		pan(0, panPoint.getY()-toActualScreenCoords(getGeographicalMiddleOfView()).getY());
-		System.out.println(transform.getTranslateY());
 		Main.tileController.zoom(1);
 		
 		//Graphics2D g2d = (Graphics2D) getGraphics();

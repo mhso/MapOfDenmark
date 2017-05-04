@@ -303,7 +303,7 @@ public class RoutePage extends JPanel {
 					e.printStackTrace();
 				}
 	    		
-    			Main.map.getRoutePreviewImage(addrFrom.getLonLatAsPoint(), addrTo.getLonLatAsPoint());
+    			Main.map.getRoutePreviewImage(Main.routeController.getRouteRegion());
     			
 				makePinPoint(addrFrom, addrTo);
 				RoutePlannerMain routePlannerMain =  new RoutePlannerMain(bufferedImage, txtAddrFrom.getText(), txtAddrTo.getText(), routeDistance, routemodels);

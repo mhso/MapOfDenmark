@@ -10,6 +10,7 @@ import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.Util;
 import dk.itu.n.danmarkskort.kdtree.KDTree;
 import dk.itu.n.danmarkskort.kdtree.KDTreeNode;
+import dk.itu.n.danmarkskort.models.Region;
 import dk.itu.n.danmarkskort.models.ReuseRouteEdgeMetaObj;
 import dk.itu.n.danmarkskort.models.RouteEnum;
 import dk.itu.n.danmarkskort.models.RouteModel;
@@ -19,6 +20,7 @@ public class RouteController {
 	private List<RouteEdge> routeEdges;
 	private List<RouteVertex> vertices;
 	private RouteGraph routeGraph;
+	private Region routeRegion;
 	private boolean debug = true;
 	KDTree<RouteEdge> edgeTree;
 	
@@ -96,6 +98,8 @@ public class RouteController {
 	
 	public KDTree<RouteEdge> getEdgeTree() { return edgeTree; }
 	
+	public Region getRouteRegion() { return routeRegion; }
+	
 	public RouteGraph getGraph() { return routeGraph; }
 	
 	public void setEdgeTree(KDTree<RouteEdge> edgeTree) {
@@ -132,6 +136,12 @@ public class RouteController {
 			RouteModel lastModel = null;
 			double distSum = 0;
 			int sizeOfEdges = 0;
+			double minRouteX = Math.min(from.getX(), to.getX());
+			double maxRouteX = Math.max(from.getX(), to.getX());
+			double minRouteY = Math.min(from.getY(), to.getY());
+			double maxRouteY = Math.max(from.getY(), to.getY());
+			double[] routeBounds = {minRouteX, minRouteY, maxRouteX, maxRouteY};
+			
 			for(RouteEdge edge : edges){
 				Main.map.addRouteEdge(edge);
 				RouteEnum routeEnum = RouteEnum.CONTINUE_ON;
@@ -145,12 +155,24 @@ public class RouteController {
 					lastModel = routeModel;
 					routeModels.add(routeModel);
 				}
+				testEdgeBounds(routeBounds, edge);
 				lastEdge = edge;
 				sizeOfEdges++;
 			}
+			routeRegion = new Region(routeBounds[0], routeBounds[1], routeBounds[2], routeBounds[3]);
+			System.out.println(routeRegion);
 			return routeModels;
 		}
 		return Collections.emptyList();
+	}
+	
+	private void testEdgeBounds(double[] currentRouteBounds, RouteEdge edge) {
+		RouteVertex edgeFrom = edge.getFrom();
+		RouteVertex edgeTo = edge.getTo();
+		if(edgeFrom.getX() < currentRouteBounds[0]) currentRouteBounds[0] = edgeFrom.getX();
+		if(edgeFrom.getY() < currentRouteBounds[1]) currentRouteBounds[1] = edgeFrom.getY();
+		if(edgeTo.getX() > currentRouteBounds[2]) currentRouteBounds[2] = edgeTo.getX();
+		if(edgeTo.getY() > currentRouteBounds[3]) currentRouteBounds[3] = edgeTo.getY();
 	}
 
 	private RouteEnum calcDirectionType(RouteEdge edge, RouteEdge lastEdge) {
