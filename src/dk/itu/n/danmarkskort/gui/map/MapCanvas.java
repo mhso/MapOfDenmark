@@ -93,6 +93,8 @@ public class MapCanvas extends JPanel {
 			Main.tileController.draw(g2d);
 		} else {
 			drawMapShapes(g2d, getGeographicalRegion(), transform);
+			g2d.setStroke(new BasicStroke(Float.MIN_VALUE));
+			
 		}
 		if(Main.pinPointManager != null) {
 			Main.pinPointManager.drawPinPoints(g2d);
@@ -363,21 +365,39 @@ public class MapCanvas extends JPanel {
 	}
 	
 	public BufferedImage getRoutePreviewImage(Point2D.Float from, Point2D.Float to) {
-		final double MARGIN = 1.02;
-		double x1 = Math.min(from.getX(), to.getX());
-		x1 -= x1*MARGIN - x1;
-		double y1 = Math.min(from.getY(), to.getY());
-		y1 -= y1*MARGIN - y1;
-		double x2 = Math.max(from.getX(), to.getX())*MARGIN;
-		double y2 = Math.max(from.getY(), to.getY())*MARGIN;
-		Region region = new Region(x1, y1, x2, y2);
+		final double MARGIN = 1.30;
+		double dx1 = Math.min(from.getX(), to.getX());
+		double dy1 = Math.max(from.getY(), to.getY());
+		double dx2 = Math.max(from.getX(), to.getX());
+		double dy2 = Math.min(from.getY(), to.getY());
+		System.out.println(new Region(dx1, dy1, dx2, dy2));
+		double distX = (dx2-dx1)*MARGIN;
+		double distY = (dy2-dy1)*MARGIN;
+		double x2 = dx1 + distX;
+		double x1 = dx2 - distX;
+		double y2 = dy1 + distY;
+		double y1 = dy2 - distY;
+		Region region = new Region(x1, y2, x2, y1);
+		System.out.println(region);
 		
-		zoomToRegion(region);
+		AffineTransform newTransform = new AffineTransform();
+		Util.zoomToRegion(newTransform, region, getWidth());
 		
-		Graphics2D g2d = (Graphics2D) getGraphics();
-		BufferedImage image = new BufferedImage(800, 600, BufferedImage.TYPE_INT_ARGB);
+		transform.setTransform(newTransform);
+		actualTransform.setTransform(newTransform);
+		Region view = getActualGeographicalRegion();
+		System.out.println(transform.getTranslateY());
+		Point2D panPoint = toActualScreenCoords(new Point2D.Double(view.getMiddlePoint().getX(), 
+				view.y2-view.getMiddlePoint().getY()));
+		pan(0, panPoint.getY()-toActualScreenCoords(getGeographicalMiddleOfView()).getY());
+		System.out.println(transform.getTranslateY());
+		Main.tileController.zoom(1);
+		
+		//Graphics2D g2d = (Graphics2D) getGraphics();
+		//BufferedImage image = new BufferedImage(800, 600, BufferedImage.TYPE_INT_ARGB);
 //		image.createGraphics().drawImage(image, 0, 0, null);
-		return image;
+		//return image;
+		return null;
 	}
 	
 	public void pan(double dx, double dy) {
@@ -547,10 +567,11 @@ public class MapCanvas extends JPanel {
 	}
 	
 	public void zoomToRegion(Region region) {
+		transform.setTransform(new AffineTransform());
 		System.out.println(region);
 		pan(-region.x1, -region.y2);
 		zoom(getWidth() / (region.x2 - region.x1));
-		System.out.println(getGeographicalRegion());
+		System.out.println(getActualGeographicalRegion());
 	}
 	
 	public void setupDone() {
