@@ -2,6 +2,7 @@ package dk.itu.n.danmarkskort.address;
 
 import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.TimerUtil;
+import dk.itu.n.danmarkskort.Util;
 import dk.itu.n.danmarkskort.kdtree.KDTree;
 import dk.itu.n.danmarkskort.kdtree.KDTreeNode;
 import dk.itu.n.danmarkskort.models.ParsedAddress;
@@ -11,6 +12,7 @@ import dk.itu.n.danmarkskort.routeplanner.RouteGraph;
 
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -49,33 +51,35 @@ public class AddressController {
 	
 	public Address getSearchResult(String find){
 		Address addrBuild = AddressParser.parse(find, false);
-		Map<String, Postcode> list;
-		list = addressHolder.search(addrBuild,
-				SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.EQUALS);
-		if(list.size() < 1) { list = addressHolder.search(addrBuild,
-				SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.ANY);
-		}
-		if(list.size() < 1) { list = addressHolder.search(addrBuild,
-				SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.ANY, SearchEnum.EQUALS);
-		}
-		if(list.size() < 1) { list = addressHolder.search(addrBuild,
-				SearchEnum.LEVENSHTEIN, SearchEnum.EQUALS, SearchEnum.ANY, SearchEnum.EQUALS);
-		}
-		if(list.size() < 1) { list = addressHolder.search(addrBuild,
-				SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.ANY, SearchEnum.LEVENSHTEIN);
-		}
+		if(addrBuild == null) return null;
 		
-		if(list.size() == 1) {
-			for(Postcode pc : list.values()){
-				for(Street st : pc.getStreets().values()){
-					for(Housenumber hn : st.getHousenumbers().values()){
-						Address addr = AddressParser.parse(hn.toString(), false);
-						addr.setLonLat(hn.getLonLat());
-						return addr;
+			Map<String, Postcode> list;
+			list = addressHolder.search(addrBuild,
+					SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.EQUALS);
+			if(list.size() < 1) { list = addressHolder.search(addrBuild,
+					SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.ANY);
+			}
+			if(list.size() < 1) { list = addressHolder.search(addrBuild,
+					SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.ANY, SearchEnum.EQUALS);
+			}
+			if(list.size() < 1) { list = addressHolder.search(addrBuild,
+					SearchEnum.LEVENSHTEIN, SearchEnum.EQUALS, SearchEnum.ANY, SearchEnum.EQUALS);
+			}
+			if(list.size() < 1) { list = addressHolder.search(addrBuild,
+					SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.ANY, SearchEnum.LEVENSHTEIN);
+			}
+			
+			if(list.size() == 1) {
+				for(Postcode pc : list.values()){
+					for(Street st : pc.getStreets().values()){
+						for(Housenumber hn : st.getHousenumbers().values()){
+							Address addr = AddressParser.parse(hn.toString(), false);
+							addr.setLonLat(hn.getLonLat());
+							return addr;
+						}
 					}
 				}
 			}
-		}
 		return null;
 	}
 
@@ -158,7 +162,7 @@ public class AddressController {
 	
 	private void makeTree(){
 		List<Housenumber> housenumbers = addressHolder.getHousenumbers();
-		System.out.println("AddressController -> MakeTree size: " + housenumbers.size());
+		Main.log("AddressController -> MakeTree size: " + housenumbers.size());
 		housenumberTree = new KDTreeNode<>(housenumbers);
 	}
 }

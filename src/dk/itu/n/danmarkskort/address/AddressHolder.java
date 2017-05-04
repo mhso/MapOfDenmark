@@ -2,6 +2,7 @@ package dk.itu.n.danmarkskort.address;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -127,6 +128,7 @@ public class AddressHolder implements Serializable {
 	
 	private Map<String, Postcode> searchPostcode(Map<String, Postcode> input, Address addr, SearchEnum postcodeType, SearchEnum cityType){
 		Map<String, Postcode> result = new HashMap<String, Postcode>();
+		if(addr == null) return result;
 			switch(postcodeType){
 			case CONTAINS:
 				result = postcodeContains(input, addr.getPostcode());
