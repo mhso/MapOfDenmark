@@ -2,7 +2,6 @@ package dk.itu.n.danmarkskort.gui.map;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.MouseInfo;
@@ -381,13 +380,13 @@ public class MapCanvas extends JPanel {
 		
 		transform.setTransform(newTransform);
 		actualTransform.setTransform(newTransform);
+		panToPosition(region.getMiddlePoint());
+		
 		Main.tileController.zoom(1);
 		
-		//Graphics2D g2d = (Graphics2D) getGraphics();
-		//BufferedImage image = new BufferedImage(800, 600, BufferedImage.TYPE_INT_ARGB);
-//		image.createGraphics().drawImage(image, 0, 0, null);
-		//return image;
-		return null;
+		BufferedImage image = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
+        
+		return image;
 	}
 	
 	public void pan(double dx, double dy) {
