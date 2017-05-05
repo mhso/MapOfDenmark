@@ -14,14 +14,11 @@ public class TileRenderTask extends Task {
 	}
 	
 	public void work() {
-		if(tile.isUseless()) return;
+		if(Main.tileController.isBlurred() || tile.isUseless()) return;
 		tile.render();
 		if(swapWhenDone) Main.tileController.swapTileWithUselessTile(tile);
 		if(repaintWhenDone) Main.mainPanel.repaint();
 	}
-
-	public void onRunStart() {}
-	public void onRunEnd() {}
 
 	public void setRepaintWhenDone(boolean repaintWhenDone) {
 		this.repaintWhenDone = repaintWhenDone;
@@ -30,5 +27,8 @@ public class TileRenderTask extends Task {
 	public void setSwapWhenDone(boolean swapWhenDone) {
 		this.swapWhenDone = swapWhenDone;
 	}
+	
+	public void onRunStart() {}
+	public void onRunEnd() {}
 	
 }
