@@ -23,7 +23,7 @@ public class Main {
 	public final static String APP_NAME = "Yak Maps";
 	public final static String APP_VERSION = "0.8";
 	public final static boolean debug = true;
-	public final static boolean debugExtra = false;
+	public final static boolean debugExtra = true;
 	public final static boolean production = false;
 	public final static boolean buffered = true;
 	public final static boolean saveParsedAddresses = true;
@@ -122,11 +122,11 @@ public class Main {
         window.setPreferredSize(new Dimension(DKConstants.WINDOW_WIDTH, DKConstants.WINDOW_HEIGHT));
         if(userPreferences.isMaximizeOnStartup()) window.setExtendedState(window.getExtendedState() | JFrame.MAXIMIZED_BOTH);
         window.addComponentListener(new ComponentListener() {
-            public void componentResized(ComponentEvent e) {         
-            	Main.windowResized(e);
-            }public void componentHidden(ComponentEvent arg0) {}public void componentMoved(ComponentEvent arg0) {}public void componentShown(ComponentEvent arg0) {}
+            public void componentResized(ComponentEvent e) {Main.windowResized(e);}
+            public void componentHidden(ComponentEvent arg0) {}
+            public void componentMoved(ComponentEvent arg0) {}
+            public void componentShown(ComponentEvent arg0) {}
         });
-
         window.pack();
 		window.setLocationRelativeTo(null);
         window.setVisible(true);

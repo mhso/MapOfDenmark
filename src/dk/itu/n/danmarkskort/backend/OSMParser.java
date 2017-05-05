@@ -1,6 +1,5 @@
 package dk.itu.n.danmarkskort.backend;
 
-import dk.itu.n.danmarkskort.DKConstants;
 import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.models.*;
 import dk.itu.n.danmarkskort.kdtree.*;
@@ -26,7 +25,7 @@ public class OSMParser extends SAXAdapter implements Serializable {
 
     private transient EnumMap<WayType, ArrayList<ParsedItem>> enumMap;
     private transient EnumMap<WayType, ArrayList<ParsedPlace>> places;
-    private EnumMap<WayType, KDTree<ParsedItem>> enumMapKD;
+    public EnumMap<WayType, KDTree<ParsedItem>> enumMapKD;
     private EnumMap<WayType, KDTree<ParsedPlace>> enumMapPlacesKD;
 
     private transient ParsedWay way;

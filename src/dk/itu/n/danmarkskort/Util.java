@@ -1,6 +1,8 @@
 
 package dk.itu.n.danmarkskort;
 
+import java.awt.AWTException;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -11,6 +13,7 @@ import java.io.IOException;
 import java.io.LineNumberReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
@@ -23,9 +26,11 @@ import dk.itu.n.danmarkskort.models.Region;
 
 import java.awt.MouseInfo;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.Robot;
 import java.awt.Toolkit;import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
+import java.awt.image.BufferedImage;
 
 public class Util {
 	
@@ -227,6 +232,48 @@ public class Util {
 	public static void zoomToRegion(AffineTransform transform, Region region, double currentWidth) {
 		Util.pan(transform, -region.x1, -region.y2);
 		Util.zoom(transform, currentWidth / (region.x2 - region.x1));
+	}
+	
+	public static void openWebpage(String urlString) {
+	    try {
+	        Desktop.getDesktop().browse(new URL(urlString).toURI());
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	}
+	
+	public static BufferedImage screenshot() {
+		Rectangle screenRect = new Rectangle(Toolkit.getDefaultToolkit().getScreenSize());
+		try {
+			BufferedImage capture = new Robot().createScreenCapture(screenRect);
+			return capture;
+		} catch (AWTException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	public static BufferedImage screenshotWithoutGUI() {
+		Main.mainPanel.hideGUI();
+		Main.mainPanel.repaint();
+		
+		Rectangle screenRect = new Rectangle(
+			Main.map.getLocationOnScreen().x, 
+			Main.map.getLocationOnScreen().y, 
+			Main.map.getWidth(), 
+			Main.map.getHeight()
+		);
+		try {
+			BufferedImage capture = new Robot().createScreenCapture(screenRect);
+			Main.mainPanel.showGUI();
+			return capture;
+		} catch (AWTException e) {
+			e.printStackTrace();
+			Main.mainPanel.showGUI();
+			Main.mainPanel.repaint();
+			return null;
+		}
+		
 	}
 	
 	public static void zoomToRegionY(AffineTransform transform, Region region, double currentHeight) {

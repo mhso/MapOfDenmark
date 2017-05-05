@@ -1,35 +1,36 @@
 package dk.itu.n.danmarkskort.gui.map.multithreading;
 
 import java.awt.Graphics2D;
+import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
 import javax.swing.Timer;
-
 import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.Util;
-import dk.itu.n.danmarkskort.models.Region;
 import dk.itu.n.danmarkskort.multithreading.Queue;
 import dk.itu.n.danmarkskort.multithreading.TaskPriority;
 
 public class TileController implements ActionListener {
 
-	public int tileWidth, tileHeight;
-	public Point2D zero;
-	public Point tilePos;
-	public boolean isInitialized, blur;
-	public Queue tileQueue;
-	public HashMap<String, Tile> tiles;
-	public double imageScale, tileX, tileY;
-	public Timer blurTimer;
-	public AffineTransform tileTransform;
+	private int tileWidth, tileHeight;
+	private boolean isInitialized, blur;
 	public boolean blockNextPan = false;
+	public double imageScale, tileX, tileY;
+	public Point tilePos;
+	public Point2D zero;
+	public AffineTransform tileTransform;
+	public AffineTransform zoomTransform;
+	public HashMap<String, Tile> tiles;
+	public Queue tileQueue;
+	public Timer blurTimer;
+	public BufferedImage zoomImage;
 	
 	public TileController() {
 		isInitialized = false;
@@ -47,15 +48,14 @@ public class TileController implements ActionListener {
 		imageScale = 1;
 		blurTimer = new Timer(500, this);
 		blurTimer.setRepeats(false);
-
 		Tile tile = new Tile(new Point(0, -1));
 		tiles.put(tile.getKey(), tile);
 		queueTile(tile, TaskPriority.MEDIUM, true, false);
 		tileTransform = new AffineTransform();
-		
+		zoomTransform = new AffineTransform();
+		zoomImage = null;
 		tileX = 0;
 		tileY = 0;
-		
 		isInitialized = true;
 	}
 	
@@ -71,17 +71,23 @@ public class TileController implements ActionListener {
 		if(!Main.buffered) return;
 		imageScale *= scale;
 		if(!isBlurred()) blur();
+		else Util.zoom(zoomTransform, scale);
 		blurTimer.restart();
+	}
+	
+	public void prepareZoomImage() {
+		zoomImage = Util.screenshotWithoutGUI();
+		zoomTransform = new AffineTransform();
+		Point mousePositionScreen = MouseInfo.getPointerInfo().getLocation();
+		zoomTransform.translate(-mousePositionScreen.x + Main.map.getLocationOnScreen().x, -mousePositionScreen.y + Main.map.getLocationOnScreen().y);
 	}
 	
 	public boolean updateTilePos() {
 		boolean outcome;
-		
 		int x = (int) tileX;
 		int y = (int) tileY;
 		outcome = (x != tilePos.x || y != tilePos.y);
 		tilePos = new Point(x, y);
-		
 		return outcome;
 	}
 	
@@ -94,6 +100,7 @@ public class TileController implements ActionListener {
 	}
 	
 	public void queueTile(Tile tile, TaskPriority priority, boolean repaintAfterRender, boolean swapWhenDone) {
+		if(isBlurred()) return;
 		TileRenderTask task = new TileRenderTask(tile);
 		task.setRepaintWhenDone(repaintAfterRender);
 		task.setPriority(priority);
@@ -104,6 +111,11 @@ public class TileController implements ActionListener {
 	public void setTileSize(int tileWidth, int tileHeight) {
 		this.tileWidth = tileWidth;
 		this.tileHeight = tileHeight;
+		fullRepaint();
+	}
+	
+	public void fullRepaint() {
+		zoom(1);
 	}
 	
 	public int getTileWidth() {
@@ -132,11 +144,16 @@ public class TileController implements ActionListener {
 	
 	public void draw(Graphics2D g2d) {
 		if(!isInitialized()) return;
-		String[] tileKeys = tiles.keySet().toArray(new String[tiles.size()]);
-		for(String key : tileKeys) {
-			Tile tile = tiles.get(key);
-			if(tile == null) continue;
-			tile.draw(g2d);
+		if(isBlurred() && zoomImage != null) {
+			g2d.setTransform(zoomTransform);
+			g2d.drawImage(zoomImage, 0, 0, null);
+		} else {			
+			String[] tileKeys = tiles.keySet().toArray(new String[tiles.size()]);
+			for(String key : tileKeys) {
+				Tile tile = tiles.get(key);
+				if(tile == null) continue;
+				tile.draw(g2d);
+			}
 		}
 	}
 	
@@ -146,19 +163,27 @@ public class TileController implements ActionListener {
 	
 	public void blur() {
 		if(!isInitialized()) return;
+		prepareZoomImage();
+		tiles.clear();
 		blur = true;
 	}
 	
 	public void unblur() {
+		
+		// Update transform.
 		updateZero();
 		updateTilePos();
 		tiles.clear();
+		zoomImage = null;
 		imageScale = 1;
+		blur = false;
 		
+		// Render the viewport tile.
 		Tile tileView = new Tile(new Point(0, -1));
 		tiles.put(tileView.getKey(), tileView);
 		queueTile(tileView, TaskPriority.HIGH, true, false);
 		
+		// Render the surrounding tiles.
 		for(int x=-1; x<2; x++) {
 			for(int y=-2; y<1; y++) {
 				if(x == 0 && y == -1) continue;
@@ -168,7 +193,7 @@ public class TileController implements ActionListener {
 			}
 		}
 		
-		blur = false;
+		
 	}
 
 	public void actionPerformed(ActionEvent e) {
@@ -181,9 +206,7 @@ public class TileController implements ActionListener {
 	}
 	
 	public void swapTileWithUselessTile(Tile newTile) {
-		
 		String[] tileKeys = tiles.keySet().toArray(new String[tiles.size()]);
-		
 		for(String key : tileKeys) {
 			Tile oldTile = tiles.get(key);
 			if(oldTile == null) continue;
@@ -197,9 +220,8 @@ public class TileController implements ActionListener {
 	public void checkForNewTiles() {
 		if(!Main.buffered) return;
 		List<Tile> newTiles = getNewTiles();
-		for(Tile tile : newTiles) {
-			queueTile(tile, TaskPriority.HIGHEST, true, true);
-		}
+		for(Tile tile : newTiles) queueTile(tile, TaskPriority.HIGHEST, true, true);
+		
 	}
 	
 	public List<Tile> getNewTiles() {
@@ -214,17 +236,15 @@ public class TileController implements ActionListener {
 	}
 	
 	public void pan(double tx, double ty) {
+		if(isBlurred()) Util.pan(zoomTransform, tx, ty);
 		if(!Main.buffered) return;
 		if(blockNextPan) {
 			blockNextPan = false;
 			return;
 		}
-		
 		tileTransform.translate(tx, ty);
-		
 		tileX = -Util.roundByN(0.5, tileTransform.getTranslateX() / getTileWidth());
 		tileY = -Util.roundByN(0.5, tileTransform.getTranslateY() / getTileHeight());
-		
 	}
 	
 	public void resetTileTransform() {
