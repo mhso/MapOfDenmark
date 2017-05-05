@@ -175,7 +175,7 @@ public class BottomPanel extends JPanel implements CanvasListener {
             double shortest = Double.POSITIVE_INFINITY;
             WayType type = null;
             for(WayType waytype: highways) {
-                KDTree<ParsedItem> tree = Main.model.enumMapKD.get(waytype);
+                KDTree<ParsedItem> tree = Main.model.getEnumMapKD().get(waytype);
                 if(tree == null) continue;
                 ParsedItem candidate = tree.nearest(query);
                 if(candidate == null) continue;
@@ -190,9 +190,11 @@ public class BottomPanel extends JPanel implements CanvasListener {
             }
             String text = " ";
             if(nearest != null) {
-            	if(Main.map.getHighlightedShape() == null || 
-            			nearest.getShape().getBounds2D().getCenterX() != Main.map.getHighlightedShape().getBounds2D().getCenterX()) {
-            		Main.map.highlightWay(type, nearest.getShape());
+            	if(Main.userPreferences.isHighlightingNearestRoad()) {
+            		if(Main.map.getHighlightedShape() == null || 
+                			nearest.getShape().getBounds2D().getCenterX() != Main.map.getHighlightedShape().getBounds2D().getCenterX()) {
+                		Main.map.highlightWay(type, nearest.getShape());
+                	}
             	}
             	if(nearest.getName() != null) text = nearest.getName();
             }

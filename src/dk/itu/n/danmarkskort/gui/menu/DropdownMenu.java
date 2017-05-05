@@ -9,7 +9,8 @@ public class DropdownMenu extends CustomDropdown {
 	
 	private static final long serialVersionUID = 8481689365025322045L;
     private JPanel menuItems, wrapper;
-    private JPanel routePage, aboutUsPage, settingsPage, mapLayersPage, loadPage, savePage, pinPointPage;
+    private JPanel aboutUsPage, settingsPage, mapLayersPage, loadPage, savePage, pinPointPage;
+    private RoutePage routePage;
 
     private GridBagConstraints gbcContainer;
     private JScrollPane contentPane;
@@ -29,6 +30,8 @@ public class DropdownMenu extends CustomDropdown {
         mapLayersPage = new MapLayersPage(this);
         aboutUsPage = new AboutUsPage();
         pinPointPage = new PinPointPage();
+        
+        routePage = new RoutePage(this, "");
         
         wrapper = new JPanel(new GridBagLayout());
         gbcContainer = new GridBagConstraints();
@@ -87,6 +90,12 @@ public class DropdownMenu extends CustomDropdown {
         menuItems.setPreferredSize(new Dimension(topPanel.getMenuWidth(), menuItems.getPreferredSize().height));
         gbcContainer.gridx = 0;
         wrapper.add(menuItems, gbcContainer);
+    }
+    
+    public void openRoutePage(String fromText, String toText, boolean forceReplace) {
+    	addToContentPane(routePage);
+    	if(fromText != null && (routePage.isFromFieldEmpty() || forceReplace)) routePage.setFromText(fromText);
+    	if(toText != null && (routePage.isToFieldEmpty() || forceReplace)) routePage.setToText(toText);
     }
 
     private void addcontentPane() {

@@ -35,12 +35,12 @@ public class DropdownRightClick extends CustomDropdown {
 		else if(text.equals("Route from here")) {
 			Main.mainPanel.getDropMenu().showDropdown();
 			Point2D mousePoint = Util.toRealCoords(Main.map.getGeographicalMousePosition());
-			System.out.println(mousePoint.getX() + ", " + mousePoint.getY());
-			Main.mainPanel.getDropMenu().addToContentPane(new RoutePage(Main.mainPanel.getDropMenu(), 
-					(float)mousePoint.getX() + ", " + (float)mousePoint.getY()));
+			Main.mainPanel.getDropMenu().openRoutePage((float)mousePoint.getY() + ", " + (float)mousePoint.getX(), null, true);
 		}
 		else if(text.equals("Route to here")) {
-			
+			Main.mainPanel.getDropMenu().showDropdown();
+			Point2D mousePoint = Util.toRealCoords(Main.map.getGeographicalMousePosition());
+			Main.mainPanel.getDropMenu().openRoutePage(null, (float)mousePoint.getY() + ", " + (float)mousePoint.getX(), true);
 		} else if(text.equals("Find tweets near this position")) {
 			Point2D mousePoint = Util.toRealCoords(Main.map.getGeographicalMousePosition());
 			String url = "https://twitter.com/search?l=&q=near%3A%22" + mousePoint.getY() + "%2C" + mousePoint.getX() + "%20%22%20within%3A15mi&src=typd";

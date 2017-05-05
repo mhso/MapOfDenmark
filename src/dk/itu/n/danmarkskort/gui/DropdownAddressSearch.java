@@ -16,12 +16,16 @@ public class DropdownAddressSearch extends CustomDropdown {
      * Create the panel.
      */
     public DropdownAddressSearch(Component widthComponent, Style style) {
-        this.style = style;
-        this.widthComponent = widthComponent;
-        UIManager.put("MenuItem.background", style.dropdownItemBG());
-        UIManager.put("MenuItem:foreground", style.dropdowItemTextColor());
-        UIManager.put("MenuItem.selectionBackground", style.dropdownItemBGActive());
-        UIManager.put("MenuItem.selectionForeground", style.dropdownItemTextColorActive());
+    	this(style);
+    	this.widthComponent = widthComponent; 
+    }
+    
+    public DropdownAddressSearch(Style style) {
+    	this.style = style;
+    	 UIManager.put("MenuItem.background", style.dropdownItemBG());
+         UIManager.put("MenuItem:foreground", style.dropdowItemTextColor());
+         UIManager.put("MenuItem.selectionBackground", style.dropdownItemBGActive());
+         UIManager.put("MenuItem.selectionForeground", style.dropdownItemTextColorActive());
     }
 
     /**
@@ -71,6 +75,10 @@ public class DropdownAddressSearch extends CustomDropdown {
 		selectedItem.setBackground(style.dropdownItemBGActive());
 		selectedItem.setForeground(style.dropdownItemTextColorActive());
 		selectedIndex = index;
+	}
+	
+	public void setWidthComponent(Component widthComponent) {
+		this.widthComponent = widthComponent;
 	}
 
 	/**

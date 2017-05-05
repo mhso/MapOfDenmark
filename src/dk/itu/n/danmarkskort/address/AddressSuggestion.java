@@ -12,6 +12,7 @@ public class AddressSuggestion {
 	private String lastSearchInput = null;
 	private Address lastSearchAddress = null;
 	private boolean debug = false;
+	
 	AddressSuggestion(){
 		
 	}
@@ -19,7 +20,6 @@ public class AddressSuggestion {
 	public List<String> searchSuggestions(String find, long limitAmountOfResults){
 		return analyzeUserinput(find, limitAmountOfResults);
 	}
-	
 	
 	private Address continueSearchSuggestions(String find){
 		if(lastSearchInput != null && find != null && lastSearchInput.length() <= find.length()){	

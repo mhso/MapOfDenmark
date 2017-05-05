@@ -16,7 +16,6 @@ public class Postcode implements Serializable {
 	private String postcode, city;
 	private Map<String, Street> streets;
 	private RegionFloat region;
-	private boolean debug = false;
 	
 	Postcode(String postcode, String city){
 		this.postcode = ReuseStringObj.make(postcode);
@@ -42,18 +41,6 @@ public class Postcode implements Serializable {
 				if(stR.y2 < region.y2) region.y2 = stR.y2;
 		}
 		return region;
-	}
-	
-	public Map<RegionFloat, Street> searchRegionWithin(RegionFloat input){
-		Map<RegionFloat, Street> regions = new HashMap<RegionFloat, Street>();
-		for(Street st : streets.values()) {
-			RegionFloat stR = st.getRegion();
-			if(stR.isWithin(input)){
-				regions.put(st.getRegion(), st);
-				if(debug) System.out.println("MATCH: ADD: " + st.getStreet());
-			}
-		}
-		return regions;
 	}
 	
 	public int count(){
@@ -120,7 +107,7 @@ public class Postcode implements Serializable {
 					result.put(entry.getKey(), entry.getValue());
 				}
 			} catch (StringIndexOutOfBoundsException e) {
-				//e.printStackTrace();
+
 			}
 		}
 		return result;

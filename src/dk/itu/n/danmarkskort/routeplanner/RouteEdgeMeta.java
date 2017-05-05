@@ -1,6 +1,9 @@
 package dk.itu.n.danmarkskort.routeplanner;
 
-public class RouteEdgeMeta {
+import java.io.Serializable;
+
+public class RouteEdgeMeta implements Serializable {
+	private static final long serialVersionUID = 4626171199056902618L;
 	private int maxSpeed;
 	private final boolean forwardAllowed, backwardAllowed, carsAllowed, bikesAllowed, walkAllowed;
 	
@@ -12,7 +15,7 @@ public class RouteEdgeMeta {
 		this.backwardAllowed = backwardAllowed;
 		this.carsAllowed = carsAllowed;
 		this.bikesAllowed = bikesAllowed;
-		this.walkAllowed = bikesAllowed;
+		this.walkAllowed = walkAllowed;
 	}
 
 	public int getMaxSpeed() { return maxSpeed; }
@@ -25,5 +28,4 @@ public class RouteEdgeMeta {
 	public String getKey(){
 		return maxSpeed + "_" + forwardAllowed + "_" + backwardAllowed + "_" + carsAllowed + "_" + bikesAllowed + "_" + walkAllowed;
 	}
-	
 }

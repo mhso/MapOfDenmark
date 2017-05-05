@@ -26,7 +26,7 @@ public class MapMouseController extends MouseAdapter {
 		canvas.addMouseMotionListener(this);
 		canvas.addMouseWheelListener(this);
 	}
-	
+
 	public void mouseClicked(MouseEvent e) {
 		if(SwingUtilities.isRightMouseButton(e)) {
 			DropdownRightClick drc = new DropdownRightClick();
@@ -42,13 +42,13 @@ public class MapMouseController extends MouseAdapter {
 		if(Main.pinPointManager != null) Main.pinPointManager.checkHover();
 		canvas.mouseMoved();
 	}
-	
+
 	public void mouseDragged(MouseEvent e) {
 		Point2D currentMousePosition = e.getPoint();
 		double dx = currentMousePosition.getX() - lastMousePosition.getX();
 		double dy = currentMousePosition.getY() - lastMousePosition.getY();
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		
+
 		int warp = Util.mouseWarp();
 		if(warp == 0) {
 			dx -= screenSize.getWidth();
@@ -59,17 +59,16 @@ public class MapMouseController extends MouseAdapter {
 		} else if(warp == 3) {
 			dy += screenSize.getHeight();
 		}
-		
+
 		canvas.pan(dx, dy);
 		lastMousePosition = currentMousePosition;
-		
+
 		Main.window.repaint();
 	}
 
 	public void mouseWheelMoved(MouseWheelEvent e) {
-		
 		double factor = Math.pow(0.9, e.getWheelRotation());
-		
+
 		Point2D currentMousePosition = e.getPoint();
 		double dx = currentMousePosition.getX();
 		double dy = currentMousePosition.getY();

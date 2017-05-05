@@ -19,8 +19,9 @@ import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Map;
 
-import dk.itu.n.danmarkskort.backend.InputMonitor;
-import dk.itu.n.danmarkskort.backend.InputStreamListener;
+import dk.itu.n.danmarkskort.backend.BinaryWrapper;
+import dk.itu.n.danmarkskort.backend.ProgressMonitor;
+import dk.itu.n.danmarkskort.backend.ProgressListener;
 import dk.itu.n.danmarkskort.models.Region;
 
 import java.awt.MouseInfo;
@@ -131,6 +132,12 @@ public class Util {
 		}
 	}
 	
+	public static double distanceInMeters(Point2D p1, Point2D p2) {
+        double latM = 1000*((p2.getY()-p1.getY())*110.574);
+        double lonM = 1000*((p2.getX()-p1.getX())*111.320*Math.cos(Math.toRadians(p2.getY())));
+        return Math.sqrt((lonM * lonM) + (latM * latM));
+    }
+	
 	public static Point2D toRealCoords(Point2D fakeCoords) {
 		return new Point2D.Float((float)fakeCoords.getX()/Main.model.getLonFactor(), (float)-fakeCoords.getY());
 	}
@@ -146,6 +153,22 @@ public class Util {
 				simpleFileName + ".bin";
 	}
 	
+	public static void extractAllFromBinary(BinaryWrapper binary) {
+		Main.model = binary.getModel();
+		Main.addressController.setAddressHolder(binary.getAddressHolder());
+		Main.addressController.setHousenumberTree(binary.getHousenumberTree());
+		Main.routeController.setEdgeTree(binary.getEdgeTree());
+		Main.routeController.setGraph(binary.getRouteGraph());
+	}
+	
+	public static void addAllToBinary(BinaryWrapper binary) {
+		binary.setModel(Main.model);
+        binary.setAddressHolder(Main.addressController.getAddressHolder());
+        binary.setEdgeTree(Main.routeController.getEdgeTree());
+        binary.setHousenumberTree(Main.addressController.gethousenumberTree());
+        binary.setRouteGraph(Main.routeController.getGraph());
+	}
+	
 	public static boolean writeObjectToFile(Object object, String filename) {
 		try {
 			FileOutputStream fout = new FileOutputStream(filename);
@@ -159,12 +182,12 @@ public class Util {
 		}
 	}
 	
-	public static Object readObjectFromFile(String fileName, List<InputStreamListener> listeners) {		
+	public static Object readObjectFromFile(String fileName, List<ProgressListener> listeners) {		
 		try {
 			BufferedInputStream fout = new BufferedInputStream(new FileInputStream(fileName));
-			InputMonitor monitor = new InputMonitor(fout, fileName);
+			ProgressMonitor monitor = new ProgressMonitor(fout);
 			ObjectInputStream oos = new ObjectInputStream(monitor);
-			for(InputStreamListener listener : listeners) monitor.addListener(listener);
+			for(ProgressListener listener : listeners) monitor.addListener(listener);
 			Object object = oos.readObject();
 			oos.close();
 			return object;
@@ -253,4 +276,8 @@ public class Util {
 		
 	}
 	
+	public static void zoomToRegionY(AffineTransform transform, Region region, double currentHeight) {
+		Util.pan(transform, -region.x1, -region.y2);
+		Util.zoom(transform, currentHeight / (region.y2 - region.y1));
+	}
 }

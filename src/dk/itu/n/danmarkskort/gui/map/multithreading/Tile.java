@@ -50,6 +50,10 @@ public class Tile {
 		return transform;
 	}
 	
+	public BufferedImage getImage() {
+		return image;
+	}
+	
 	public void render() {
 		Main.map.drawMapShapesForTile(this);
 		isRendered = true;

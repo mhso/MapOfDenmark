@@ -16,4 +16,8 @@ public class ReuseRouteEdgeMetaObj {
 				return routeEdgeMeta;
 		}
 	}
+	
+	public static void clear(){
+		map.clear();
+	}
 }

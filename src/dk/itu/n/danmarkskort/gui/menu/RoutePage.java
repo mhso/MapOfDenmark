@@ -11,6 +11,7 @@ import javax.swing.text.DocumentFilter;
 import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.address.Address;
 import dk.itu.n.danmarkskort.gui.DropdownAddressSearch;
+import dk.itu.n.danmarkskort.gui.SearchField;
 import dk.itu.n.danmarkskort.gui.Style;
 import dk.itu.n.danmarkskort.gui.map.PinPoint;
 import dk.itu.n.danmarkskort.gui.routeplanner.RoutePlannerMain;
@@ -37,9 +38,11 @@ public class RoutePage extends JPanel {
     private ImageIcon ADDR_ICON_VALID, ADDR_ICON_INVALID;
 	private DropdownMenu menu;
 	private JRadioButton rdbtnCar, rdbtnBike, rdbtnWalk, rdbtnFastest, rdbtnShortest;
+	private List<String> dropSuggestionsList;
 	
     public RoutePage(DropdownMenu menu, String txtAddreToSetField) {
     	this.menu = menu;
+    	dropSuggestionsList = new ArrayList<>();
     	if(Main.production) {
     		try {
 				ADDR_ICON_VALID = new ImageIcon(ImageIO.read(getClass().getResourceAsStream("/resources/icons/happiness.png")));
@@ -99,7 +102,9 @@ public class RoutePage extends JPanel {
         gbc_lblFrom.gridy = 1;
         panelCenter.add(lblFrom, gbc_lblFrom);
         
-        txtAddrFrom = new JTextField();
+        dropSuggestionsAddrFrom = new DropdownAddressSearch(style);
+        
+        txtAddrFrom = new SearchField(dropSuggestionsAddrFrom, dropSuggestionsList, null);
         GridBagConstraints gbc_txtAddrfrom = new GridBagConstraints();
         gbc_txtAddrfrom.gridwidth = 4;
         gbc_txtAddrfrom.insets = new Insets(0, 0, 5, 5);
@@ -107,32 +112,9 @@ public class RoutePage extends JPanel {
         gbc_txtAddrfrom.gridx = 1;
         gbc_txtAddrfrom.gridy = 1;
         panelCenter.add(txtAddrFrom, gbc_txtAddrfrom);
-        dropSuggestionsAddrFrom = new DropdownAddressSearch(txtAddrFrom, style);
         ((AbstractDocument) txtAddrFrom.getDocument()).setDocumentFilter(new SearchFilter(txtAddrFrom, dropSuggestionsAddrFrom));
-        txtAddrFrom.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(KeyEvent e) {
-				if(!dropSuggestionsAddrFrom.isEmpty()) {
-					if(e.getKeyCode() == KeyEvent.VK_DOWN) {
-						if(dropSuggestionsAddrFrom.getSelectedIndex() < dropSuggestionsAddrFrom.getComponents().length-1) {	
-							dropSuggestionsAddrFrom.setSelectedElement(dropSuggestionsAddrFrom.getSelectedIndex()+1);
-						}
-					}
-					else if(e.getKeyCode() == KeyEvent.VK_UP) {
-						if(dropSuggestionsAddrFrom.getSelectedIndex() > 0) {
-							dropSuggestionsAddrFrom.setSelectedElement(dropSuggestionsAddrFrom.getSelectedIndex()-1);
-						}
-					}
-					else if(e.getKeyCode() == KeyEvent.VK_ENTER) {
-						if(dropSuggestionsAddrFrom.getSelectedIndex() > 0) {
-							dropSuggestionsAddrFrom.itemClicked();
-						}
-					}
-				}
-			}
-        	
-        });
         
+        dropSuggestionsAddrFrom.setWidthComponent(txtAddrFrom);
         
         JButton btnSwapToFrom = style.arrowUpDownButton();
         btnSwapToFrom.addActionListener(e -> swapToFromFields());
@@ -169,7 +151,9 @@ public class RoutePage extends JPanel {
         gbc_lblTo.gridy = 2;
         panelCenter.add(lblTo, gbc_lblTo);
         
-        txtAddrTo = new JTextField();
+        dropSuggestionsAddrTo = new DropdownAddressSearch(style);
+        
+        txtAddrTo = new SearchField(dropSuggestionsAddrTo, dropSuggestionsList, null);
         txtAddrTo.setText(txtAddreToSetField);
         GridBagConstraints gbc_txtAddreto = new GridBagConstraints();
         gbc_txtAddreto.gridwidth = 4;
@@ -178,31 +162,9 @@ public class RoutePage extends JPanel {
         gbc_txtAddreto.gridx = 1;
         gbc_txtAddreto.gridy = 2;
         panelCenter.add(txtAddrTo, gbc_txtAddreto);
-        dropSuggestionsAddrTo = new DropdownAddressSearch(txtAddrTo, style);
         ((AbstractDocument) txtAddrTo.getDocument()).setDocumentFilter(new SearchFilter(txtAddrTo, dropSuggestionsAddrTo));
-        txtAddrTo.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(KeyEvent e) {
-				if(!dropSuggestionsAddrTo.isEmpty()) {
-					if(e.getKeyCode() == KeyEvent.VK_DOWN) {
-						if(dropSuggestionsAddrTo.getSelectedIndex() < dropSuggestionsAddrTo.getComponents().length-1) {	
-							dropSuggestionsAddrTo.setSelectedElement(dropSuggestionsAddrTo.getSelectedIndex()+1);
-						}
-					}
-					else if(e.getKeyCode() == KeyEvent.VK_UP) {
-						if(dropSuggestionsAddrTo.getSelectedIndex() > 0) {
-							dropSuggestionsAddrTo.setSelectedElement(dropSuggestionsAddrTo.getSelectedIndex()-1);
-						}
-					}
-					else if(e.getKeyCode() == KeyEvent.VK_ENTER) {
-						if(dropSuggestionsAddrTo.getSelectedIndex() > 0) {
-							dropSuggestionsAddrTo.itemClicked();
-						}
-					}
-				}
-			}
-        	
-        });
+        
+        dropSuggestionsAddrTo.setWidthComponent(txtAddrTo);
         
         JButton btnFind = new JButton("Find Route");
         btnFind.addActionListener( e -> openFindRoute());
@@ -295,6 +257,22 @@ public class RoutePage extends JPanel {
         validateToFromFields();
     }
     
+    public void setFromText(String from) {
+    	txtAddrFrom.setText(from);
+    }
+    
+    public void setToText(String to) {
+    	txtAddrTo.setText(to);
+    }
+    
+    public boolean isFromFieldEmpty() {
+    	return txtAddrFrom.getText().isEmpty();
+    }
+    
+    public boolean isToFieldEmpty() {
+    	return txtAddrTo.getText().isEmpty();
+    }
+    
     private void swapToFromFields() {
     	String addrFromTemp = txtAddrFrom.getText();
     	txtAddrFrom.setText(txtAddrTo.getText());
@@ -333,14 +311,16 @@ public class RoutePage extends JPanel {
     		BufferedImage bufferedImage = null;
     		
     		List<RouteModel> routemodels = Main.routeController.makeRoute(addrFrom.getLonLatAsPoint(), addrTo.getLonLatAsPoint(), weightEnum);
-			if(!routemodels.isEmpty()){
+    		if(!routemodels.isEmpty()){
 	    		try {
 					if(Main.production) bufferedImage = ImageIO.read(getClass().getResourceAsStream("/resources/routeplanner/demo_routeplanner.PNG"));
 					else bufferedImage = ImageIO.read(new File("resources/routeplanner/demo_routeplanner.PNG"));
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-				
+	    		
+    			Main.map.getRoutePreviewImage(Main.routeController.getRouteRegion());
+    			
 				makePinPoint(addrFrom, addrTo);
 				RoutePlannerMain routePlannerMain =  new RoutePlannerMain(bufferedImage, txtAddrFrom.getText(), txtAddrTo.getText(), routeDistance, routemodels);
 			}else {
@@ -360,8 +340,8 @@ public class RoutePage extends JPanel {
 		ArrayList<PinPoint> pinPoints = new ArrayList<PinPoint>();
 		PinPoint pinPointFrom = new PinPoint(addrFrom.getLonLatAsPoint(), txtAddrFrom.getText());
 		PinPoint pinPointTo = new PinPoint(addrTo.getLonLatAsPoint(), txtAddrTo.getText());
-		pinPointFrom.setIconIndex(5);
-		pinPointTo.setIconIndex(6);
+		pinPointFrom.setIconIndex(14);
+		pinPointTo.setIconIndex(13);
 		pinPoints.add(pinPointFrom);
 		pinPoints.add(pinPointTo);
 		Main.pinPointManager.setTemporaryPinPoints(pinPoints);
@@ -383,14 +363,14 @@ public class RoutePage extends JPanel {
 	private List<RouteModel> demoRoute(){
 		List<RouteModel> routeModels = new ArrayList<RouteModel>();
 		
-		routeModels.add(new RouteModel(RouteEnum.CONTINUE_ON, "Roskildevej", 600));
-		routeModels.add(new RouteModel(RouteEnum.TURN_LEFT, "Roskildevej", 600));
-		routeModels.add(new RouteModel(RouteEnum.CONTINUE_ON, "H. Hansenvej", 250));
-		routeModels.add(new RouteModel(RouteEnum.TURN_RIGHT, "Postmosen", 250));
-		routeModels.add(new RouteModel(RouteEnum.TURN_RIGHT, "Blågårdsgade", 250));
-		routeModels.add(new RouteModel(RouteEnum.CONTINUE_ON, "Sverigesvej", 250));
-		routeModels.add(new RouteModel(RouteEnum.TURN_RIGHT, "Amagerbrogade", 1500));
-		routeModels.add(new RouteModel(RouteEnum.AT_DESTINATION, "Rosenhaven 1", -1));
+		routeModels.add(new RouteModel(RouteEnum.CONTINUE_ON, "Roskildevej", 50, 600));
+		routeModels.add(new RouteModel(RouteEnum.TURN_LEFT, "Roskildevej", 60, 600));
+		routeModels.add(new RouteModel(RouteEnum.CONTINUE_ON, "H. Hansenvej", 50, 250));
+		routeModels.add(new RouteModel(RouteEnum.TURN_RIGHT, "Postmosen", 50, 250));
+		routeModels.add(new RouteModel(RouteEnum.TURN_RIGHT, "Blågårdsgade", 50, 250));
+		routeModels.add(new RouteModel(RouteEnum.CONTINUE_ON, "Sverigesvej", 50, 250));
+		routeModels.add(new RouteModel(RouteEnum.TURN_RIGHT, "Amagerbrogade", 80, 1500));
+		routeModels.add(new RouteModel(RouteEnum.AT_DESTINATION, "Rosenhaven 1", 50, -1));
 		return routeModels;
 	}
 	
@@ -447,7 +427,9 @@ public class RoutePage extends JPanel {
         
         public void dropdownSuggestions(int offset, String text) {
             if(offset > 1) {
-                populateSuggestions(das, input, SearchController.getSearchFieldSuggestions(text));
+            	dropSuggestionsList.removeAll(dropSuggestionsList);
+              	dropSuggestionsList.addAll(SearchController.getSearchFieldSuggestions(text));
+            	populateSuggestions(das, input, dropSuggestionsList);
                 revalidate();
                 repaint();
             } else {

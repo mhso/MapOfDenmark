@@ -15,6 +15,7 @@ import dk.itu.n.danmarkskort.gui.map.MapCanvas;
 import dk.itu.n.danmarkskort.gui.map.PinPointManager;
 import dk.itu.n.danmarkskort.gui.map.multithreading.TileController;
 import dk.itu.n.danmarkskort.mapgfx.GraphicRepresentation;
+import dk.itu.n.danmarkskort.models.ReuseStringObj;
 import dk.itu.n.danmarkskort.models.UserPreferences;
 import dk.itu.n.danmarkskort.routeplanner.RouteController;
 
@@ -26,12 +27,9 @@ public class Main {
 	public final static boolean production = false;
 	public final static boolean buffered = true;
 	public final static boolean saveParsedAddresses = true;
-	public final static boolean useLauncher = true;
 	public final static boolean nearest = true;
-	
-	public static boolean binaryfile = true;
-	public static boolean forceParsing;
 
+	public static boolean useLauncher = true;
 	public static OSMReader osmReader;
 	public static JFrame window;
 	public static OSMParser model;
@@ -44,7 +42,6 @@ public class Main {
 	public static RouteController routeController;
 	public static Style style;
 	
-	@SuppressWarnings("unused")
 	public static void main(String[] args) {
 		System.setProperty("awt.useSystemAAFontSettings","on");
 		System.setProperty("swing.aatext", "true");
@@ -53,7 +50,6 @@ public class Main {
 			userPreferences = new UserPreferences();
 			Util.writeObjectToFile(Main.userPreferences, DKConstants.USERPREF_PATH);
 		}
-		forceParsing = userPreferences.isForcingParsing();
         if(useLauncher || args.length < 1) new WindowLauncher();
         else launch(args);
 	}
@@ -67,6 +63,7 @@ public class Main {
 		addressController  =  new AddressController();
 		osmReader = new OSMReader();
 		model = new OSMParser(osmReader);
+		
 		routeController = new RouteController();
 		style = new Style();
 		if(args.length > 0) prepareParser(args);
@@ -93,7 +90,8 @@ public class Main {
 		Runnable r = new Runnable() {
 			@Override
 			public void run() {
-				osmReader.parseFile(args[0]);
+				osmReader.parseFile(args[0], model);
+				ReuseStringObj.clear();
 				if(window == null) main();
 		        shutdown();
 			}
