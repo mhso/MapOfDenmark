@@ -563,7 +563,6 @@ public class MapCanvas extends JPanel {
 		System.out.println(region);
 		pan(-region.x1, -region.y2);
 		zoom(getWidth() / (region.x2 - region.x1));
-		System.out.println(getActualGeographicalRegion());
 	}
 	
 	public void setupDone() {
@@ -572,9 +571,9 @@ public class MapCanvas extends JPanel {
 		for(CanvasListener listener : listeners) listener.onSetupDone();
 	}
 	
-	@Deprecated
 	public void forceRepaint() {
-		
+		zoomChanged = true;
+		repaint();
+		Main.tileController.zoom(1);
 	}
-
 }

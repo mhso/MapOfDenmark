@@ -145,28 +145,27 @@ public class SettingsPage extends JPanel {
         Component rigidArea = Box.createRigidArea(new Dimension(20, 20));
         panel.add(rigidArea);
         
-        JPanel panelColorblindTheme = new JPanel();
-        panelColorblindTheme.setOpaque(false);
-        panelColorblindTheme.setMaximumSize(new Dimension(SUBPANEL_WIDTH, SUBPANEL_HEIGHT));
-        panel.add(panelColorblindTheme);
-        panelColorblindTheme.setLayout(new BorderLayout(0, 0));
+        JPanel panelNightTheme = new JPanel();
+        panelNightTheme.setOpaque(false);
+        panelNightTheme.setMaximumSize(new Dimension(SUBPANEL_WIDTH, SUBPANEL_HEIGHT));
+        panel.add(panelNightTheme);
+        panelNightTheme.setLayout(new BorderLayout(0, 0));
         
-        JLabel labelColorblind = new JLabel("Colorblind");
-        panelColorblindTheme.add(labelColorblind, BorderLayout.WEST);
+        JLabel labelNight = new JLabel("Night");
+        panelNightTheme.add(labelNight, BorderLayout.WEST);
         
-        JLabel labelColorblindIcon = new JLabel();
-        labelColorblindIcon.setHorizontalAlignment(SwingConstants.LEFT);
-        panelColorblindTheme.add(labelColorblindIcon, BorderLayout.CENTER);
+        JLabel labelNightIcon = new JLabel(style.nightThemePreview());
+        panelNightTheme.add(labelNightIcon, BorderLayout.CENTER);
         
-        CustomToggleButton buttonColorblindToggle = style.toggleButton();
-        buttonColorblindToggle.addActionListener(e -> {
-        	if(!buttonColorblindToggle.isOn()) {
-        		Main.userPreferences.setCurrentMapTheme("Colorblind");
+        CustomToggleButton buttonNightToggle = style.toggleButton();
+        buttonNightToggle.addActionListener(e -> {
+        	if(!buttonNightToggle.isOn()) {
+        		Main.userPreferences.setCurrentMapTheme("Night");
         		changeCurrentTheme();
         	}
         });
-        buttonColorblindToggle.setOn(false);
-        panelColorblindTheme.add(buttonColorblindToggle, BorderLayout.EAST);
+        buttonNightToggle.setOn(false);
+        panelNightTheme.add(buttonNightToggle, BorderLayout.EAST);
         
         JPanel panelSouth = new JPanel();
         panelSouth.setOpaque(false);
@@ -178,21 +177,21 @@ public class SettingsPage extends JPanel {
         buttonBack.setFont(new Font("Tahoma", Font.PLAIN, 13));
         panelSouth.add(buttonBack, BorderLayout.WEST);
         
-        CustomToggleButton[] buttons = {buttonBasicToggle, buttonColorblindToggle};
+        CustomToggleButton[] buttons = {buttonBasicToggle, buttonNightToggle};
         for(CustomToggleButton button : buttons) {
         	button.addActionListener(new ButtonSelecter(button, buttons));
         }
         
         if(Main.userPreferences.getCurrentMapTheme().equals("Basic")) buttonBasicToggle.setOn(true);
-        else if(Main.userPreferences.getCurrentMapTheme().equals("Colorblind")) buttonColorblindToggle.setOn(true);
+        else if(Main.userPreferences.getCurrentMapTheme().equals("Night")) buttonNightToggle.setOn(true);
     }
     
     private void changeCurrentTheme() {
     	if(Main.production) GraphicRepresentation.parseData(
     			getClass().getResource("/resources/Theme" + Main.userPreferences.getCurrentMapTheme() + ".XML").toString());
     	else GraphicRepresentation.parseData("resources/Theme" + Main.userPreferences.getCurrentMapTheme() + ".XML");
-    	Main.map.forceRepaint();
     	Util.writeObjectToFile(Main.userPreferences, DKConstants.USERPREF_PATH);
+    	Main.map.forceRepaint();
     }
     
     private void createInterfaceThemePanel() {
