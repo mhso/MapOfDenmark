@@ -1,11 +1,13 @@
 package dk.itu.n.danmarkskort.gui.map.multithreading;
 
 import java.awt.Graphics2D;
+import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,9 +26,11 @@ public class TileController implements ActionListener {
 	public Point tilePos;
 	public Point2D zero;
 	public AffineTransform tileTransform;
+	public AffineTransform zoomTransform;
 	public HashMap<String, Tile> tiles;
 	public Queue tileQueue;
 	public Timer blurTimer;
+	public BufferedImage zoomImage;
 	
 	public TileController() {
 		isInitialized = false;
@@ -48,6 +52,8 @@ public class TileController implements ActionListener {
 		tiles.put(tile.getKey(), tile);
 		queueTile(tile, TaskPriority.MEDIUM, true, false);
 		tileTransform = new AffineTransform();
+		zoomTransform = new AffineTransform();
+		zoomImage = null;
 		tileX = 0;
 		tileY = 0;
 		isInitialized = true;
@@ -64,7 +70,15 @@ public class TileController implements ActionListener {
 	public void zoom(double scale) {
 		imageScale *= scale;
 		if(!isBlurred()) blur();
+		else Util.zoom(zoomTransform, scale);
 		blurTimer.restart();
+	}
+	
+	public void prepareZoomImage() {
+		zoomImage = Util.screenshotWithoutGUI();
+		zoomTransform = new AffineTransform();
+		Point mousePositionScreen = MouseInfo.getPointerInfo().getLocation();
+		zoomTransform.translate(-mousePositionScreen.x + Main.map.getLocationOnScreen().x, -mousePositionScreen.y + Main.map.getLocationOnScreen().y);
 	}
 	
 	public boolean updateTilePos() {
@@ -85,6 +99,7 @@ public class TileController implements ActionListener {
 	}
 	
 	public void queueTile(Tile tile, TaskPriority priority, boolean repaintAfterRender, boolean swapWhenDone) {
+		if(isBlurred()) return;
 		TileRenderTask task = new TileRenderTask(tile);
 		task.setRepaintWhenDone(repaintAfterRender);
 		task.setPriority(priority);
@@ -95,6 +110,11 @@ public class TileController implements ActionListener {
 	public void setTileSize(int tileWidth, int tileHeight) {
 		this.tileWidth = tileWidth;
 		this.tileHeight = tileHeight;
+		fullRepaint();
+	}
+	
+	public void fullRepaint() {
+		zoom(1);
 	}
 	
 	public int getTileWidth() {
@@ -123,11 +143,16 @@ public class TileController implements ActionListener {
 	
 	public void draw(Graphics2D g2d) {
 		if(!isInitialized()) return;
-		String[] tileKeys = tiles.keySet().toArray(new String[tiles.size()]);
-		for(String key : tileKeys) {
-			Tile tile = tiles.get(key);
-			if(tile == null) continue;
-			tile.draw(g2d);
+		if(isBlurred() && zoomImage != null) {
+			g2d.setTransform(zoomTransform);
+			g2d.drawImage(zoomImage, 0, 0, null);
+		} else {			
+			String[] tileKeys = tiles.keySet().toArray(new String[tiles.size()]);
+			for(String key : tileKeys) {
+				Tile tile = tiles.get(key);
+				if(tile == null) continue;
+				tile.draw(g2d);
+			}
 		}
 	}
 	
@@ -137,6 +162,8 @@ public class TileController implements ActionListener {
 	
 	public void blur() {
 		if(!isInitialized()) return;
+		prepareZoomImage();
+		tiles.clear();
 		blur = true;
 	}
 	
@@ -146,7 +173,9 @@ public class TileController implements ActionListener {
 		updateZero();
 		updateTilePos();
 		tiles.clear();
+		zoomImage = null;
 		imageScale = 1;
+		blur = false;
 		
 		// Render the viewport tile.
 		Tile tileView = new Tile(new Point(0, -1));
@@ -163,7 +192,7 @@ public class TileController implements ActionListener {
 			}
 		}
 		
-		blur = false;
+		
 	}
 
 	public void actionPerformed(ActionEvent e) {
@@ -205,6 +234,7 @@ public class TileController implements ActionListener {
 	}
 	
 	public void pan(double tx, double ty) {
+		if(isBlurred()) Util.pan(zoomTransform, tx, ty);
 		if(blockNextPan) {
 			blockNextPan = false;
 			return;

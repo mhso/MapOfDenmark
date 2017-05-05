@@ -1,6 +1,7 @@
 
 package dk.itu.n.danmarkskort;
 
+import java.awt.AWTException;
 import java.awt.Desktop;
 import java.awt.Dimension;
 import java.io.BufferedInputStream;
@@ -24,9 +25,11 @@ import dk.itu.n.danmarkskort.models.Region;
 
 import java.awt.MouseInfo;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.Robot;
 import java.awt.Toolkit;import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
+import java.awt.image.BufferedImage;
 
 public class Util {
 	
@@ -214,6 +217,40 @@ public class Util {
 	    } catch (Exception e) {
 	        e.printStackTrace();
 	    }
+	}
+	
+	public static BufferedImage screenshot() {
+		Rectangle screenRect = new Rectangle(Toolkit.getDefaultToolkit().getScreenSize());
+		try {
+			BufferedImage capture = new Robot().createScreenCapture(screenRect);
+			return capture;
+		} catch (AWTException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	public static BufferedImage screenshotWithoutGUI() {
+		Main.mainPanel.hideGUI();
+		Main.mainPanel.repaint();
+		
+		Rectangle screenRect = new Rectangle(
+			Main.map.getLocationOnScreen().x, 
+			Main.map.getLocationOnScreen().y, 
+			Main.map.getWidth(), 
+			Main.map.getHeight()
+		);
+		try {
+			BufferedImage capture = new Robot().createScreenCapture(screenRect);
+			Main.mainPanel.showGUI();
+			return capture;
+		} catch (AWTException e) {
+			e.printStackTrace();
+			Main.mainPanel.showGUI();
+			Main.mainPanel.repaint();
+			return null;
+		}
+		
 	}
 	
 }

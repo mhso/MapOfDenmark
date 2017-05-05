@@ -14,7 +14,7 @@ public class TileRenderTask extends Task {
 	}
 	
 	public void work() {
-		if(tile.isUseless()) return;
+		if(Main.tileController.isBlurred() || tile.isUseless()) return;
 		tile.render();
 		if(swapWhenDone) Main.tileController.swapTileWithUselessTile(tile);
 		if(repaintWhenDone) Main.mainPanel.repaint();
