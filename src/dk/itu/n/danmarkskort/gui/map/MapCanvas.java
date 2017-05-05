@@ -330,6 +330,9 @@ public class MapCanvas extends JPanel {
 		
 		if(Main.debug) {
 			if(edge.isTravelTypeAllowed(WeightEnum.DISTANCE_CAR)  && 
+					edge.isTravelTypeAllowed(WeightEnum.DISTANCE_BIKE)
+					&& edge.isTravelTypeAllowed(WeightEnum.DISTANCE_WALK));
+			else if(edge.isTravelTypeAllowed(WeightEnum.DISTANCE_CAR)  && 
 					edge.isTravelTypeAllowed(WeightEnum.DISTANCE_BIKE)) g2d.setColor(Color.MAGENTA);
 			
 			else if(edge.isTravelTypeAllowed(WeightEnum.DISTANCE_CAR)  && 
