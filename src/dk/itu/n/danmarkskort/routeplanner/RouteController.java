@@ -142,6 +142,7 @@ public class RouteController {
 			double maxRouteY = Math.max(from.getY(), to.getY());
 			double[] routeBounds = {minRouteX, minRouteY, maxRouteX, maxRouteY};
 			
+			if(Main.map.getRoute() != null) Main.map.setRoute(null);
 			for(RouteEdge edge : edges){
 				Main.map.addRouteEdge(edge);
 				RouteEnum routeEnum = RouteEnum.CONTINUE_ON;
@@ -151,7 +152,7 @@ public class RouteController {
 				}else{
 					routeEnum = calcDirectionType(edge, lastEdge);
 					distSum = 0;
-					RouteModel routeModel = new RouteModel(routeEnum, edge.getDescription(), edge.getDistance());
+					RouteModel routeModel = new RouteModel(routeEnum, edge.getDescription(), edge.getMaxSpeed(), edge.getDistance());
 					lastModel = routeModel;
 					routeModels.add(routeModel);
 				}

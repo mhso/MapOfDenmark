@@ -340,8 +340,8 @@ public class RoutePage extends JPanel {
 		ArrayList<PinPoint> pinPoints = new ArrayList<PinPoint>();
 		PinPoint pinPointFrom = new PinPoint(addrFrom.getLonLatAsPoint(), txtAddrFrom.getText());
 		PinPoint pinPointTo = new PinPoint(addrTo.getLonLatAsPoint(), txtAddrTo.getText());
-		pinPointFrom.setIconIndex(13);
-		pinPointTo.setIconIndex(14);
+		pinPointFrom.setIconIndex(14);
+		pinPointTo.setIconIndex(13);
 		pinPoints.add(pinPointFrom);
 		pinPoints.add(pinPointTo);
 		Main.pinPointManager.setTemporaryPinPoints(pinPoints);
@@ -363,14 +363,14 @@ public class RoutePage extends JPanel {
 	private List<RouteModel> demoRoute(){
 		List<RouteModel> routeModels = new ArrayList<RouteModel>();
 		
-		routeModels.add(new RouteModel(RouteEnum.CONTINUE_ON, "Roskildevej", 600));
-		routeModels.add(new RouteModel(RouteEnum.TURN_LEFT, "Roskildevej", 600));
-		routeModels.add(new RouteModel(RouteEnum.CONTINUE_ON, "H. Hansenvej", 250));
-		routeModels.add(new RouteModel(RouteEnum.TURN_RIGHT, "Postmosen", 250));
-		routeModels.add(new RouteModel(RouteEnum.TURN_RIGHT, "Blågårdsgade", 250));
-		routeModels.add(new RouteModel(RouteEnum.CONTINUE_ON, "Sverigesvej", 250));
-		routeModels.add(new RouteModel(RouteEnum.TURN_RIGHT, "Amagerbrogade", 1500));
-		routeModels.add(new RouteModel(RouteEnum.AT_DESTINATION, "Rosenhaven 1", -1));
+		routeModels.add(new RouteModel(RouteEnum.CONTINUE_ON, "Roskildevej", 50, 600));
+		routeModels.add(new RouteModel(RouteEnum.TURN_LEFT, "Roskildevej", 60, 600));
+		routeModels.add(new RouteModel(RouteEnum.CONTINUE_ON, "H. Hansenvej", 50, 250));
+		routeModels.add(new RouteModel(RouteEnum.TURN_RIGHT, "Postmosen", 50, 250));
+		routeModels.add(new RouteModel(RouteEnum.TURN_RIGHT, "Blågårdsgade", 50, 250));
+		routeModels.add(new RouteModel(RouteEnum.CONTINUE_ON, "Sverigesvej", 50, 250));
+		routeModels.add(new RouteModel(RouteEnum.TURN_RIGHT, "Amagerbrogade", 80, 1500));
+		routeModels.add(new RouteModel(RouteEnum.AT_DESTINATION, "Rosenhaven 1", 50, -1));
 		return routeModels;
 	}
 	

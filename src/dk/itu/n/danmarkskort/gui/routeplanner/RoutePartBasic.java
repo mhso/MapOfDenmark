@@ -19,6 +19,7 @@ public class RoutePartBasic extends JPanel {
 	private static final long serialVersionUID = 3150387631326599889L;
 	private final String ROUTE_FROM, ROUTE_TO;
 	private double routeTotalDistance;
+	private double routeSeconds;
 	private RouteImageSplit routeImageSplit;
 	public RoutePartBasic(String routeFrom, String routeTo, JPanel parent,  List<RouteModel> routeModels) {
 		ROUTE_FROM = routeFrom;
@@ -51,7 +52,7 @@ public class RoutePartBasic extends JPanel {
 		gbc_lblHereYouGo.gridy = 0;
 		add(lblHereYouGo, gbc_lblHereYouGo);
 		
-		JLabel lblRouteDistance = new JLabel("(" + makeDistance(routeTotalDistance) + ")");
+		JLabel lblRouteDistance = new JLabel("(" + makeDistance(routeTotalDistance) + " " + makeTime(routeSeconds) + ")");
 		lblRouteDistance.setFont(new Font("Tahoma", Font.BOLD, 17));
 		GridBagConstraints gbc_lblRouteDistance = new GridBagConstraints();
 		gbc_lblRouteDistance.insets = new Insets(0, 0, 5, 0);
@@ -82,13 +83,17 @@ public class RoutePartBasic extends JPanel {
 	
 	private void initRouteSteps(JPanel parent, List<RouteModel> routeModels){
 		double totalDist = 0;
+		int totalTime = 0;
 		int pos = 1;
 		parent.add(this);
 		for(RouteModel rm : routeModels){
-			
 			totalDist += rm.getDistance();
+			double meters = rm.getDistance();
+			double maxSpeedInMeterPerSec = ((rm.getMaxSpeed()*1000)/60)/60;
+			totalTime += meters/maxSpeedInMeterPerSec;
 			parent.add(new RoutePartStep(pos++, routeImageSplit.getStepIcon(rm.getDirection()), rm));
 		}
+		routeSeconds = totalTime;
 		routeTotalDistance = totalDist;
 	}
 
@@ -96,5 +101,15 @@ public class RoutePartBasic extends JPanel {
 		if(input == -1) return "";
 		if(input / 1000 > 1.0) return String.format("%.1f", input / 1000) + " km.";
 		return String.format("%.0f", input) + " meter";
+	}
+	
+	private String makeTime(double seconds) {
+		String result = (int) seconds + " seconds";
+		if(seconds > 60) {
+			double mins = seconds/60;
+			seconds = seconds%60;
+			result = (int)mins + " minutes, " + (int)seconds + " seconds";
+		}
+		return result;
 	}
 }
