@@ -2,7 +2,6 @@ package dk.itu.n.danmarkskort.gui.map;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.MouseInfo;
@@ -14,6 +13,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -36,6 +36,7 @@ import dk.itu.n.danmarkskort.models.ParsedPlace;
 import dk.itu.n.danmarkskort.models.Region;
 import dk.itu.n.danmarkskort.models.WayType;
 import dk.itu.n.danmarkskort.routeplanner.RouteEdge;
+import dk.itu.n.danmarkskort.routeplanner.WeightEnum;
 
 public class MapCanvas extends JPanel {
 
@@ -58,7 +59,7 @@ public class MapCanvas extends JPanel {
 
 	private Shape currentHighlighedShape;
 	private WayType currentHighlighedWaytype;
-	private RouteEdge[] currentRoute;
+	private List<RouteEdge> currentRoute;
 	
 	public MapCanvas() {
 		new MapMouseController(this);
@@ -91,6 +92,8 @@ public class MapCanvas extends JPanel {
 			Main.tileController.draw(g2d);
 		} else {
 			drawMapShapes(g2d, getGeographicalRegion(), transform);
+			g2d.setStroke(new BasicStroke(Float.MIN_VALUE));
+			
 		}
 		if(Main.pinPointManager != null) {
 			Main.pinPointManager.drawPinPoints(g2d);
@@ -306,7 +309,11 @@ public class MapCanvas extends JPanel {
 		currentHighlighedWaytype = wayType;
 	}
 	
-	private void drawRouteEdges(Graphics2D g2d, RouteEdge[] edges) {
+	public void drawRouteEdge(RouteEdge edge) {
+		drawRouteEdge((Graphics2D)getGraphics(), edge);
+	}
+	
+	private void drawRouteEdges(Graphics2D g2d, List<RouteEdge> edges) {
 		currentRoute = edges;
 		for(RouteEdge edge : edges) drawRouteEdge(g2d, edge);
 	}
@@ -318,21 +325,71 @@ public class MapCanvas extends JPanel {
 		g2d.setTransform(transform);
 		if(antiAlias) g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		else g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
-		g2d.setStroke(new BasicStroke((float)(0.0009f*1.5/getZoom())));
+		g2d.setStroke(new BasicStroke((float)(0.0010f*1.5/getZoom())));
 		g2d.setColor(Color.BLUE);
+		
+		if(Main.debug) {
+			if(edge.isTravelTypeAllowed(WeightEnum.DISTANCE_CAR)  && 
+					edge.isTravelTypeAllowed(WeightEnum.DISTANCE_BIKE)
+					&& edge.isTravelTypeAllowed(WeightEnum.DISTANCE_WALK));
+			else if(edge.isTravelTypeAllowed(WeightEnum.DISTANCE_CAR)  && 
+					edge.isTravelTypeAllowed(WeightEnum.DISTANCE_BIKE)) g2d.setColor(Color.MAGENTA);
+			
+			else if(edge.isTravelTypeAllowed(WeightEnum.DISTANCE_CAR)  && 
+					edge.isTravelTypeAllowed(WeightEnum.DISTANCE_WALK)) g2d.setColor(Color.GREEN);
+			
+			else if(edge.isTravelTypeAllowed(WeightEnum.DISTANCE_WALK)  && 
+					edge.isTravelTypeAllowed(WeightEnum.DISTANCE_BIKE)) g2d.setColor(Color.PINK);
+			
+			else if(edge.isTravelTypeAllowed(WeightEnum.DISTANCE_BIKE)) g2d.setColor(Color.ORANGE);
+			else if(edge.isTravelTypeAllowed(WeightEnum.DISTANCE_CAR)) g2d.setColor(Color.RED);
+			else if(edge.isTravelTypeAllowed(WeightEnum.DISTANCE_WALK)) g2d.setColor(Color.YELLOW);
+		}
+		
 		g2d.draw(path);
 	}
 	
-	public void setRoute(RouteEdge[] edges) {
+	public void addRouteEdge(RouteEdge edge) {
+		if(currentRoute == null) currentRoute = new ArrayList<>();
+		currentRoute.add(edge);
+	}
+	
+	public void setRoute(List<RouteEdge> edges) {
 		currentRoute = edges;
 	}
 	
-	public RouteEdge[] getRoute() {
+	public List<RouteEdge> getRoute() {
 		return currentRoute;
 	}
 	
 	public Shape getHighlightedShape() {
 		return currentHighlighedShape;
+	}
+	
+	public BufferedImage getRoutePreviewImage(Region routeRegion) {
+		final double MARGIN = 1.50;
+		
+		double distX = (routeRegion.x2-routeRegion.x1)*MARGIN;
+		double distY = (routeRegion.y2-routeRegion.y1)*MARGIN;
+		double x1 = routeRegion.x2 - distX;
+		double x2 = routeRegion.x1 + distX;
+		double y1 = routeRegion.y2 - distY;
+		double y2 = routeRegion.y1 + distY;
+		Region region = new Region(x1, y1, x2, y2);
+		System.out.println(region);
+		AffineTransform newTransform = new AffineTransform();
+		if(routeRegion.y2-routeRegion.y1 < routeRegion.x2-routeRegion.x1) Util.zoomToRegion(newTransform, region, getWidth());
+		else Util.zoomToRegionY(newTransform, region, getHeight());
+		
+		transform.setTransform(newTransform);
+		actualTransform.setTransform(newTransform);
+		panToPosition(region.getMiddlePoint());
+		
+		Main.tileController.zoom(1);
+		
+		BufferedImage image = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
+        
+		return image;
 	}
 	
 	public void pan(double dx, double dy) {
@@ -499,11 +556,19 @@ public class MapCanvas extends JPanel {
 		Region mapRegion = Main.model.getMapRegion();
 		pan(-mapRegion.x1, -mapRegion.y2);
 		zoom(getWidth() / (mapRegion.x2 - mapRegion.x1));
-		if(!Main.tileController.isInitialized && Main.buffered) Main.tileController.initialize();
+	}
+	
+	public void zoomToRegion(Region region) {
+		transform.setTransform(new AffineTransform());
+		System.out.println(region);
+		pan(-region.x1, -region.y2);
+		zoom(getWidth() / (region.x2 - region.x1));
+		System.out.println(getActualGeographicalRegion());
 	}
 	
 	public void setupDone() {
 		zoomToBounds();
+		if(!Main.tileController.isInitialized) Main.tileController.initialize();
 		for(CanvasListener listener : listeners) listener.onSetupDone();
 	}
 	

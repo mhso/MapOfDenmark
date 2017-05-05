@@ -1,5 +1,14 @@
 package dk.itu.n.danmarkskort.routeplanner;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.swing.Timer;
+
+import dk.itu.n.danmarkskort.Main;
+
 public class RouteDijkstra {
 	private double[] distTo;         		// distTo[v] = distance  of shortest s->v path
     private RouteEdge[] edgeTo;    			// edgeTo[v] = last edge on shortest s->v path
@@ -28,7 +37,9 @@ public class RouteDijkstra {
 
         distTo = new double[graph.getNumOfVertices()];
         edgeTo = new RouteEdge[graph.getNumOfVertices()];
-
+        List<RouteEdge> edgesInRoute = null;
+        if(debug) edgesInRoute = new ArrayList<>();
+        
         validateVertex(source);
 
         for (int v = 0; v < graph.getNumOfVertices(); v++)
@@ -38,18 +49,20 @@ public class RouteDijkstra {
         // relax vertices in order of distance from s
         pq = new IndexMinPQ<Double>(graph.getNumOfVertices());
         pq.insert(source, distTo[source]);
-        while (!pq.isEmpty()) {
+    	while (!pq.isEmpty()) {
             int v = pq.delMin();
             if(v == target) { 
             	//System.out.println("Target found, we can stop now.");
             	break;
             }
-            
-            for (RouteEdge edge : graph.adjacent(v)) {
-            	if(edge.isTravelTypeAllowed(weightEnum))
+        	for (RouteEdge edge : graph.adjacent(v)) {
+            	if(edge.isTravelTypeAllowed(weightEnum)) {
+            		if(debug) edgesInRoute.add(edge);
             		relax(edge);
+            	}
             }
         }
+        if(debug) new AnimationTimer(20, edgesInRoute);
 
         // check optimality conditions
         //assert check(graph, source);
@@ -166,5 +179,24 @@ public class RouteDijkstra {
         int V = distTo.length;
         if (vertexId < 0 || vertexId >= V)
             throw new IllegalArgumentException("vertex " + vertexId + " is not between 0 and " + (V-1));
+    }
+    
+    private class AnimationTimer implements ActionListener {
+    	Timer timer;
+    	List<RouteEdge> edgesInRoute;
+    	int index;
+    	
+    	public AnimationTimer(int delay, List<RouteEdge> edgesInRoute) {
+    		this.edgesInRoute = edgesInRoute;
+    		timer = new Timer(delay, this);
+    		timer.start();
+    	}
+    	
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			 Main.map.drawRouteEdge(edgesInRoute.get(index));
+			 index++;
+	     	 if(index >= edgesInRoute.size()-1) timer.stop();
+		}
     }
 }

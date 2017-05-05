@@ -17,8 +17,8 @@ import java.util.List;
 import java.util.Map;
 
 import dk.itu.n.danmarkskort.backend.BinaryWrapper;
-import dk.itu.n.danmarkskort.backend.InputMonitor;
-import dk.itu.n.danmarkskort.backend.InputStreamListener;
+import dk.itu.n.danmarkskort.backend.ProgressMonitor;
+import dk.itu.n.danmarkskort.backend.ProgressListener;
 import dk.itu.n.danmarkskort.models.Region;
 
 import java.awt.MouseInfo;
@@ -177,12 +177,12 @@ public class Util {
 		}
 	}
 	
-	public static Object readObjectFromFile(String fileName, List<InputStreamListener> listeners) {		
+	public static Object readObjectFromFile(String fileName, List<ProgressListener> listeners) {		
 		try {
 			BufferedInputStream fout = new BufferedInputStream(new FileInputStream(fileName));
-			InputMonitor monitor = new InputMonitor(fout, fileName);
+			ProgressMonitor monitor = new ProgressMonitor(fout);
 			ObjectInputStream oos = new ObjectInputStream(monitor);
-			for(InputStreamListener listener : listeners) monitor.addListener(listener);
+			for(ProgressListener listener : listeners) monitor.addListener(listener);
 			Object object = oos.readObject();
 			oos.close();
 			return object;
@@ -229,4 +229,8 @@ public class Util {
 		Util.zoom(transform, currentWidth / (region.x2 - region.x1));
 	}
 	
+	public static void zoomToRegionY(AffineTransform transform, Region region, double currentHeight) {
+		Util.pan(transform, -region.x1, -region.y2);
+		Util.zoom(transform, currentHeight / (region.y2 - region.y1));
+	}
 }
