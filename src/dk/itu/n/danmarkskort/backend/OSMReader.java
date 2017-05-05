@@ -35,7 +35,7 @@ import dk.itu.n.danmarkskort.Util;
 public class OSMReader {
 	
 	public List<OSMParserListener> parserListeners = new ArrayList<OSMParserListener>();
-	private List<InputStreamListener> inputListeners = new ArrayList<InputStreamListener>();
+	private List<ProgressListener> inputListeners = new ArrayList<ProgressListener>();
 	private String currentChecksum;
 	private InputStream inputStream;
 	private String fileName;
@@ -57,7 +57,7 @@ public class OSMReader {
 		parserListeners.add(listener);
 	}
 	
-	public void addInputListener(InputStreamListener listener) {
+	public void addInputListener(ProgressListener listener) {
 		inputListeners.add(listener);
 	}
 	
@@ -94,7 +94,7 @@ public class OSMReader {
 			}
 			BinaryWrapper binary = (BinaryWrapper) Util.readObjectFromFile(fileName, inputListeners);
 			Util.extractAllFromBinary(binary);
-			for(InputStreamListener listener : inputListeners) listener.onSetupDone();
+			for(ProgressListener listener : inputListeners) listener.onSetupDone();
 		}
 		else {
 			try {
@@ -106,15 +106,15 @@ public class OSMReader {
 	                fileName = Util.getBinaryFilePath();
 	                BinaryWrapper binary = (BinaryWrapper) Util.readObjectFromFile(fileName, inputListeners);
 	                Util.extractAllFromBinary(binary);
-	                for (InputStreamListener listener : inputListeners) listener.onSetupDone();
+	                for (ProgressListener listener : inputListeners) listener.onSetupDone();
 			}  
             else {
             	if (fileName.endsWith(".osm")) {
                     try {
                     	if(Main.production) inputStream = new FileInputStream(getClass().getResource(fileName).toString());
                     	else inputStream = new FileInputStream(fileName);
-                        InputMonitor monitor = new InputMonitor(inputStream, fileName);
-                        for (InputStreamListener inListener : inputListeners) monitor.addListener(inListener);
+                        ProgressMonitor monitor = new ProgressMonitor(inputStream);
+                        for (ProgressListener inListener : inputListeners) monitor.addListener(inListener);
                         loadOSM(new InputSource(monitor), fileName, contentHandler);
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
@@ -124,10 +124,10 @@ public class OSMReader {
                     try {
                     	if(Main.production) inputStream = new FileInputStream(getClass().getResource(fileName).toString());
                     	else inputStream = new FileInputStream(fileName);
-                        InputMonitor monitor = new InputMonitor(inputStream, fileName);
+                        ProgressMonitor monitor = new ProgressMonitor(inputStream);
                         ZipInputStream zip = new ZipInputStream(new BufferedInputStream(monitor));
                         zip.getNextEntry();
-                        for (InputStreamListener inListener : inputListeners) monitor.addListener(inListener);
+                        for (ProgressListener inListener : inputListeners) monitor.addListener(inListener);
                         loadOSM(new InputSource(zip), fileName, contentHandler);
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
@@ -150,7 +150,7 @@ public class OSMReader {
                 }
             }
 
-            for (InputStreamListener listener : inputListeners) listener.onSetupDone();
+            for (ProgressListener listener : inputListeners) listener.onSetupDone();
         }
 		
 		parseTimer.off();
