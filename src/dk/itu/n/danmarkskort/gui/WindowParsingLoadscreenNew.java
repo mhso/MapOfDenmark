@@ -158,6 +158,7 @@ public class WindowParsingLoadscreenNew extends JFrame implements OSMParserListe
 	public void onStreamEnded() {
 		currentPercent = 100;
 		setProgressPercent();
+		labelRemaining.setText("Time Remaining: 0 Seconds.");
 		labelStatus.setText("Converting Data To KD-Trees...");
 	}
 	
