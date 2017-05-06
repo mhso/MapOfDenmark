@@ -165,8 +165,8 @@ public class GraphicRepresentation {
 		}
 		if(currentTheme == null) parseZoomValues();
 		String parseFile = "";
-		if(Main.production) parseFile = GraphicRepresentation.class.getResource("resources/ThemeBasic.XML").toString();
-		else parseFile = "resources/ThemeBasic.XML";
+		if(Main.production) parseFile = GraphicRepresentation.class.getResource("resources/themes/ThemeBasic.XML").toString();
+		else parseFile = "resources/themes/ThemeBasic.XML";
 		parseTheme(parseFile);
 		if(!themeFile.equals(parseFile)) parseTheme(themeFile);
 		currentTheme = themeFile;
@@ -176,8 +176,8 @@ public class GraphicRepresentation {
 		try {
 			XMLReader reader = XMLReaderFactory.createXMLReader();
 			reader.setContentHandler(new ZoomHandler());
-			if(Main.production) reader.parse(new InputSource(GraphicRepresentation.class.getResourceAsStream("/resources/ZoomValues.XML")));
-			else reader.parse(new InputSource("resources/ZoomValues.XML"));
+			if(Main.production) reader.parse(new InputSource(GraphicRepresentation.class.getResourceAsStream("/resources/themes/ZoomValues.XML")));
+			else reader.parse(new InputSource("resources/themes/ZoomValues.XML"));
 		} catch (SAXException e) {
 			e.printStackTrace();
 		} catch (IOException e) {

@@ -19,7 +19,7 @@
 		</line>
 		<line>
 			<type name="HIGHWAY_PRIMARY"/>
-			<innercolor color="FFd7A4"/>
+			<innercolor color="FFD7A4"/>
 			<outercolor color="AB7D26"/>
 			<lineproperties linewidth="90"/>
 			<layer layer="4"/>
@@ -84,13 +84,6 @@
 			<outercolor color="A5A5A5"/>
 			<lineproperties linewidth="20"/>
 			<layer layer="3"/>
-		</line>
-		<line>
-			<type name="RAIL"/>
-			<innercolor color="F6EBEB"/>
-			<outercolor color="6D6D6D"/>
-			<lineproperties linedash="5, 8" borderdash="false" lineend="BUTT" linejoin="BEVEL" linewidth="12"/>
-			<layer layer="2"/>
 		</line>
 		<line>
 			<type name="RAIL"/>

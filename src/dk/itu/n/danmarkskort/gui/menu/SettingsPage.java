@@ -24,7 +24,6 @@ import java.util.ArrayList;
 
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
-import javax.swing.border.MatteBorder;
 
 public class SettingsPage extends JPanel {
 	private static final long serialVersionUID = 4642167284178775315L;
@@ -92,6 +91,9 @@ public class SettingsPage extends JPanel {
         buttonChangePreferences.setBorder(new LineBorder(new Color(0, 153, 204), 2, true));
         buttonChangePreferences.addActionListener(e -> showPreferencesPanel());
         defaultCenterPanel.add(buttonChangePreferences);
+        
+        // Hack! Couldn't get ScrollPane to work properly with CardLayout, so inserting a RigidArea here to push setting buttons to the top.
+        defaultCenterPanel.add(Box.createRigidArea(new Dimension(20, 20)));
         
         createMapThemePanel();
         
@@ -167,6 +169,31 @@ public class SettingsPage extends JPanel {
         buttonNightToggle.setOn(false);
         panelNightTheme.add(buttonNightToggle, BorderLayout.EAST);
         
+        rigidArea = Box.createRigidArea(new Dimension(20, 20));
+        panel.add(rigidArea);
+        
+        JPanel panelBWTheme = new JPanel();
+        panelBWTheme.setOpaque(false);
+        panelBWTheme.setMaximumSize(new Dimension(SUBPANEL_WIDTH, SUBPANEL_HEIGHT));
+        panel.add(panelBWTheme);
+        panelBWTheme.setLayout(new BorderLayout(0, 0));
+        
+        JLabel labelBW = new JLabel("Grays");
+        panelBWTheme.add(labelBW, BorderLayout.WEST);
+        
+        JLabel labelBWIcon = new JLabel(style.bwThemePreview());
+        panelBWTheme.add(labelBWIcon, BorderLayout.CENTER);
+        
+        CustomToggleButton buttonBWToggle = style.toggleButton();
+        buttonBWToggle.addActionListener(e -> {
+        	if(!buttonBWToggle.isOn()) {
+        		Main.userPreferences.setCurrentMapTheme("BW");
+        		changeCurrentTheme();
+        	}
+        });
+        buttonBWToggle.setOn(false);
+        panelBWTheme.add(buttonBWToggle, BorderLayout.EAST);
+        
         JPanel panelSouth = new JPanel();
         panelSouth.setOpaque(false);
         panelMapTheme.add(panelSouth, BorderLayout.SOUTH);
@@ -177,19 +204,20 @@ public class SettingsPage extends JPanel {
         buttonBack.setFont(new Font("Tahoma", Font.PLAIN, 13));
         panelSouth.add(buttonBack, BorderLayout.WEST);
         
-        CustomToggleButton[] buttons = {buttonBasicToggle, buttonNightToggle};
+        CustomToggleButton[] buttons = {buttonBasicToggle, buttonNightToggle, buttonBWToggle};
         for(CustomToggleButton button : buttons) {
         	button.addActionListener(new ButtonSelecter(button, buttons));
         }
         
         if(Main.userPreferences.getCurrentMapTheme().equals("Basic")) buttonBasicToggle.setOn(true);
-        else if(Main.userPreferences.getCurrentMapTheme().equals("Night")) buttonNightToggle.setOn(true);
+        else if(Main.userPreferences.getCurrentMapTheme().equals("Night")) buttonBWToggle.setOn(true);
+        else if(Main.userPreferences.getCurrentMapTheme().equals("BW")) buttonBWToggle.setOn(true);
     }
     
     private void changeCurrentTheme() {
     	if(Main.production) GraphicRepresentation.parseData(
-    			getClass().getResource("/resources/Theme" + Main.userPreferences.getCurrentMapTheme() + ".XML").toString());
-    	else GraphicRepresentation.parseData("resources/Theme" + Main.userPreferences.getCurrentMapTheme() + ".XML");
+    			getClass().getResource("/resources/themes/Theme" + Main.userPreferences.getCurrentMapTheme() + ".XML").toString());
+    	else GraphicRepresentation.parseData("resources/themes/Theme" + Main.userPreferences.getCurrentMapTheme() + ".XML");
     	Util.writeObjectToFile(Main.userPreferences, DKConstants.USERPREF_PATH);
     	Main.map.forceRepaint();
     }
@@ -336,6 +364,9 @@ public class SettingsPage extends JPanel {
         buttonBack.addActionListener(e -> showDefaultPanel());
         buttonBack.setFont(new Font("Tahoma", Font.PLAIN, 13));
         panelSouth.add(buttonBack, BorderLayout.WEST);
+        
+        // Hack! Couldn't get ScrollPane to work properly with CardLayout, so inserting a RigidArea here to push preference buttons to the top.
+        panelSouth.add(Box.createRigidArea(new Dimension(20, 60)), BorderLayout.SOUTH);
     }
     
     private String[] getParsedFiles() {

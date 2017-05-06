@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<theme version="0.3">
+	<defaultfont fontcolor="000000" fontsize="20"/>
+	<bgcolor color="D4D9DC"/>
+	<lines>
+		<line>
+			<type name="HIGHWAY_MOTORWAY"/>
+			<innercolor color="B6B6B6"/>
+			<outercolor color="5E5E5E"/>
+			<lineproperties linewidth="90"/>
+			<layer layer="5"/>
+		</line>
+		<line>
+			<type name="HIGHWAY_TRUNK"/>
+			<innercolor color="F6F2F1"/>
+			<outercolor color="4E4E4E"/>
+			<lineproperties linewidth="90"/>
+			<layer layer="5"/>
+		</line>
+		<line>
+			<type name="HIGHWAY_PRIMARY"/>
+			<innercolor color="BCBCBC"/>
+			<outercolor color="5E5E5E"/>
+			<lineproperties linewidth="90"/>
+			<layer layer="4"/>
+		</line>
+		<line>
+			<type name="HIGHWAY_SECONDARY"/>
+			<innercolor color="434343"/>
+			<outercolor color="1F1F1F"/>
+			<lineproperties linewidth="90"/>
+			<layer layer="4"/>
+		</line>
+		<line>
+			<type name="HIGHWAY_FOOTWAY"/>
+			<innercolor color="A4A39A"/>
+			<lineproperties linedash="5, 5" borderdash="true" linewidth="8"/>
+			<layer layer="3"/>
+		</line>
+		<line>
+			<type name="HIGHWAY_CYCLEWAY"/>
+			<innercolor color="88888A"/>
+			<lineproperties linedash="5, 5" borderdash="true" linewidth="8"/>
+			<layer layer="3"/>
+		</line>
+		<line>
+			<type name="HIGHWAY_PEDESTRIAN"/>
+			<innercolor color="E9E9E9"/>
+			<outercolor color="A5A5A5"/>
+			<lineproperties linewidth="20"/>
+			<layer layer="3"/>
+		</line>
+		<line>
+			<type name="RAIL"/>
+			<innercolor color="F7F7F7"/>
+			<outercolor color="6D6D6D"/>
+			<lineproperties linedash="5, 8" borderdash="false" lineend="BUTT" linejoin="BEVEL" linewidth="12"/>
+			<layer layer="2"/>
+		</line>
+		<line>
+			<type name="LIGHT_RAIL"/>
+			<innercolor color="6D6D6D"/>
+			<lineproperties linewidth="8"/>
+			<layer layer="2"/>
+		</line>
+	</lines>
+	<areas>
+		<area>
+			<type name="COASTLINE"/>
+			<innercolor color="E9E9E9"/>
+			<layer layer="1"/>
+		</area>
+		<area>
+			<type name="WATER"/>
+			<innercolor color="D5D7D8"/>
+			<layer layer="2"/>
+		</area>
+		<area>
+			<type name="INDUSTRIAL"/>
+			<innercolor color="D8D8D8"/>
+			<layer layer="1"/>
+		</area>
+		<area>
+			<type name="PARKING"/>
+			<innercolor color="FFFFFF"/>
+			<layer layer="2"/>
+		</area>
+		<area>
+			<type name="CEMETERY"/>
+			<innercolor color="CECECE"/>
+			<layer layer="2"/>
+		</area>
+		<area>
+			<type name="CONSTRUCTION"/>
+			<innercolor color="BFBFBF"/>
+			<layer layer="2"/>
+		</area>
+		<area>
+			<type name="PLATFORM"/>
+			<innercolor color="A5A5A5"/>
+			<layer layer="3"/>
+		</area>
+		<area>
+			<type name="GRASS"/>
+			<innercolor color="E2E5E0"/>
+			<layer layer="2"/>
+		</area>
+		<area>
+			<type name="WOOD"/>
+			<innercolor color="C7C7C7"/>
+			<layer layer="2"/>
+		</area>
+		<area>
+			<type name="SCRUB"/>
+			<innercolor color="B9B9B9"/>
+			<layer layer="2"/>
+		</area>
+		<area>
+			<type name="FARMLAND"/>
+			<innercolor color="CDCDCD"/>
+			<layer layer="2"/>
+		</area>
+		<area>
+			<type name="SPORT"/>
+			<innercolor color="9A9A9A"/>
+			<outercolor color="555555"/>
+			<layer layer="3"/>
+		</area>
+		<area>
+			<type name="RAILWAY"/>
+			<innercolor color="AEAEAE"/>
+			<layer layer="2"/>
+		</area>
+		<area>
+			<type name="PARK"/>
+			<innercolor color="B9B9B9"/>
+			<layer layer="2"/>
+		</area>
+		<area>
+			<type name="FOREST"/>
+			<innercolor color="7F7F7F"/>
+			<layer layer="2"/>
+		</area>
+	</areas>
+</theme>

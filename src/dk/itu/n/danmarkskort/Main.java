@@ -70,13 +70,13 @@ public class Main {
 		else prepareParser(new String[]{userPreferences.getDefaultMapFile()});
 		if(userPreferences.getCurrentMapTheme() != null) {
 			if(Main.production) GraphicRepresentation.parseData(
-					Main.class.getResource("/resources/Theme" + userPreferences.getCurrentMapTheme() + ".XML").toString());
-			else GraphicRepresentation.parseData("resources/Theme" + userPreferences.getCurrentMapTheme() + ".XML");
+					Main.class.getResource("/resources/themes/Theme" + userPreferences.getCurrentMapTheme() + ".XML").toString());
+			else GraphicRepresentation.parseData("resources/themes/Theme" + userPreferences.getCurrentMapTheme() + ".XML");
 		}
 		else {
 			if(Main.production) GraphicRepresentation.parseData(
-					Main.class.getResource("/resources/Theme" + userPreferences.getDefaultTheme() + ".XML").toString());
-			else GraphicRepresentation.parseData("resources/Theme" + userPreferences.getDefaultTheme() + ".XML");
+					Main.class.getResource("/resources/themes/Theme" + userPreferences.getDefaultTheme() + ".XML").toString());
+			else GraphicRepresentation.parseData("resources/themes/Theme" + userPreferences.getDefaultTheme() + ".XML");
 			userPreferences.setCurrentMapTheme(userPreferences.getDefaultTheme());
 		}
 	}

@@ -6,6 +6,7 @@ import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.Util;
 import dk.itu.n.danmarkskort.backend.BinaryWrapper;
 import dk.itu.n.danmarkskort.gui.Style;
+import dk.itu.n.danmarkskort.gui.components.PanelFileInfo;
 
 import java.awt.*;
 import javax.swing.border.TitledBorder;
@@ -46,16 +47,10 @@ public class SavePage extends JPanel  {
         panelEast.setBackground(style.menuContentBG());
         panelPage.add(panelEast, BorderLayout.EAST);
         
-        JPanel panelCenter = new JPanel();
+        JPanel panelCenter = new PanelFileInfo();
         panelCenter.setBackground(style.menuContentBG());
         panelPage.add(panelCenter, BorderLayout.CENTER);
         initContentPanel(panelCenter);
-        GridBagLayout gbl_panelCenter = new GridBagLayout();
-        gbl_panelCenter.columnWidths = new int[]{0, 0, 0};
-        gbl_panelCenter.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0};
-        gbl_panelCenter.columnWeights = new double[]{0.0, 1.0, Double.MIN_VALUE};
-        gbl_panelCenter.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
-        panelCenter.setLayout(gbl_panelCenter);
         
         JButton btnSaveToFile = new JButton("Save To File");
         btnSaveToFile.addActionListener(e -> saveCurrentMap());
