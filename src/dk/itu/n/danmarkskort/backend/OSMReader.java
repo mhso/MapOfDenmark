@@ -78,19 +78,14 @@ public class OSMReader {
 		parseMemory.on();
 
 		if(fileName.endsWith(".bin")) {
-			if(Main.production && new File(fileName).getName().equals("default.bin")) {
-				fileName = getClass().getResource(fileName).toString();
-			}
-			else {
-				try {
-					for(Path checkSumDir : Files.newDirectoryStream(Paths.get("parsedOSMFiles"))) {
-						for(Path parsedFile : Files.newDirectoryStream(checkSumDir)) {
-							if(parsedFile.toString().equals(fileName)) currentChecksum = checkSumDir.toFile().getName();
-						}
+			try {
+				for(Path checkSumDir : Files.newDirectoryStream(Paths.get("parsedOSMFiles"))) {
+					for(Path parsedFile : Files.newDirectoryStream(checkSumDir)) {
+						if(parsedFile.toString().equals(fileName)) currentChecksum = checkSumDir.toFile().getName();
 					}
-				} catch (IOException e) {
-					e.printStackTrace();
 				}
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
 			BinaryWrapper binary = (BinaryWrapper) Util.readObjectFromFile(fileName, inputListeners);
 			Util.extractAllFromBinary(binary);
@@ -111,8 +106,7 @@ public class OSMReader {
             else {
             	if (fileName.endsWith(".osm")) {
                     try {
-                    	if(Main.production) inputStream = new FileInputStream(getClass().getResource(fileName).toString());
-                    	else inputStream = new FileInputStream(fileName);
+                    	inputStream = new FileInputStream(fileName);
                         ProgressMonitor monitor = new ProgressMonitor(inputStream);
                         for (ProgressListener inListener : inputListeners) monitor.addListener(inListener);
                         loadOSM(new InputSource(monitor), fileName, contentHandler);
@@ -122,8 +116,7 @@ public class OSMReader {
 
                 } else if (fileName.endsWith(".zip")) {
                     try {
-                    	if(Main.production) inputStream = new FileInputStream(getClass().getResource(fileName).toString());
-                    	else inputStream = new FileInputStream(fileName);
+                    	inputStream = new FileInputStream(fileName);
                         ProgressMonitor monitor = new ProgressMonitor(inputStream);
                         ZipInputStream zip = new ZipInputStream(new BufferedInputStream(monitor));
                         zip.getNextEntry();
@@ -171,7 +164,6 @@ public class OSMReader {
 	}
 	
 	private boolean checkSumExists(String checkSum) {
-		if(Main.production) return getClass().getResource("/parsedOSMFiles/"+checkSum) != null;
 		return Files.exists(Paths.get("parsedOSMFiles/"+checkSum));
 	}
 	

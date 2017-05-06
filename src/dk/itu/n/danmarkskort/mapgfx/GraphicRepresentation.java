@@ -175,7 +175,7 @@ public class GraphicRepresentation {
 		}
 		if(currentTheme == null) parseZoomValues();
 		String parseFile = "";
-		if(Main.production) parseFile = GraphicRepresentation.class.getResource("resources/themes/ThemeBasic.XML").toString();
+		if(Main.production) parseFile = GraphicRepresentation.class.getResource("/resources/themes/ThemeBasic.XML").toString();
 		else parseFile = "resources/themes/ThemeBasic.XML";
 		parseTheme(parseFile);
 		if(!themeFile.equals(parseFile)) parseTheme(themeFile);

@@ -190,7 +190,10 @@ public class Util {
 	
 	public static Object readObjectFromFile(String fileName, List<ProgressListener> listeners) {		
 		try {
-			BufferedInputStream fout = new BufferedInputStream(new FileInputStream(fileName));
+			BufferedInputStream fout;
+			if(Main.production && fileName.endsWith("resources/default.bin")) 
+				fout = new BufferedInputStream(Util.class.getResourceAsStream(fileName));
+			else fout = new BufferedInputStream(new FileInputStream(fileName));
 			ProgressMonitor monitor = new ProgressMonitor(fout);
 			ObjectInputStream oos = new ObjectInputStream(monitor);
 			for(ProgressListener listener : listeners) monitor.addListener(listener);
