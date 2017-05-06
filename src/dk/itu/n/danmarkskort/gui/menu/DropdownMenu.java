@@ -1,6 +1,9 @@
 package dk.itu.n.danmarkskort.gui.menu;
 
 import dk.itu.n.danmarkskort.gui.*;
+import dk.itu.n.danmarkskort.gui.components.CustomButton;
+import dk.itu.n.danmarkskort.gui.components.CustomDropdown;
+import dk.itu.n.danmarkskort.gui.components.CustomScrollBarUI;
 
 import javax.swing.*;
 import java.awt.*;

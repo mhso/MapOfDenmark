@@ -2,6 +2,8 @@ package dk.itu.n.danmarkskort.gui;
 
 import javax.swing.*;
 
+import dk.itu.n.danmarkskort.gui.components.CustomDropdown;
+
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;

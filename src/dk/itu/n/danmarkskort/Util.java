@@ -18,6 +18,11 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import dk.itu.n.danmarkskort.backend.BinaryWrapper;
 import dk.itu.n.danmarkskort.backend.ProgressMonitor;
@@ -28,7 +33,8 @@ import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Robot;
-import java.awt.Toolkit;import java.awt.geom.AffineTransform;
+import java.awt.Toolkit;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 
@@ -242,10 +248,9 @@ public class Util {
 	    }
 	}
 	
-	public static BufferedImage screenshot() {
-		Rectangle screenRect = new Rectangle(Toolkit.getDefaultToolkit().getScreenSize());
+	public static BufferedImage screenshot(Rectangle region) {
 		try {
-			BufferedImage capture = new Robot().createScreenCapture(screenRect);
+			BufferedImage capture = new Robot().createScreenCapture(region);
 			return capture;
 		} catch (AWTException e) {
 			e.printStackTrace();
@@ -253,18 +258,31 @@ public class Util {
 		}
 	}
 	
-	public static BufferedImage screenshotWithoutGUI() {
+	public static BufferedImage screenshot(int delay) {
+		ExecutorService service = Executors.newFixedThreadPool(1);
+		Future<BufferedImage> imageTask = service.submit(new ScreenshotDelayer(delay, true));
+        
+		try {
+			BufferedImage image = imageTask.get();
+			service.shutdownNow();
+			return image;
+		} catch (InterruptedException | ExecutionException e) {
+			e.printStackTrace();
+		}
+		service.shutdownNow();
+		return null;
+	}
+	
+	public static BufferedImage screenshot() {
+		return screenshot(new Rectangle(Toolkit.getDefaultToolkit().getScreenSize()));
+	}
+	
+	public static BufferedImage screenshotWithoutGUI(Rectangle region) {
 		Main.mainPanel.hideGUI();
 		Main.mainPanel.repaint();
 		
-		Rectangle screenRect = new Rectangle(
-			Main.map.getLocationOnScreen().x, 
-			Main.map.getLocationOnScreen().y, 
-			Main.map.getWidth(), 
-			Main.map.getHeight()
-		);
 		try {
-			BufferedImage capture = new Robot().createScreenCapture(screenRect);
+			BufferedImage capture = new Robot().createScreenCapture(region);
 			Main.mainPanel.showGUI();
 			return capture;
 		} catch (AWTException e) {
@@ -273,11 +291,52 @@ public class Util {
 			Main.mainPanel.repaint();
 			return null;
 		}
-		
+	}
+	
+	public static BufferedImage screenshotWithoutGUI(int delay) {
+		ExecutorService service = Executors.newFixedThreadPool(1);
+		Future<BufferedImage> imageTask = service.submit(new ScreenshotDelayer(delay, false));
+        
+		try {
+			BufferedImage image = imageTask.get();
+			service.shutdownNow();
+			return image;
+		} catch (InterruptedException | ExecutionException e) {
+			e.printStackTrace();
+		}
+		service.shutdownNow();
+		return null;
+	}
+	
+	public static BufferedImage screenshotWithoutGUI() {
+		Rectangle screenRect = new Rectangle(
+				Main.map.getLocationOnScreen().x, 
+				Main.map.getLocationOnScreen().y, 
+				Main.map.getWidth(), 
+				Main.map.getHeight()
+			);
+		return screenshotWithoutGUI(screenRect);
 	}
 	
 	public static void zoomToRegionY(AffineTransform transform, Region region, double currentHeight) {
 		Util.pan(transform, -region.x1, -region.y2);
 		Util.zoom(transform, currentHeight / (region.y2 - region.y1));
+	}
+	
+	private static class ScreenshotDelayer implements Callable<BufferedImage> {
+		private int delay;
+		private boolean gui;
+		
+		public ScreenshotDelayer(int delay, boolean gui) {
+			this.delay = delay;
+			this.gui = gui;
+		}
+		
+		@Override
+		public BufferedImage call() throws Exception {
+			Thread.sleep(delay);
+			if(gui) return screenshot();
+			else return screenshotWithoutGUI();
+		}	
 	}
 }

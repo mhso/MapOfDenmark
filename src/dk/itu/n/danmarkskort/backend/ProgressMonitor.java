@@ -39,8 +39,8 @@ public class ProgressMonitor extends InputStream {
 	}
 	
 	@Override
-	public synchronized void mark(int arg0) {
-		in.mark(arg0);
+	public synchronized void mark(int readlimit) {
+		in.mark(readlimit);
 	}
 
 	@Override
@@ -49,21 +49,18 @@ public class ProgressMonitor extends InputStream {
 	}
 
 	@Override
-	public int read(byte[] arg0, int arg1, int arg2) throws IOException {
-		// TODO Auto-generated method stub
-		return in.read(arg0, arg1, arg2);
+	public int read(byte[] b, int off, int len) throws IOException {
+		return in.read(b, off, len);
 	}
 
 	@Override
-	public int read(byte[] arg0) throws IOException {
-		// TODO Auto-generated method stub
-		return in.read(arg0);
+	public int read(byte[] b) throws IOException {
+		return in.read(b);
 	}
 
 	@Override
-	public long skip(long arg0) throws IOException {
-		// TODO Auto-generated method stub
-		return in.skip(arg0);
+	public long skip(long n) throws IOException {
+		return in.skip(n);
 	}
 
 	@Override

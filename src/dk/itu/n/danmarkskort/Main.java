@@ -1,8 +1,8 @@
 package dk.itu.n.danmarkskort;
 
 import java.awt.Dimension;
+import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
 import javax.swing.*;
 
 import dk.itu.n.danmarkskort.address.AddressController;
@@ -22,7 +22,7 @@ import dk.itu.n.danmarkskort.routeplanner.RouteController;
 public class Main {
 	public final static String APP_NAME = "Yak Maps";
 	public final static String APP_VERSION = "0.8";
-	public final static boolean debug = true;
+	public final static boolean debug = false;
 	public final static boolean debugExtra = true;
 	public final static boolean production = false;
 	public final static boolean buffered = true;
@@ -121,11 +121,8 @@ public class Main {
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setPreferredSize(new Dimension(DKConstants.WINDOW_WIDTH, DKConstants.WINDOW_HEIGHT));
         if(userPreferences.isMaximizeOnStartup()) window.setExtendedState(window.getExtendedState() | JFrame.MAXIMIZED_BOTH);
-        window.addComponentListener(new ComponentListener() {
+        window.addComponentListener(new ComponentAdapter() {
             public void componentResized(ComponentEvent e) {Main.windowResized(e);}
-            public void componentHidden(ComponentEvent arg0) {}
-            public void componentMoved(ComponentEvent arg0) {}
-            public void componentShown(ComponentEvent arg0) {}
         });
         window.pack();
 		window.setLocationRelativeTo(null);
@@ -134,6 +131,7 @@ public class Main {
     }
     
     public static void windowResized(ComponentEvent e) {
+    	if(!tileController.isInitialized()) tileController.initialize();
     	Main.tileController.setTileSize(window.getWidth(), window.getHeight());
     }
     

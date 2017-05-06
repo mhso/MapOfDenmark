@@ -6,6 +6,7 @@ import javax.swing.border.EmptyBorder;
 import dk.itu.n.danmarkskort.DKConstants;
 import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.Util;
+import dk.itu.n.danmarkskort.gui.components.ScaleLabel;
 import dk.itu.n.danmarkskort.gui.map.CanvasListener;
 import dk.itu.n.danmarkskort.kdtree.KDTree;
 import dk.itu.n.danmarkskort.models.ParsedItem;

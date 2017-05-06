@@ -151,8 +151,14 @@ public class MapCanvas extends JPanel {
                 g2d.fill(item.getShape());
                 shapesDrawn++;
             }
-
-            // second, paint outlines for areas
+        }
+        
+        for (WaytypeGraphicSpec wayTypeArea : areasVisible) {
+            currentWTGSpec = wayTypeArea;
+            KDTree<ParsedItem> kdTree = Main.model.getEnumMapKD().get(wayTypeArea.getWayType());
+            
+            if (kdTree == null) continue;
+        	// second, paint outlines for areas
             if (currentWTGSpec.getOuterColor() != null) {
                 currentWTGSpec.transformOutline(g2d);
                 for (Iterator<ParsedItem> i = kdTree.iterator(currentRegion); i.hasNext(); ) {
@@ -162,7 +168,7 @@ public class MapCanvas extends JPanel {
                 }
             }
         }
-
+        
         // Drawing all line outlines
         for (WaytypeGraphicSpec wayTypeLine : linesVisible) {
         	if(wayTypeLine.getOuterColor() == null) continue;
@@ -430,7 +436,7 @@ public class MapCanvas extends JPanel {
 		return currentHighlighedShape;
 	}
 	
-	public BufferedImage getRoutePreviewImage(Region routeRegion) {
+	public void zoomToRouteRegion(Region routeRegion) {
 		final double MARGIN = 1.50;
 		
 		double distX = (routeRegion.x2-routeRegion.x1)*MARGIN;
@@ -440,7 +446,7 @@ public class MapCanvas extends JPanel {
 		double y1 = routeRegion.y2 - distY;
 		double y2 = routeRegion.y1 + distY;
 		Region region = new Region(x1, y1, x2, y2);
-		System.out.println(region);
+		
 		AffineTransform newTransform = new AffineTransform();
 		if(routeRegion.y2-routeRegion.y1 < routeRegion.x2-routeRegion.x1) Util.zoomToRegion(newTransform, region, getWidth());
 		else Util.zoomToRegionY(newTransform, region, getHeight());
@@ -449,11 +455,11 @@ public class MapCanvas extends JPanel {
 		actualTransform.setTransform(newTransform);
 		panToPosition(region.getMiddlePoint());
 		
-		Main.tileController.zoom(1);
-		
-		BufferedImage image = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
-        
-		return image;
+		forceRepaint();
+	}
+	
+	public BufferedImage getRoutePreviewImage() {
+		return Util.screenshotWithoutGUI(1500);
 	}
 	
 	public void pan(double dx, double dy) {

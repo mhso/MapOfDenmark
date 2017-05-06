@@ -5,6 +5,8 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 
 import dk.itu.n.danmarkskort.Main;
+import dk.itu.n.danmarkskort.gui.components.CustomButton;
+import dk.itu.n.danmarkskort.gui.components.CustomToggleButton;
 
 import java.awt.*;
 import java.awt.font.TextAttribute;

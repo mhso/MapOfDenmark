@@ -6,8 +6,8 @@ import javax.swing.border.TitledBorder;
 import dk.itu.n.danmarkskort.DKConstants;
 import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.Util;
-import dk.itu.n.danmarkskort.gui.CustomToggleButton;
 import dk.itu.n.danmarkskort.gui.Style;
+import dk.itu.n.danmarkskort.gui.components.CustomToggleButton;
 import dk.itu.n.danmarkskort.mapgfx.GraphicRepresentation;
 
 import java.util.List;
