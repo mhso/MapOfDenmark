@@ -30,8 +30,8 @@ public class GraphicRepresentation {
 	
 	/**
 	 * Get a list of Graphic Specification objects matching the inputed zoom level. 
-	 * The Graphic Specs returned are for all zoom levels equal to and less than the specified zoom level.
-	 * Fx. input zoom level 10 return all Graphic Specs for level 10, level 9, level 8 etc.
+	 * The Graphic Specs returned are for all zoom levels less than and equal to the specified zoom level.
+	 * Fx. input zoom level 10 returns all Graphic Specs for level 10 and below.
 	 * 
 	 * Furthermore, the Graphic Specs are sorted by their layer values, meaning lower layer objects appear first in the list and are thereby drawn first.
 	 * 
@@ -52,6 +52,14 @@ public class GraphicRepresentation {
 		return cummulativeList;
 	}
 	
+	/**
+	 * This method acts like a filter where a List of different types of WaytypeGraphicSpecs can be inputed and a new List
+	 * of all the GraphicSpec objects in the list, that inherit from the specified WaytypeGraphicSpec, will be returned.
+	 * 
+	 * @param allSpecs The List of mixed Graphic Specs.
+	 * @param searchClass The type of GraphicSpec to return a separate list of.
+	 * @return A new List of all the filtered WaytypeGraphicSpecs in the original list.
+	 */
 	public static List<WaytypeGraphicSpec> getSpecificSpec(List<WaytypeGraphicSpec> allSpecs, 
 			Class<? extends WaytypeGraphicSpec> searchClass) {
 		List<WaytypeGraphicSpec> result = new ArrayList<>();
@@ -156,8 +164,10 @@ public class GraphicRepresentation {
 	
 	/**
 	 * Parse an XML file containing information about the graphical representation of the map.
+	 * This method first parses and saves data from the basic theme (ThemeBasic.XML). If the inputed theme is a different one, 
+	 * the values that exist in that theme will override those of the basic theme. 
 	 * 
-	 * @param source The InputSource of the XML file.
+	 * @param themeFile The filename of the XML file.
 	 */
 	public static void parseData(String themeFile) {
 		for(int i = 0; i < zoomLevelArr.length; i++) {

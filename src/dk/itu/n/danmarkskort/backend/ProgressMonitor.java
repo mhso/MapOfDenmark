@@ -10,6 +10,16 @@ import java.util.List;
 
 import javax.swing.Timer;
 
+/**
+ * This class extends <code>FilteredInputStream</code> to provide ways to monitor the progress of an <code>InputStream</code>.
+ * A class can implement <code>ProgressListener</code> to receive notifications from the Input Stream. <p>
+ * This can then be used to create Loading Screens where users can visually track the progress of the stream.
+ * This class is inspired by the class <code>CountingInputStream</code> from {@link https://commons.apache.org/proper/commons-io/}
+ * but the code has not been copied in any way (I saw it as a challenge to create this on my own!).
+ * 
+ * @see ProgressListener
+ * @author Team N ITU
+ */
 public class ProgressMonitor extends FilterInputStream {
 	private int currentPct;
 	private int totalByteCount;
@@ -21,6 +31,11 @@ public class ProgressMonitor extends FilterInputStream {
 	private List<ProgressListener> listeners = new ArrayList<>();
 	private ProgressTimer timer;
 	
+	/**
+	 * Create a new ProgressMonitor to monitor the supplied <code>InputStream</code>.
+	 * 
+	 * @param in The <code>InputStream</code> to monitor, this <code>InputStream</code> is supplied to the superclass <code>FilterInputStream</code>.
+	 */
 	public ProgressMonitor(InputStream in) {
 		super(in);
 		try {
@@ -96,10 +111,8 @@ public class ProgressMonitor extends FilterInputStream {
 	
 	private class ProgressTimer implements ActionListener {
 		private Timer timer;
-		private int delay;
 		
 		public ProgressTimer(int delay) {
-			this.delay = delay;
 			timer = new Timer(delay, this);
 			timer.start();
 		}
