@@ -1,6 +1,9 @@
 package dk.itu.n.danmarkskort.gui;
 
 import javax.swing.*;
+
+import dk.itu.n.danmarkskort.gui.components.CustomScrollBarUI;
+
 import java.awt.*;
 
 public class DropdownMenu extends JPopupMenu{

@@ -1,4 +1,4 @@
-package dk.itu.n.danmarkskort.gui;
+package dk.itu.n.danmarkskort.gui.components;
 
 import dk.itu.n.danmarkskort.Main;
 

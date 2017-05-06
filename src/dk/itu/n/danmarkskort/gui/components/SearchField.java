@@ -1,4 +1,4 @@
-package dk.itu.n.danmarkskort.gui;
+package dk.itu.n.danmarkskort.gui.components;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -6,6 +6,8 @@ import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JTextField;
+
+import dk.itu.n.danmarkskort.gui.DropdownAddressSearch;
 
 public class SearchField extends JTextField {
 	private static final long serialVersionUID = 7828180981089742062L;	

@@ -14,8 +14,6 @@
 		<type name="HIGHWAY_TRUNK"/>
 	</zoomlevel>
 	<zoomlevel level="3">	
-		<type name="PLACE_TOWN"/>
-		<type name="PLACE_SUBURB"/>
 	</zoomlevel>
 	<zoomlevel level="4">
 	</zoomlevel>
@@ -24,6 +22,8 @@
 	<zoomlevel level="6">
 	</zoomlevel>
 	<zoomlevel level="7">
+		<type name="PLACE_TOWN"/>
+		<type name="PLACE_SUBURB"/>
 		<type name="GRASS"/>
 		<type name="WOOD"/>
 	</zoomlevel>

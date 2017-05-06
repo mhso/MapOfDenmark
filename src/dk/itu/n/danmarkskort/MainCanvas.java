@@ -53,6 +53,7 @@ public class MainCanvas extends JPanel {
     
     public void hideGUI() {
     	guiManager.setVisible(false);
+    	guiManager.getTopPanel().getDropMenu().setVisible(false);
     	repaint();
     }
     

@@ -13,7 +13,7 @@ public class UserPreferences implements Serializable {
 	private boolean highlightNearestRoad = true;
 	
 	private String defaultTheme = "Basic";
-	private String defaultMapFile = "map.bin";
+	private String defaultMapFile = "default.bin";
 	
 	public void setCurrentMapTheme(String currentMapTheme) { this.currentMapTheme = currentMapTheme; }
 	public void setCurrentGUITheme(String currentGUITheme) { this.currentGUITheme = currentGUITheme; }

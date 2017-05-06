@@ -11,8 +11,8 @@ import javax.swing.text.DocumentFilter;
 import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.address.Address;
 import dk.itu.n.danmarkskort.gui.DropdownAddressSearch;
-import dk.itu.n.danmarkskort.gui.SearchField;
 import dk.itu.n.danmarkskort.gui.Style;
+import dk.itu.n.danmarkskort.gui.components.SearchField;
 import dk.itu.n.danmarkskort.gui.map.PinPoint;
 import dk.itu.n.danmarkskort.gui.routeplanner.RoutePlannerMain;
 import dk.itu.n.danmarkskort.models.RouteEnum;
@@ -304,29 +304,31 @@ public class RoutePage extends JPanel {
     
     private void openFindRoute(){
     	if(validateToFromFields()){
-    		WeightEnum weightEnum =  findWeightType();
-    		Address addrFrom = SearchController.getSearchFieldAddressObj(txtAddrFrom.getText());
-			Address addrTo = SearchController.getSearchFieldAddressObj(txtAddrTo.getText());
-    		String routeDistance = "999";
-    		BufferedImage bufferedImage = null;
-    		
-    		List<RouteModel> routemodels = Main.routeController.makeRoute(addrFrom.getLonLatAsPoint(), addrTo.getLonLatAsPoint(), weightEnum);
-    		if(!routemodels.isEmpty()){
-	    		try {
-					if(Main.production) bufferedImage = ImageIO.read(getClass().getResourceAsStream("/resources/routeplanner/demo_routeplanner.PNG"));
-					else bufferedImage = ImageIO.read(new File("resources/routeplanner/demo_routeplanner.PNG"));
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-	    		
-    			Main.map.getRoutePreviewImage(Main.routeController.getRouteRegion());
-    			
-				makePinPoint(addrFrom, addrTo);
-				RoutePlannerMain routePlannerMain =  new RoutePlannerMain(bufferedImage, txtAddrFrom.getText(), txtAddrTo.getText(), routeDistance, routemodels);
-			}else {
-				menu.blockVisibility(true);
-	    		JOptionPane.showMessageDialog(this, "Unable to find a route, we're sorry.", "No route", JOptionPane.INFORMATION_MESSAGE);
-			}
+    		Thread t = new Thread(new Runnable() {
+				@Override
+				public void run() {
+					WeightEnum weightEnum =  findWeightType();
+		    		Address addrFrom = SearchController.getSearchFieldAddressObj(txtAddrFrom.getText());
+					Address addrTo = SearchController.getSearchFieldAddressObj(txtAddrTo.getText());
+		    		String routeDistance = "999";
+		    		BufferedImage bufferedImage = null;
+		    		
+		    		List<RouteModel> routemodels = Main.routeController.makeRoute(addrFrom.getLonLatAsPoint(), addrTo.getLonLatAsPoint(), weightEnum);
+		    		if(!routemodels.isEmpty()){
+		    			makePinPoint(addrFrom, addrTo);
+		    			
+		    			Main.map.zoomToRouteRegion(Main.routeController.getRouteRegion());
+		    			bufferedImage = Main.map.getRoutePreviewImage();
+						
+						RoutePlannerMain routePlannerMain =  new RoutePlannerMain(bufferedImage, txtAddrFrom.getText(), txtAddrTo.getText(), 
+								routeDistance, weightEnum, routemodels);
+					}else {
+						menu.blockVisibility(true);
+			    		JOptionPane.showMessageDialog(RoutePage.this, "Unable to find a route, we're sorry.", "No route", JOptionPane.INFORMATION_MESSAGE);
+					}
+    			}
+    		});
+    		t.start();
     	} else if(!txtAddrFrom.getText().trim().isEmpty() && !txtAddrTo.getText().trim().isEmpty()) {
     		menu.blockVisibility(true);
     		JOptionPane.showMessageDialog(this, "To/From fields can't be empty.", "Missing information", JOptionPane.INFORMATION_MESSAGE);

@@ -1,4 +1,4 @@
-package dk.itu.n.danmarkskort.gui;
+package dk.itu.n.danmarkskort.gui.components;
 
 import java.awt.Color;
 import java.io.IOException;
