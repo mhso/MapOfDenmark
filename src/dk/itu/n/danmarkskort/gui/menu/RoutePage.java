@@ -320,7 +320,8 @@ public class RoutePage extends JPanel {
 		    			Main.map.zoomToRouteRegion(Main.routeController.getRouteRegion());
 		    			bufferedImage = Main.map.getRoutePreviewImage();
 						
-						RoutePlannerMain routePlannerMain =  new RoutePlannerMain(bufferedImage, txtAddrFrom.getText(), txtAddrTo.getText(), routeDistance, routemodels);
+						RoutePlannerMain routePlannerMain =  new RoutePlannerMain(bufferedImage, txtAddrFrom.getText(), txtAddrTo.getText(), 
+								routeDistance, weightEnum, routemodels);
 					}else {
 						menu.blockVisibility(true);
 			    		JOptionPane.showMessageDialog(RoutePage.this, "Unable to find a route, we're sorry.", "No route", JOptionPane.INFORMATION_MESSAGE);

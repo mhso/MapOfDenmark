@@ -205,14 +205,6 @@ public class MapCanvas extends JPanel {
             	currentWTGSpec = wayTypeLabel;
             	KDTree<ParsedPlace> kdTree = Main.model.getEnumMapPlacesKD().get(wayTypeLabel.getWayType());
             	if(kdTree == null) continue;
-            	if(currentWTGSpec.getOuterColor() != null) {
-            		currentWTGSpec.transformOutline(g2d);
-                    for (Iterator<ParsedPlace> i = kdTree.iterator(currentRegion); i.hasNext(); ) {
-                        ParsedPlace place = i.next();
-                        g2d.drawString(place.getName(), place.x, place.y);
-                        shapesDrawn++;
-                	}
-            	}
             	currentWTGSpec.transformPrimary(g2d);
                 for (Iterator<ParsedPlace> i = kdTree.iterator(currentRegion); i.hasNext(); ) {
                     ParsedPlace place = i.next();
@@ -450,7 +442,7 @@ public class MapCanvas extends JPanel {
 		double y2 = routeRegion.y1 + distY;
 		Region region = new Region(x1, y1, x2, y2);
 		
-		zoomToRegion(routeRegion);
+		zoomToRegion(region);
 	}
 	
 	public BufferedImage getRoutePreviewImage() {

@@ -16,6 +16,7 @@ import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.gui.Style;
 import dk.itu.n.danmarkskort.models.RouteEnum;
 import dk.itu.n.danmarkskort.models.RouteModel;
+import dk.itu.n.danmarkskort.routeplanner.WeightEnum;
 
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -32,13 +33,15 @@ public class RoutePlannerMain {
 	private JPanel panelRouteImage, panelRouteDescription;
 	private JLabel lblRouteimage;
 	private final String ROUTE_FROM, ROUTE_TO;
+	private final WeightEnum weightEnum;
 
 	/**
 	 * Create the application.
 	 */
-	public RoutePlannerMain(BufferedImage routeImage, String routeFrom, String routeTo, String routeDistance,  List<RouteModel> routeModels) {
+	public RoutePlannerMain(BufferedImage routeImage, String routeFrom, String routeTo, String routeDistance, WeightEnum weightEnum, List<RouteModel> routeModels) {
 		ROUTE_FROM = routeFrom;
 		ROUTE_TO = routeTo;
+		this.weightEnum = weightEnum;
 		
 		initialize();
 		makeRoute(ROUTE_FROM, ROUTE_TO, routeDistance, routeModels);
@@ -160,6 +163,6 @@ public class RoutePlannerMain {
 	}
 	
 	private void makeRoute(String routeFrom, String routeTo, String routeDistance,  List<RouteModel> routeModels){
-		RoutePartBasic routePartBasic = new RoutePartBasic(routeFrom, routeTo, panelRouteDescription, routeModels);
+		RoutePartBasic routePartBasic = new RoutePartBasic(routeFrom, routeTo, weightEnum, panelRouteDescription, routeModels);
 	}
 }
