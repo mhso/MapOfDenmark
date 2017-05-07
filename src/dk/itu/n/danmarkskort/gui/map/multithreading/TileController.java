@@ -63,6 +63,10 @@ public class TileController implements ActionListener {
 		return isInitialized;
 	}
 	
+	public boolean isTileQueueEmpty() {
+		return tileQueue.size() == 0;
+	}
+	
 	public void updateZero() {
 		zero = Main.map.toActualModelCoords(new Point2D.Double(0, 0));
 	}
