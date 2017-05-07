@@ -72,7 +72,7 @@ public class TileController implements ActionListener {
 		imageScale *= scale;
 		if(!isBlurred()) blur();
 		else Util.zoom(zoomTransform, scale);
-		blurTimer.restart();
+		if(blurTimer != null) blurTimer.restart();
 	}
 	
 	public void prepareZoomImage() {
