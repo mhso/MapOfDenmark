@@ -16,7 +16,7 @@ public class DKConstants {
 	/**
 	 * Maximum scale, is the same as zoom level 20
 	 */
-	public static final double MAX_SCALE = 371336.94267964247;
+	public static final double MAX_SCALE = 371336.94267964247, MIN_SCALE = 222.70042257660032;
 	
 	/**
 	 * The factor that Theme line width and font size values get magnified by.

@@ -8,6 +8,7 @@ import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.Shape;
+import java.awt.Toolkit;
 import java.awt.geom.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
@@ -48,7 +49,9 @@ public class MapCanvas extends JPanel {
 
 	private WaytypeGraphicSpec currentWTGSpec;
 	private boolean zoomChanged = true;
-
+	private double MIN_SCALE;
+	private double MAX_SCALE;
+	
 	private List<CanvasListener> listeners = new ArrayList<>();
 	private List<WaytypeGraphicSpec> wayTypesVisible;
 	private List<WaytypeGraphicSpec> areasVisible;
@@ -524,8 +527,9 @@ public class MapCanvas extends JPanel {
 		double zoomBefore = getZoom();
 		double scaleBefore = getZoomRaw();
 
-		if(scaleBefore * factor > DKConstants.MAX_SCALE) factor = DKConstants.MAX_SCALE / scaleBefore;
-
+		if(scaleBefore * factor > MAX_SCALE) factor = MAX_SCALE / scaleBefore;
+		else if(scaleBefore * factor < MIN_SCALE) factor = scaleBefore / MIN_SCALE;
+		
 		Util.zoom(transform, factor);
 		Util.zoom(actualTransform, factor);
 		if(Main.tileController.isInitialized()) Main.tileController.zoom(factor);
@@ -597,9 +601,8 @@ public class MapCanvas extends JPanel {
 
 	public double getZoom() {
 		Region denmark = DKConstants.BOUNDS_DENMARK;
-		double denmarkWidth = denmark.getWidth();
 		Region view = getGeographicalRegion();
-		return Math.floor(Math.log(denmarkWidth/view.getWidth())*2.8);
+		return 2+Math.floor(Math.log(denmark.getWidth()/view.getWidth())*2.5);
 	}
 	
 	public double getZoomRaw() {
@@ -626,6 +629,8 @@ public class MapCanvas extends JPanel {
 	}
 	
 	public void setupDone() {
+		MAX_SCALE = DKConstants.MAX_SCALE/((Toolkit.getDefaultToolkit().getScreenSize().getWidth()+16)/Main.window.getWidth());
+		MIN_SCALE = DKConstants.MIN_SCALE/((Toolkit.getDefaultToolkit().getScreenSize().getWidth()+16)/Main.window.getWidth());
 		zoomToBounds();
 		if(!Main.tileController.isInitialized()) Main.tileController.initialize();
 		for(CanvasListener listener : listeners) listener.onSetupDone();

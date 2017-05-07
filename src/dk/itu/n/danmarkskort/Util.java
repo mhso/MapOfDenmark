@@ -327,17 +327,16 @@ public class Util {
 	}
 	
 	private static class ScreenshotDelayer implements Callable<BufferedImage> {
-		private int delay;
 		private boolean gui;
 		
 		public ScreenshotDelayer(int delay, boolean gui) {
-			this.delay = delay;
 			this.gui = gui;
 		}
 		
 		@Override
 		public BufferedImage call() throws Exception {
-			Thread.sleep(delay);
+			while(!Main.tileController.isTileQueueEmpty()) Thread.sleep(5);
+			Thread.sleep(1500);
 			if(gui) return screenshot();
 			else return screenshotWithoutGUI();
 		}	
