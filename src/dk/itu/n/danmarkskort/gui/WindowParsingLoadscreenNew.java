@@ -9,7 +9,6 @@ import javax.swing.JLabel;
 
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -21,12 +20,12 @@ import java.awt.Dimension;
 
 import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.Util;
-import dk.itu.n.danmarkskort.backend.InputStreamListener;
+import dk.itu.n.danmarkskort.backend.ProgressListener;
 import dk.itu.n.danmarkskort.backend.OSMParserListener;
 
 import javax.imageio.ImageIO;
 
-public class WindowParsingLoadscreenNew extends JFrame implements OSMParserListener, InputStreamListener {
+public class WindowParsingLoadscreenNew extends JFrame implements OSMParserListener, ProgressListener {
 	private static final long serialVersionUID = 4049548769311961507L;
 	private static final Color BAR_STATIC_COLOR = Color.LIGHT_GRAY;
 	private static final Color BAR_LOADING_COLOR = new Color(0, 153, 0);
@@ -38,6 +37,7 @@ public class WindowParsingLoadscreenNew extends JFrame implements OSMParserListe
 	private long fileSize;
 	private double currentPercent;
 	private JLabel labelPercent;
+	private JLabel labelRemaining;
 	private int objectCount = 1000;
 	private String fileName;
 	
@@ -83,6 +83,12 @@ public class WindowParsingLoadscreenNew extends JFrame implements OSMParserListe
 		labelStatus = new JLabel("Preparing To Parse File...");
 		labelStatus.setHorizontalAlignment(SwingConstants.LEFT);
 		statusPanel.add(labelStatus, BorderLayout.WEST);
+		
+		labelRemaining = new JLabel("Time Remaining: ...");
+		labelRemaining.setOpaque(true);
+		labelRemaining.setBackground(contentPane.getBackground());
+		labelRemaining.setHorizontalAlignment(SwingConstants.RIGHT);
+		statusPanel.add(labelRemaining, BorderLayout.EAST);
 		
 		setPreferredSize(new Dimension(mainImage.getWidth(), mainImage.getHeight()+80));
 		
@@ -132,13 +138,27 @@ public class WindowParsingLoadscreenNew extends JFrame implements OSMParserListe
 	}
 	
 	@Override
-	public void onPercent(int percentAmounth) {
-		currentPercent += percentAmounth;
+	public void onPercent(int percentAmount) {
+		currentPercent += percentAmount;
 		setProgressPercent();
 	}
 	
 	@Override
+	public void getTimeRemaining(int timeRemaining) {
+		timeRemaining = timeRemaining/1000;
+		String timeString = "Time Remaining: " + timeRemaining + " Seconds.";
+		if(timeRemaining > 60) {
+			int seconds = timeRemaining % 60;
+			timeString = "Time Remaining: " + timeRemaining/60 + " Minutes & " + seconds + " Seconds.";
+		}
+		labelRemaining.setText(timeString);
+	}
+	
+	@Override
 	public void onStreamEnded() {
+		currentPercent = 100;
+		setProgressPercent();
+		labelRemaining.setText("Time Remaining: 0 Seconds.");
 		labelStatus.setText("Converting Data To KD-Trees...");
 	}
 	

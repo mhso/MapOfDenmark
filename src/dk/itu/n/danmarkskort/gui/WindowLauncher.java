@@ -6,6 +6,7 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 import dk.itu.n.danmarkskort.Main;
+import dk.itu.n.danmarkskort.gui.components.CustomScrollBarUI;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -247,7 +248,7 @@ public class WindowLauncher extends JFrame {
 		binFilesList.setForeground(new Color(200, 200, 200));
 		labelSelectedFile.setForeground(new Color(200, 200, 200));
 		
-		setPreferredSize(new Dimension(550, 550));
+		setPreferredSize(new Dimension(550, 620));
 		pack();
 		
 		setLocationRelativeTo(null);

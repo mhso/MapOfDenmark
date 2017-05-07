@@ -6,6 +6,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.Serializable;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -220,7 +222,17 @@ public class PinPointManager implements Serializable {
 	}
 	
 	public void save() {
-		Util.writeObjectToFile(this, "parsedOSMFiles/"+Main.osmReader.getChecksum()+"/pinpoints.bin");
+		if(Main.production && Main.osmReader.getFileName().endsWith("resources/default.bin")) {
+			if(!Files.exists(Paths.get("parsedOSMFiles/default"))) {
+				try {
+					Files.createDirectory(Paths.get("parsedOSMFiles/default"));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			Util.writeObjectToFile(this, "parsedOSMFiles/default/pinpoints.bin");
+		}
+		else Util.writeObjectToFile(this, "parsedOSMFiles/"+Main.osmReader.getChecksum()+"/pinpoints.bin");
 	}
 	
 	public void drawPinPoints(Graphics2D g) {
@@ -248,7 +260,10 @@ public class PinPointManager implements Serializable {
 	}
 	
 	public static PinPointManager load(MapCanvas canvas) {
-		PinPointManager manager = (PinPointManager) Util.readObjectFromFile("parsedOSMFiles/"+Main.osmReader.getChecksum()+"/pinpoints.bin");
+		PinPointManager manager = null;
+		if(Main.production && Main.osmReader.getFileName().endsWith("resources/default.bin"))
+			manager = (PinPointManager) Util.readObjectFromFile("parsedOSMFiles/default/pinpoints.bin");
+		else manager = (PinPointManager) Util.readObjectFromFile("parsedOSMFiles/"+Main.osmReader.getChecksum()+"/pinpoints.bin");
 		if(manager != null) {
 			manager.setMap(canvas);
 			manager.loadIcon();

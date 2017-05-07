@@ -1,10 +1,12 @@
 package dk.itu.n.danmarkskort.routeplanner;
 
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class Stack<Item> implements Iterable<Item> {
-    private Node<Item> first;     // top of stack
+public class Stack<Item> implements Iterable<Item>, Serializable {
+	private static final long serialVersionUID = -4352016104562971349L;
+	private Node<Item> first;     // top of stack
     private int n;                // size of the stack
 
     // helper linked list class

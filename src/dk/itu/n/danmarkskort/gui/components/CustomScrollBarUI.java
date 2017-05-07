@@ -1,7 +1,10 @@
-package dk.itu.n.danmarkskort.gui;
+package dk.itu.n.danmarkskort.gui.components;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicScrollBarUI;
+
+import dk.itu.n.danmarkskort.gui.Style;
+
 import java.awt.*;
 
 public class CustomScrollBarUI extends BasicScrollBarUI {

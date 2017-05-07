@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.ZipInputStream;
 
+import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
@@ -34,7 +35,7 @@ import dk.itu.n.danmarkskort.Util;
 public class OSMReader {
 	
 	public List<OSMParserListener> parserListeners = new ArrayList<OSMParserListener>();
-	private List<InputStreamListener> inputListeners = new ArrayList<InputStreamListener>();
+	private List<ProgressListener> inputListeners = new ArrayList<ProgressListener>();
 	private String currentChecksum;
 	private InputStream inputStream;
 	private String fileName;
@@ -43,9 +44,9 @@ public class OSMReader {
 		initialize();
 	}
 	
-	public OSMReader(String fileName) {
-		initialize();
-		parseFile(fileName);
+	public OSMReader(String fileName, ContentHandler contentHandler) {
+		this();
+		parseFile(fileName, contentHandler);
 	}
 	
 	public void initialize() {
@@ -56,7 +57,7 @@ public class OSMReader {
 		parserListeners.add(listener);
 	}
 	
-	public void addInputListener(InputStreamListener listener) {
+	public void addInputListener(ProgressListener listener) {
 		inputListeners.add(listener);
 	}
 	
@@ -68,7 +69,7 @@ public class OSMReader {
 		return fileName;
 	}
 	
-	public void parseFile(String fileName) {
+	public void parseFile(String fileName, ContentHandler contentHandler) {
 		this.fileName = fileName;
 		
 		TimerUtil parseTimer = new TimerUtil();
@@ -77,24 +78,18 @@ public class OSMReader {
 		parseMemory.on();
 
 		if(fileName.endsWith(".bin")) {
-			if(Main.production && new File(fileName).getName().equals("default.bin")) {
-				fileName = getClass().getResource(fileName).toString();
-			}
-			else {
-				try {
-					for(Path checkSumDir : Files.newDirectoryStream(Paths.get("parsedOSMFiles"))) {
-						for(Path parsedFile : Files.newDirectoryStream(checkSumDir)) {
-							if(parsedFile.toString().equals(fileName)) currentChecksum = checkSumDir.toFile().getName();
-						}
+			try {
+				for(Path checkSumDir : Files.newDirectoryStream(Paths.get("parsedOSMFiles"))) {
+					for(Path parsedFile : Files.newDirectoryStream(checkSumDir)) {
+						if(parsedFile.toString().equals(fileName)) currentChecksum = checkSumDir.toFile().getName();
 					}
-				} catch (IOException e) {
-					e.printStackTrace();
 				}
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
 			BinaryWrapper binary = (BinaryWrapper) Util.readObjectFromFile(fileName, inputListeners);
-			Main.model = binary.getModel();
-			Main.addressController.setAddressHolder(binary.getAddressHolder());
-			for(InputStreamListener listener : inputListeners) listener.onSetupDone();
+			Util.extractAllFromBinary(binary);
+			for(ProgressListener listener : inputListeners) listener.onSetupDone();
 		}
 		else {
 			try {
@@ -102,34 +97,31 @@ public class OSMReader {
             } catch (NoSuchAlgorithmException | IOException e1) {
                 e1.printStackTrace();
             }
-			if (!Main.forceParsing && Main.binaryfile && checkSumExists(currentChecksum)) {
+			if (!Main.userPreferences.isForcingParsing() && !Main.userPreferences.isSavingToBinary() && checkSumExists(currentChecksum)) {
 	                fileName = Util.getBinaryFilePath();
 	                BinaryWrapper binary = (BinaryWrapper) Util.readObjectFromFile(fileName, inputListeners);
-	                Main.model = binary.getModel();
-	                Main.addressController.setAddressHolder(binary.getAddressHolder());
-	                for (InputStreamListener listener : inputListeners) listener.onSetupDone();
+	                Util.extractAllFromBinary(binary);
+	                for (ProgressListener listener : inputListeners) listener.onSetupDone();
 			}  
             else {
             	if (fileName.endsWith(".osm")) {
                     try {
-                    	if(Main.production) inputStream = new FileInputStream(getClass().getResource(fileName).toString());
-                    	else inputStream = new FileInputStream(fileName);
-                        InputMonitor monitor = new InputMonitor(inputStream, fileName);
-                        for (InputStreamListener inListener : inputListeners) monitor.addListener(inListener);
-                        loadOSM(new InputSource(monitor), fileName);
+                    	inputStream = new FileInputStream(fileName);
+                        ProgressMonitor monitor = new ProgressMonitor(inputStream);
+                        for (ProgressListener inListener : inputListeners) monitor.addListener(inListener);
+                        loadOSM(new InputSource(monitor), fileName, contentHandler);
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     }
 
                 } else if (fileName.endsWith(".zip")) {
                     try {
-                    	if(Main.production) inputStream = new FileInputStream(getClass().getResource(fileName).toString());
-                    	else inputStream = new FileInputStream(fileName);
-                        InputMonitor monitor = new InputMonitor(inputStream, fileName);
+                    	inputStream = new FileInputStream(fileName);
+                        ProgressMonitor monitor = new ProgressMonitor(inputStream);
                         ZipInputStream zip = new ZipInputStream(new BufferedInputStream(monitor));
                         zip.getNextEntry();
-                        for (InputStreamListener inListener : inputListeners) monitor.addListener(inListener);
-                        loadOSM(new InputSource(zip), fileName);
+                        for (ProgressListener inListener : inputListeners) monitor.addListener(inListener);
+                        loadOSM(new InputSource(zip), fileName, contentHandler);
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     } catch (IOException e) {
@@ -137,7 +129,7 @@ public class OSMReader {
                     }
                 }
             	
-                if(Main.binaryfile) {
+                if(Main.userPreferences.isSavingToBinary()) {
                     String path = "parsedOSMFiles/" + currentChecksum + "/";
                     try {
                     	Path filePath = Paths.get(path);
@@ -146,13 +138,12 @@ public class OSMReader {
                         e.printStackTrace();
                     }
                     BinaryWrapper binary = new BinaryWrapper();
-                    binary.setModel(Main.model);
-                    binary.setAddressHolder(Main.addressController.getAddressHolder());
+                    Util.addAllToBinary(binary);
                     Util.writeObjectToFile(binary, Util.getBinaryFilePath());
                 }
             }
 
-            for (InputStreamListener listener : inputListeners) listener.onSetupDone();
+            for (ProgressListener listener : inputListeners) listener.onSetupDone();
         }
 		
 		parseTimer.off();
@@ -162,10 +153,10 @@ public class OSMReader {
 		Main.logRamUsage();
 	}
 
-	private void loadOSM(InputSource source, String fileName) {
+	private void loadOSM(InputSource source, String fileName, ContentHandler contentHandler) {
 		try {
 			XMLReader reader = XMLReaderFactory.createXMLReader();
-			reader.setContentHandler(Main.model);
+			reader.setContentHandler(contentHandler);
 			reader.parse(source);
 		} catch (SAXException | IOException e) {
 			e.printStackTrace();
@@ -173,7 +164,6 @@ public class OSMReader {
 	}
 	
 	private boolean checkSumExists(String checkSum) {
-		if(Main.production) return getClass().getResource("/parsedOSMFiles/"+checkSum) != null;
 		return Files.exists(Paths.get("parsedOSMFiles/"+checkSum));
 	}
 	

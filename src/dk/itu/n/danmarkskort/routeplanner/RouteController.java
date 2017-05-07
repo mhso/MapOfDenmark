@@ -4,9 +4,13 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Vector;
 
+import dk.itu.n.danmarkskort.Main;
+import dk.itu.n.danmarkskort.Util;
 import dk.itu.n.danmarkskort.kdtree.KDTree;
 import dk.itu.n.danmarkskort.kdtree.KDTreeNode;
+import dk.itu.n.danmarkskort.models.Region;
 import dk.itu.n.danmarkskort.models.ReuseRouteEdgeMetaObj;
 import dk.itu.n.danmarkskort.models.RouteEnum;
 import dk.itu.n.danmarkskort.models.RouteModel;
@@ -16,6 +20,7 @@ public class RouteController {
 	private List<RouteEdge> routeEdges;
 	private List<RouteVertex> vertices;
 	private RouteGraph routeGraph;
+	private Region routeRegion;
 	private boolean debug = true;
 	KDTree<RouteEdge> edgeTree;
 	
@@ -23,7 +28,6 @@ public class RouteController {
 		vertexCount = 0;
 		routeEdges = new ArrayList<RouteEdge>();
 		vertices = new ArrayList<RouteVertex>();
-		routeGraph = null;
 	}
 	
 	/**
@@ -39,64 +43,71 @@ public class RouteController {
 	}
 	
 	public void addEdge(RouteVertex fromVertex, RouteVertex toVertex, Integer maxSpeed,
-			boolean forwardAllowed, boolean backwardAllowed, boolean carsAllowed, boolean bikesAllowed, String description){
+			boolean forwardAllowed, boolean backwardAllowed, boolean carsAllowed,
+			boolean bikesAllowed, boolean walkAllowed, String description){
+		
 		RouteEdgeMeta routeEdgeMeta = new RouteEdgeMeta(maxSpeed, forwardAllowed, backwardAllowed,
-				carsAllowed, bikesAllowed);
+				carsAllowed, bikesAllowed, walkAllowed);
 		RouteEdgeMeta reuseRouteEdgeMeta = ReuseRouteEdgeMetaObj.make(routeEdgeMeta);
 		if(forwardAllowed){
-			if(debug && description != null && description.startsWith("Amagerbrogade"))System.out.println("debug addEdge forward: " + description);
 			RouteEdge edge = new RouteEdge(fromVertex, toVertex, reuseRouteEdgeMeta, description);
 			routeEdges.add(edge);
 		}
 		if(backwardAllowed){
-			if(debug && description != null && description.startsWith("Amagerbrogade"))System.out.println("debug addEdge backward: " + description);
 			RouteEdge edge = new RouteEdge(toVertex, fromVertex, reuseRouteEdgeMeta, description);
 			routeEdges.add(edge);
 		}
-	
 	}
 	
 	public void makeGraph(){
 		routeGraph = new RouteGraph(vertexCount);
 		for(RouteEdge edge : routeEdges) routeGraph.addEdge(edge);
+		makeTree();	
+		cleanUp();
+	}
+
+	private void makeTree() {
 		edgeTree = new KDTreeNode<>(routeEdges);
 	}
 	
 	public void cleanUp(){
 		routeEdges = null;
+		vertices = null;
+		ReuseRouteEdgeMetaObj.clear();
 	}
 	
 	public Iterable<RouteEdge> getRoute(RouteVertex from, RouteVertex to, WeightEnum weightEnum){
-		if(routeGraph == null) makeGraph();
-		RouteDijkstra routeDijkstra = new RouteDijkstra(routeGraph, from.getId(), weightEnum);
-		if(debug) System.out.println("debug getRoute: " + routeDijkstra);
+		RouteDijkstra routeDijkstra = new RouteDijkstra(routeGraph, from.getId(), to.getId(), weightEnum);
 		return routeDijkstra.pathTo(to.getId());
 	}
 	
 	public boolean hasRoute(RouteVertex from, RouteVertex to, WeightEnum weightEnum){
-		if(routeGraph == null) makeGraph();
-		RouteDijkstra routeDijkstra = new RouteDijkstra(routeGraph, from.getId(), weightEnum);
+		RouteDijkstra routeDijkstra = new RouteDijkstra(routeGraph, from.getId(), to.getId(), weightEnum);
 		return routeDijkstra.hasPathTo(to.getId());
 	}
 
-	public int getVertexCount() {
-		return vertexCount;
+	public int getVertexCount() { return vertexCount; }
+	
+	public int getNumOfRouteEdges() { return routeEdges.size(); }
+
+	public int getNumOfVertices() { return vertices.size(); }
+
+	public List<RouteEdge> getRouteEdges() { return routeEdges; }
+
+	public List<RouteVertex> getVertices() { return vertices; }
+	
+	public KDTree<RouteEdge> getEdgeTree() { return edgeTree; }
+	
+	public Region getRouteRegion() { return routeRegion; }
+	
+	public RouteGraph getGraph() { return routeGraph; }
+	
+	public void setEdgeTree(KDTree<RouteEdge> edgeTree) {
+		this.edgeTree = edgeTree;
 	}
 	
-	public int getNumOfRouteEdges() {
-		return routeEdges.size();
-	}
-
-	public int getNumOfVertices() {
-		return vertices.size();
-	}
-
-	public List<RouteEdge> getRouteEdges() {
-		return routeEdges;
-	}
-
-	public List<RouteVertex> getVertices() {
-		return vertices;
+	public void setGraph(RouteGraph graph) {
+		routeGraph = graph;
 	}
 	
 	public String toString() {
@@ -105,72 +116,91 @@ public class RouteController {
 				+ " getNumOfRouteEdges=" + getNumOfRouteEdges();
 	}
 	
-	public RouteVertex demoFindVertex(float[] lonLat){
-		for(RouteVertex rv : vertices){
-			System.out.println("demoFindVertex, compare: x" + lonLat[0] + " = " + rv.x +", " + lonLat[1] + " = " + rv.y);
-			if(rv.isEqualPoint(new Point2D.Float(lonLat[0], lonLat[1]))) return rv;
-		}
-		return null;
-	}
-	
-	public RouteEdge searchEdgesKDTree(Point2D.Float lonLat){
-		//KDTree<RouteEdge> kdTree = new KDTreeNode<>(routeEdges);
-		
-		if(debug) {
-			System.out.println("debug searchEdgesKDTree: \n"
-					+ "input para: " + lonLat
-					);
-		}
-		
+	public RouteEdge searchEdgesKDTree(Point2D.Float lonLat){		
 		if(lonLat != null) {
 			RouteEdge edge = edgeTree.nearest(lonLat);
-			if(edge != null) { System.out.println("RouteController found Edge: " + edge.getDescription()); }
-			else { System.out.println("No edge found"); }
 			return edge;
 		}
 		return null;
 	}
 
-
-	
 	public List<RouteModel> makeRoute(Point2D.Float from, Point2D.Float to, WeightEnum weightEnum){
 		List<RouteModel> routeModels = new ArrayList<RouteModel>();
 		RouteEdge fromEdge = searchEdgesKDTree(from);
 		RouteEdge toEdge = searchEdgesKDTree(to);
 		
-		if(debug) {
-			System.out.println("debug makeRoute: \n"
-					+ "from: " + from.toString() + ", fromEdge: " + fromEdge
-					+ " to: " + to.toString() + ", toEdge: " + toEdge
-					);
-		}
-		
 		if(fromEdge != null && toEdge != null && hasRoute(fromEdge.getFrom(), toEdge.getFrom(), weightEnum)) {
-			if(debug)System.out.println("debug makeRoute hasRoute!!!");
 			Iterable<RouteEdge> edges = getRoute(fromEdge.getFrom(), toEdge.getFrom(), weightEnum);
 			
-			if(debug && edges != null)System.out.println("debug makeRoute IterableEdges!!!");
+			RouteEdge lastEdge = null;
 			RouteModel lastModel = null;
 			double distSum = 0;
+			int sizeOfEdges = 0;
+			double minRouteX = Math.min(from.getX(), to.getX());
+			double maxRouteX = Math.max(from.getX(), to.getX());
+			double minRouteY = Math.min(from.getY(), to.getY());
+			double maxRouteY = Math.max(from.getY(), to.getY());
+			double[] routeBounds = {minRouteX, minRouteY, maxRouteX, maxRouteY};
+			
+			if(Main.map.getRoute() != null) Main.map.setRoute(null);
 			for(RouteEdge edge : edges){
-				if(debug)System.out.println("debug makeRoute foreach: " + edge.toString());
+				Main.map.addRouteEdge(edge);
 				RouteEnum routeEnum = RouteEnum.CONTINUE_ON;
-				
-				if(lastModel != null && edge.getDescription().equals(lastModel.getDescription())) {
+				if(lastModel != null && edge.getDescription().equals(lastEdge.getDescription())) {
 					distSum += edge.getDistance();
 					lastModel.setDistance(distSum);
 				}else{
+					routeEnum = calcDirectionType(edge, lastEdge);
 					distSum = 0;
-					RouteModel routeModel = new RouteModel(routeEnum, edge.getDescription(), edge.getDistance());
+					RouteModel routeModel = new RouteModel(routeEnum, edge.getDescription(), edge.getMaxSpeed(), edge.getDistance());
 					lastModel = routeModel;
 					routeModels.add(routeModel);
 				}
+				testEdgeBounds(routeBounds, edge);
+				lastEdge = edge;
+				sizeOfEdges++;
 			}
-			if(debug) {
-				System.out.println("debug makeRoute return found edges! size: " + routeModels.size());
-			}
+			routeRegion = new Region(routeBounds[0], routeBounds[1], routeBounds[2], routeBounds[3]);
 			return routeModels;
 		}
 		return Collections.emptyList();
+	}
+	
+	private void testEdgeBounds(double[] currentRouteBounds, RouteEdge edge) {
+		RouteVertex edgeFrom = edge.getFrom();
+		RouteVertex edgeTo = edge.getTo();
+		if(edgeFrom.getX() < currentRouteBounds[0]) currentRouteBounds[0] = edgeFrom.getX();
+		if(edgeFrom.getY() < currentRouteBounds[1]) currentRouteBounds[1] = edgeFrom.getY();
+		if(edgeTo.getX() > currentRouteBounds[2]) currentRouteBounds[2] = edgeTo.getX();
+		if(edgeTo.getY() > currentRouteBounds[3]) currentRouteBounds[3] = edgeTo.getY();
+	}
+
+	private RouteEnum calcDirectionType(RouteEdge edge, RouteEdge lastEdge) {
+		RouteEnum routeEnum = RouteEnum.CONTINUE_ON;
+		if(lastEdge == null){
+			return RouteEnum.START_AT;
+		}
+		if(lastEdge != null && edge != null){
+			double v1v2Angle = angleBetween2Edges(lastEdge.getFrom(), lastEdge.getTo(), edge.getTo());
+			int v1v2AngleInt = (int)v1v2Angle;
+			String v2StrAngleStr = String.format("%.1f", v1v2Angle); 
+			
+			if(v1v2AngleInt < 0) v1v2AngleInt = 360 + v1v2AngleInt;
+			
+			if(v1v2AngleInt > 45 && v1v2AngleInt < 180){
+				routeEnum = RouteEnum.TURN_RIGHT;
+			} else if(v1v2AngleInt > 180){
+				routeEnum = RouteEnum.TURN_LEFT;
+			} else {
+				routeEnum = RouteEnum.CONTINUE_ON;
+			}
+			Main.log("v: " + v1v2AngleInt + " ( " + v2StrAngleStr + " )" + ", " + routeEnum.toString() + " til " + edge.getDescription());
+		}
+		return routeEnum;
+	}
+	
+	private double angleBetween2Edges(Point2D.Float center, Point2D.Float current, Point2D.Float previous) {
+		  return Math.toDegrees(Math.atan2(current.x - center.x,current.y - center.y) -
+		                        Math.atan2(previous.x - center.x,previous.y - center.y));
 	}
 }

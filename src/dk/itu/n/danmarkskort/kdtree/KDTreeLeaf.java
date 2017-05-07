@@ -35,7 +35,8 @@ public class KDTreeLeaf<T extends KDComparable> extends KDTree<T> {
 
     @Override
     public List<KDComparable[]> getItems(Region reg) {
-        return getAllItems();
+        if(overlaps(reg)) return getAllItems();
+        else return Collections.emptyList();
     }
 
     @Override
@@ -50,7 +51,23 @@ public class KDTreeLeaf<T extends KDComparable> extends KDTree<T> {
         arrList.add(data);
         return arrList;
     }
+    
+    protected int leafSize(int currentSize) {
+    	return ++currentSize;
+    }
+    
+    protected int size(int currentSize) {
+    	return currentSize += data.length;
+    }
 
+    protected int nodeSizeAt(int depth, int currentDepth, int currentSize) {
+    	currentDepth++;
+    	if(depth == currentDepth) {
+    		currentSize++;
+    	}
+    	return currentSize;
+    }
+    
     private boolean overlaps(Region reg) {
         return minLon < reg.x1 + reg.getWidth() &&
                 minLon + (maxLon - minLon) > reg.x1 &&
@@ -70,5 +87,10 @@ public class KDTreeLeaf<T extends KDComparable> extends KDTree<T> {
             }
         }
         return candidate;
+    }
+    
+    public String toString() {
+    	return "KDTreeLeaf [data=" + data.toString() + ", dataSize=" + data.length + ", minLon=" + minLon +
+    			", minLat=" + minLat + ", maxLon=" + maxLon + ", maxLat=" + maxLat + "]";
     }
 }

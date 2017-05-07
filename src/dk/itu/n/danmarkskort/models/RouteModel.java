@@ -4,10 +4,12 @@ public class RouteModel {
 	private final String DESCRIPTION;
 	private double distance;
 	private final RouteEnum DIRECTION;
+	private int maxSpeed;
 	
-	public RouteModel(RouteEnum direction, String description, double distance){
+	public RouteModel(RouteEnum direction, String description, int maxSpeed, double distance){
 		DIRECTION = direction;
 		DESCRIPTION = getStepDescription(direction, description);
+		this.maxSpeed = maxSpeed;
 		this.distance = distance;
 	}
 
@@ -15,6 +17,9 @@ public class RouteModel {
 
 	public double getDistance() { return distance; }
 	public void setDistance(double distance) { this.distance = distance; }
+	
+	public int getMaxSpeed() { return maxSpeed; }
+	public void setMaxSpeed(int maxSpeed) { this.maxSpeed = maxSpeed; }
 
 	public RouteEnum getDirection() { return DIRECTION; }
 	

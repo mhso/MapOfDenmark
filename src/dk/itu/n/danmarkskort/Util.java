@@ -1,6 +1,8 @@
 
 package dk.itu.n.danmarkskort;
 
+import java.awt.AWTException;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -11,20 +13,30 @@ import java.io.IOException;
 import java.io.LineNumberReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
-import dk.itu.n.danmarkskort.backend.InputMonitor;
-import dk.itu.n.danmarkskort.backend.InputStreamListener;
+import dk.itu.n.danmarkskort.backend.BinaryWrapper;
+import dk.itu.n.danmarkskort.backend.ProgressMonitor;
+import dk.itu.n.danmarkskort.backend.ProgressListener;
 import dk.itu.n.danmarkskort.models.Region;
 
 import java.awt.MouseInfo;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.Robot;
-import java.awt.Toolkit;import java.awt.geom.AffineTransform;
+import java.awt.Toolkit;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
+import java.awt.image.BufferedImage;
 
 public class Util {
 	
@@ -94,8 +106,8 @@ public class Util {
 		}
 	}
 	
-	public static int roundByN(double n, double value){
-	    return (int) (Math.round(value/n) * n);
+	public static double roundByN(double n, double value){
+	    return Math.round(value/n) * n;
 	}
 	
 	public static int mouseWarp() {
@@ -126,6 +138,12 @@ public class Util {
 		}
 	}
 	
+	public static double distanceInMeters(Point2D p1, Point2D p2) {
+        double latM = 1000*((p2.getY()-p1.getY())*110.574);
+        double lonM = 1000*((p2.getX()-p1.getX())*111.320*Math.cos(Math.toRadians(p2.getY())));
+        return Math.sqrt((lonM * lonM) + (latM * latM));
+    }
+	
 	public static Point2D toRealCoords(Point2D fakeCoords) {
 		return new Point2D.Float((float)fakeCoords.getX()/Main.model.getLonFactor(), (float)-fakeCoords.getY());
 	}
@@ -141,6 +159,22 @@ public class Util {
 				simpleFileName + ".bin";
 	}
 	
+	public static void extractAllFromBinary(BinaryWrapper binary) {
+		Main.model = binary.getModel();
+		Main.addressController.setAddressHolder(binary.getAddressHolder());
+		Main.addressController.setHousenumberTree(binary.getHousenumberTree());
+		Main.routeController.setEdgeTree(binary.getEdgeTree());
+		Main.routeController.setGraph(binary.getRouteGraph());
+	}
+	
+	public static void addAllToBinary(BinaryWrapper binary) {
+		binary.setModel(Main.model);
+        binary.setAddressHolder(Main.addressController.getAddressHolder());
+        binary.setEdgeTree(Main.routeController.getEdgeTree());
+        binary.setHousenumberTree(Main.addressController.gethousenumberTree());
+        binary.setRouteGraph(Main.routeController.getGraph());
+	}
+	
 	public static boolean writeObjectToFile(Object object, String filename) {
 		try {
 			FileOutputStream fout = new FileOutputStream(filename);
@@ -154,12 +188,15 @@ public class Util {
 		}
 	}
 	
-	public static Object readObjectFromFile(String fileName, List<InputStreamListener> listeners) {		
+	public static Object readObjectFromFile(String fileName, List<ProgressListener> listeners) {		
 		try {
-			BufferedInputStream fout = new BufferedInputStream(new FileInputStream(fileName));
-			InputMonitor monitor = new InputMonitor(fout, fileName);
+			BufferedInputStream fout;
+			if(Main.production && fileName.endsWith("resources/default.bin")) 
+				fout = new BufferedInputStream(Util.class.getResourceAsStream(fileName));
+			else fout = new BufferedInputStream(new FileInputStream(fileName));
+			ProgressMonitor monitor = new ProgressMonitor(fout);
 			ObjectInputStream oos = new ObjectInputStream(monitor);
-			for(InputStreamListener listener : listeners) monitor.addListener(listener);
+			for(ProgressListener listener : listeners) monitor.addListener(listener);
 			Object object = oos.readObject();
 			oos.close();
 			return object;
@@ -206,4 +243,102 @@ public class Util {
 		Util.zoom(transform, currentWidth / (region.x2 - region.x1));
 	}
 	
+	public static void openWebpage(String urlString) {
+	    try {
+	        Desktop.getDesktop().browse(new URL(urlString).toURI());
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	}
+	
+	public static BufferedImage screenshot(Rectangle region) {
+		try {
+			BufferedImage capture = new Robot().createScreenCapture(region);
+			return capture;
+		} catch (AWTException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	public static BufferedImage screenshot(int delay) {
+		ExecutorService service = Executors.newFixedThreadPool(1);
+		Future<BufferedImage> imageTask = service.submit(new ScreenshotDelayer(delay, true));
+        
+		try {
+			BufferedImage image = imageTask.get();
+			service.shutdownNow();
+			return image;
+		} catch (InterruptedException | ExecutionException e) {
+			e.printStackTrace();
+		}
+		service.shutdownNow();
+		return null;
+	}
+	
+	public static BufferedImage screenshot() {
+		return screenshot(new Rectangle(Toolkit.getDefaultToolkit().getScreenSize()));
+	}
+	
+	public static BufferedImage screenshotWithoutGUI(Rectangle region) {
+		Main.mainPanel.hideGUI();
+		Main.mainPanel.repaint();
+		
+		try {
+			BufferedImage capture = new Robot().createScreenCapture(region);
+			Main.mainPanel.showGUI();
+			return capture;
+		} catch (AWTException e) {
+			e.printStackTrace();
+			Main.mainPanel.showGUI();
+			Main.mainPanel.repaint();
+			return null;
+		}
+	}
+	
+	public static BufferedImage screenshotWithoutGUI(int delay) {
+		ExecutorService service = Executors.newFixedThreadPool(1);
+		Future<BufferedImage> imageTask = service.submit(new ScreenshotDelayer(delay, false));
+        
+		try {
+			BufferedImage image = imageTask.get();
+			service.shutdownNow();
+			return image;
+		} catch (InterruptedException | ExecutionException e) {
+			e.printStackTrace();
+		}
+		service.shutdownNow();
+		return null;
+	}
+	
+	public static BufferedImage screenshotWithoutGUI() {
+		Rectangle screenRect = new Rectangle(
+				Main.map.getLocationOnScreen().x, 
+				Main.map.getLocationOnScreen().y, 
+				Main.map.getWidth(), 
+				Main.map.getHeight()
+			);
+		return screenshotWithoutGUI(screenRect);
+	}
+	
+	public static void zoomToRegionY(AffineTransform transform, Region region, double currentHeight) {
+		Util.pan(transform, -region.x1, -region.y2);
+		Util.zoom(transform, currentHeight / (region.y2 - region.y1));
+	}
+	
+	private static class ScreenshotDelayer implements Callable<BufferedImage> {
+		private boolean gui;
+		
+		public ScreenshotDelayer(int delay, boolean gui) {
+			this.gui = gui;
+		}
+		
+		@Override
+		public BufferedImage call() throws Exception {
+			while(!Main.tileController.isTileQueueEmpty()) Thread.sleep(5);
+			Thread.sleep(1500);
+			if(gui) return screenshot();
+			else return screenshotWithoutGUI();
+		}	
+	}
 }

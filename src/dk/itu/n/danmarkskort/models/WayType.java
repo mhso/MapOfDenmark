@@ -77,8 +77,9 @@ public enum WayType {
 	//WATER_DITCH_TUNNEL, // Grøft-tunnel.
 	PITCH,
 	HIGHWAY_TRACK,
-	HIGHWAY_PATH
+	HIGHWAY_PATH,
 	//UNDEFINED 			// Udefinerbar.
 
-	
+	PLACE_TOWN,				// En by
+	PLACE_SUBURB			// En forstad
 }

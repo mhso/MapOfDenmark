@@ -28,7 +28,7 @@ public class ParsedNode extends Point2D.Float{
     public float getLon() { return x; }
     public float getLat() { return y; }
     //public float[] getPoint() { return new float[]{lon, lat}; }
-
+    
     public String toString() {
     	return "ParsedNode [" + "key=" + key + ", lon=" + x + ", lat=" + y + "]";
     }

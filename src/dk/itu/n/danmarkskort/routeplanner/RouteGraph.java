@@ -1,6 +1,9 @@
 package dk.itu.n.danmarkskort.routeplanner;
 
-public class RouteGraph {
+import java.io.Serializable;
+
+public class RouteGraph implements Serializable {
+	private static final long serialVersionUID = 7359475752602187631L;
 	private static final String NEWLINE = System.getProperty("line.separator");
 	private final int numOfVertices;			// number of vertices in this digraph
 	private int numOfEdges;						// number of edges in this digraph

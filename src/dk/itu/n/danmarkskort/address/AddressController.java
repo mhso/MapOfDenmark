@@ -2,9 +2,17 @@ package dk.itu.n.danmarkskort.address;
 
 import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.TimerUtil;
+import dk.itu.n.danmarkskort.Util;
+import dk.itu.n.danmarkskort.kdtree.KDTree;
+import dk.itu.n.danmarkskort.kdtree.KDTreeNode;
 import dk.itu.n.danmarkskort.models.ParsedAddress;
+import dk.itu.n.danmarkskort.models.ReuseStringObj;
+import dk.itu.n.danmarkskort.routeplanner.RouteEdge;
+import dk.itu.n.danmarkskort.routeplanner.RouteGraph;
 
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -16,13 +24,12 @@ public class AddressController {
 	private TimerUtil timerUtilB = new TimerUtil();
 	private PostcodeCityBestMatch postcodeCityBestMatch;
 	private AddressSuggestion addressSuggestion;
-	private AddressRegionSearch addressRegionSearch;
+	private KDTree<Housenumber> housenumberTree;
 	private boolean debug = false;
 	
 	public AddressController(){
 		postcodeCityBestMatch = new PostcodeCityBestMatch();
 		addressSuggestion = new AddressSuggestion();
-		addressRegionSearch = new AddressRegionSearch();
 	}
 	
 	public AddressHolder getAddressHolder() {
@@ -33,44 +40,73 @@ public class AddressController {
 		addressHolder = holder;
 	}
 	
+	public KDTree<Housenumber> gethousenumberTree(){
+		return housenumberTree;
+	}
+	public void setHousenumberTree(KDTree<Housenumber> housenumberTree){
+		this.housenumberTree = housenumberTree;
+	}
+	
 	public List<String> getSearchSuggestions(String find, long limitAmountOfResults){ return addressSuggestion.searchSuggestions(find, limitAmountOfResults); }
-	public List<String> getSearchSuggestions(Point2D.Float find, long limitAmountOfResults){ return searchSuggestions(find, limitAmountOfResults); }
+	public List<String> getSearchSuggestions(Point2D.Float find){
+		List<String> result = new ArrayList<String>();
+		Housenumber hn = searchHousenumberKDTree(find);
+		if(hn != null) result.add(hn.toString());
+		return result;
+	}
 	
 	
 	public Address getSearchResult(String find){
 		Address addrBuild = AddressParser.parse(find, false);
-		Map<String, Postcode> list;
-		list = addressHolder.search(addrBuild,
-				SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.EQUALS);
-		if(list.size() < 1) { list = addressHolder.search(addrBuild,
-				SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.ANY);
-		}
-		if(list.size() < 1) { list = addressHolder.search(addrBuild,
-				SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.ANY, SearchEnum.EQUALS);
-		}
-		if(list.size() < 1) { list = addressHolder.search(addrBuild,
-				SearchEnum.LEVENSHTEIN, SearchEnum.EQUALS, SearchEnum.ANY, SearchEnum.EQUALS);
-		}
-		if(list.size() < 1) { list = addressHolder.search(addrBuild,
-				SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.ANY, SearchEnum.LEVENSHTEIN);
-		}
+		if(addrBuild == null) return null;
 		
-		if(list.size() == 1) {
-			for(Postcode pc : list.values()){
-				for(Street st : pc.getStreets().values()){
-					for(Housenumber hn : st.getHousenumbers().values()){
-						Address addr = AddressParser.parse(hn.toString(), false);
-						addr.setLonLat(hn.getLonLat());
-						return addr;
+			Map<String, Postcode> list;
+			list = addressHolder.search(addrBuild,
+					SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.EQUALS);
+			if(list.size() < 1) { list = addressHolder.search(addrBuild,
+					SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.ANY);
+			}
+			if(list.size() < 1) { list = addressHolder.search(addrBuild,
+					SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.ANY, SearchEnum.EQUALS);
+			}
+			if(list.size() < 1) { list = addressHolder.search(addrBuild,
+					SearchEnum.LEVENSHTEIN, SearchEnum.EQUALS, SearchEnum.ANY, SearchEnum.EQUALS);
+			}
+			if(list.size() < 1) { list = addressHolder.search(addrBuild,
+					SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.ANY, SearchEnum.LEVENSHTEIN);
+			}
+			
+			if(list.size() == 1) {
+				for(Postcode pc : list.values()){
+					for(Street st : pc.getStreets().values()){
+						for(Housenumber hn : st.getHousenumbers().values()){
+							Address addr = AddressParser.parse(hn.toString(), false);
+							addr.setLonLat(hn.getLonLat());
+							return addr;
+						}
 					}
 				}
 			}
-		}
 		return null;
 	}
+
+	public Address getSearchResult(Point2D.Float find){
+		Housenumber hn = searchHousenumberKDTree(find);
+		if(hn == null) return null;
+		Address addr = AddressParser.parse(hn.toString(), false);
+		addr.setLonLat(hn.getLonLat());
+		return addr;
+	}
 	
-	public List<String> searchSuggestions(Point2D.Float input, long limitAmountOfResults){
-		 return addressRegionSearch.searchSuggestions(input, limitAmountOfResults);
+	public Housenumber searchHousenumberKDTree(Point2D.Float lonLat){		
+		if(lonLat != null) {
+			Main.log(housenumberTree.size());
+			Housenumber hn = housenumberTree.nearest(lonLat);
+			if(hn != null) { System.out.println("RouteController found house: " + hn.toString()); }
+			else { System.out.println("No edge found"); }
+			return hn;
+		}
+		return null;
 	}
 	
 	public void addAddress(Point2D.Float lonLat, String street, String housenumber, String postcode, String city){
@@ -81,11 +117,11 @@ public class AddressController {
 		postcodeCityBestMatch.add(postcode,  city);
 	}
 	
-	private int acceptLvl1 = 0, acceptLvl2 = 0, acceptNot = 0;
+	private int acceptLvl1 = 0, acceptLvl2 = 0;
 	public void addressParsed(ParsedAddress addr) {
 		timerUtilA.on();
         if(addr != null) {
-        	Point2D.Float lonLat = new Point2D.Float(addr.getFirstLon(), addr.getFirstLat());
+        	Point2D.Float lonLat = new Point2D.Float(addr.getLon(), addr.getLat());
 	
 			if(AddressValidator.isAddressMinimum(addr.getStreet(), addr.getHousenumber(), addr.getPostcode())){
 				if(AddressValidator.isCityname(addr.getCity())) {
@@ -104,7 +140,6 @@ public class AddressController {
     				AddressValidator.prepPostcode(addr.getPostcode()), null);
         	acceptLvl2++;
 			} else {
-					acceptNot++;
 					addressesNotAcceptedCount++;
          }        	
 			lonLat = null;
@@ -113,13 +148,16 @@ public class AddressController {
 
 	public void onLWParsingFinished() {
 		timerUtilA.off();
-		if(debug) System.out.print("acceptLvl1: " + acceptLvl1 + ", acceptLvl2: " + acceptLvl2 + ", acceptNot: " + acceptNot);
+		if(debug) System.out.print("acceptLvl1: " + acceptLvl1 + ", acceptLvl2: " + acceptLvl2);
 		Main.log("Addresses parse first to last time: " + timerUtilA.toString());
 		timerUtilB.on();
 		for(Entry<String, Postcode> entry : addressHolder.postcodes.entrySet()){
 			entry.getValue().setCity(postcodeCityBestMatch.getMatch(entry.getKey()));
 		}
 		postcodeCityBestMatch.cleanup();
+		
+		makeTree();
+		
 		timerUtilB.off();
 		Main.log("Addresses PostcodeCityCombination time: " + timerUtilB.toString());
 		Main.log("Addresses (accepted): " + getAddressSize());
@@ -128,5 +166,11 @@ public class AddressController {
 	
 	public int getAddressSize() {
 		return addressHolder.count();
+	}
+	
+	private void makeTree(){
+		List<Housenumber> housenumbers = addressHolder.getHousenumbers();
+		Main.log("AddressController -> MakeTree size: " + housenumbers.size());
+		housenumberTree = new KDTreeNode<>(housenumbers);
 	}
 }

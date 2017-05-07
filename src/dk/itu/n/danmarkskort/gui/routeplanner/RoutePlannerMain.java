@@ -16,6 +16,7 @@ import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.gui.Style;
 import dk.itu.n.danmarkskort.models.RouteEnum;
 import dk.itu.n.danmarkskort.models.RouteModel;
+import dk.itu.n.danmarkskort.routeplanner.WeightEnum;
 
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -32,37 +33,19 @@ public class RoutePlannerMain {
 	private JPanel panelRouteImage, panelRouteDescription;
 	private JLabel lblRouteimage;
 	private final String ROUTE_FROM, ROUTE_TO;
-	private RouteImageSplit routeImageSplit;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					RoutePlannerMain window = new RoutePlannerMain(null, "","", "", demo());
-					window.frmRouteplanner.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+	private final WeightEnum weightEnum;
 
 	/**
 	 * Create the application.
 	 */
-	public RoutePlannerMain(BufferedImage routeImage, String routeFrom, String routeTo, String routeDistance,  List<RouteModel> routeModels) {
-		routeImageSplit = new RouteImageSplit();
+	public RoutePlannerMain(BufferedImage routeImage, String routeFrom, String routeTo, String routeDistance, WeightEnum weightEnum, List<RouteModel> routeModels) {
 		ROUTE_FROM = routeFrom;
 		ROUTE_TO = routeTo;
+		this.weightEnum = weightEnum;
+		
 		initialize();
-		
 		makeRoute(ROUTE_FROM, ROUTE_TO, routeDistance, routeModels);
-		
 		frmRouteplanner.setVisible(true);
-		
 		routeImage(routeImage);
 		
 	}
@@ -180,27 +163,6 @@ public class RoutePlannerMain {
 	}
 	
 	private void makeRoute(String routeFrom, String routeTo, String routeDistance,  List<RouteModel> routeModels){
-		// Ad basic route info
-		panelRouteDescription.add(new RoutePartBasic(routeFrom, routeTo, routeDistance));
-		
-		// Add route steps
-		int pos = 1;
-		for(RouteModel rm : routeModels){
-			panelRouteDescription.add(new RoutePartStep(pos++, routeImageSplit.getStepIcon(rm.getDirection()), rm));
-		}
-	}
-	
-	private static List<RouteModel> demo(){
-		List<RouteModel> routeModels = new ArrayList<RouteModel>();
-		
-		routeModels.add(new RouteModel(RouteEnum.CONTINUE_ON, "Roskildevej", 600));
-		routeModels.add(new RouteModel(RouteEnum.TURN_LEFT, "Roskildevej", 600));
-		routeModels.add(new RouteModel(RouteEnum.CONTINUE_ON, "H. Hansenvej", 250));
-		routeModels.add(new RouteModel(RouteEnum.TURN_RIGHT, "Postmosen", 250));
-		routeModels.add(new RouteModel(RouteEnum.TURN_RIGHT, "Blågårdsgade", 250));
-		routeModels.add(new RouteModel(RouteEnum.CONTINUE_ON, "Sverigesvej", 250));
-		routeModels.add(new RouteModel(RouteEnum.TURN_RIGHT, "Amagerbrogade", 1500));
-		routeModels.add(new RouteModel(RouteEnum.AT_DESTINATION, "Rosenhaven 1", -1));
-		return routeModels;
+		RoutePartBasic routePartBasic = new RoutePartBasic(routeFrom, routeTo, weightEnum, panelRouteDescription, routeModels);
 	}
 }

@@ -12,16 +12,22 @@ public class DKConstants {
 	 * Determines the default size of Main Window.
 	 */
 	public final static int WINDOW_WIDTH = 1000, WINDOW_HEIGHT = 800;
+
+	/**
+	 * Maximum scale, is the same as zoom level 20
+	 */
+	public static final double MAX_SCALE = 371336.94267964247, MIN_SCALE = 222.70042257660032;
 	
 	/**
-	 * The factor that Theme line width values gets magnified by.
+	 * The factor that Theme line width and font size values get magnified by.
 	 */
-	public static final float LINE_MAGNIFYING_VALUE = 0.000001f, LINE_OUTLINE_WIDTH = 0.000005f;
+	public static final float LINE_MAGNIFYING_VALUE = 0.000001f, LINE_OUTLINE_WIDTH = 0.000005f, 
+			FONTSIZE_MAGNIFYING_VALUE = 0.00008f, FONT_OUTLINE_WIDTH = 0.000012f;
 	
 	/**
 	 * Standard size of KD-Tree leaves.
 	 */
-	public static final int KD_SIZE = 25;
+	public static final int KD_SIZE = 500;
 	
 	/**
 	 * Longitude and Latitude bounds for the full Denmark .OSM file.

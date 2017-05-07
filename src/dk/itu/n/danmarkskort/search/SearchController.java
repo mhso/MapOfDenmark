@@ -8,10 +8,7 @@ import dk.itu.n.danmarkskort.Util;
 import dk.itu.n.danmarkskort.address.Address;
 
 public class SearchController{
-	
-	private SearchController(){
-		
-	}
+	private SearchController(){ }
 	
 	public static List<String> getSearchFieldSuggestions(String inputStr){
 		long limitAmountOfResults = 10;
@@ -19,7 +16,7 @@ public class SearchController{
 		if(inputStr == null || inputStr.isEmpty()) return null;
 		
 		if(isCoordinates(inputStr)) {
-			return Main.addressController.getSearchSuggestions(stringCordsToPointFloat(inputStr), limitAmountOfResults);
+			return Main.addressController.getSearchSuggestions(stringCordsToPointFloat(inputStr));
 		} else {
 			return Main.addressController.getSearchSuggestions(inputStr, limitAmountOfResults);
 		}
@@ -29,17 +26,14 @@ public class SearchController{
 		if(inputStr == null || inputStr.isEmpty()) return null;
 		
 		if(isCoordinates(inputStr)) {
-			Main.log("Search for cords string");
-			//return Main.addressController.getNearstSearchResult(stringCordsToPointFloat(inputStr));
-			return null;
+			return Main.addressController.getSearchResult(stringCordsToPointFloat(inputStr));
 		} else {
-			Main.log("Search for address string");
 			return Main.addressController.getSearchResult(inputStr);
 		}
 	}
 	
 	private static boolean isCoordinates(String inputStr){
-		String cordRegex = "((\\-{0,1})([0-9]{1,3})(\\.)(\\-{0,1})([0-9]{5,7}))";
+		String cordRegex = "((\\-{0,1})([0-9]{1,3})(\\.)(\\-{0,1})([0-9]{5,9}))";
 		String cordsRegex = cordRegex + "(\\,\\s)" + cordRegex;
 		if(inputStr.matches(cordsRegex)) return true;
 		return false;
@@ -49,7 +43,10 @@ public class SearchController{
 		String[] strArr = inputStr.split(", ");
 		float lat = Float.parseFloat(strArr[0]);
 		float lon = Float.parseFloat(strArr[1]);
-		Point2D fakeCoords = Util.toFakeCoords(new Point2D.Float(lon, lat));
+		Point2D realCoords = new Point2D.Float(lon, lat);
+		Point2D fakeCoords = Util.toFakeCoords(realCoords);
+		System.out.println(realCoords);
+		System.out.println(fakeCoords);
 		return new Point2D.Float((float)fakeCoords.getX(), (float)fakeCoords.getY());
 	}
 }

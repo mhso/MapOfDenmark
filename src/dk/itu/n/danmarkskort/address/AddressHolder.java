@@ -1,9 +1,10 @@
 package dk.itu.n.danmarkskort.address;
 
-import java.awt.geom.Point2D;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -15,13 +16,21 @@ public class AddressHolder implements Serializable {
 	private static final long serialVersionUID = 4946666884688610616L;
 	public HashMap<String, Postcode> postcodes = new HashMap<String, Postcode>();
 	
-	public AddressHolder(){
-	
-	}
+	public AddressHolder(){ }
 	
 	public Postcode getPostcode(String postcode) {
 		if(postcode == null) return null;
 		return postcodes.get(postcode.toLowerCase());
+	}
+	
+	public List<Housenumber> getHousenumbers(){
+		List<Housenumber> result = new ArrayList<Housenumber>();
+		for(Postcode postcode : postcodes.values()){
+			for(Street street : postcode.getStreets().values()){
+				result.addAll(street.getHousenumbers().values());
+			}
+		}
+		return result;
 	}
 	
 	public int count(){
@@ -119,6 +128,7 @@ public class AddressHolder implements Serializable {
 	
 	private Map<String, Postcode> searchPostcode(Map<String, Postcode> input, Address addr, SearchEnum postcodeType, SearchEnum cityType){
 		Map<String, Postcode> result = new HashMap<String, Postcode>();
+		if(addr == null) return result;
 			switch(postcodeType){
 			case CONTAINS:
 				result = postcodeContains(input, addr.getPostcode());
@@ -194,47 +204,5 @@ public class AddressHolder implements Serializable {
 		Map<RegionFloat, Postcode> regions = new HashMap<RegionFloat, Postcode>();
 		for(Postcode pc : postcodes.values()) regions.put(pc.getRegion(), pc);
 		return regions;
-	}
-	
-	public Map<RegionFloat, Postcode> searchRegionWithin(RegionFloat input){
-		Map<RegionFloat, Postcode> regions = new HashMap<RegionFloat, Postcode>();
-		for(Postcode pc : postcodes.values()) {
-			RegionFloat pcR = pc.getRegion();
-			if(pcR.isWithin(input)){
-				regions.put(pc.getRegion(), pc);
-			}
-		}
-		return regions;
-	}
-	
-	public Map<RegionFloat, Housenumber> searchRegionHousenumbers(RegionFloat region){	
-		for(Postcode pc : searchRegionWithin(region).values()) {
-			float expanVal = 0.0f;
-			for(int i=0; i<10000; i++) {
-				RegionFloat r = new RegionFloat(region.x1 - expanVal, region.y1 - expanVal, region.x2 + expanVal, region.y2 + expanVal);
-				for(Street st : pc.searchRegionWithin(r).values()){
-					Map<RegionFloat, Housenumber> regions = st.searchRegionWithin(r);
-					if(!regions.isEmpty()) System.out.println("searchRegionHousenumbers succes!");
-					if(!regions.isEmpty()) return regions;
-				}
-				System.out.println("searchRegionHousenumbers expand!" + r.toString());
-				expanVal = expanVal + 	0.000100f;
-			}
-		}
-		return Collections.emptyMap();
-	}
-	
-	public Housenumber searchHousenumber(Point2D.Float lonLat){
-		RegionFloat input = new RegionFloat(lonLat.x, lonLat.y, lonLat.x, lonLat.y);
-		for(Postcode pc : searchRegionWithin(input).values()) {
-			for(Street st : pc.searchRegionWithin(input).values()){
-				for(Housenumber hn : st.searchRegionWithin(input).values()){
-					if(hn.getLon() == lonLat.x && hn.getLat() == lonLat.y) {
-						return hn;
-					}
-				}
-			}
-		}
-		return null;
 	}
 }

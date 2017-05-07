@@ -1,9 +1,8 @@
 package dk.itu.n.danmarkskort;
 
 import java.awt.Dimension;
-import java.awt.Toolkit;
+import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
 import javax.swing.*;
 
 import dk.itu.n.danmarkskort.address.AddressController;
@@ -16,24 +15,21 @@ import dk.itu.n.danmarkskort.gui.map.MapCanvas;
 import dk.itu.n.danmarkskort.gui.map.PinPointManager;
 import dk.itu.n.danmarkskort.gui.map.multithreading.TileController;
 import dk.itu.n.danmarkskort.mapgfx.GraphicRepresentation;
+import dk.itu.n.danmarkskort.models.ReuseStringObj;
 import dk.itu.n.danmarkskort.models.UserPreferences;
 import dk.itu.n.danmarkskort.routeplanner.RouteController;
 
 public class Main {
-
-	public final static String APP_NAME = "yakMaps";
-	public final static String APP_VERSION = "0.7";
+	public final static String APP_NAME = "Yak Maps";
+	public final static String APP_VERSION = "0.8";
 	public final static boolean debug = true;
-	public final static boolean debugExtra = false;
+	public final static boolean debugExtra = true;
 	public final static boolean production = false;
 	public final static boolean buffered = true;
 	public final static boolean saveParsedAddresses = true;
-	public final static boolean useLauncher = true;
 	public final static boolean nearest = true;
-	
-	public static boolean binaryfile = true;
-	public static boolean forceParsing;
 
+	public static boolean useLauncher = true;
 	public static OSMReader osmReader;
 	public static JFrame window;
 	public static OSMParser model;
@@ -46,7 +42,6 @@ public class Main {
 	public static RouteController routeController;
 	public static Style style;
 	
-	@SuppressWarnings("unused")
 	public static void main(String[] args) {
 		System.setProperty("awt.useSystemAAFontSettings","on");
 		System.setProperty("swing.aatext", "true");
@@ -55,7 +50,6 @@ public class Main {
 			userPreferences = new UserPreferences();
 			Util.writeObjectToFile(Main.userPreferences, DKConstants.USERPREF_PATH);
 		}
-		forceParsing = userPreferences.isForcingParsing();
         if(useLauncher || args.length < 1) new WindowLauncher();
         else launch(args);
 	}
@@ -69,19 +63,20 @@ public class Main {
 		addressController  =  new AddressController();
 		osmReader = new OSMReader();
 		model = new OSMParser(osmReader);
+		
 		routeController = new RouteController();
 		style = new Style();
 		if(args.length > 0) prepareParser(args);
 		else prepareParser(new String[]{userPreferences.getDefaultMapFile()});
 		if(userPreferences.getCurrentMapTheme() != null) {
 			if(Main.production) GraphicRepresentation.parseData(
-					Main.class.getResource("/resources/Theme" + userPreferences.getCurrentMapTheme() + ".XML").toString());
-			else GraphicRepresentation.parseData("resources/Theme" + userPreferences.getCurrentMapTheme() + ".XML");
+					Main.class.getResource("/resources/themes/Theme" + userPreferences.getCurrentMapTheme() + ".XML").toString());
+			else GraphicRepresentation.parseData("resources/themes/Theme" + userPreferences.getCurrentMapTheme() + ".XML");
 		}
 		else {
 			if(Main.production) GraphicRepresentation.parseData(
-					Main.class.getResource("/resources/Theme" + userPreferences.getDefaultTheme() + ".XML").toString());
-			else GraphicRepresentation.parseData("resources/Theme" + userPreferences.getDefaultTheme() + ".XML");
+					Main.class.getResource("/resources/themes/Theme" + userPreferences.getDefaultTheme() + ".XML").toString());
+			else GraphicRepresentation.parseData("resources/themes/Theme" + userPreferences.getDefaultTheme() + ".XML");
 			userPreferences.setCurrentMapTheme(userPreferences.getDefaultTheme());
 		}
 	}
@@ -95,7 +90,8 @@ public class Main {
 		Runnable r = new Runnable() {
 			@Override
 			public void run() {
-				osmReader.parseFile(args[0]);
+				osmReader.parseFile(args[0], model);
+				ReuseStringObj.clear();
 				if(window == null) main();
 		        shutdown();
 			}
@@ -125,20 +121,18 @@ public class Main {
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setPreferredSize(new Dimension(DKConstants.WINDOW_WIDTH, DKConstants.WINDOW_HEIGHT));
         if(userPreferences.isMaximizeOnStartup()) window.setExtendedState(window.getExtendedState() | JFrame.MAXIMIZED_BOTH);
-        window.addComponentListener(new ComponentListener() {
-            public void componentResized(ComponentEvent e) {         
-            	Main.windowResized(e);
-            }public void componentHidden(ComponentEvent arg0) {}public void componentMoved(ComponentEvent arg0) {}public void componentShown(ComponentEvent arg0) {}
+        window.addComponentListener(new ComponentAdapter() {
+            public void componentResized(ComponentEvent e) {Main.windowResized(e);}
         });
-
         window.pack();
 		window.setLocationRelativeTo(null);
-		
         window.setVisible(true);
         map.setupDone();
     }
     
     public static void windowResized(ComponentEvent e) {
+    	if(!tileController.isInitialized()) tileController.initialize();
+    	Main.map.setMinMaxScale();
     	Main.tileController.setTileSize(window.getWidth(), window.getHeight());
     }
     
