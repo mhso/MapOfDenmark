@@ -11,6 +11,7 @@ import javax.swing.border.EmptyBorder;
 import dk.itu.n.danmarkskort.DKConstants;
 import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.Util;
+import dk.itu.n.danmarkskort.gui.components.CustomToggleButton;
 
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;

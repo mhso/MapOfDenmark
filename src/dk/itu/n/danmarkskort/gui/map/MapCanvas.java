@@ -151,8 +151,14 @@ public class MapCanvas extends JPanel {
                 g2d.fill(item.getShape());
                 shapesDrawn++;
             }
-
-            // second, paint outlines for areas
+        }
+        
+        for (WaytypeGraphicSpec wayTypeArea : areasVisible) {
+            currentWTGSpec = wayTypeArea;
+            KDTree<ParsedItem> kdTree = Main.model.getEnumMapKD().get(wayTypeArea.getWayType());
+            
+            if (kdTree == null) continue;
+        	// second, paint outlines for areas
             if (currentWTGSpec.getOuterColor() != null) {
                 currentWTGSpec.transformOutline(g2d);
                 for (Iterator<ParsedItem> i = kdTree.iterator(currentRegion); i.hasNext(); ) {
@@ -162,7 +168,7 @@ public class MapCanvas extends JPanel {
                 }
             }
         }
-
+        
         // Drawing all line outlines
         for (WaytypeGraphicSpec wayTypeLine : linesVisible) {
         	if(wayTypeLine.getOuterColor() == null) continue;
@@ -192,24 +198,19 @@ public class MapCanvas extends JPanel {
             }
         }
         
-        // draw all labels
-        for(WaytypeGraphicSpec wayTypeLabel : labelsVisible) {
-        	currentWTGSpec = wayTypeLabel;
-        	KDTree<ParsedPlace> kdTree = Main.model.getEnumMapPlacesKD().get(wayTypeLabel.getWayType());
-        	if(kdTree == null) continue;
-        	if(currentWTGSpec.getOuterColor() != null) {
-        		currentWTGSpec.transformOutline(g2d);
+        // draw all labels        
+        if(getZoom() < 14) {
+        	g2d.setFont(g2d.getFont().deriveFont((float)(g2d.getFont().getSize2D()*1/getZoom()*2)));
+        	for(WaytypeGraphicSpec wayTypeLabel : labelsVisible) {
+            	currentWTGSpec = wayTypeLabel;
+            	KDTree<ParsedPlace> kdTree = Main.model.getEnumMapPlacesKD().get(wayTypeLabel.getWayType());
+            	if(kdTree == null) continue;
+            	currentWTGSpec.transformPrimary(g2d);
                 for (Iterator<ParsedPlace> i = kdTree.iterator(currentRegion); i.hasNext(); ) {
                     ParsedPlace place = i.next();
                     g2d.drawString(place.getName(), place.x, place.y);
                     shapesDrawn++;
-            	}
-        	}
-        	currentWTGSpec.transformPrimary(g2d);
-            for (Iterator<ParsedPlace> i = kdTree.iterator(currentRegion); i.hasNext(); ) {
-                ParsedPlace place = i.next();
-                g2d.drawString(place.getName(), place.x, place.y);
-                shapesDrawn++;
+                }
             }
         }
 
@@ -430,7 +431,7 @@ public class MapCanvas extends JPanel {
 		return currentHighlighedShape;
 	}
 	
-	public BufferedImage getRoutePreviewImage(Region routeRegion) {
+	public void zoomToRouteRegion(Region routeRegion) {
 		final double MARGIN = 1.50;
 		
 		double distX = (routeRegion.x2-routeRegion.x1)*MARGIN;
@@ -440,20 +441,12 @@ public class MapCanvas extends JPanel {
 		double y1 = routeRegion.y2 - distY;
 		double y2 = routeRegion.y1 + distY;
 		Region region = new Region(x1, y1, x2, y2);
-		System.out.println(region);
-		AffineTransform newTransform = new AffineTransform();
-		if(routeRegion.y2-routeRegion.y1 < routeRegion.x2-routeRegion.x1) Util.zoomToRegion(newTransform, region, getWidth());
-		else Util.zoomToRegionY(newTransform, region, getHeight());
 		
-		transform.setTransform(newTransform);
-		actualTransform.setTransform(newTransform);
-		panToPosition(region.getMiddlePoint());
-		
-		Main.tileController.zoom(1);
-		
-		BufferedImage image = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
-        
-		return image;
+		zoomToRegion(region);
+	}
+	
+	public BufferedImage getRoutePreviewImage() {
+		return Util.screenshotWithoutGUI(1500);
 	}
 	
 	public void pan(double dx, double dy) {
@@ -606,7 +599,7 @@ public class MapCanvas extends JPanel {
 		Region denmark = DKConstants.BOUNDS_DENMARK;
 		double denmarkWidth = denmark.getWidth();
 		Region view = getGeographicalRegion();
-		return Math.floor(Math.log(denmarkWidth/view.getWidth())*2.5);
+		return Math.floor(Math.log(denmarkWidth/view.getWidth())*2.8);
 	}
 	
 	public double getZoomRaw() {
@@ -621,9 +614,15 @@ public class MapCanvas extends JPanel {
 	}
 	
 	public void zoomToRegion(Region region) {
-		transform.setTransform(new AffineTransform());
-		pan(-region.x1, -region.y2);
-		zoom(getWidth() / (region.x2 - region.x1));
+		AffineTransform newTransform = new AffineTransform();
+		if(region.y2-region.y1 < region.x2-region.x1) Util.zoomToRegion(newTransform, region, getWidth());
+		else Util.zoomToRegionY(newTransform, region, getHeight());
+		
+		transform.setTransform(newTransform);
+		actualTransform.setTransform(newTransform);
+		panToPosition(region.getMiddlePoint());
+		
+		forceRepaint();
 	}
 	
 	public void setupDone() {
@@ -633,11 +632,11 @@ public class MapCanvas extends JPanel {
 	}
 	
 	public void forceRepaint() {
+		zoomChanged = true;
 		if(Main.buffered) {
 			Main.tileController.fullRepaint();
 		} else {
 			repaint();
 		}
 	}
-
 }

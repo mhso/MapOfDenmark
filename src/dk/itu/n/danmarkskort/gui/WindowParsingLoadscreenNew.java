@@ -9,7 +9,6 @@ import javax.swing.JLabel;
 
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -86,6 +85,8 @@ public class WindowParsingLoadscreenNew extends JFrame implements OSMParserListe
 		statusPanel.add(labelStatus, BorderLayout.WEST);
 		
 		labelRemaining = new JLabel("Time Remaining: ...");
+		labelRemaining.setOpaque(true);
+		labelRemaining.setBackground(contentPane.getBackground());
 		labelRemaining.setHorizontalAlignment(SwingConstants.RIGHT);
 		statusPanel.add(labelRemaining, BorderLayout.EAST);
 		
@@ -157,6 +158,7 @@ public class WindowParsingLoadscreenNew extends JFrame implements OSMParserListe
 	public void onStreamEnded() {
 		currentPercent = 100;
 		setProgressPercent();
+		labelRemaining.setText("Time Remaining: 0 Seconds.");
 		labelStatus.setText("Converting Data To KD-Trees...");
 	}
 	

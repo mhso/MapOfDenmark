@@ -22,8 +22,7 @@ public class DKConstants {
 	 * The factor that Theme line width and font size values get magnified by.
 	 */
 	public static final float LINE_MAGNIFYING_VALUE = 0.000001f, LINE_OUTLINE_WIDTH = 0.000005f, 
-			FONTSIZE_MAGNIFYING_VALUE = 0.00008f, FONT_OUTLINE_WIDTH = 0.000012f, 
-			FONT_POPULATION_FACTOR = 0.00000001f;
+			FONTSIZE_MAGNIFYING_VALUE = 0.00008f, FONT_OUTLINE_WIDTH = 0.000012f;
 	
 	/**
 	 * Standard size of KD-Tree leaves.

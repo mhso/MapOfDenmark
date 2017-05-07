@@ -5,6 +5,8 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 
 import dk.itu.n.danmarkskort.Main;
+import dk.itu.n.danmarkskort.gui.components.CustomButton;
+import dk.itu.n.danmarkskort.gui.components.CustomToggleButton;
 
 import java.awt.*;
 import java.awt.font.TextAttribute;
@@ -23,7 +25,7 @@ public class Style {
     private CustomButton searchButton, menuButton, routeButton, centerViewButton, zoomInButton, zoomOutButton,
             menuLayerButton, menuSaveButton, menuOpenButton, menuSettingsButton, menuRouteButton, menuInfoButton, 
             menuPinPointButton, pinPointPanButton, pinPointDeleteButton, arrowUpDownButton;
-    private ImageIcon scaleIndicator, basicThemePreview, logo, launcherOptionsIcon, launcherLoadIcon;
+    private ImageIcon scaleIndicator, basicThemePreview, nightThemePreview, bwThemePreview, logo, launcherOptionsIcon, launcherLoadIcon;
     private Image frameIcon;
     private Font normalText, smallHeadline, mediumHeadline, largeHeadline, largeHeadlineSpacing;
 
@@ -81,6 +83,8 @@ public class Style {
         pinPointDeleteButton = new CustomButton("resources/icons/office-bin.png", menuAlpha, menuAlphaHover);
 
         basicThemePreview = getImageIcon("resources/icons/previewthemebasic.png");
+        nightThemePreview = getImageIcon("resources/icons/previewthemenight.png");
+        bwThemePreview = getImageIcon("resources/icons/previewthemebw.png");
         
         scaleIndicator = getImageIcon("resources/scale.png");
         
@@ -170,6 +174,9 @@ public class Style {
     public CustomToggleButton toggleButton() { return new CustomToggleButton(1.0f, 0.8f); }
     
     public ImageIcon basicThemePreview() { return basicThemePreview; }
+    public ImageIcon nightThemePreview() { return nightThemePreview; }
+    public ImageIcon bwThemePreview() { return bwThemePreview; }
+    
     public ImageIcon scaleIndicator() { return scaleIndicator; }
     
     public Image frameIcon() { return frameIcon; }

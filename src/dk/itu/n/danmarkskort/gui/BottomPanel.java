@@ -6,6 +6,7 @@ import javax.swing.border.EmptyBorder;
 import dk.itu.n.danmarkskort.DKConstants;
 import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.Util;
+import dk.itu.n.danmarkskort.gui.components.ScaleLabel;
 import dk.itu.n.danmarkskort.gui.map.CanvasListener;
 import dk.itu.n.danmarkskort.kdtree.KDTree;
 import dk.itu.n.danmarkskort.models.ParsedItem;
@@ -142,9 +143,7 @@ public class BottomPanel extends JPanel implements CanvasListener {
         buttonCentreView = style.centerViewButton();
         buttonCentreView.setBorder(new EtchedBorder(EtchedBorder.RAISED, BORDER_HIGHTLIGHT, BORDER_SHADOW));
         buttonCentreView.addActionListener(e -> {
-            Main.map.zoomToBounds();
-        	Main.map.panToPosition(Main.model.getMapRegion().getMiddlePoint());
-        	Main.map.repaint();
+            Main.map.zoomToRegion(Main.model.getMapRegion());
         });
         buttonCentreView.setFocusPainted(false);
         rightParent.add(buttonCentreView, BorderLayout.NORTH);
@@ -199,9 +198,6 @@ public class BottomPanel extends JPanel implements CanvasListener {
             	if(nearest.getName() != null) text = nearest.getName();
             }
             nearestStreetLabel.setText(text);
-
-//            ParsedNode lonLat = new ParsedNode(Main.map.getGeographicalMousePosition());
-//            if(lonLat != null)Main.routeController.searchEdgesKDTree(lonLat);
         }
     }
     

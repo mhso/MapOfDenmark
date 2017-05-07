@@ -6,6 +6,7 @@ import javax.swing.JOptionPane;
 
 import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.Util;
+import dk.itu.n.danmarkskort.gui.components.CustomDropdown;
 import dk.itu.n.danmarkskort.gui.map.PinPoint;
 import dk.itu.n.danmarkskort.gui.menu.RoutePage;
 
