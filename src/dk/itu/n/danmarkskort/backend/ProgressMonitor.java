@@ -25,8 +25,9 @@ public class ProgressMonitor extends FilterInputStream {
 	private int totalByteCount;
 	private int currentByteCount;
 	private int byteCountStamp;
+	private int currentTimeRemaining = Integer.MAX_VALUE;
 	private long timeStamp;
-	private byte timeStampDelay;
+	private int timeStampDelay = 0;
 	private boolean streamStarted;
 	private List<ProgressListener> listeners = new ArrayList<>();
 	private ProgressTimer timer;
@@ -132,18 +133,19 @@ public class ProgressMonitor extends FilterInputStream {
 						
 						int bytesPassed = currentByteCount-byteCountStamp;
 						if(bytesPassed > 0) {
-							long currentTime = System.currentTimeMillis();
-							
-							int msRemaining = (int)(((totalByteCount-currentByteCount)/bytesPassed)*(currentTime-timeStamp));
-							for(ProgressListener listener : listeners) listener.getTimeRemaining(msRemaining);
+							int msRemaining = (int)(((totalByteCount-currentByteCount)/bytesPassed)*(System.currentTimeMillis()-timeStamp));
+							if(msRemaining <= currentTimeRemaining) {
+								currentTimeRemaining = msRemaining;
+								for(ProgressListener listener : listeners) listener.getTimeRemaining(msRemaining);
+							}	
 						}
 					}
 					timeStampDelay++;
 					if(timeStampDelay % 10 == 0) {
 						timeStamp = System.currentTimeMillis();
+						byteCountStamp = currentByteCount;
 						timeStampDelay = 0;
 					}
-					byteCountStamp = currentByteCount;
 				}
 				else if(!streamStarted && currentByteCount > 0) {
 					for(ProgressListener listener : listeners) listener.onStreamStarted();
