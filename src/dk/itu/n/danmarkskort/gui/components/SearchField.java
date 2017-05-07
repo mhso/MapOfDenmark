@@ -33,7 +33,6 @@ public class SearchField extends JTextField {
 					}
 					else if(e.getKeyCode() == KeyEvent.VK_SPACE) {
 						if(dropSuggestions.getSelectedIndex() > -1 && dropSuggestions.isVisible()) {
-							System.out.println("Space");
 							setText(dropSuggestionsList.get(dropSuggestions.getSelectedIndex()));
 						}
 					}
