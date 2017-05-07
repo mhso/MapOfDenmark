@@ -628,9 +628,13 @@ public class MapCanvas extends JPanel {
 		forceRepaint();
 	}
 	
-	public void setupDone() {
+	public void setMinMaxScale() {
 		MAX_SCALE = DKConstants.MAX_SCALE/((Toolkit.getDefaultToolkit().getScreenSize().getWidth()+16)/Main.window.getWidth());
 		MIN_SCALE = DKConstants.MIN_SCALE/((Toolkit.getDefaultToolkit().getScreenSize().getWidth()+16)/Main.window.getWidth());
+	}
+	
+	public void setupDone() {
+		setMinMaxScale();
 		zoomToBounds();
 		if(!Main.tileController.isInitialized()) Main.tileController.initialize();
 		for(CanvasListener listener : listeners) listener.onSetupDone();
