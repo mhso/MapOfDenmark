@@ -36,5 +36,6 @@ public class DKConstants {
 	/**
 	 * The factor that longitude coordinates gets multiplied by. This is because the world is spherical.
 	 */
-	public static final float FACTOR_LON_DENMARK = (float)(Math.cos((BOUNDS_DENMARK.y1 + (BOUNDS_DENMARK.y2 - BOUNDS_DENMARK.y1) / 2)) / 180 * Math.PI);
+	public static final double AVERAGE_LATITUDE = BOUNDS_DENMARK.y1 + ((BOUNDS_DENMARK.y2 - BOUNDS_DENMARK.y1) / 2);
+	public static final double FACTOR_LON_DENMARK = Math.cos( AVERAGE_LATITUDE / 180 * Math.PI);
 }

@@ -26,7 +26,7 @@ public class Main {
 	public final static boolean debugExtra = true;
 	public final static boolean production = false;
 	public final static boolean buffered = true;
-	public final static boolean saveParsedAddresses = true;
+	public final static boolean saveParsedAddresses = false;
 	public final static boolean nearest = true;
 
 	public static boolean useLauncher = true;

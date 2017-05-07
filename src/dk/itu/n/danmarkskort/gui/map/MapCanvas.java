@@ -522,6 +522,8 @@ public class MapCanvas extends JPanel {
 	}
 
 	public void zoom(double _factor) {
+		Main.log(transform.getScaleX());
+		Main.log("lonfactor: " + DKConstants.FACTOR_LON_DENMARK);
 	    double factor = _factor;
 
 		double zoomBefore = getZoom();
