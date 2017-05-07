@@ -393,7 +393,7 @@ public class MapCanvas extends JPanel {
 		g2d.setTransform(transform);
 		if(antiAlias) g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		else g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
-		g2d.setStroke(new BasicStroke((float)(0.0010f*1.5/getZoom())));
+		g2d.setStroke(new BasicStroke((float)(0.0010f*0.5/getZoom())));
 		g2d.setColor(Color.BLUE);
 		
 		if(Main.debug) {
