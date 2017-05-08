@@ -233,6 +233,9 @@ public class SettingsPage extends JPanel {
         labelChangeTheme.setHorizontalAlignment(SwingConstants.CENTER);
         panelInterfaceTheme.add(labelChangeTheme, BorderLayout.NORTH);
         
+        JLabel labelBasicIcon = new JLabel("Not yet implementet...");
+        panelInterfaceTheme.add(labelBasicIcon, BorderLayout.CENTER);
+        
         JPanel panelSouth = new JPanel();
         panelSouth.setOpaque(false);
         panelInterfaceTheme.add(panelSouth, BorderLayout.SOUTH);
