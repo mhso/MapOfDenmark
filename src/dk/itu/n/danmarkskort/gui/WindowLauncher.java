@@ -75,7 +75,7 @@ public class WindowLauncher extends JFrame {
 		
 		labelSelectedFile = new JLabel();
 		
-		JList<String> binFilesList = new JList(getParsedFiles());
+		JList<String> binFilesList = new JList<>(getParsedFiles());
 		binFilesList.setFont(style.normalText());
 		binFilesList.setSelectionBackground(style.launcherSelectionBG());
 		binFilesList.setSelectionForeground(style.panelBG());

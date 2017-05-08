@@ -130,6 +130,11 @@
 			<outercolor color="000000"/>
 			<layer layer="3"/>
 		</area>
+		<area>
+			<type name="PLATFORM"/>
+			<innercolor color="5C5F5A"/>
+			<layer layer="3"/>
+		</area>
 	</areas>
 	<labels>
 		<label>

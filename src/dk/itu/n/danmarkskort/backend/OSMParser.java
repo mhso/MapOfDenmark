@@ -494,6 +494,8 @@ public class OSMParser extends SAXAdapter implements Serializable {
                     case "forest":
                         waytype = WayType.FOREST;
                         break;
+                    case "meadow":
+                    	waytype = WayType.MEADOW;
                     case "industrial":
                         waytype = WayType.INDUSTRIAL;
                         break;
@@ -588,6 +590,7 @@ public class OSMParser extends SAXAdapter implements Serializable {
                         waytype = WayType.STADIUM;
                         break;
                     case "park":
+                    case "common":
                     case "garden":
                         waytype = WayType.PARK;
                         break;
@@ -596,6 +599,7 @@ public class OSMParser extends SAXAdapter implements Serializable {
                         break;
                     case "track":
                     case "pitch":
+                    case "golf_course":
                         waytype = WayType.SPORT;
                         break;
                 }

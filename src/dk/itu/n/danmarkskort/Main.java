@@ -132,7 +132,6 @@ public class Main {
     
     public static void windowResized(ComponentEvent e) {
     	if(!tileController.isInitialized()) tileController.initialize();
-    	Main.map.setMinMaxScale();
     	Main.tileController.setTileSize(window.getWidth(), window.getHeight());
     }
     
