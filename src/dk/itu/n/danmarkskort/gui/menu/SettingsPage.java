@@ -178,7 +178,7 @@ public class SettingsPage extends JPanel {
         panel.add(panelBWTheme);
         panelBWTheme.setLayout(new BorderLayout(0, 0));
         
-        JLabel labelBW = new JLabel("Grays");
+        JLabel labelBW = new JLabel("Gray");
         panelBWTheme.add(labelBW, BorderLayout.WEST);
         
         JLabel labelBWIcon = new JLabel(style.bwThemePreview());
@@ -271,7 +271,7 @@ public class SettingsPage extends JPanel {
         JLabel defaultMapFileLabel = new JLabel("Default Map File:");
         defaultMapFilePanel.add(defaultMapFileLabel, BorderLayout.WEST);
         
-        JComboBox<String> defaultMapFileBox = new JComboBox(getParsedFiles());
+        JComboBox<String> defaultMapFileBox = new JComboBox<>(getParsedFiles());
         defaultMapFileBox.addActionListener(e -> {
         	Main.userPreferences.setDefaultMapFile(defaultMapFileBox.getSelectedItem().toString());
         	Util.writeObjectToFile(Main.userPreferences, DKConstants.USERPREF_PATH);
@@ -300,7 +300,7 @@ public class SettingsPage extends JPanel {
         JLabel defaultMapThemeLabel = new JLabel("Default Map Theme:");
         defaultMapThemePanel.add(defaultMapThemeLabel, BorderLayout.WEST);
         
-        JComboBox<String> defaultMapThemeBox = new JComboBox(new String[]{"Basic", "Colorblind"});
+        JComboBox<String> defaultMapThemeBox = new JComboBox<>(new String[]{"Basic", "Night", ""});
         defaultMapThemeBox.addActionListener(e -> {
         	Main.userPreferences.setDefaultTheme(defaultMapThemeBox.getSelectedItem().toString());
         	Util.writeObjectToFile(Main.userPreferences, DKConstants.USERPREF_PATH);
