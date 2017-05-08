@@ -407,7 +407,6 @@ public class RoutePage extends JPanel {
         @Override
         public void replace(FilterBypass fb, int offset, int length, String newText,
                             AttributeSet attr) throws BadLocationException {
-
             super.replace(fb, offset, length, newText, attr);
             dropdownSuggestions(offset, input.getText());
             validateToFromFields();
@@ -418,7 +417,6 @@ public class RoutePage extends JPanel {
             	dropSuggestionsList.removeAll(dropSuggestionsList);
               	dropSuggestionsList.addAll(SearchController.getSearchFieldSuggestions(text));
             	populateSuggestions(das, input, dropSuggestionsList);
-
             } else {
             	das.setVisible(false);
             	validateToFromFields();
