@@ -78,9 +78,6 @@ public class Style {
         centerViewButton = new CustomButton("resources/icons/target.png", alphaFloat, alphaHover, zoomButtonBG);
         zoomInButton = new CustomButton("resources/icons/zoomin.png", alphaFloat, alphaHover, zoomButtonBG);
         zoomOutButton = new CustomButton("resources/icons/zoomout.png", alphaFloat, alphaHover, zoomButtonBG);
-        
-        pinPointPanButton = new CustomButton("resources/icons/map-pin.png", menuAlpha, menuAlphaHover);
-        pinPointDeleteButton = new CustomButton("resources/icons/office-bin.png", menuAlpha, menuAlphaHover);
 
         basicThemePreview = getImageIcon("resources/icons/previewthemebasic.png");
         nightThemePreview = getImageIcon("resources/icons/previewthemenight.png");
