@@ -94,7 +94,7 @@ public class AboutUsPage extends JPanel  {
         gbc_lblDate.gridy = 3;
         panel.add(lblDate, gbc_lblDate);
         
-        JLabel lblAppdate = new JLabel("03.20.2017");
+        JLabel lblAppdate = new JLabel("05.08.2017");
         GridBagConstraints gbc_lblAppdate = new GridBagConstraints();
         gbc_lblAppdate.anchor = GridBagConstraints.WEST;
         gbc_lblAppdate.insets = new Insets(0, 0, 5, 0);
@@ -113,7 +113,7 @@ public class AboutUsPage extends JPanel  {
         String appDescription = "<html>This application is made as part of our education"
         		+ "<br>as software developers, its includes a map of Denmark,"
         		+ "<br>Key features:"
-        		+ "<br>Zoom/pan, search, routeplanning and print.";
+        		+ "<br>Zoom/pan, search, routeplanning.";
         
         JLabel lblAppDescription = new JLabel(appDescription);
         GridBagConstraints gbc_lblNewLabel = new GridBagConstraints();
@@ -131,7 +131,7 @@ public class AboutUsPage extends JPanel  {
         gbc_lblTeamName.gridy = 6;
         panel.add(lblTeamName, gbc_lblTeamName);
         
-        JLabel lblTeamAi = new JLabel("Team AI");
+        JLabel lblTeamAi = new JLabel("Group N");
         GridBagConstraints gbc_lblTeamAi = new GridBagConstraints();
         gbc_lblTeamAi.anchor = GridBagConstraints.WEST;
         gbc_lblTeamAi.insets = new Insets(0, 0, 5, 0);
