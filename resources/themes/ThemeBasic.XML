@@ -152,8 +152,18 @@
 			<layer layer="3"/>
 		</area>
 		<area>
+			<type name="MEADOW"/>
+			<innercolor color="DCFCC1"/>
+			<layer layer="1"/>
+		</area>
+		<area>
 			<type name="GRASS"/>
 			<innercolor color="CBEFA8"/>
+			<layer layer="2"/>
+		</area>
+		<area>
+			<type name="WETLAND"/>
+			<innercolor color="94B983"/>
 			<layer layer="2"/>
 		</area>
 		<area>
