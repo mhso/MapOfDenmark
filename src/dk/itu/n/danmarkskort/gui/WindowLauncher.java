@@ -287,7 +287,9 @@ public class WindowLauncher extends JFrame {
 			labelSelectedFile.setText("default.bin (default)");
 		}		
 		try {
-			for(Path entry : Files.newDirectoryStream(Paths.get("parsedOSMFiles"))) {
+			Path path = Paths.get("parsedOSMFiles");
+			if(!Files.exists(path)) Files.createDirectory(path);
+			for(Path entry : Files.newDirectoryStream(path)) {
 				for(Path binFile : Files.newDirectoryStream(entry)) {
 					if(!binFile.toFile().getName().equals("pinpoints.bin")) {
 						binFiles.add(binFile);
@@ -300,7 +302,7 @@ public class WindowLauncher extends JFrame {
 			}
 		}
 		catch (IOException e) {
-			e.printStackTrace();
+			if(Main.debug) e.printStackTrace();
 		}
 		String[] results = new String[binFiles.size()];
 		for(int i = 0; i < binFiles.size(); i++) {
@@ -308,7 +310,6 @@ public class WindowLauncher extends JFrame {
 		}
 		return results;
 	}
-
 
 	private void loadFile() {
 		JFileChooser fc = viewFileChooser("Load View To File", "Load");
