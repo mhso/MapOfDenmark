@@ -43,6 +43,7 @@ public class DropdownMenu extends CustomDropdown {
         addcontentPane();
 
         add(wrapper);
+        addToContentPane(pinPointPage);
     }
 
     private void addMenuItems() {

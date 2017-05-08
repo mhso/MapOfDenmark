@@ -34,6 +34,7 @@ public class PinPointPage extends JPanel {
         panelHeadline.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
         panelHeadline.setBackground(style.menuContentBG());
         panelPage.add(panelHeadline, BorderLayout.NORTH);
+        
         JLabel lblPageHeadline = new JLabel("Your Point of Interests");
         lblPageHeadline.setFont(new Font("Tahoma", Font.BOLD, 18));
         panelHeadline.add(lblPageHeadline);
@@ -50,10 +51,16 @@ public class PinPointPage extends JPanel {
         panelEast.setBackground(style.menuContentBG());
         panelPage.add(panelEast, BorderLayout.EAST);
         
+        JPanel panelCenterSuper = new JPanel();
+        panelCenterSuper.setBackground(style.menuContentBG());
+        panelCenterSuper.setPreferredSize(getPreferredSize());
+        panelPage.add(panelCenterSuper, BorderLayout.CENTER);
+        
         JPanel panelCenter = new JPanel();
         panelCenter.setBackground(style.menuContentBG());
-        panelPage.add(panelCenter, BorderLayout.CENTER);
-        panelCenter.setLayout(new BorderLayout(0, 0));
+        panelCenterSuper.add(panelCenter);
+        panelCenter.setLayout(new BoxLayout(panelCenter, BoxLayout.Y_AXIS));
+        panelCenter.setPreferredSize(getPreferredSize());
         initContentPanel(panelCenter);
     }
 	
