@@ -1,7 +1,5 @@
 package dk.itu.n.danmarkskort.gui.routeplanner;
 
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import java.awt.BorderLayout;
 import javax.swing.JPanel;
@@ -13,14 +11,11 @@ import java.awt.Image;
 import javax.swing.JScrollPane;
 
 import dk.itu.n.danmarkskort.Main;
-import dk.itu.n.danmarkskort.gui.Style;
-import dk.itu.n.danmarkskort.models.RouteEnum;
 import dk.itu.n.danmarkskort.models.RouteModel;
 import dk.itu.n.danmarkskort.routeplanner.WeightEnum;
 
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
-import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JCheckBox;
 import java.awt.event.ItemListener;

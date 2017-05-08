@@ -37,7 +37,7 @@ public class RoutePartStep extends JPanel {
 		add(lblRouteIcon, gbc_lblRouteIcon);
 		
 		JLabel lblRoutePosition = new JLabel(STEP_POSITION);
-		lblRoutePosition.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		lblRoutePosition.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		GridBagConstraints gbc_lblRouteposition = new GridBagConstraints();
 		gbc_lblRouteposition.insets = new Insets(0, 0, 5, 5);
 		gbc_lblRouteposition.gridx = 1;
@@ -67,6 +67,6 @@ public class RoutePartStep extends JPanel {
 	private String makeDistance(double input){
 		if(input == -1) return "";
 		if(input / 1000 > 1.0) return String.format("%.1f", input / 1000) + " km.";
-		return String.format("%.0f", input) + " meter";
+		return String.format("%.0f", input) + " metres.";
 	}
 }
