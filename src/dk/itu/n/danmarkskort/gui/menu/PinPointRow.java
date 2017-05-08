@@ -9,6 +9,7 @@ import javax.swing.border.EmptyBorder;
 
 import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.gui.Style;
+import dk.itu.n.danmarkskort.gui.components.CustomButton;
 import dk.itu.n.danmarkskort.gui.map.PinPoint;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -34,7 +35,13 @@ public class PinPointRow extends JPanel {
 		panel.setBackground(style.menuContentBG());
 		PinPointRow self = this;
 		
-		btnPan = style.pinPointPanButton();
+		float menuAlpha = 0.7f;
+		float menuAlphaHover = 1f;
+		
+		CustomButton pinPointPanButton = new CustomButton("resources/icons/map-pin.png", menuAlpha, menuAlphaHover);
+		CustomButton  pinPointDeleteButton = new CustomButton("resources/icons/office-bin.png", menuAlpha, menuAlphaHover);
+        
+		btnPan = pinPointPanButton;
 		btnPan.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				Main.pinPointManager.panToLocation(pinPoint);
@@ -42,12 +49,12 @@ public class PinPointRow extends JPanel {
 		});
 		panel.add(btnPan);
 		
-		btnDelete = style.pinPointDeleteButton();
+		btnDelete = pinPointDeleteButton;
 		btnDelete.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				Main.pinPointManager.removePinPoint(pinPoint);
-				Main.mainPanel.repaint();
 				PinPointPage.removeRow(self);
+				Main.mainPanel.repaint();
 			}
 		});
 
@@ -61,7 +68,5 @@ public class PinPointRow extends JPanel {
 		name = new JLabel(pinPoint.getName());
 		name.setBorder(new EmptyBorder(0, 5, 0, 0));
 		panel_1.add(name);
-
 	}
-
 }
