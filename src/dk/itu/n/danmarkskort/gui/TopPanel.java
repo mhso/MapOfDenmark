@@ -189,6 +189,7 @@ public class TopPanel extends JPanel {
 	}
 
 	public void populateSuggestions(List<String> list) {
+		dropSuggestions.setVisible(false);
         dropSuggestions.removeAll();
         for(String str : list){
             dropSuggestions.addElement(input, str);
@@ -241,8 +242,7 @@ public class TopPanel extends JPanel {
         }
 
         public void dropdownSuggestions(int offset, String text) {
-        	
-            if(offset > 1 && text.length() > 1) {
+            if(offset > 1) {
             	dropSuggestionsList.removeAll(dropSuggestionsList);
               	dropSuggestionsList.addAll(SearchController.getSearchFieldSuggestions(text));
             	populateSuggestions(dropSuggestionsList);
