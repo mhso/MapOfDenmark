@@ -7,10 +7,10 @@ public class UserPreferences implements Serializable {
 	
 	private String currentMapTheme;
 	private String currentGUITheme;
-	private boolean maximizeOnStartup;
+	private boolean maximizeOnStartup = true;
 	private boolean saveToBinary = true;
 	private boolean forceParsing = false;
-	private boolean highlightNearestRoad = true;
+	private boolean highlightNearestRoad = false;
 	
 	private String defaultTheme = "Basic";
 	private String defaultMapFile = "default.bin";
