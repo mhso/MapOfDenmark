@@ -6,6 +6,8 @@ import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.gui.Style;
 
 import java.awt.*;
+import java.io.InputStream;
+
 import javax.swing.border.TitledBorder;
 
 public class AboutUsPage extends JPanel  {
@@ -113,8 +115,9 @@ public class AboutUsPage extends JPanel  {
         String appDescription = "<html>This application is made as part of our education"
         		+ "<br>as software developers, its includes a map of Denmark,"
         		+ "<br>Key features:"
-        		+ "<br>Zoom/pan, search, routeplanning and print.";
-        
+        		+ "<br>Zoom/pan, search, routeplanning and print."
+        		+ "<br>Credit to Apache commmons for their Levenstein implementation.";
+
         JLabel lblAppDescription = new JLabel(appDescription);
         GridBagConstraints gbc_lblNewLabel = new GridBagConstraints();
         gbc_lblNewLabel.anchor = GridBagConstraints.NORTHWEST;

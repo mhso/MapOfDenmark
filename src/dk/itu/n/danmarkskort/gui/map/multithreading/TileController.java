@@ -197,7 +197,6 @@ public class TileController implements ActionListener {
 			}
 		}
 		
-		
 	}
 
 	public void actionPerformed(ActionEvent e) {
@@ -225,7 +224,6 @@ public class TileController implements ActionListener {
 		if(!Main.buffered) return;
 		List<Tile> newTiles = getNewTiles();
 		for(Tile tile : newTiles) queueTile(tile, TaskPriority.HIGHEST, true, true);
-		
 	}
 	
 	public List<Tile> getNewTiles() {
