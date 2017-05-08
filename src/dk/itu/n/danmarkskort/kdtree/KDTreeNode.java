@@ -16,13 +16,26 @@ public class KDTreeNode<T extends KDComparable> extends KDTree<T> {
     private KDTree<T> rightChild;
     private float leftSplit;
     private float rightSplit;
+    //private final int KD_SIZE;
+    private final int KD_SIZE;
 
     public KDTreeNode(List<T> list) {
         this(KDTree.listToArray(list), true);
     }
+    
+    public KDTreeNode(List<T> list, int kd_size) {
+        this(KDTree.listToArray(list), true, kd_size);
+    }
 
     private KDTreeNode(KDComparable[] arr, boolean sortByLon) {
         createStructure(arr, sortByLon);
+        KD_SIZE = DKConstants.KD_SIZE;
+        //System.out.println("KD_SIZE: " + KD_SIZE);
+    }
+    
+    private KDTreeNode(KDComparable[] arr, boolean sortByLon, int kd_size) {
+        createStructure(arr, sortByLon);
+        KD_SIZE = kd_size;
     }
 
     private void createStructure(KDComparable[] array, boolean sortByLon) {
@@ -65,10 +78,10 @@ public class KDTreeNode<T extends KDComparable> extends KDTree<T> {
                 for(Point2D.Float node : item.getNodes()) rightSplit = node.y < rightSplit ? node.y : rightSplit; // nederst er værdierne størst
             }
         }
-        if(leftArray.length > DKConstants.KD_SIZE) leftChild = new KDTreeNode<>(leftArray, !sortByLon);
+        if(leftArray.length > KD_SIZE) leftChild = new KDTreeNode<>(leftArray, !sortByLon);
         else leftChild = new KDTreeLeaf<>(leftArray);
 
-        if(rightArray.length > DKConstants.KD_SIZE) rightChild = new KDTreeNode<>(rightArray, !sortByLon);
+        if(rightArray.length > KD_SIZE) rightChild = new KDTreeNode<>(rightArray, !sortByLon);
         else rightChild = new KDTreeLeaf<>(rightArray);
     }
 
