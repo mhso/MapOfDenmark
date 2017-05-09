@@ -534,8 +534,7 @@ public class MapCanvas extends JPanel {
 	}
 
 	public double getZoom() {
-		Main.log("scale vs maxscale : "+ transform.getScaleX()+" vs "+DKConstants.NEW_MAX_SCALE);
-	    return (double)(int)((Math.log(transform.getScaleX() / DKConstants.NEW_MIN_SCALE) / Math.log(DKConstants.ZOOM_LOG_BASE)) + 1);
+	    return (double)(int)((Math.log(transform.getScaleX() / DKConstants.MIN_SCALE) / Math.log(DKConstants.ZOOM_LOG_BASE)) + 1);
     }
 	
 	public double getZoomRaw() {
