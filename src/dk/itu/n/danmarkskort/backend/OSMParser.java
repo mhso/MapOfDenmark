@@ -229,7 +229,7 @@ public class OSMParser extends SAXAdapter implements Serializable {
                 second = route.makeVertex(secondNode.x, secondNode.y);
                 vertexMap.put(secondNode, second);
             }
-            route.addEdge(first, second, maxSpeed, forward, backward, motorvehicle, bicycle, walk, name);
+            if(maxSpeed > 0) route.addEdge(first, second, maxSpeed, forward, backward, motorvehicle, bicycle, walk, name);
         }
     }
 

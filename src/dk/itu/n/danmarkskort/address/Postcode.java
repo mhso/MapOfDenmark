@@ -20,7 +20,7 @@ public class Postcode implements Serializable {
 	Postcode(String postcode, String city){
 		this.postcode = ReuseStringObj.make(postcode);
 		setCity(city);
-		streets = new HashMap<String, Street>();
+		streets = new HashMap<String, Street>(2000);
 	}
 
 	public String getCity() { return city.toString(); }

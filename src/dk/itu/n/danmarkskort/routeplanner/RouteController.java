@@ -67,7 +67,7 @@ public class RouteController {
 	}
 
 	private void makeTree() {
-		edgeTree = new KDTreeNode<>(routeEdges);
+		edgeTree = new KDTreeNode<>(routeEdges, 2000);
 	}
 	
 	public void cleanUp(){
