@@ -1,9 +1,7 @@
 
 package dk.itu.n.danmarkskort;
 
-import java.awt.AWTException;
-import java.awt.Desktop;
-import java.awt.Dimension;
+import java.awt.*;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -29,11 +27,7 @@ import dk.itu.n.danmarkskort.backend.ProgressMonitor;
 import dk.itu.n.danmarkskort.backend.ProgressListener;
 import dk.itu.n.danmarkskort.models.Region;
 
-import java.awt.MouseInfo;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.Robot;
-import java.awt.Toolkit;
+import javax.swing.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
@@ -235,7 +229,7 @@ public class Util {
 	}
 	
 	public static void pan(AffineTransform transform, double dx, double dy) {
-		transform.preConcatenate(AffineTransform.getTranslateInstance(dx, dy));
+        transform.preConcatenate(AffineTransform.getTranslateInstance(dx, dy));
 	}
 	
 	public static void zoom(AffineTransform transform, double scale) {
@@ -285,19 +279,17 @@ public class Util {
 	}
 	
 	public static BufferedImage screenshotWithoutGUI(Rectangle region) {
-		Main.mainPanel.hideGUI();
-		Main.mainPanel.repaint();
-		
-		try {
-			BufferedImage capture = new Robot().createScreenCapture(region);
-			Main.mainPanel.showGUI();
-			return capture;
-		} catch (AWTException e) {
-			e.printStackTrace();
-			Main.mainPanel.showGUI();
-			Main.mainPanel.repaint();
-			return null;
-		}
+        Main.mainPanel.hideGUI();
+        try {
+            BufferedImage capture = new Robot().createScreenCapture(region);
+            Main.mainPanel.showGUI();
+            return capture;
+        } catch (AWTException e) {
+            e.printStackTrace();
+            Main.mainPanel.showGUI();
+            Main.mainPanel.repaint();
+            return null;
+        }
 	}
 	
 	public static BufferedImage screenshotWithoutGUI(int delay) {
