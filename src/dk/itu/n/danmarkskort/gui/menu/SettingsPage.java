@@ -178,7 +178,7 @@ public class SettingsPage extends JPanel {
         panel.add(panelBWTheme);
         panelBWTheme.setLayout(new BorderLayout(0, 0));
         
-        JLabel labelBW = new JLabel("Gray");
+        JLabel labelBW = new JLabel("<html><body>Gray-<br>scale</body></html>");
         panelBWTheme.add(labelBW, BorderLayout.WEST);
         
         JLabel labelBWIcon = new JLabel(style.bwThemePreview());

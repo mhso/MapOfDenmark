@@ -7,7 +7,6 @@ import dk.itu.n.danmarkskort.gui.components.SearchField;
 import dk.itu.n.danmarkskort.gui.map.PinPoint;
 import dk.itu.n.danmarkskort.gui.menu.DropdownMenu;
 import dk.itu.n.danmarkskort.gui.menu.PinPointPage;
-import dk.itu.n.danmarkskort.gui.menu.RoutePage;
 import dk.itu.n.danmarkskort.search.SearchController;
 
 import javax.swing.*;
@@ -49,7 +48,6 @@ public class TopPanel extends JPanel {
         gbc.weighty = 1;
 
         menu = style.menuButton();
-        menu.addActionListener(e -> dropMenu.addToContentPane(new PinPointPage()));
         menu.setToolTipText("Menu");
         gbc.fill = GridBagConstraints.HORIZONTAL;
         top.add(menu, gbc);
