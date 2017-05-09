@@ -3,17 +3,14 @@ package dk.itu.n.danmarkskort.gui.menu;
 import javax.swing.*;
 
 import dk.itu.n.danmarkskort.Main;
-import dk.itu.n.danmarkskort.Util;
 import dk.itu.n.danmarkskort.gui.Style;
 import dk.itu.n.danmarkskort.gui.components.PanelFileInfo;
-import dk.itu.n.danmarkskort.models.Region;
 
 import java.awt.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import java.io.File;
-import java.text.DecimalFormat;
 
 public class LoadPage extends JPanel  {
 	private static final long serialVersionUID = -3622354925202477780L;
@@ -70,10 +67,9 @@ public class LoadPage extends JPanel  {
 		if (fcVal == JFileChooser.APPROVE_OPTION) {
 			File file = fc.getSelectedFile();
 			
+			Main.window.dispose();
 			Main.launch(new String[]{file.getAbsolutePath()});
-			Main.window.add(Main.createFrameComponents());
-			Main.window.revalidate();
-			Main.map.setupDone();
+			Main.map.isSetupDone();
         }
     }
 	

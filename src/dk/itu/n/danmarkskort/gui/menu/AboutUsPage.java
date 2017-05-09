@@ -113,9 +113,17 @@ public class AboutUsPage extends JPanel  {
         panel.add(lblDescription, gbc_lblDescription);
         
         String appDescription = "<html>This application is made as part of our education"
-        		+ "<br>as software developers, its includes a map of Denmark,"
+        		+ "<br>as software developers at IT-University Copenhagen, "
+        		+ "<br>it includes a map of Denmark."
         		+ "<br>Key features:"
-        		+ "<br>Zoom/pan, search, routeplanning.";
+        		+ "<br>Zoom/pan, themes, address-search, routeplanning."
+        		+ "<br>"
+        		+ "<br>Thanks to:"
+        		+ "<br>- Apache Commons (https://commons.apache.org) for their"
+        		+ "<br>  Levehnstein implementation as well as inspiration for "
+        		+ "<br>  our loading screen from their CountingInputStream."
+        		+ "<br>- Darryl Burke for his AlphaImageIcon implementation:"
+        		+ "<br> https://tips4java.wordpress.com/2010/08/22/alpha-icons.";
         
         JLabel lblAppDescription = new JLabel(appDescription);
         GridBagConstraints gbc_lblNewLabel = new GridBagConstraints();
