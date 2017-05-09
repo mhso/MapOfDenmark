@@ -159,8 +159,8 @@ public class KDTreeNode<T extends KDComparable> extends KDTree<T> {
     
     protected int nodeSize(int currentDepth) {
     	currentDepth++;
-    	currentDepth = leftChild.nodeSize(currentDepth);
-    	currentDepth = rightChild.nodeSize(currentDepth);
+    	if(leftChild != null) currentDepth = leftChild.nodeSize(currentDepth);
+    	if(rightChild != null) currentDepth = rightChild.nodeSize(currentDepth);
     	return currentDepth;
     }
     

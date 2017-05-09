@@ -156,6 +156,17 @@ public class Util {
 		return new Point2D.Float((float)realCoords.getX()*Main.model.getLonFactor(), (float)-realCoords.getY());
 	}
 	
+	public static Point2D.Float stringCordsToPointFloat(String inputStr){
+		String[] strArr = inputStr.split(", ");
+		float lat = Float.parseFloat(strArr[0]);
+		float lon = Float.parseFloat(strArr[1]);
+		Point2D realCoords = new Point2D.Float(lon, lat);
+		Point2D fakeCoords = Util.toFakeCoords(realCoords);
+		System.out.println(realCoords);
+		System.out.println(fakeCoords);
+		return new Point2D.Float((float)fakeCoords.getX(), (float)fakeCoords.getY());
+	}
+	
 	public static String getBinaryFilePath() {
 		File file = new File(Main.osmReader.getFileName());
 		String simpleFileName = file.getName().substring(0, file.getName().length()-4);
@@ -265,9 +276,9 @@ public class Util {
 		}
 	}
 	
-	public static BufferedImage screenshot(int delay) {
+	public static BufferedImage screenshot(Rectangle region, int delay) {
 		ExecutorService service = Executors.newFixedThreadPool(1);
-		Future<BufferedImage> imageTask = service.submit(new ScreenshotDelayer(delay, true));
+		Future<BufferedImage> imageTask = service.submit(new ScreenshotDelayer(region, delay, true));
         
 		try {
 			BufferedImage image = imageTask.get();
@@ -278,6 +289,16 @@ public class Util {
 		}
 		service.shutdownNow();
 		return null;
+	}
+	
+	public static BufferedImage screenshot(int delay) {
+		Rectangle screenRect = new Rectangle(
+				Main.map.getLocationOnScreen().x, 
+				Main.map.getLocationOnScreen().y, 
+				Main.map.getWidth(), 
+				Main.map.getHeight()
+			);
+		return screenshot(screenRect, delay);
 	}
 	
 	public static BufferedImage screenshot() {
@@ -302,7 +323,7 @@ public class Util {
 	
 	public static BufferedImage screenshotWithoutGUI(int delay) {
 		ExecutorService service = Executors.newFixedThreadPool(1);
-		Future<BufferedImage> imageTask = service.submit(new ScreenshotDelayer(delay, false));
+		Future<BufferedImage> imageTask = service.submit(new ScreenshotDelayer(null, delay, false));
         
 		try {
 			BufferedImage image = imageTask.get();
@@ -332,16 +353,21 @@ public class Util {
 	
 	private static class ScreenshotDelayer implements Callable<BufferedImage> {
 		private boolean gui;
+		private Rectangle region;
 		
-		public ScreenshotDelayer(int delay, boolean gui) {
+		public ScreenshotDelayer(Rectangle region, int delay, boolean gui) {
 			this.gui = gui;
+			this.region = region;
 		}
 		
 		@Override
 		public BufferedImage call() throws Exception {
 			while(!Main.tileController.isTileQueueEmpty()) Thread.sleep(5);
 			Thread.sleep(1500);
-			if(gui) return screenshot();
+			if(gui) {
+				if(region == null) return screenshot();
+				else return screenshot(region);
+			}
 			else return screenshotWithoutGUI();
 		}	
 	}
