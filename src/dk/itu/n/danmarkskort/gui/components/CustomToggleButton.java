@@ -23,11 +23,11 @@ public class CustomToggleButton extends CustomButton {
     	addActionListener(e -> swap());
     }
     
-    public void setOn(boolean on) {
+    public void setSelected(boolean on) {
     	if(switchedOn != on) swap();
     }
     
-    public boolean isOn() {
+    public boolean isSelected() {
     	return switchedOn;
     }
     

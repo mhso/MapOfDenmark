@@ -136,12 +136,12 @@ public class SettingsPage extends JPanel {
         
         CustomToggleButton buttonBasicToggle = style.toggleButton();
         buttonBasicToggle.addActionListener(e -> {
-        	if(!buttonBasicToggle.isOn()) {
+        	if(!buttonBasicToggle.isSelected()) {
         		Main.userPreferences.setCurrentMapTheme("Basic");
             	changeCurrentTheme();
         	}
         });
-        buttonBasicToggle.setOn(false);
+        buttonBasicToggle.setSelected(false);
         panelBasicTheme.add(buttonBasicToggle, BorderLayout.EAST);
         
         Component rigidArea = Box.createRigidArea(new Dimension(20, 20));
@@ -161,12 +161,12 @@ public class SettingsPage extends JPanel {
         
         CustomToggleButton buttonNightToggle = style.toggleButton();
         buttonNightToggle.addActionListener(e -> {
-        	if(!buttonNightToggle.isOn()) {
+        	if(!buttonNightToggle.isSelected()) {
         		Main.userPreferences.setCurrentMapTheme("Night");
         		changeCurrentTheme();
         	}
         });
-        buttonNightToggle.setOn(false);
+        buttonNightToggle.setSelected(false);
         panelNightTheme.add(buttonNightToggle, BorderLayout.EAST);
         
         rigidArea = Box.createRigidArea(new Dimension(20, 20));
@@ -186,12 +186,12 @@ public class SettingsPage extends JPanel {
         
         CustomToggleButton buttonBWToggle = style.toggleButton();
         buttonBWToggle.addActionListener(e -> {
-        	if(!buttonBWToggle.isOn()) {
+        	if(!buttonBWToggle.isSelected()) {
         		Main.userPreferences.setCurrentMapTheme("BW");
         		changeCurrentTheme();
         	}
         });
-        buttonBWToggle.setOn(false);
+        buttonBWToggle.setSelected(false);
         panelBWTheme.add(buttonBWToggle, BorderLayout.EAST);
         
         JPanel panelSouth = new JPanel();
@@ -209,9 +209,9 @@ public class SettingsPage extends JPanel {
         	button.addActionListener(new ButtonSelecter(button, buttons));
         }
         
-        if(Main.userPreferences.getCurrentMapTheme().equals("Basic")) buttonBasicToggle.setOn(true);
-        else if(Main.userPreferences.getCurrentMapTheme().equals("Night")) buttonBWToggle.setOn(true);
-        else if(Main.userPreferences.getCurrentMapTheme().equals("BW")) buttonBWToggle.setOn(true);
+        if(Main.userPreferences.getCurrentMapTheme().equals("Basic")) buttonBasicToggle.setSelected(true);
+        else if(Main.userPreferences.getCurrentMapTheme().equals("Night")) buttonBWToggle.setSelected(true);
+        else if(Main.userPreferences.getCurrentMapTheme().equals("BW")) buttonBWToggle.setSelected(true);
     }
     
     private void changeCurrentTheme() {
@@ -277,6 +277,11 @@ public class SettingsPage extends JPanel {
         	Util.writeObjectToFile(Main.userPreferences, DKConstants.USERPREF_PATH);
         });
         defaultMapFileBox.addMouseListener(new MouseAdapter() {
+        	@Override
+			public void mousePressed(MouseEvent e) {
+				menu.blockVisibility(true);
+			}
+        	
 			@Override
 			public void mouseEntered(MouseEvent e) {
 				menu.blockVisibility(true);
@@ -306,6 +311,11 @@ public class SettingsPage extends JPanel {
         	Util.writeObjectToFile(Main.userPreferences, DKConstants.USERPREF_PATH);
         });
         defaultMapThemeBox.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				menu.blockVisibility(true);
+			}
+
 			@Override
 			public void mouseEntered(MouseEvent e) {
 				menu.blockVisibility(true);
@@ -445,7 +455,7 @@ public class SettingsPage extends JPanel {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			for(CustomToggleButton button : buttons) {
-				if(button != sourceButton) button.setOn(false);
+				if(button != sourceButton) button.setSelected(false);
 			}
 		}
 	}
