@@ -77,12 +77,14 @@ public class RouteController {
 	}
 	
 	public Iterable<RouteEdge> getRoute(RouteVertex from, RouteVertex to, WeightEnum weightEnum){
-		RouteDijkstra routeDijkstra = new RouteDijkstra(routeGraph, from.getId(), to.getId(), weightEnum);
+		//RouteDijkstra routeDijkstra = new RouteDijkstra(routeGraph, from.getId(), to.getId(), weightEnum);
+		RouteDijkstraAStar routeDijkstra = new RouteDijkstraAStar(routeGraph, from, to, weightEnum);
 		return routeDijkstra.pathTo(to.getId());
 	}
 	
 	public boolean hasRoute(RouteVertex from, RouteVertex to, WeightEnum weightEnum){
-		RouteDijkstra routeDijkstra = new RouteDijkstra(routeGraph, from.getId(), to.getId(), weightEnum);
+		//RouteDijkstra routeDijkstra = new RouteDijkstra(routeGraph, from.getId(), to.getId(), weightEnum);
+		RouteDijkstraAStar routeDijkstra = new RouteDijkstraAStar(routeGraph, from, to, weightEnum);
 		return routeDijkstra.hasPathTo(to.getId());
 	}
 
