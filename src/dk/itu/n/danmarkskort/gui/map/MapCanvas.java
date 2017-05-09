@@ -9,7 +9,6 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.Shape;
-import java.awt.Toolkit;
 import java.awt.geom.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
@@ -58,6 +57,7 @@ public class MapCanvas extends JPanel {
 	private List<WaytypeGraphicSpec> labelsVisible;
 	
 	public boolean scaleCurrentLayer = false;
+	private boolean setupDone;
 
 	private Shape currentHighlighedShape;
 	private WayType currentHighlighedWaytype;
@@ -210,7 +210,7 @@ public class MapCanvas extends JPanel {
         	for(WaytypeGraphicSpec wayTypeLabel : labelsVisible) {
             	currentWTGSpec = wayTypeLabel;
             	KDTree<ParsedPlace> kdTree = Main.model.getEnumMapPlacesKD().get(wayTypeLabel.getWayType());
-            	if(kdTree == null) continue;
+            	if(kdTree == null) continue; 	
             	currentWTGSpec.transformPrimary(g2d);
                 for (Iterator<ParsedPlace> i = kdTree.iterator(currentRegion); i.hasNext(); ) {
                     ParsedPlace place = i.next();
@@ -456,8 +456,16 @@ public class MapCanvas extends JPanel {
 		return toModelCoords(getRelativeMousePosition());
 	}
 	
+	public boolean isSetupDone() {
+		return setupDone;
+	}
+	
+	public void setupInProgress() {
+		setupDone = false;
+	}
+	
 	public void mouseMoved() {
-		for(CanvasListener listener : listeners) listener.onMouseMoved();
+		if(setupDone) for(CanvasListener listener : listeners) listener.onMouseMoved();
 	}
 
 	public void zoom(double _factor) {
@@ -546,7 +554,6 @@ public class MapCanvas extends JPanel {
 		Region mapRegion = Main.model.getMapRegion();
 		pan(-mapRegion.x1, -mapRegion.y2);
 		zoom(getWidth() / (mapRegion.x2 - mapRegion.x1));
-		if(!Main.tileController.isInitialized()) Main.tileController.initialize();
 	}
 	
 	public void zoomToRegion(Region region) {
@@ -563,7 +570,9 @@ public class MapCanvas extends JPanel {
 	
 	public void setupDone() {
 		zoomToBounds();
+		
 		if(!Main.tileController.isInitialized()) Main.tileController.initialize();
+		setupDone = true;
 		for(CanvasListener listener : listeners) listener.onSetupDone();
 	}
 	

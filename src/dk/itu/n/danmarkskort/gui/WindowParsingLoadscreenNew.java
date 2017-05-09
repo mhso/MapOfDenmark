@@ -132,7 +132,9 @@ public class WindowParsingLoadscreenNew extends JFrame implements OSMParserListe
 	public void onParsingGotItem(Object parsedItem) {
 		objectCount++;
 		if(objectCount >= 1000) {
-			labelStatus.setText(parsedItem.toString());
+			int maxLength = 60;
+			if(parsedItem.toString().length() < maxLength) labelStatus.setText(parsedItem.toString());
+			else labelStatus.setText(parsedItem.toString().substring(0, maxLength));
 			objectCount = 0;
 		}
 	}

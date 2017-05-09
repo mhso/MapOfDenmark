@@ -64,8 +64,8 @@ public class WindowLauncherConfigure extends JDialog {
 		panelBinary.add(labelBinary, BorderLayout.WEST);
 		
 		CustomToggleButton buttonBinary = style.toggleButton();
-		buttonBinary.addActionListener(e -> Main.userPreferences.setSaveToBinary(!buttonBinary.isOn()));
-		buttonBinary.setOn(Main.userPreferences.isSavingToBinary());
+		buttonBinary.addActionListener(e -> Main.userPreferences.setSaveToBinary(!buttonBinary.isSelected()));
+		buttonBinary.setSelected(Main.userPreferences.isSavingToBinary());
 		panelBinary.add(buttonBinary, BorderLayout.EAST);
 		
 		JPanel panelReparse = new JPanel();
@@ -84,10 +84,10 @@ public class WindowLauncherConfigure extends JDialog {
 		
 		CustomToggleButton buttonReparse = style.toggleButton();
 		buttonReparse.addActionListener(e -> {
-			Main.userPreferences.setForceParsing(!buttonReparse.isOn());
+			Main.userPreferences.setForceParsing(!buttonReparse.isSelected());
 			Util.writeObjectToFile(Main.userPreferences, DKConstants.USERPREF_PATH);
 		});
-		buttonReparse.setOn(Main.userPreferences.isForcingParsing());
+		buttonReparse.setSelected(Main.userPreferences.isForcingParsing());
 		panelReparse.add(buttonReparse, BorderLayout.EAST);
 		
 		centerPanel.add(Box.createRigidArea(new Dimension(centerPanel.getWidth(), 10)));
