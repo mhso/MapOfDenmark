@@ -290,7 +290,7 @@ public class SettingsPage extends JPanel {
         defaultMapFileBox.setSelectedItem(Main.userPreferences.getDefaultMapFile());
         defaultMapFilePanel.add(defaultMapFileBox, BorderLayout.EAST);
         
-        centerPanel.add(Box.createRigidArea(new Dimension(20, 20)));
+        centerPanel.add(Box.createRigidArea(new Dimension(20, 10)));
         
         JPanel defaultMapThemePanel = new JPanel();
         defaultMapThemePanel.setOpaque(false);
@@ -320,7 +320,7 @@ public class SettingsPage extends JPanel {
         defaultMapThemeBox.setPreferredSize(new Dimension(defaultMapFileBox.getPreferredSize()));
         defaultMapThemePanel.add(defaultMapThemeBox, BorderLayout.EAST);
         
-        centerPanel.add(Box.createRigidArea(new Dimension(20, 20)));
+        centerPanel.add(Box.createRigidArea(new Dimension(20, 10)));
         
         JPanel maximizeOnStartupPanel = new JPanel();
         maximizeOnStartupPanel.setOpaque(false);
@@ -339,7 +339,7 @@ public class SettingsPage extends JPanel {
         maximizeButton.setSelected(Main.userPreferences.isMaximizeOnStartup());
         maximizeOnStartupPanel.add(maximizeButton, BorderLayout.EAST);
         
-        centerPanel.add(Box.createRigidArea(new Dimension(20, 20)));
+        centerPanel.add(Box.createRigidArea(new Dimension(20, 10)));
         
         JPanel highlightRoadPanel = new JPanel();
         highlightRoadPanel.setOpaque(false);
@@ -357,6 +357,22 @@ public class SettingsPage extends JPanel {
         highlightButton.setBackground(panelCenter.getBackground());
         highlightButton.setSelected(Main.userPreferences.isHighlightingNearestRoad());
         highlightRoadPanel.add(highlightButton, BorderLayout.EAST);
+        
+        centerPanel.add(Box.createRigidArea(new Dimension(20, 10)));
+        
+        JPanel drawDjikstraPanel = new JPanel();
+        drawDjikstraPanel.setOpaque(false);
+        centerPanel.add(drawDjikstraPanel);
+        drawDjikstraPanel.setLayout(new BorderLayout(15, 0));
+        
+        JLabel drawDjikstraLabel = new JLabel("DEBUG: Draw Djikstra/A*");
+        drawDjikstraPanel.add(drawDjikstraLabel, BorderLayout.WEST);
+        
+        JCheckBox drawDjikstraButton = new JCheckBox();
+        drawDjikstraButton.addActionListener(e -> Main.routeController.isDrawingDjikstra = drawDjikstraButton.isSelected());
+        drawDjikstraButton.setBackground(panelCenter.getBackground());
+        drawDjikstraButton.setSelected(Main.userPreferences.isHighlightingNearestRoad());
+        drawDjikstraPanel.add(drawDjikstraButton, BorderLayout.EAST);
         
         JPanel panelSouth = new JPanel();
         panelSouth.setOpaque(false);

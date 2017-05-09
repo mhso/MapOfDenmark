@@ -21,7 +21,8 @@ public class RouteController {
 	private List<RouteVertex> vertices;
 	private RouteGraph routeGraph;
 	private Region routeRegion;
-	private boolean debug = true;
+	private boolean debug = false;
+	public boolean isDrawingDjikstra = false;
 	KDTree<RouteEdge> edgeTree;
 	
 	public RouteController(){
@@ -146,12 +147,12 @@ public class RouteController {
 			
 			for(RouteEdge edge : edges) sizeOfEdges++;
 			
-			if(Main.map.getRoute() != null) Main.map.setRoute(null);
+			if(Main.map.getRoute() != null && !isDrawingDjikstra) Main.map.setRoute(null);
 			int count = 0;
 			RouteEnum routeEnum = RouteEnum.CONTINUE_ON;
 			for(RouteEdge edge : edges){
 				count++;
-				//Main.map.addRouteEdge(edge);
+				if(!isDrawingDjikstra) Main.map.addRouteEdge(edge);
 				if(lastModel != null && edge.getDescription().equals(lastEdge.getDescription())) {
 					distSum += edge.getDistance();
 					lastModel.setDistance(distSum);

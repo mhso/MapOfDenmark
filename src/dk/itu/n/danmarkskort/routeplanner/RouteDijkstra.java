@@ -14,7 +14,7 @@ public class RouteDijkstra {
     private RouteEdge[] edgeTo;    			// edgeTo[v] = last edge on shortest s->v path
     private IndexMinPQ<Double> pq;    		// priority queue of vertices
     private WeightEnum weightEnum;
-    private boolean debug = true;
+    private boolean debug = false;
     private int source, target;
 
     /**
@@ -33,7 +33,7 @@ public class RouteDijkstra {
         distTo = new double[graph.getNumOfVertices()];
         edgeTo = new RouteEdge[graph.getNumOfVertices()];
         List<RouteEdge> edgesInRoute = null;
-        if(debug) edgesInRoute = new ArrayList<>();
+        if(Main.routeController.isDrawingDjikstra) edgesInRoute = new ArrayList<>();
         
         validateVertex(source);
 
@@ -50,12 +50,15 @@ public class RouteDijkstra {
             
         	for (RouteEdge edge : graph.adjacent(v)) {
             	if(edge.isTravelTypeAllowed(weightEnum)) {
-            		if(debug) edgesInRoute.add(edge);
+            		if(Main.routeController.isDrawingDjikstra) edgesInRoute.add(edge);
             		relax(edge);
             	}
             }
         }
-        if(debug) new AnimationTimer(20, edgesInRoute);
+        if(Main.routeController.isDrawingDjikstra) {
+        	Main.map.setRoute(edgesInRoute);
+        	Main.map.repaint();
+        }
     }
 
     // relax edge e and update pq if changed
@@ -117,31 +120,5 @@ public class RouteDijkstra {
         int V = distTo.length;
         if (vertexId < 0 || vertexId >= V)
             throw new IllegalArgumentException("vertex " + vertexId + " is not between 0 and " + (V-1));
-    }
-    
-    private class AnimationTimer implements ActionListener {
-    	Timer timer;
-    	List<RouteEdge> edgesInRoute;
-    	int index;
-    	
-    	public AnimationTimer(int delay, List<RouteEdge> edgesInRoute) {
-    		this.edgesInRoute = edgesInRoute;
-    		timer = new Timer(delay, this);
-    		timer.start();
-    	}
-    	
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			Main.map.addRouteEdge(edgesInRoute.get(index));
-			 if(index % 100 == 0) {
-				 Main.map.repaint();
-			 }
-			 index++;
-	     	 if(index >= edgesInRoute.size()-1) {
-	     		 System.out.println("Debug: DJIKSTRA OVER!");
-	     		 Main.map.repaint();
-	     		 timer.stop();
-	     	 }
-		}
     }
 }
