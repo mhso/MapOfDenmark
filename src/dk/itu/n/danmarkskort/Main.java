@@ -59,7 +59,6 @@ public class Main {
 	}
 
 	public static void startup(String[] args) {
-		if(window != null) window.getContentPane().removeAll();
 		addressController  =  new AddressController();
 		osmReader = new OSMReader();
 		model = new OSMParser(osmReader);
@@ -92,7 +91,7 @@ public class Main {
 			public void run() {
 				osmReader.parseFile(args[0], model);
 				ReuseStringObj.clear();
-				if(window == null) main();
+				main();
 		        shutdown();
 			}
 		};
@@ -102,7 +101,7 @@ public class Main {
 	public static void main() {
 		makeFrame();
 	}
-
+	
 	public static void shutdown() {}
 
 	public static void log(Object text) {

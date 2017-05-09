@@ -6,10 +6,13 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 
 import javax.swing.JLabel;
 
 import dk.itu.n.danmarkskort.DKConstants;
+import dk.itu.n.danmarkskort.Main;
 
 public class ScaleLabel extends JLabel {
 	private static final long serialVersionUID = 7223963683459327164L;
