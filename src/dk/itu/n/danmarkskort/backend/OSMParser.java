@@ -293,7 +293,7 @@ public class OSMParser extends SAXAdapter implements Serializable {
     private void resetValues() {
         way = null;
         relation = null;
-        //address = null;
+        address = null;
         node = null;
         place = null;
 
