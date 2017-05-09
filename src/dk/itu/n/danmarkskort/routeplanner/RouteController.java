@@ -149,7 +149,7 @@ public class RouteController {
 			RouteEnum routeEnum = RouteEnum.CONTINUE_ON;
 			for(RouteEdge edge : edges){
 				count++;
-				Main.map.addRouteEdge(edge);
+				//Main.map.addRouteEdge(edge);
 				if(lastModel != null && edge.getDescription().equals(lastEdge.getDescription())) {
 					distSum += edge.getDistance();
 					lastModel.setDistance(distSum);

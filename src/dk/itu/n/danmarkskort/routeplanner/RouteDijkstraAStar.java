@@ -14,7 +14,7 @@ public class RouteDijkstraAStar {
     private RouteEdge[] edgeTo;    			// edgeTo[v] = last edge on shortest s->v path
     private IndexMinPQ<Double> pq;    		// priority queue of vertices
     private WeightEnum weightEnum;
-    private boolean debug = false;
+    private boolean debug = true;
     private int source, target;
     
     private double heuristics(int source, int target){
@@ -199,7 +199,9 @@ public class RouteDijkstraAStar {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			 Main.map.drawRouteEdge(edgesInRoute.get(index));
-			 if(index % 1000 == 0) Main.map.repaint();
+			 if(index % 1000 == 0) {
+				 for(int i = 0; i < index; i++) Main.map.drawRouteEdge(edgesInRoute.get(i));
+			 }
 			 index++;
 	     	 if(index >= edgesInRoute.size()-1) timer.stop();
 		}
