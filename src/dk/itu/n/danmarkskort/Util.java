@@ -316,6 +316,7 @@ public class Util {
 	}
 	
 	public static BufferedImage screenshotWithoutGUI() {
+		if(!Main.map.isVisible()) return new BufferedImage(0, 0, BufferedImage.TYPE_USHORT_GRAY);
 		Rectangle screenRect = new Rectangle(
 				Main.map.getLocationOnScreen().x, 
 				Main.map.getLocationOnScreen().y, 

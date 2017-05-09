@@ -6,6 +6,8 @@ import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.gui.Style;
 
 import java.awt.*;
+import java.io.InputStream;
+
 import javax.swing.border.TitledBorder;
 
 public class AboutUsPage extends JPanel  {

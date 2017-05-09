@@ -8,7 +8,6 @@ import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.Util;
 import dk.itu.n.danmarkskort.gui.components.CustomDropdown;
 import dk.itu.n.danmarkskort.gui.map.PinPoint;
-import dk.itu.n.danmarkskort.gui.menu.RoutePage;
 
 public class DropdownRightClick extends CustomDropdown {
 	private static final long serialVersionUID = -3776480204582099583L;
