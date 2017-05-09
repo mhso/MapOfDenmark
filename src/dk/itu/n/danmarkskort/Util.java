@@ -143,9 +143,19 @@ public class Util {
 	}
 	
 	public static double distanceInMeters(Point2D p1, Point2D p2) {
-        double latM = 1000*((p2.getY()-p1.getY())*110.574);
-        double lonM = 1000*((p2.getX()-p1.getX())*111.320*Math.cos(Math.toRadians(p2.getY())));
-        return Math.sqrt((lonM * lonM) + (latM * latM));
+		p1 = toRealCoords(p1);
+		p2 = toRealCoords(p2);
+		double earthRadius = 6371*1000;
+		double latRad1 = Math.toRadians(p1.getY());
+		double latRad2 = Math.toRadians(p2.getY());
+		double latDeltaRad = Math.toRadians(p2.getY()-p1.getY());
+		double lonDeltaRad = Math.toRadians(p2.getX()-p1.getX());
+		
+		double haversine = Math.sin(latDeltaRad/2) * Math.sin(latDeltaRad/2) + 
+				Math.cos(latRad1) * Math.cos(latRad2) * Math.sin(lonDeltaRad/2) * Math.sin(lonDeltaRad/2);
+		double formular = 2 * Math.atan2(Math.sqrt(haversine), Math.sqrt(1-haversine));
+		
+        return earthRadius * formular;
     }
 	
 	public static Point2D toRealCoords(Point2D fakeCoords) {
