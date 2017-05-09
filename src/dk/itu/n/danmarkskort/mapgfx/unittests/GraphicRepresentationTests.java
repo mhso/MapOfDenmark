@@ -4,7 +4,6 @@ import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.xml.sax.InputSource;
 
 import dk.itu.n.danmarkskort.mapgfx.GraphicRepresentation;
 import dk.itu.n.danmarkskort.mapgfx.GraphicSpecArea;
@@ -16,7 +15,7 @@ public class GraphicRepresentationTests {
 	@Before
 	public void parseGraphicData() {
 		if(!setupDone) {
-			GraphicRepresentation.parseData("resources/ThemeTest.XML");
+			GraphicRepresentation.parseData("resources/themes/ThemeTest.XML");
 			setupDone = true;
 		}
 	}

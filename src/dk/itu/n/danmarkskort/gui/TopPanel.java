@@ -6,7 +6,7 @@ import dk.itu.n.danmarkskort.address.Address;
 import dk.itu.n.danmarkskort.gui.components.SearchField;
 import dk.itu.n.danmarkskort.gui.map.PinPoint;
 import dk.itu.n.danmarkskort.gui.menu.DropdownMenu;
-import dk.itu.n.danmarkskort.gui.menu.RoutePage;
+import dk.itu.n.danmarkskort.gui.menu.PinPointPage;
 import dk.itu.n.danmarkskort.search.SearchController;
 
 import javax.swing.*;
@@ -189,6 +189,7 @@ public class TopPanel extends JPanel {
 	}
 
 	public void populateSuggestions(List<String> list) {
+		dropSuggestions.setVisible(false);
         dropSuggestions.removeAll();
         for(String str : list){
             dropSuggestions.addElement(input, str);
@@ -241,8 +242,7 @@ public class TopPanel extends JPanel {
         }
 
         public void dropdownSuggestions(int offset, String text) {
-        	
-            if(offset > 1 && text.length() > 1) {
+            if(offset > 1) {
             	dropSuggestionsList.removeAll(dropSuggestionsList);
               	dropSuggestionsList.addAll(SearchController.getSearchFieldSuggestions(text));
             	populateSuggestions(dropSuggestionsList);

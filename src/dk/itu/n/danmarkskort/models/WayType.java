@@ -19,6 +19,7 @@ public enum WayType {
 	// Landuse:
 	RESIDENTIAL,		// beboelsesområde
 	FOREST, 			// Skov.
+	MEADOW,				// Græs-eng.
 	INDUSTRIAL,			// Industriområde.
 	GRASS,				// Græs.
 	RETAIL,				// Købe-ting-sted.

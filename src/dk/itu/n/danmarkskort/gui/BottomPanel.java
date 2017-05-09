@@ -144,6 +144,7 @@ public class BottomPanel extends JPanel implements CanvasListener {
         buttonCentreView.setBorder(new EtchedBorder(EtchedBorder.RAISED, BORDER_HIGHTLIGHT, BORDER_SHADOW));
         buttonCentreView.addActionListener(e -> {
             Main.map.zoomToRegion(Main.model.getMapRegion());
+            onZoomLevelChanged();
         });
         buttonCentreView.setFocusPainted(false);
         rightParent.add(buttonCentreView, BorderLayout.NORTH);

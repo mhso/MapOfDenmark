@@ -95,6 +95,10 @@ public class Util {
 		return file.length();
 	}
 	
+	public static long getFileSize(String fileName) {
+		return getFileSize(new File(fileName));
+	}
+	
 	public static int getNumberOfLines(File file) {
 		try {
 			LineNumberReader  lnr = new LineNumberReader(new FileReader(file));
@@ -312,6 +316,7 @@ public class Util {
 	}
 	
 	public static BufferedImage screenshotWithoutGUI() {
+		if(!Main.map.isVisible()) return new BufferedImage(0, 0, BufferedImage.TYPE_USHORT_GRAY);
 		Rectangle screenRect = new Rectangle(
 				Main.map.getLocationOnScreen().x, 
 				Main.map.getLocationOnScreen().y, 

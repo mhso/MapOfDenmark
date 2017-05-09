@@ -100,7 +100,6 @@ public class RouteControllerTest {
 		String result = null;
 		if(rc.hasRoute(A1, A6, weightEnum)) {
 			Iterable<RouteEdge> edges = rc.getRoute(A1, A6, weightEnum);
-			//System.out.println("SHOW ME THE ROUTE: " + fromToStr);
 			double distSum = 0;
 			int count = 0;
 			StringBuilder sb =  new StringBuilder();
@@ -108,14 +107,10 @@ public class RouteControllerTest {
 				distSum += e.getWeight(weightEnum);
 				count++;
 				sb.append(e.toStringDesr() + ", ");
-				
-				//System.out.print(e.toStringDesr() + ", ");
 			}
 			result = "Count: " + count + " Total dist: " + distSum + " | " + sb.toString();
-				//System.out.println("\nCount: " + count + ", Distance: " + distSum + "\n");
 		} else {
 			result = "NO ROUTE";
-			//System.out.println("NO ROUTE FOR: " + fromToStr);
 		}
 		return result;
 	}

@@ -49,8 +49,6 @@ public class MapCanvas extends JPanel {
 
 	private WaytypeGraphicSpec currentWTGSpec;
 	private boolean zoomChanged = true;
-	private double MIN_SCALE;
-	private double MAX_SCALE;
 	
 	private List<CanvasListener> listeners = new ArrayList<>();
 	private List<WaytypeGraphicSpec> wayTypesVisible;
@@ -393,7 +391,7 @@ public class MapCanvas extends JPanel {
 		g2d.setTransform(transform);
 		if(antiAlias) g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		else g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
-		g2d.setStroke(new BasicStroke((float)(0.0010f*1.5/getZoom())));
+		g2d.setStroke(new BasicStroke((float)(0.0010f*0.5/getZoom())));
 		g2d.setColor(Color.BLUE);
 		
 		if(Main.debug) {
@@ -529,8 +527,8 @@ public class MapCanvas extends JPanel {
 		double zoomBefore = getZoom();
 		double scaleBefore = getZoomRaw();
 
-		if(scaleBefore * factor > MAX_SCALE) factor = MAX_SCALE / scaleBefore;
-		else if(scaleBefore * factor < MIN_SCALE) factor = scaleBefore / MIN_SCALE;
+		if(scaleBefore * factor > DKConstants.MAX_SCALE) factor = DKConstants.MAX_SCALE / scaleBefore;
+		else if(scaleBefore * factor < DKConstants.MIN_SCALE) factor = scaleBefore / DKConstants.MIN_SCALE;
 		
 		Util.zoom(transform, factor);
 		Util.zoom(actualTransform, factor);
@@ -603,7 +601,9 @@ public class MapCanvas extends JPanel {
 
 	public double getZoom() {
 		Region denmark = DKConstants.BOUNDS_DENMARK;
-		Region view = getGeographicalRegion();
+		Point2D topLeft = toActualModelCoords(new Point2D.Double(0, 0));
+		Point2D bottomRight = toActualModelCoords(new Point2D.Double(DKConstants.VIEWCONSTANT, DKConstants.VIEWCONSTANT));
+		Region view = new Region(topLeft.getX(), topLeft.getY(), bottomRight.getX(), bottomRight.getY());
 		return 2+Math.floor(Math.log(denmark.getWidth()/view.getWidth())*2.5);
 	}
 	
@@ -630,13 +630,7 @@ public class MapCanvas extends JPanel {
 		forceRepaint();
 	}
 	
-	public void setMinMaxScale() {
-		MAX_SCALE = DKConstants.MAX_SCALE/((Toolkit.getDefaultToolkit().getScreenSize().getWidth()+16)/Main.window.getWidth());
-		MIN_SCALE = DKConstants.MIN_SCALE/((Toolkit.getDefaultToolkit().getScreenSize().getWidth()+16)/Main.window.getWidth());
-	}
-	
 	public void setupDone() {
-		setMinMaxScale();
 		zoomToBounds();
 		if(!Main.tileController.isInitialized()) Main.tileController.initialize();
 		for(CanvasListener listener : listeners) listener.onSetupDone();

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <theme version="0.3">
-	<defaultfont fontcolor="000000" fontsize="60"/>
+	<defaultfont fontcolor="000000" fontsize="20"/>
 	<bgcolor color="18135B"/>
 	<lines>
 		<line>
@@ -87,7 +87,7 @@
 		</area>
 		<area>
 			<type name="BUILDING"/>
-			<innercolor color="F5F57A"/>
+			<innercolor color="D7D765"/>
 			<outercolor color="666600"/>
 			<layer layer="5"/>
 		</area>
@@ -130,9 +130,22 @@
 			<outercolor color="000000"/>
 			<layer layer="3"/>
 		</area>
+		<area>
+			<type name="PLATFORM"/>
+			<innercolor color="5C5F5A"/>
+			<layer layer="3"/>
+		</area>
 	</areas>
 	<labels>
 		<label>
+			<type name="PLACE_TOWN"/>
+			<innercolor color="FFFFFF"/>
+			<layer layer="5"/>
+		</label>
+		<label>
+			<type name="PLACE_SUBURB"/>
+			<innercolor color="FFFFFF"/>
+			<layer layer="5"/>
 		</label>
 	</labels>
 	<icons>

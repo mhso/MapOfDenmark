@@ -208,6 +208,16 @@ public class PinPointManager implements Serializable {
 				}
 			}
 		}
+		
+		for(PinPoint pinPoint : systemPinPoints.values()) {
+			if(pinPoint.isInRegion(mapRegion)) {
+				if(pinPoint.checkHover()) {
+					Main.mainPanel.repaint();
+					return;
+				}
+			}
+		}
+		
 	}
 	
 	public void panToLocation(PinPoint pinPoint) {

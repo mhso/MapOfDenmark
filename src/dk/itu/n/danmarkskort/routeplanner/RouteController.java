@@ -142,15 +142,20 @@ public class RouteController {
 			double maxRouteY = Math.max(from.getY(), to.getY());
 			double[] routeBounds = {minRouteX, minRouteY, maxRouteX, maxRouteY};
 			
+			for(RouteEdge edge : edges) sizeOfEdges++;
+			
 			if(Main.map.getRoute() != null) Main.map.setRoute(null);
+			int count = 0;
+			RouteEnum routeEnum = RouteEnum.CONTINUE_ON;
 			for(RouteEdge edge : edges){
+				count++;
 				Main.map.addRouteEdge(edge);
-				RouteEnum routeEnum = RouteEnum.CONTINUE_ON;
 				if(lastModel != null && edge.getDescription().equals(lastEdge.getDescription())) {
 					distSum += edge.getDistance();
 					lastModel.setDistance(distSum);
 				}else{
 					routeEnum = calcDirectionType(edge, lastEdge);
+					if(count == sizeOfEdges) routeEnum = RouteEnum.AT_DESTINATION;
 					distSum = 0;
 					RouteModel routeModel = new RouteModel(routeEnum, edge.getDescription(), edge.getMaxSpeed(), edge.getDistance());
 					lastModel = routeModel;
@@ -158,7 +163,7 @@ public class RouteController {
 				}
 				testEdgeBounds(routeBounds, edge);
 				lastEdge = edge;
-				sizeOfEdges++;
+				
 			}
 			routeRegion = new Region(routeBounds[0], routeBounds[1], routeBounds[2], routeBounds[3]);
 			return routeModels;
