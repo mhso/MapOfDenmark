@@ -123,7 +123,7 @@ public class RoutePartBasic extends JPanel {
 			if(minutes > 60) {
 				int hours = minutes/60;
 				minutes = minutes%60;
-				result = hours + ", hours, " + minutes + " minutes and " + (int)seconds + " seconds.";
+				result = hours + " hours, " + minutes + " minutes and " + (int)seconds + " seconds.";
 			}
 			else result = minutes + " minutes and " + (int)seconds + " seconds.";
 		}

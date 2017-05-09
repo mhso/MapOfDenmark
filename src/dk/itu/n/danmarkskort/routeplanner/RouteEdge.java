@@ -16,7 +16,7 @@ public class RouteEdge implements KDComparable, Serializable {
 	public RouteEdge(RouteVertex from, RouteVertex to, RouteEdgeMeta routeEdgeMeta, String description){
 		if (from.getId() < 0) throw new IllegalArgumentException("Vertex names must be nonnegative integers");
         if (to.getId() < 0) throw new IllegalArgumentException("Vertex names must be nonnegative integers");
-        if (routeEdgeMeta.getMaxSpeed() <= 0) throw new IllegalArgumentException("maxSpeed is 0, must be positive integer");
+        if (routeEdgeMeta.getMaxSpeed() <= 0) { throw new IllegalArgumentException("maxSpeed less than or equal to 0, must be positive integer"); }
 		this.from = from;
 		this.to = to;
 		this.routeEdgeMeta = routeEdgeMeta;
@@ -69,7 +69,6 @@ public class RouteEdge implements KDComparable, Serializable {
 		default:
 			break;
 		}
-		//System.out.println("Result: " + result + ", Type: " + weightEnum.toString());
 		return result;
 	}
 	

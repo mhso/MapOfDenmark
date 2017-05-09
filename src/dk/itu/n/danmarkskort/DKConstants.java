@@ -22,8 +22,8 @@ public class DKConstants {
 	/**
 	 * Standard size of KD-Tree leaves.
 	 */
-	public static final int KD_SIZE = 25;
-	
+	public static final int KD_SIZE = 50;
+
 	/**
 	 * Longitude and Latitude bounds for the full Denmark .OSM file.
 	 */

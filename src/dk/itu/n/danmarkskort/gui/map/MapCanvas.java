@@ -6,6 +6,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.MouseInfo;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.Shape;
 import java.awt.Toolkit;
@@ -331,7 +332,7 @@ public class MapCanvas extends JPanel {
 		g2d.setTransform(transform);
 		if(antiAlias) g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		else g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
-		g2d.setStroke(new BasicStroke((float)(0.0010f*0.5/getZoom())));
+		g2d.setStroke(new BasicStroke((float)(0.0012f*0.5/getZoom())));
 		g2d.setColor(Color.BLUE);
 		
 		if(Main.debug) {
@@ -373,7 +374,7 @@ public class MapCanvas extends JPanel {
 	}
 	
 	public void zoomToRouteRegion(Region routeRegion) {
-		final double MARGIN = 1.50;
+		final double MARGIN = 1.60;
 		
 		double distX = (routeRegion.x2-routeRegion.x1)*MARGIN;
 		double distY = (routeRegion.y2-routeRegion.y1)*MARGIN;
@@ -387,7 +388,7 @@ public class MapCanvas extends JPanel {
 	}
 	
 	public BufferedImage getRoutePreviewImage() {
-		return Util.screenshotWithoutGUI(1500);
+		return Util.screenshot(new Rectangle(70, 100, getWidth()-140, getHeight()-120), 1500);
 	}
 	
 	public void pan(double dx, double dy) {

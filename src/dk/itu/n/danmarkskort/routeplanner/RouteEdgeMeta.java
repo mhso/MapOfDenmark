@@ -4,13 +4,13 @@ import java.io.Serializable;
 
 public class RouteEdgeMeta implements Serializable {
 	private static final long serialVersionUID = 4626171199056902618L;
-	private int maxSpeed;
+	private final short maxSpeed;
 	private final boolean forwardAllowed, backwardAllowed, carsAllowed, bikesAllowed, walkAllowed;
 	
-	public RouteEdgeMeta(Integer maxSpeed, boolean forwardAllowed, boolean backwardAllowed,
+	public RouteEdgeMeta(int maxSpeed, boolean forwardAllowed, boolean backwardAllowed,
 		boolean carsAllowed, boolean bikesAllowed, boolean walkAllowed){
         
-		this.maxSpeed = maxSpeed;
+		this.maxSpeed = (short)maxSpeed;
 		this.forwardAllowed = forwardAllowed;
 		this.backwardAllowed = backwardAllowed;
 		this.carsAllowed = carsAllowed;
@@ -18,7 +18,7 @@ public class RouteEdgeMeta implements Serializable {
 		this.walkAllowed = walkAllowed;
 	}
 
-	public int getMaxSpeed() { return maxSpeed; }
+	public int getMaxSpeed() { return (int)maxSpeed; }
 	public boolean isForwardAllowed() { return forwardAllowed; }
 	public boolean isBackwardAllowed() { return backwardAllowed; }
 	public boolean isCarsAllowed() { return carsAllowed; }

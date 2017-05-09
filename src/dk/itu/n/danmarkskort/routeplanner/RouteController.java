@@ -21,7 +21,8 @@ public class RouteController {
 	private List<RouteVertex> vertices;
 	private RouteGraph routeGraph;
 	private Region routeRegion;
-	private boolean debug = true;
+	private boolean debug = false;
+	public boolean isDrawingDjikstra = false;
 	KDTree<RouteEdge> edgeTree;
 	
 	public RouteController(){
@@ -67,7 +68,7 @@ public class RouteController {
 	}
 
 	private void makeTree() {
-		edgeTree = new KDTreeNode<>(routeEdges);
+		edgeTree = new KDTreeNode<>(routeEdges, 2000);
 	}
 	
 	public void cleanUp(){
@@ -77,12 +78,14 @@ public class RouteController {
 	}
 	
 	public Iterable<RouteEdge> getRoute(RouteVertex from, RouteVertex to, WeightEnum weightEnum){
-		RouteDijkstra routeDijkstra = new RouteDijkstra(routeGraph, from.getId(), to.getId(), weightEnum);
+		//RouteDijkstra routeDijkstra = new RouteDijkstra(routeGraph, from.getId(), to.getId(), weightEnum);
+		RouteDijkstraAStar routeDijkstra = new RouteDijkstraAStar(routeGraph, from, to, weightEnum);
 		return routeDijkstra.pathTo(to.getId());
 	}
 	
 	public boolean hasRoute(RouteVertex from, RouteVertex to, WeightEnum weightEnum){
-		RouteDijkstra routeDijkstra = new RouteDijkstra(routeGraph, from.getId(), to.getId(), weightEnum);
+		//RouteDijkstra routeDijkstra = new RouteDijkstra(routeGraph, from.getId(), to.getId(), weightEnum);
+		RouteDijkstraAStar routeDijkstra = new RouteDijkstraAStar(routeGraph, from, to, weightEnum);
 		return routeDijkstra.hasPathTo(to.getId());
 	}
 
@@ -144,12 +147,12 @@ public class RouteController {
 			
 			for(RouteEdge edge : edges) sizeOfEdges++;
 			
-			if(Main.map.getRoute() != null) Main.map.setRoute(null);
+			if(Main.map.getRoute() != null && !isDrawingDjikstra) Main.map.setRoute(null);
 			int count = 0;
 			RouteEnum routeEnum = RouteEnum.CONTINUE_ON;
 			for(RouteEdge edge : edges){
 				count++;
-				Main.map.addRouteEdge(edge);
+				if(!isDrawingDjikstra) Main.map.addRouteEdge(edge);
 				if(lastModel != null && edge.getDescription().equals(lastEdge.getDescription())) {
 					distSum += edge.getDistance();
 					lastModel.setDistance(distSum);

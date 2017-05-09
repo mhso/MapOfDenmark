@@ -28,17 +28,12 @@ public class RouteDijkstra {
     public RouteDijkstra(RouteGraph graph, int sourceVertex, int targetVertex, WeightEnum weightEnum) {
     	this.source =  sourceVertex;
     	this.target =  targetVertex;
-    	
     	this.weightEnum = weightEnum;
-        for (RouteEdge edge : graph.edges()) {
-            if (edge.getWeight(weightEnum) < 0)
-                throw new IllegalArgumentException("edge " + edge + " has negative weight");
-        }
 
         distTo = new double[graph.getNumOfVertices()];
         edgeTo = new RouteEdge[graph.getNumOfVertices()];
         List<RouteEdge> edgesInRoute = null;
-        if(debug) edgesInRoute = new ArrayList<>();
+        if(Main.routeController.isDrawingDjikstra) edgesInRoute = new ArrayList<>();
         
         validateVertex(source);
 
@@ -51,21 +46,19 @@ public class RouteDijkstra {
         pq.insert(source, distTo[source]);
     	while (!pq.isEmpty()) {
             int v = pq.delMin();
-            if(v == target) { 
-            	//System.out.println("Target found, we can stop now.");
-            	break;
-            }
+            if(v == target) break;
+            
         	for (RouteEdge edge : graph.adjacent(v)) {
             	if(edge.isTravelTypeAllowed(weightEnum)) {
-            		if(debug) edgesInRoute.add(edge);
+            		if(Main.routeController.isDrawingDjikstra) edgesInRoute.add(edge);
             		relax(edge);
             	}
             }
         }
-        if(debug) new AnimationTimer(20, edgesInRoute);
-
-        // check optimality conditions
-        //assert check(graph, source);
+        if(Main.routeController.isDrawingDjikstra) {
+        	Main.map.setRoute(edgesInRoute);
+        	Main.map.repaint();
+        }
     }
 
     // relax edge e and update pq if changed
@@ -122,81 +115,10 @@ public class RouteDijkstra {
         return path;
     }
 
-
-    // check optimality conditions:
-    // (i) for all edges e:            distTo[e.to()] <= distTo[e.from()] + e.weight()
-    // (ii) for all edge e on the SPT: distTo[e.to()] == distTo[e.from()] + e.weight()
-    private boolean check(RouteGraph graph, int s) {
-
-        // check that edge weights are nonnegative
-        for (RouteEdge edge : graph.edges()) {
-            if (edge.getWeight(weightEnum) < 0) {
-                System.err.println("negative edge weight detected");
-                return false;
-            }
-        }
-
-        // check that distTo[v] and edgeTo[v] are consistent
-        if (distTo[s] != 0.0 || edgeTo[s] != null) {
-            System.err.println("distTo[s] and edgeTo[s] inconsistent");
-            return false;
-        }
-        for (int v = 0; v < graph.getNumOfVertices(); v++) {
-            if (v == s) continue;
-            if (edgeTo[v] == null && distTo[v] != Double.POSITIVE_INFINITY) {
-                System.err.println("distTo[] and edgeTo[] inconsistent");
-                return false;
-            }
-        }
-
-        // check that all edges e = v->w satisfy distTo[w] <= distTo[v] + e.weight()
-        for (int v = 0; v < graph.getNumOfVertices(); v++) {
-            for (RouteEdge edge : graph.adjacent(v)) {
-                int w = edge.getToId();
-                if (distTo[v] + edge.getWeight(weightEnum) < distTo[w]) {
-                    System.err.println("edge " + edge + " not relaxed");
-                    return false;
-                }
-            }
-        }
-
-        // check that all edges e = v->w on SPT satisfy distTo[w] == distTo[v] + e.weight()
-        for (int w = 0; w < graph.getNumOfVertices(); w++) {
-            if (edgeTo[w] == null) continue;
-            RouteEdge edge = edgeTo[w];
-            int v = edge.getFromId();
-            if (w != edge.getToId()) return false;
-            if (distTo[v] + edge.getWeight(weightEnum) != distTo[w]) {
-                System.err.println("edge " + edge + " on shortest path not tight");
-                return false;
-            }
-        }
-        return true;
-    }
-
     // throw an IllegalArgumentException unless {@code 0 <= v < V}
     private void validateVertex(int vertexId) {
         int V = distTo.length;
         if (vertexId < 0 || vertexId >= V)
             throw new IllegalArgumentException("vertex " + vertexId + " is not between 0 and " + (V-1));
-    }
-    
-    private class AnimationTimer implements ActionListener {
-    	Timer timer;
-    	List<RouteEdge> edgesInRoute;
-    	int index;
-    	
-    	public AnimationTimer(int delay, List<RouteEdge> edgesInRoute) {
-    		this.edgesInRoute = edgesInRoute;
-    		timer = new Timer(delay, this);
-    		timer.start();
-    	}
-    	
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			 Main.map.drawRouteEdge(edgesInRoute.get(index));
-			 index++;
-	     	 if(index >= edgesInRoute.size()-1) timer.stop();
-		}
     }
 }
