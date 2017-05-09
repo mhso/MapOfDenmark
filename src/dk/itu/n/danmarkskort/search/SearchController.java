@@ -1,6 +1,5 @@
 package dk.itu.n.danmarkskort.search;
 
-import java.awt.geom.Point2D;
 import java.util.List;
 
 import dk.itu.n.danmarkskort.Main;
@@ -16,7 +15,7 @@ public class SearchController{
 		if(inputStr == null || inputStr.isEmpty()) return null;
 		
 		if(isCoordinates(inputStr)) {
-			return Main.addressController.getSearchSuggestions(stringCordsToPointFloat(inputStr));
+			return Main.addressController.getSearchSuggestions(Util.stringCordsToPointFloat(inputStr));
 		} else {
 			return Main.addressController.getSearchSuggestions(inputStr, limitAmountOfResults);
 		}
@@ -26,7 +25,7 @@ public class SearchController{
 		if(inputStr == null || inputStr.isEmpty()) return null;
 		
 		if(isCoordinates(inputStr)) {
-			return Main.addressController.getSearchResult(stringCordsToPointFloat(inputStr));
+			return Main.addressController.getSearchResult(Util.stringCordsToPointFloat(inputStr));
 		} else {
 			return Main.addressController.getSearchResult(inputStr);
 		}
@@ -37,16 +36,5 @@ public class SearchController{
 		String cordsRegex = cordRegex + "(\\,\\s)" + cordRegex;
 		if(inputStr.matches(cordsRegex)) return true;
 		return false;
-	}
-	
-	private static Point2D.Float stringCordsToPointFloat(String inputStr){
-		String[] strArr = inputStr.split(", ");
-		float lat = Float.parseFloat(strArr[0]);
-		float lon = Float.parseFloat(strArr[1]);
-		Point2D realCoords = new Point2D.Float(lon, lat);
-		Point2D fakeCoords = Util.toFakeCoords(realCoords);
-		System.out.println(realCoords);
-		System.out.println(fakeCoords);
-		return new Point2D.Float((float)fakeCoords.getX(), (float)fakeCoords.getY());
 	}
 }
