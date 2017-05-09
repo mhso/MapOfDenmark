@@ -171,6 +171,6 @@ public class AddressController {
 	private void makeTree(){
 		List<Housenumber> housenumbers = addressHolder.getHousenumbers();
 		Main.log("AddressController -> MakeTree size: " + housenumbers.size());
-		housenumberTree = new KDTreeNode<>(housenumbers);
+		housenumberTree = new KDTreeNode<>(housenumbers, 2000);
 	}
 }
