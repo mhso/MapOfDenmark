@@ -151,6 +151,7 @@ public class RouteDijkstraAStar {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			 Main.map.drawRouteEdge(edgesInRoute.get(index));
+			 if(index % 1000 == 0) Main.map.repaint();
 			 index++;
 	     	 if(index >= edgesInRoute.size()-1) timer.stop();
 		}

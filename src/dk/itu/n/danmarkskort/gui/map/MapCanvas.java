@@ -6,6 +6,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.MouseInfo;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.Shape;
 import java.awt.Toolkit;
@@ -433,7 +434,7 @@ public class MapCanvas extends JPanel {
 	}
 	
 	public void zoomToRouteRegion(Region routeRegion) {
-		final double MARGIN = 1.50;
+		final double MARGIN = 1.60;
 		
 		double distX = (routeRegion.x2-routeRegion.x1)*MARGIN;
 		double distY = (routeRegion.y2-routeRegion.y1)*MARGIN;
@@ -447,7 +448,7 @@ public class MapCanvas extends JPanel {
 	}
 	
 	public BufferedImage getRoutePreviewImage() {
-		return Util.screenshotWithoutGUI(1500);
+		return Util.screenshot(new Rectangle(70, 100, getWidth()-140, getHeight()-120), 1500);
 	}
 	
 	public void pan(double dx, double dy) {

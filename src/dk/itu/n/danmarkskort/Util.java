@@ -143,9 +143,19 @@ public class Util {
 	}
 	
 	public static double distanceInMeters(Point2D p1, Point2D p2) {
-        double latM = 1000*((p2.getY()-p1.getY())*110.574);
-        double lonM = 1000*((p2.getX()-p1.getX())*111.320*Math.cos(Math.toRadians(p2.getY())));
-        return Math.sqrt((lonM * lonM) + (latM * latM));
+		p1 = toRealCoords(p1);
+		p2 = toRealCoords(p2);
+		double earthRadius = 6371*1000;
+		double latRad1 = Math.toRadians(p1.getY());
+		double latRad2 = Math.toRadians(p2.getY());
+		double latDeltaRad = Math.toRadians(p2.getY()-p1.getY());
+		double lonDeltaRad = Math.toRadians(p2.getX()-p1.getX());
+		
+		double haversine = Math.sin(latDeltaRad/2) * Math.sin(latDeltaRad/2) + 
+				Math.cos(latRad1) * Math.cos(latRad2) * Math.sin(lonDeltaRad/2) * Math.sin(lonDeltaRad/2);
+		double formular = 2 * Math.atan2(Math.sqrt(haversine), Math.sqrt(1-haversine));
+		
+        return earthRadius * formular;
     }
 	
 	public static Point2D toRealCoords(Point2D fakeCoords) {
@@ -154,6 +164,17 @@ public class Util {
 	
 	public static Point2D toFakeCoords(Point2D realCoords) {
 		return new Point2D.Float((float)realCoords.getX()*Main.model.getLonFactor(), (float)-realCoords.getY());
+	}
+	
+	public static Point2D.Float stringCordsToPointFloat(String inputStr){
+		String[] strArr = inputStr.split(", ");
+		float lat = Float.parseFloat(strArr[0]);
+		float lon = Float.parseFloat(strArr[1]);
+		Point2D realCoords = new Point2D.Float(lon, lat);
+		Point2D fakeCoords = Util.toFakeCoords(realCoords);
+		System.out.println(realCoords);
+		System.out.println(fakeCoords);
+		return new Point2D.Float((float)fakeCoords.getX(), (float)fakeCoords.getY());
 	}
 	
 	public static String getBinaryFilePath() {
@@ -265,9 +286,9 @@ public class Util {
 		}
 	}
 	
-	public static BufferedImage screenshot(int delay) {
+	public static BufferedImage screenshot(Rectangle region, int delay) {
 		ExecutorService service = Executors.newFixedThreadPool(1);
-		Future<BufferedImage> imageTask = service.submit(new ScreenshotDelayer(delay, true));
+		Future<BufferedImage> imageTask = service.submit(new ScreenshotDelayer(region, delay, true));
         
 		try {
 			BufferedImage image = imageTask.get();
@@ -278,6 +299,16 @@ public class Util {
 		}
 		service.shutdownNow();
 		return null;
+	}
+	
+	public static BufferedImage screenshot(int delay) {
+		Rectangle screenRect = new Rectangle(
+				Main.map.getLocationOnScreen().x, 
+				Main.map.getLocationOnScreen().y, 
+				Main.map.getWidth(), 
+				Main.map.getHeight()
+			);
+		return screenshot(screenRect, delay);
 	}
 	
 	public static BufferedImage screenshot() {
@@ -302,7 +333,7 @@ public class Util {
 	
 	public static BufferedImage screenshotWithoutGUI(int delay) {
 		ExecutorService service = Executors.newFixedThreadPool(1);
-		Future<BufferedImage> imageTask = service.submit(new ScreenshotDelayer(delay, false));
+		Future<BufferedImage> imageTask = service.submit(new ScreenshotDelayer(null, delay, false));
         
 		try {
 			BufferedImage image = imageTask.get();
@@ -333,16 +364,21 @@ public class Util {
 	
 	private static class ScreenshotDelayer implements Callable<BufferedImage> {
 		private boolean gui;
+		private Rectangle region;
 		
-		public ScreenshotDelayer(int delay, boolean gui) {
+		public ScreenshotDelayer(Rectangle region, int delay, boolean gui) {
 			this.gui = gui;
+			this.region = region;
 		}
 		
 		@Override
 		public BufferedImage call() throws Exception {
 			while(!Main.tileController.isTileQueueEmpty()) Thread.sleep(5);
 			Thread.sleep(1500);
-			if(gui) return screenshot();
+			if(gui) {
+				if(region == null) return screenshot();
+				else return screenshot(region);
+			}
 			else return screenshotWithoutGUI();
 		}	
 	}
