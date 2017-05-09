@@ -16,8 +16,8 @@ public class PostcodeCityBestMatch {
 	}
 	
 	private void init(){
-		combinations = new ArrayList<Combine>();
-		objMatches = new HashMap<String, Combine>();
+		combinations = new ArrayList<Combine>(5000);
+		objMatches = new HashMap<String, Combine>(5000);
 	}
 	
 	public void add(String postcode, String city){
