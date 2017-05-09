@@ -14,7 +14,7 @@ public class RouteDijkstra {
     private RouteEdge[] edgeTo;    			// edgeTo[v] = last edge on shortest s->v path
     private IndexMinPQ<Double> pq;    		// priority queue of vertices
     private WeightEnum weightEnum;
-    private boolean debug = false;
+    private boolean debug = true;
     private int source, target;
 
     /**
@@ -132,9 +132,16 @@ public class RouteDijkstra {
     	
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			 Main.map.drawRouteEdge(edgesInRoute.get(index));
+			Main.map.addRouteEdge(edgesInRoute.get(index));
+			 if(index % 100 == 0) {
+				 Main.map.repaint();
+			 }
 			 index++;
-	     	 if(index >= edgesInRoute.size()-1) timer.stop();
+	     	 if(index >= edgesInRoute.size()-1) {
+	     		 System.out.println("Debug: DJIKSTRA OVER!");
+	     		 Main.map.repaint();
+	     		 timer.stop();
+	     	 }
 		}
     }
 }
