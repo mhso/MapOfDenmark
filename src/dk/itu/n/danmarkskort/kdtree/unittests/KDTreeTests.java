@@ -2,7 +2,6 @@ package dk.itu.n.danmarkskort.kdtree.unittests;
 
 import static org.junit.Assert.*;
 
-import java.awt.Shape;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -11,7 +10,6 @@ import java.util.List;
 import org.junit.Test;
 
 import dk.itu.n.danmarkskort.DKConstants;
-import dk.itu.n.danmarkskort.kdtree.KDComparable;
 import dk.itu.n.danmarkskort.kdtree.KDTree;
 import dk.itu.n.danmarkskort.kdtree.KDTreeNode;
 import dk.itu.n.danmarkskort.models.ParsedItem;
@@ -23,7 +21,6 @@ public class KDTreeTests {
 	
 	public KDTree<ParsedItem> createKDTreeWithWays(int dataSize, int shiftValueX1, int shiftValueY1, 
 			int shiftValueX2, int shiftValueY2, int kdSize) {
-		DKConstants.KD_SIZE = kdSize;
 		List<ParsedItem> items = new ArrayList<>();
 		for(int i = 0; i < dataSize; i++) {
 			ParsedWay way = new ParsedWay(i);
@@ -31,7 +28,7 @@ public class KDTreeTests {
 			way.addNode(new Point2D.Float(i+shiftValueX2, i+shiftValueY2));
 			items.add(way);
 		}
-		return new KDTreeNode<>(items);
+		return new KDTreeNode<>(items, kdSize);
 	}
 	
 	@Test
