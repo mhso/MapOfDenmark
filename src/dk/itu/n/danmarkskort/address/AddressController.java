@@ -102,8 +102,8 @@ public class AddressController {
 		if(lonLat != null) {
 			Main.log(housenumberTree.size());
 			Housenumber hn = housenumberTree.nearest(lonLat);
-			if(hn != null) { System.out.println("RouteController found house: " + hn.toString()); }
-			else { System.out.println("No edge found"); }
+			if(hn != null) { Main.log("RouteController found house: " + hn.toString()); }
+			else { Main.log("No edge found"); }
 			return hn;
 		}
 		return null;
