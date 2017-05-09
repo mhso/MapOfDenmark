@@ -30,7 +30,7 @@ public class ProgressMonitor extends FilterInputStream {
 	private long byteCountStamp;
 	private long timeStamp;
 	private byte timeStampDelay;
-	private List<Integer> remainingTimeArr = new ArrayList<>(100);
+	private List<Integer> remainingTimeArr = new ArrayList<>(5);
 	private boolean streamStarted;
 	private List<ProgressListener> listeners = new ArrayList<>();
 	private ProgressTimer timer;
@@ -137,6 +137,7 @@ public class ProgressMonitor extends FilterInputStream {
 							int remainingSum = 0;
 							for(int i : remainingTimeArr) remainingSum += i;
 							for(ProgressListener listener : listeners) listener.getTimeRemaining(remainingSum/remainingTimeArr.size());
+							if(remainingTimeArr.size() >= 5) remainingTimeArr.remove(0);
 						}
 					}
 					timeStampDelay++;
