@@ -150,10 +150,16 @@ public class RouteDijkstraAStar {
     	
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			 Main.map.drawRouteEdge(edgesInRoute.get(index));
-			 if(index % 1000 == 0) Main.map.repaint();
+			 Main.map.addRouteEdge(edgesInRoute.get(index));
+			 if(index % 100 == 0) {
+				 Main.map.repaint();
+			 }
 			 index++;
-	     	 if(index >= edgesInRoute.size()-1) timer.stop();
+	     	 if(index >= edgesInRoute.size()-1) {
+	     		 System.out.println("Debug: A-STAR OVER!");
+	     		 Main.map.repaint();
+	     		 timer.stop();
+	     	 }
 		}
     }
 }
