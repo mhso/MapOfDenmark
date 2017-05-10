@@ -1,8 +1,6 @@
 package dk.itu.n.danmarkskort;
 
-import java.awt.AWTException;
-import java.awt.Desktop;
-import java.awt.Dimension;
+import java.awt.*;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -26,13 +24,9 @@ import java.util.concurrent.Future;
 import dk.itu.n.danmarkskort.backend.BinaryWrapper;
 import dk.itu.n.danmarkskort.backend.ProgressMonitor;
 import dk.itu.n.danmarkskort.backend.ProgressListener;
+import dk.itu.n.danmarkskort.gui.map.MapCanvas;
 import dk.itu.n.danmarkskort.models.Region;
 
-import java.awt.MouseInfo;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.Robot;
-import java.awt.Toolkit;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
@@ -315,34 +309,41 @@ public class Util {
 	}
 
 	public static BufferedImage screenshotWithoutGUI(Rectangle region) {
-		Main.mainPanel.hideGUI();
-		Main.mainPanel.repaint();
-
-		try {
-			BufferedImage capture = new Robot().createScreenCapture(region);
-			Main.mainPanel.showGUI();
-			return capture;
-		} catch (AWTException e) {
-			e.printStackTrace();
-			Main.mainPanel.showGUI();
-			Main.mainPanel.repaint();
-			return null;
-		}
+		if(!Main.screenimage) {
+            Main.mainPanel.hideGUI();
+            try {
+                BufferedImage capture = new Robot().createScreenCapture(region);
+                Main.mainPanel.showGUI();
+                return capture;
+            } catch (AWTException e) {
+                e.printStackTrace();
+                Main.mainPanel.showGUI();
+                Main.mainPanel.repaint();
+                return null;
+            }
+        } else {
+            MapCanvas map = Main.map;
+            BufferedImage image = new BufferedImage(map.getWidth(), map.getHeight(), BufferedImage.TYPE_INT_ARGB);
+            Graphics2D g2d = image.createGraphics();
+            map.printAll(g2d);
+            g2d.dispose();
+            return image;
+        }
 	}
 
 	public static BufferedImage screenshotWithoutGUI(int delay) {
-		ExecutorService service = Executors.newFixedThreadPool(1);
-		Future<BufferedImage> imageTask = service.submit(new ScreenshotDelayer(null, delay, false));
+        ExecutorService service = Executors.newFixedThreadPool(1);
+        Future<BufferedImage> imageTask = service.submit(new ScreenshotDelayer(null, delay, false));
 
-		try {
-			BufferedImage image = imageTask.get();
-			service.shutdownNow();
-			return image;
-		} catch (InterruptedException | ExecutionException e) {
-			e.printStackTrace();
-		}
-		service.shutdownNow();
-		return null;
+        try {
+            BufferedImage image = imageTask.get();
+            service.shutdownNow();
+            return image;
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+        service.shutdownNow();
+        return null;
 	}
 
 	public static BufferedImage screenshotWithoutGUI() {

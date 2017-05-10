@@ -9,13 +9,13 @@ import dk.itu.n.danmarkskort.models.ReuseStringObj;
 
 public class RouteEdge implements KDComparable, Serializable {
 	private static final long serialVersionUID = 7080914394280747088L;
-	private final RouteVertex from, to;
+	private Point2D.Float from, to;
 	private RouteEdgeMeta routeEdgeMeta;
 	private final String description;
 
-	public RouteEdge(RouteVertex from, RouteVertex to, RouteEdgeMeta routeEdgeMeta, String description){
-		if (from.getId() < 0) throw new IllegalArgumentException("Vertex names must be nonnegative integers");
-        if (to.getId() < 0) throw new IllegalArgumentException("Vertex names must be nonnegative integers");
+	public RouteEdge(Point2D.Float from, Point2D.Float to, RouteEdgeMeta routeEdgeMeta, String description){
+		//if (from.getId() < 0) throw new IllegalArgumentException("Vertex names must be nonnegative integers");
+        //if (to.getId() < 0) throw new IllegalArgumentException("Vertex names must be nonnegative integers");
         if (routeEdgeMeta.getMaxSpeed() <= 0) { throw new IllegalArgumentException("maxSpeed less than or equal to 0, must be positive integer"); }
 		this.from = from;
 		this.to = to;
@@ -25,10 +25,18 @@ public class RouteEdge implements KDComparable, Serializable {
 	}
 	
 	public int getMaxSpeed() { return routeEdgeMeta.getMaxSpeed(); }
-	public RouteVertex getFrom() { return from; }
-	public RouteVertex getTo() { return to; }
-	public int getFromId() { return from.getId(); }
-	public int getToId() { return to.getId(); }
+	public Point2D.Float getFrom() { return from; }
+	public Point2D.Float getTo() { return to; }
+	public void setFrom(Point2D.Float from) { this.from = from; }
+	public void setTo(Point2D.Float to) { this.to = to; }
+	public int getFromId() {
+		if(from instanceof RouteVertex) return ((RouteVertex) from).getId();
+		return -1;
+	}
+	public int getToId() {
+		if(to instanceof RouteVertex) return ((RouteVertex) to).getId();
+		return -1;
+	}
 	public boolean isForwardAllowed() { return routeEdgeMeta.isForwardAllowed(); }
 	public boolean isBackwardAllowed() {return routeEdgeMeta.isBackwardAllowed(); }
 	public String getDescription(){ return description; }
@@ -73,7 +81,7 @@ public class RouteEdge implements KDComparable, Serializable {
 	}
 	
 	public String toString() {
-		return from.getId() + " [" + from.toString() + "] ->" + to.getId()+ " [" + to.toString() + "]\n";
+		return "from " + from.toString() + " -> " + to.toString() + "]\n";
 	}
 	
 	public String toStringDesr() {

@@ -1,6 +1,7 @@
 package dk.itu.n.danmarkskort.backend;
 
 import dk.itu.n.danmarkskort.Main;
+import dk.itu.n.danmarkskort.address.AddressController;
 import dk.itu.n.danmarkskort.models.*;
 import dk.itu.n.danmarkskort.kdtree.*;
 
@@ -42,7 +43,6 @@ public class OSMParser extends SAXAdapter {
     private transient boolean toGraph;
     private transient short maxSpeed;
     private transient RouteController route;
-    private transient HashMap<Point2D.Float, RouteVertex> vertexMap;
 
     private transient boolean finished = false;
     private transient OSMReader reader;
@@ -58,7 +58,6 @@ public class OSMParser extends SAXAdapter {
         places = new EnumMap<>(WayType.class);
         coastlineMap = new HashMap<>();
         currentNodes = new ArrayList<>();
-        vertexMap = new HashMap<>();
         enumMap = new EnumMap<>(WayType.class);
         route = Main.routeController;
 
@@ -214,17 +213,10 @@ public class OSMParser extends SAXAdapter {
         for(int i = 0; i < currentNodes.size() - 1; i++) {
             Point2D.Float firstNode = currentNodes.get(i);
             Point2D.Float secondNode = currentNodes.get(i + 1);
-            RouteVertex first = vertexMap.get(firstNode);
-            RouteVertex second = vertexMap.get(secondNode);
-            if(first == null) {
-                first = route.makeVertex(firstNode);
-                vertexMap.put(firstNode, first);
+            if(firstNode != null && secondNode != null) {
+                if (maxSpeed > 0)
+                    route.addEdge(firstNode, secondNode, maxSpeed, forward, backward, motorvehicle, bicycle, walk, name);
             }
-            if(second == null) {
-                second = route.makeVertex(secondNode);
-                vertexMap.put(secondNode, second);
-            }
-            if(maxSpeed > 0) route.addEdge(first, second, maxSpeed, forward, backward, motorvehicle, bicycle, walk, name);
         }
     }
 

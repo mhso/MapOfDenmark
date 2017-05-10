@@ -29,6 +29,7 @@ public class Main {
 	public final static boolean buffered = true;
 	public final static boolean saveParsedAddresses = true;
 	public final static boolean nearest = true;
+	public final static boolean	screenimage = false;
 
     public static boolean useLauncher = true;
 	public static OSMReader osmReader;

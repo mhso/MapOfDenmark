@@ -69,7 +69,7 @@ public class RouteDijkstraAStar {
         //assert check(graph, source);
     }
     
-    private double heuristics(RouteVertex sourceVertex, int maxSpeed){
+    private double heuristics(Point2D.Float sourceVertex, int maxSpeed){
     	Point2D source = Util.toRealCoords(sourceVertex);
     	Point2D target = Util.toRealCoords(targetVertex);
     	double distance = Util.distanceInMeters(source, target);

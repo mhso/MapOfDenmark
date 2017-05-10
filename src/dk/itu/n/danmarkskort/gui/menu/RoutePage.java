@@ -324,17 +324,17 @@ public class RoutePage extends JPanel {
 								routeDistance, weightEnum, routemodels);
 					}else {
 						menu.blockVisibility(true);
-			    		JOptionPane.showMessageDialog(RoutePage.this, "Unable to find a route, we're sorry.", "No route", JOptionPane.INFORMATION_MESSAGE);
+			    		JOptionPane.showMessageDialog(RoutePage.this, "Unable to find route, we're sorry.", "No route", JOptionPane.INFORMATION_MESSAGE);
 					}
     			}
     		});
     		t.start();
-    	} else if(!txtAddrFrom.getText().trim().isEmpty() && !txtAddrTo.getText().trim().isEmpty()) {
+    	} else if(txtAddrFrom.getText().trim().isEmpty() || txtAddrTo.getText().trim().isEmpty()) {
     		menu.blockVisibility(true);
     		JOptionPane.showMessageDialog(this, "To/From fields can't be empty.", "Missing information", JOptionPane.INFORMATION_MESSAGE);
     	} else {
     		menu.blockVisibility(true);
-    		JOptionPane.showMessageDialog(this, "The address input not found,\n please refere to the smilyes.", "Wrong information", JOptionPane.INFORMATION_MESSAGE);
+    		JOptionPane.showMessageDialog(this, "The address input not found,\n please refer to the smileys.", "Wrong information", JOptionPane.INFORMATION_MESSAGE);
     	}
     }
 
