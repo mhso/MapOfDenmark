@@ -81,6 +81,7 @@ public enum WayType {
 	HIGHWAY_PATH,
 	//UNDEFINED 			// Udefinerbar.
 
+	PLACE_CITY,				// En storby
 	PLACE_TOWN,				// En by
 	PLACE_SUBURB			// En forstad
 }

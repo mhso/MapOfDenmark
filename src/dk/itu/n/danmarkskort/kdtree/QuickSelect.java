@@ -2,7 +2,10 @@ package dk.itu.n.danmarkskort.kdtree;
 
 import java.util.Random;
 
+import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.models.ParsedItem;
+import dk.itu.n.danmarkskort.models.ParsedRelation;
+import dk.itu.n.danmarkskort.models.ParsedWay;
 
 public class QuickSelect {
 
@@ -54,6 +57,7 @@ public class QuickSelect {
      */
     private static boolean less(KDComparable a, KDComparable b, boolean sortByLon) {
         double valueA, valueB;
+        
         if(sortByLon) {
             valueA = a.getFirstNode().getX();
             valueB = b.getFirstNode().getX();

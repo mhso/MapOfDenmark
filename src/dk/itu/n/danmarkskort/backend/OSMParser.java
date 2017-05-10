@@ -355,12 +355,15 @@ public class OSMParser extends SAXAdapter {
                 	break;
                 case "place":
                 	switch(v) {
+                		case "city":
+                			place = new ParsedPlace(name, node.x, node.y);
+                			waytype = WayType.PLACE_CITY;
                 		case "town":
-                			place = new ParsedPlace(name, ParsedPlace.TOWN, node.x, node.y);
+                			place = new ParsedPlace(name, node.x, node.y);
                 			waytype = WayType.PLACE_TOWN;
                 			return;
                 		case "suburb":
-                			place = new ParsedPlace(name, ParsedPlace.SUBURB, node.x, node.y);
+                			place = new ParsedPlace(name, node.x, node.y);
                 			waytype = WayType.PLACE_SUBURB;
                 			return;
                         case "square":

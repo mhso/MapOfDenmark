@@ -23,6 +23,7 @@
 	</zoomlevel>
 	<zoomlevel level="7">
 		<type name="MEADOW"/>
+		<type name="PLACE_CITY"/>
 		<type name="PLACE_TOWN"/>
 		<type name="PLACE_SUBURB"/>
 		<type name="GRASS"/>
