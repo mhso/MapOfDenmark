@@ -15,6 +15,7 @@ import dk.itu.n.danmarkskort.gui.map.MapCanvas;
 import dk.itu.n.danmarkskort.gui.map.PinPointManager;
 import dk.itu.n.danmarkskort.gui.map.multithreading.TileController;
 import dk.itu.n.danmarkskort.mapgfx.GraphicRepresentation;
+import dk.itu.n.danmarkskort.models.ParsedData;
 import dk.itu.n.danmarkskort.models.ReuseStringObj;
 import dk.itu.n.danmarkskort.models.UserPreferences;
 import dk.itu.n.danmarkskort.routeplanner.RouteController;
@@ -32,7 +33,8 @@ public class Main {
 	public static boolean useLauncher = true;
 	public static OSMReader osmReader;
 	public static JFrame window;
-	public static OSMParser model;
+	private static OSMParser parser;
+	public static ParsedData model;
 	public static AddressController addressController;
 	public static MapCanvas map;
 	public static MainCanvas mainPanel;
@@ -61,7 +63,8 @@ public class Main {
 	public static void startup(String[] args) {
 		addressController  =  new AddressController();
 		osmReader = new OSMReader();
-		model = new OSMParser(osmReader);
+		model = new ParsedData();
+		parser = new OSMParser(osmReader);
 		
 		routeController = new RouteController();
 		style = new Style();
@@ -89,7 +92,7 @@ public class Main {
 		Runnable r = new Runnable() {
 			@Override
 			public void run() {
-				osmReader.parseFile(args[0], model);
+				osmReader.parseFile(args[0], parser);
 				ReuseStringObj.clear();
 				main();
 		        shutdown();
