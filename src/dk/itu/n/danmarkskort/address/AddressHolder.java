@@ -10,11 +10,9 @@ import java.util.Map.Entry;
 
 import org.apache.commons.lang3.StringUtils;
 
-import dk.itu.n.danmarkskort.models.RegionFloat;
-
 public class AddressHolder implements Serializable {
 	private static final long serialVersionUID = 4946666884688610616L;
-	public HashMap<String, Postcode> postcodes = new HashMap<String, Postcode>(2000);
+	public HashMap<String, Postcode> postcodes = new HashMap<String, Postcode>(1100);
 
 	public AddressHolder(){ }
 	

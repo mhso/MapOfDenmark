@@ -11,39 +11,37 @@ import org.apache.commons.lang3.StringUtils;
 import dk.itu.n.danmarkskort.models.RegionFloat;
 import dk.itu.n.danmarkskort.models.ReuseStringObj;
 
-public class Street implements Serializable {
+public class Street extends HashMap<String,Housenumber> implements Serializable {
 	private static final long serialVersionUID = -2943891636428003556L;
 	private String street;
-	private Map<String, Housenumber> housenumbers;
 	private Postcode postcode;
+	
+	Street(Postcode postcode, String street){
+		super(50);
+		this.setPostcode(postcode);
+		this.street = ReuseStringObj.make(street);
+	}
 	
 	public Postcode getPostcode() { return postcode; }
 	public void setPostcode(Postcode postcode) { this.postcode = postcode; }
 	
-	Street(Postcode postcode, String street){
-		this.setPostcode(postcode);
-		this.street = ReuseStringObj.make(street);
-		housenumbers = new HashMap<String, Housenumber>();
-		//region = null;
-	}
-	
-	public int count(){ return housenumbers.size(); }
+	public int count(){ return this.size(); }
 	
 	public String getStreet() { return street.toString(); }
 
-	public Map<String, Housenumber> getHousenumbers() { return housenumbers; }
+	public Map<String, Housenumber> getHousenumbers() { return this; }
 	
 	public void addHousenumber(String housenumber, Point2D.Float lonLat){
 		if(housenumber != null && lonLat != null) {
 			Housenumber hn = getHousenumber(housenumber);
 			if(hn == null) hn = new Housenumber(postcode, this, housenumber, lonLat);
-			housenumbers.put(ReuseStringObj.make(housenumber.toLowerCase()), hn);
+			this.put(ReuseStringObj.make(housenumber.toLowerCase()), hn);
 		}
 	}
 	
 	public Housenumber getHousenumber(String housenumber) {
 		if(housenumber == null) return null;
-		return housenumbers.get(housenumber.toLowerCase());
+		return this.get(housenumber.toLowerCase());
 	}
 
 	

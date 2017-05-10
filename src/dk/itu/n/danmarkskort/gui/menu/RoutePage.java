@@ -310,7 +310,6 @@ public class RoutePage extends JPanel {
 					WeightEnum weightEnum =  findWeightType();
 		    		Address addrFrom = SearchController.getSearchFieldAddressObj(txtAddrFrom.getText());
 					Address addrTo = SearchController.getSearchFieldAddressObj(txtAddrTo.getText());
-		    		String routeDistance = "999";
 		    		BufferedImage bufferedImage = null;
 		    		
 		    		List<RouteModel> routemodels = Main.routeController.makeRoute(addrFrom.getLonLatAsPoint(), addrTo.getLonLatAsPoint(), weightEnum);
@@ -320,8 +319,8 @@ public class RoutePage extends JPanel {
 		    			Main.map.zoomToRouteRegion(Main.routeController.getRouteRegion());
 		    			bufferedImage = Main.map.getRoutePreviewImage();
 						
-						RoutePlannerMain routePlannerMain =  new RoutePlannerMain(bufferedImage, txtAddrFrom.getText(), txtAddrTo.getText(), 
-								routeDistance, weightEnum, routemodels);
+						RoutePlannerMain routePlannerMain =  new RoutePlannerMain(bufferedImage, addrFrom.toStringShort(), addrTo.toStringShort(), 
+								weightEnum, routemodels);
 					}else {
 						menu.blockVisibility(true);
 			    		JOptionPane.showMessageDialog(RoutePage.this, "Unable to find route, we're sorry.", "No route", JOptionPane.INFORMATION_MESSAGE);
