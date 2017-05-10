@@ -141,7 +141,7 @@ public class WindowParsingLoadscreenNew extends JFrame implements OSMParserListe
 	
 	@Override
 	public void onPercent(int percentAmount) {
-		currentPercent += percentAmount;
+		if(currentPercent + percentAmount <= 100) currentPercent += percentAmount;
 		setProgressPercent();
 	}
 	

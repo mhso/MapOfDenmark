@@ -61,10 +61,11 @@ public class OSMParser extends SAXAdapter {
         enumMap = new EnumMap<>(WayType.class);
         route = Main.routeController;
 
-        for(WayType waytype : WayType.values()) enumMap.put(waytype, new ArrayList<>());
-        places.put(WayType.PLACE_TOWN, new ArrayList<>());
-        places.put(WayType.PLACE_SUBURB, new ArrayList<>());
-
+        for(WayType waytype : WayType.values()) {
+        	if(waytype.toString().startsWith("PLACE_")) places.put(waytype, new ArrayList<>());
+        	else enumMap.put(waytype, new ArrayList<>());
+        }
+        
         finished = false;
         Main.log("Parsing started.");
 
@@ -75,7 +76,8 @@ public class OSMParser extends SAXAdapter {
         Main.log("Parsing finished.");
 
         int numItemsSaved = 0;
-        for(WayType wt : WayType.values()) numItemsSaved += enumMap.get(wt).size();
+        for(WayType wt : WayType.values()) if(!wt.toString().startsWith("PLACE_")) 
+        	numItemsSaved += enumMap.get(wt).size();
         Main.log("Ways and Relations saved: " + numItemsSaved);
 
         temporaryClean();
@@ -89,20 +91,14 @@ public class OSMParser extends SAXAdapter {
                 tree = getCoastlines();
                 coastlineMap = null;
             }
-            else if(wt == WayType.PLACE_TOWN || wt == WayType.PLACE_SUBURB) {
+            else if(wt.toString().startsWith("PLACE_")) {
             	if(!places.isEmpty()) {
-                	KDTree<ParsedPlace> townsTree;
-                	ArrayList<ParsedPlace> towns = places.get(WayType.PLACE_TOWN);
-                	if(towns.isEmpty()) townsTree = null;
-                	else townsTree = new KDTreeNode<>(towns);
+                	KDTree<ParsedPlace> placeTree;
+                	ArrayList<ParsedPlace> towns = places.get(wt);
+                	if(towns.isEmpty()) placeTree = null;
+                	else placeTree = new KDTreeNode<>(towns);
                 	
-                	KDTree<ParsedPlace> suburbsTree;
-                	ArrayList<ParsedPlace> suburbs = places.get(WayType.PLACE_SUBURB);
-                	if(suburbs.isEmpty()) suburbsTree = null;
-                	else suburbsTree = new KDTreeNode<>(suburbs);
-                	
-                	Main.model.enumMapPlacesKD.put(WayType.PLACE_TOWN, townsTree);
-                	Main.model.enumMapPlacesKD.put(WayType.PLACE_SUBURB, suburbsTree);
+                	Main.model.enumMapPlacesKD.put(wt, placeTree);
                 }
             }
             else {
@@ -341,13 +337,20 @@ public class OSMParser extends SAXAdapter {
                 	break;
                 case "place":
                 	switch(v) {
+                		case "city":
+                			place = new ParsedPlace(name, node.x, node.y);
+                			waytype = WayType.PLACE_CITY;
                 		case "town":
-                			place = new ParsedPlace(name, ParsedPlace.TOWN, node.x, node.y);
+                			place = new ParsedPlace(name, node.x, node.y);
                 			waytype = WayType.PLACE_TOWN;
                 			return;
                 		case "suburb":
-                			place = new ParsedPlace(name, ParsedPlace.SUBURB, node.x, node.y);
+                			place = new ParsedPlace(name, node.x, node.y);
                 			waytype = WayType.PLACE_SUBURB;
+                			return;
+                		case "neighbourhood":
+                			place = new ParsedPlace(name, node.x, node.y);
+                			waytype = WayType.PLACE_NEIGHBOURHOOD;
                 			return;
                         case "square":
                             isArea = true;
