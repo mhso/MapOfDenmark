@@ -1,10 +1,7 @@
 package dk.itu.n.danmarkskort.routeplanner;
 
 import java.awt.geom.Point2D;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Vector;
+import java.util.*;
 
 import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.Util;
@@ -18,31 +15,32 @@ import dk.itu.n.danmarkskort.models.RouteModel;
 public class RouteController {
 	private int vertexCount;
 	private List<RouteEdge> routeEdges;
-	//private List<RouteVertex> vertices;
 	private RouteGraph routeGraph;
 	private Region routeRegion;
 	private boolean debug = false;
 	public boolean isDrawingDjikstra = false;
 	private boolean useDjikstraWithAStar = true;
 	KDTree<RouteEdge> edgeTree;
-	
+	private HashMap<Point2D.Float, RouteVertex> vertexMap;
+
 	public RouteController(){
 		vertexCount = 0;
 		routeEdges = new ArrayList<RouteEdge>();
 	}
-	
+
 	/**
 	 * Creates a RouteVertex with a unique Id based on the position i the ArrayList
 	 * @param point
 	 * @return A Vertex object
 	 */
+
 	public RouteVertex makeVertex(Point2D.Float lonLat){
 		RouteVertex vertex = new RouteVertex(vertexCount, lonLat);
 		vertexCount++;
 		return vertex;
 	}
 	
-	public void addEdge(RouteVertex fromVertex, RouteVertex toVertex, short maxSpeed,
+	public void addEdge(Point2D.Float fromVertex, Point2D.Float toVertex, short maxSpeed,
 			boolean forwardAllowed, boolean backwardAllowed, boolean carsAllowed,
 			boolean bikesAllowed, boolean walkAllowed, String description){
 		
@@ -60,8 +58,21 @@ public class RouteController {
 	}
 	
 	public void makeGraph(){
-		System.out.println("I'm here -> makeGraph");
-		routeGraph = new RouteGraph(vertexCount);
+		Main.log("I am makeGraph");
+
+		vertexMap = new HashMap<>();
+		for(RouteEdge edge: routeEdges) {
+			Point2D.Float from = edge.getFrom();
+			Point2D.Float to = edge.getTo();
+
+			vertexMap.putIfAbsent(from, new RouteVertex(vertexMap.size(), from));
+			edge.setFrom(vertexMap.get(from));
+			vertexMap.putIfAbsent(to, new RouteVertex(vertexMap.size(), to));
+			edge.setTo(vertexMap.get(to));
+		}
+		routeGraph = new RouteGraph(vertexMap.size());
+		vertexMap = null;
+
 		for(RouteEdge edge : routeEdges) routeGraph.addEdge(edge);
 		makeTree();	
 		cleanUp();
@@ -124,8 +135,10 @@ public class RouteController {
 		List<RouteModel> routeModels = new ArrayList<RouteModel>();
 		RouteEdge fromEdge = searchEdgesKDTree(from);
 		RouteEdge toEdge = searchEdgesKDTree(to);
-		
-		Iterable<RouteEdge> edges = getRoute(fromEdge.getFrom(), toEdge.getFrom(), weightEnum);
+		RouteVertex fromVertex = (RouteVertex) fromEdge.getFrom();
+		RouteVertex toVertex = (RouteVertex) toEdge.getFrom();
+
+		Iterable<RouteEdge> edges = getRoute(fromVertex, toVertex, weightEnum);
 		
 		if(fromEdge != null && toEdge != null && edges != null) {
 			
@@ -170,8 +183,8 @@ public class RouteController {
 	}
 	
 	private void testEdgeBounds(double[] currentRouteBounds, RouteEdge edge) {
-		RouteVertex edgeFrom = edge.getFrom();
-		RouteVertex edgeTo = edge.getTo();
+		RouteVertex edgeFrom = (RouteVertex) edge.getFrom();
+		RouteVertex edgeTo = (RouteVertex) edge.getTo();
 		if(edgeFrom.getX() < currentRouteBounds[0]) currentRouteBounds[0] = edgeFrom.getX();
 		if(edgeFrom.getY() < currentRouteBounds[1]) currentRouteBounds[1] = edgeFrom.getY();
 		if(edgeTo.getX() > currentRouteBounds[2]) currentRouteBounds[2] = edgeTo.getX();
