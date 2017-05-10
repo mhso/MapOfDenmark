@@ -23,14 +23,14 @@ import dk.itu.n.danmarkskort.routeplanner.RouteController;
 public class Main {
 	public final static String APP_NAME = "Yak Maps";
 	public final static String APP_VERSION = "0.9";
-	public final static boolean debug = true;
+	public final static boolean debug = false;
 	public final static boolean debugExtra = true;
 	public final static boolean production = false;
 	public final static boolean buffered = true;
 	public final static boolean saveParsedAddresses = true;
 	public final static boolean nearest = true;
 
-	public static boolean useLauncher = true;
+    public static boolean useLauncher = true;
 	public static OSMReader osmReader;
 	public static JFrame window;
 	private static OSMParser parser;
@@ -43,8 +43,8 @@ public class Main {
 	public static TileController tileController;
 	public static RouteController routeController;
 	public static Style style;
-	
-	public static void main(String[] args) {
+
+    public static void main(String[] args) {
 		System.setProperty("awt.useSystemAAFontSettings","on");
 		System.setProperty("swing.aatext", "true");
 		userPreferences = (UserPreferences)Util.readObjectFromFile(DKConstants.USERPREF_PATH);

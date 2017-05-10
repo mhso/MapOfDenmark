@@ -166,9 +166,6 @@ public class RoutePage extends JPanel {
         
         dropSuggestionsAddrTo.setWidthComponent(txtAddrTo);
         
-        JButton btnFind = new JButton("Find Route");
-        btnFind.addActionListener( e -> openFindRoute());
-        
         rdbtnCar = new JRadioButton("Car");
         rdbtnCar.setBackground(style.menuContentBG());
         rdbtnCar.setSelected(true);
@@ -247,10 +244,13 @@ public class RoutePage extends JPanel {
         radioButtonGroupRouteType.add(rdbtnFastest);
         radioButtonGroupRouteType.add(rdbtnShortest);
         
+        JButton btnFind = new JButton("Find Route");
+        btnFind.addActionListener( e -> openFindRoute());
+        
         GridBagConstraints gbc_btnFind = new GridBagConstraints();
         gbc_btnFind.anchor = GridBagConstraints.EAST;
         gbc_btnFind.insets = new Insets(0, 0, 0, 5);
-        gbc_btnFind.gridx = 3;
+        gbc_btnFind.gridx = 4;
         gbc_btnFind.gridy = 6;
         panelCenter.add(btnFind, gbc_btnFind);
         

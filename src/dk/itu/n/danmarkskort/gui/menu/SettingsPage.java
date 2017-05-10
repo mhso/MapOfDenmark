@@ -66,7 +66,6 @@ public class SettingsPage extends JPanel {
         panelCenter.setBorder(new EmptyBorder(15, 15, 15, 15));
         panelCenter.setBackground(style.menuContentBG());
         panelPage.add(panelCenter, BorderLayout.CENTER);
-        initContentPanel(panelCenter);
         panelCenter.setLayout(new CardLayout());
         
         JPanel defaultCenterPanel = new JPanel();
@@ -80,12 +79,6 @@ public class SettingsPage extends JPanel {
         buttonChangeMapTheme.addActionListener(e -> showMapThemePanel());
         defaultCenterPanel.add(buttonChangeMapTheme);
         
-        JButton buttonChangeInterfaceTheme = new JButton("Change Interface Theme");
-        buttonChangeInterfaceTheme.setBackground(new Color(224, 255, 255));
-        buttonChangeInterfaceTheme.setBorder(new LineBorder(new Color(0, 153, 204), 2, true));
-        buttonChangeInterfaceTheme.addActionListener(e -> showInterfaceThemePanel());
-        defaultCenterPanel.add(buttonChangeInterfaceTheme);
-        
         JButton buttonChangePreferences = new JButton("Change Preferences");
         buttonChangePreferences.setBackground(new Color(224, 255, 255));
         buttonChangePreferences.setBorder(new LineBorder(new Color(0, 153, 204), 2, true));
@@ -97,14 +90,12 @@ public class SettingsPage extends JPanel {
         
         createMapThemePanel();
         
-        createInterfaceThemePanel();
-        
         createPreferencesPanel();
     }
     
     private void createMapThemePanel() {
     	final int SUBPANEL_WIDTH = 420;
-    	final int SUBPANEL_HEIGHT = 50;
+    	final int SUBPANEL_HEIGHT = 40;
     	
     	JPanel panelMapTheme = new JPanel();
         panelMapTheme.setOpaque(false);
@@ -201,8 +192,7 @@ public class SettingsPage extends JPanel {
         
         JButton buttonBack = new JButton("Back");
         buttonBack.addActionListener(e -> showDefaultPanel());
-        buttonBack.setFont(new Font("Tahoma", Font.PLAIN, 13));
-        panelSouth.add(buttonBack, BorderLayout.WEST);
+        panelSouth.add(buttonBack, BorderLayout.EAST);
         
         CustomToggleButton[] buttons = {buttonBasicToggle, buttonNightToggle, buttonBWToggle};
         for(CustomToggleButton button : buttons) {
@@ -220,33 +210,8 @@ public class SettingsPage extends JPanel {
     	else GraphicRepresentation.parseData("resources/themes/Theme" + Main.userPreferences.getCurrentMapTheme() + ".XML");
     	Util.writeObjectToFile(Main.userPreferences, DKConstants.USERPREF_PATH);
     	Main.map.forceRepaint();
-    }
-    
-    private void createInterfaceThemePanel() {
-    	JPanel panelInterfaceTheme = new JPanel();
-    	panelInterfaceTheme.setLayout(new BorderLayout(0, 5));
-        panelInterfaceTheme.setOpaque(false);
-        panelCenter.add(panelInterfaceTheme, "name_interfacetheme");
-        
-        JLabel labelChangeTheme = new JLabel("Change Interface Theme");
-        labelChangeTheme.setFont(new Font("Tahoma", Font.PLAIN, 20));
-        labelChangeTheme.setHorizontalAlignment(SwingConstants.CENTER);
-        panelInterfaceTheme.add(labelChangeTheme, BorderLayout.NORTH);
-        
-        JLabel labelBasicIcon = new JLabel("Not yet implementet...");
-        panelInterfaceTheme.add(labelBasicIcon, BorderLayout.CENTER);
-        
-        JPanel panelSouth = new JPanel();
-        panelSouth.setOpaque(false);
-        panelInterfaceTheme.add(panelSouth, BorderLayout.SOUTH);
-        panelSouth.setLayout(new BorderLayout(0, 0));
-        
-        JButton buttonBack = new JButton("Back");
-        buttonBack.addActionListener(e -> showDefaultPanel());
-        buttonBack.setFont(new Font("Tahoma", Font.PLAIN, 13));
-        panelSouth.add(buttonBack, BorderLayout.WEST);
-    }
-    
+    }    
+  
     private void createPreferencesPanel() {
     	JPanel panelDefaultValues = new JPanel();
     	panelDefaultValues.setLayout(new BorderLayout(0, 5));
@@ -370,6 +335,23 @@ public class SettingsPage extends JPanel {
         
         centerPanel.add(Box.createRigidArea(new Dimension(20, 10)));
         
+        JPanel useDjikstraWithAStarPanel = new JPanel();
+        useDjikstraWithAStarPanel.setOpaque(false);
+        centerPanel.add(useDjikstraWithAStarPanel);
+        useDjikstraWithAStarPanel.setLayout(new BorderLayout(15, 0));
+        
+        JLabel useDjikstraWithAStarLabel = new JLabel("Use Djikstra with A* as search algorithm: ");
+        useDjikstraWithAStarPanel.add(useDjikstraWithAStarLabel, BorderLayout.WEST);
+        
+        JCheckBox useDjikstraWithAStarCheckBox = new JCheckBox();
+        useDjikstraWithAStarCheckBox.addActionListener(e ->
+        		Main.userPreferences.setUseDjikstraWithAStar(useDjikstraWithAStarCheckBox.isSelected()));
+        useDjikstraWithAStarCheckBox.setBackground(panelCenter.getBackground());
+        useDjikstraWithAStarCheckBox.setSelected(Main.userPreferences.useDjikstraWithAStar());
+        useDjikstraWithAStarPanel.add(useDjikstraWithAStarCheckBox, BorderLayout.EAST);
+        
+        centerPanel.add(Box.createRigidArea(new Dimension(20, 10)));
+        
         JPanel drawDjikstraPanel = new JPanel();
         drawDjikstraPanel.setOpaque(false);
         centerPanel.add(drawDjikstraPanel);
@@ -378,11 +360,11 @@ public class SettingsPage extends JPanel {
         JLabel drawDjikstraLabel = new JLabel("DEBUG: Draw Djikstra/A*");
         drawDjikstraPanel.add(drawDjikstraLabel, BorderLayout.WEST);
         
-        JCheckBox drawDjikstraButton = new JCheckBox();
-        drawDjikstraButton.addActionListener(e -> Main.routeController.isDrawingDjikstra = drawDjikstraButton.isSelected());
-        drawDjikstraButton.setBackground(panelCenter.getBackground());
-        drawDjikstraButton.setSelected(Main.userPreferences.isHighlightingNearestRoad());
-        drawDjikstraPanel.add(drawDjikstraButton, BorderLayout.EAST);
+        JCheckBox drawDjikstraCheckBox = new JCheckBox();
+        drawDjikstraCheckBox.addActionListener(e -> Main.routeController.isDrawingDjikstra = drawDjikstraCheckBox.isSelected());
+        drawDjikstraCheckBox.setBackground(panelCenter.getBackground());
+        drawDjikstraCheckBox.setSelected(Main.userPreferences.isHighlightingNearestRoad());
+        drawDjikstraPanel.add(drawDjikstraCheckBox, BorderLayout.EAST);
         
         JPanel panelSouth = new JPanel();
         panelSouth.setOpaque(false);
@@ -391,8 +373,7 @@ public class SettingsPage extends JPanel {
         
         JButton buttonBack = new JButton("Back");
         buttonBack.addActionListener(e -> showDefaultPanel());
-        buttonBack.setFont(new Font("Tahoma", Font.PLAIN, 13));
-        panelSouth.add(buttonBack, BorderLayout.WEST);
+        panelSouth.add(buttonBack, BorderLayout.EAST);
         
         // Hack! Couldn't get ScrollPane to work properly with CardLayout, so inserting a RigidArea here to push preference buttons to the top.
         panelSouth.add(Box.createRigidArea(new Dimension(20, 60)), BorderLayout.SOUTH);
@@ -410,7 +391,7 @@ public class SettingsPage extends JPanel {
 			}
 		}
 		catch (IOException e) {
-			e.printStackTrace();
+			if(Main.debug) e.printStackTrace();
 		}
 		String[] results = new String[binFiles.size()];
 		for(int i = 0; i < binFiles.size(); i++) {
@@ -429,18 +410,9 @@ public class SettingsPage extends JPanel {
 		cl.show(panelCenter, "name_maptheme");
     }
     
-    private void showInterfaceThemePanel() {
-    	CardLayout cl = (CardLayout)panelCenter.getLayout();
-		cl.show(panelCenter, "name_interfacetheme");
-    }
-    
     private void showPreferencesPanel() {
     	CardLayout cl = (CardLayout)panelCenter.getLayout();
 		cl.show(panelCenter, "name_preferences");
-    }
-
-	private void initContentPanel(JPanel panel){
-    	
     }
 
 	private class ButtonSelecter implements ActionListener {

@@ -43,6 +43,7 @@ public class OSMParser extends SAXAdapter {
     private transient int maxSpeed;
     private transient RouteController route;
     private transient HashMap<Point2D.Float, RouteVertex> vertexMap;
+    private transient boolean waysFinished = false;
 
     private transient boolean finished = false;
     private transient OSMReader reader;
@@ -169,6 +170,11 @@ public class OSMParser extends SAXAdapter {
                 temporaryWayReferences.put(way.getID(), way);
                 break;
             case "relation":
+                if(!waysFinished) {
+                    waysFinished = true;
+                    vertexMap = null;
+                    nodeMap = null; // none of the relations we save have nodes
+                }
                 relation = new ParsedRelation(Long.parseLong(atts.getValue("id")));
                 temporaryRelationReferences.put(relation.getID(), relation);
                 break;
@@ -181,7 +187,6 @@ public class OSMParser extends SAXAdapter {
                 String role = atts.getValue("role");
                 switch(type) {
                     case "node":
-                        if(nodeMap.get(ref) != null) currentNodes.add(nodeMap.get(ref));
                         break;
                     case "way":
                         if(temporaryWayReferences.containsKey(ref)) relation.addMember(temporaryWayReferences.get(ref), role);
@@ -234,7 +239,6 @@ public class OSMParser extends SAXAdapter {
 
     private void addCurrent() {
         if(way != null) way.addNodes(currentNodes);
-        else if(relation != null && currentNodes.size() > 0) relation.addNodes(currentNodes);
 
         if(waytype != null) {
             if(way != null) {
@@ -247,9 +251,7 @@ public class OSMParser extends SAXAdapter {
                 relation.correctOuters();
                 for(OSMParserListener listener : reader.parserListeners) listener.onParsingGotItem(relation);
             }
-            else if(node != null) {
-            	for(OSMParserListener listener : reader.parserListeners) listener.onParsingGotItem(node);
-            } 
+            else if(node != null) for(OSMParserListener listener : reader.parserListeners) listener.onParsingGotItem(node);
         }
 
         if(address != null && Main.saveParsedAddresses) {
