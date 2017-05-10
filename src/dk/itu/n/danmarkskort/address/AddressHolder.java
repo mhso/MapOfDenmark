@@ -15,7 +15,7 @@ import dk.itu.n.danmarkskort.models.RegionFloat;
 public class AddressHolder implements Serializable {
 	private static final long serialVersionUID = 4946666884688610616L;
 	public HashMap<String, Postcode> postcodes = new HashMap<String, Postcode>(2000);
-	
+
 	public AddressHolder(){ }
 	
 	public Postcode getPostcode(String postcode) {
@@ -198,11 +198,5 @@ public class AddressHolder implements Serializable {
 		if(p == null) p = new Postcode(hn.getPostcode().getPostcode(), hn.getPostcode().getCity());
 			p.addAddress(hn.getStreet().getStreet(), hn.getHousenumber(), hn.getLonLat());
 			input.putIfAbsent(p.getPostcode(), p);
-	}
-	
-	public Map<RegionFloat, Postcode> getRegions(){
-		Map<RegionFloat, Postcode> regions = new HashMap<RegionFloat, Postcode>();
-		for(Postcode pc : postcodes.values()) regions.put(pc.getRegion(), pc);
-		return regions;
 	}
 }

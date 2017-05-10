@@ -102,7 +102,7 @@ public class RouteGraph implements Serializable {
      * @return all edges in this edge-weighted digraph, as an iterable
      */
     public Iterable<RouteEdge> edges() {
-        Bag<RouteEdge> list = new Bag<RouteEdge>();
+    	Bag<RouteEdge> list = new Bag<RouteEdge>();
         for (int vertexId = 0; vertexId < numOfVertices; vertexId++) {
             for (RouteEdge edge : adjacent(vertexId)) {
                 list.add(edge);

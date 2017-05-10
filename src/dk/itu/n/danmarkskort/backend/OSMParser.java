@@ -40,7 +40,7 @@ public class OSMParser extends SAXAdapter {
     private transient boolean motorvehicle;
     private transient boolean walk;
     private transient boolean toGraph;
-    private transient int maxSpeed;
+    private transient short maxSpeed;
     private transient RouteController route;
     private transient HashMap<Point2D.Float, RouteVertex> vertexMap;
 
@@ -310,15 +310,14 @@ public class OSMParser extends SAXAdapter {
     }
 
     private void temporaryClean() {
-        ReuseStringObj.clear();
-        vertexMap = null;
+
         nodeMap = null;
         temporaryWayReferences = null;
         temporaryRelationReferences = null;
     }
 
     private void finalClean() {
-        if(Main.debug) System.gc();
+        System.gc();
     }
     
     public boolean isFinished() {
@@ -588,7 +587,7 @@ public class OSMParser extends SAXAdapter {
                 break;
             case "maxspeed":
                 try{
-                    maxSpeed = Integer.parseInt(v);
+                    maxSpeed = Short.parseShort(v);
                 }
                 catch (NumberFormatException e) {
                     maxSpeed = 0;
