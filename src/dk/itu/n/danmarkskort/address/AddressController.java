@@ -121,7 +121,7 @@ public class AddressController {
 	public void addressParsed(ParsedAddress addr) {
 		timerUtilA.on();
         if(addr != null) {
-        	Point2D.Float lonLat = new Point2D.Float(addr.getLon(), addr.getLat());
+        	Point2D.Float lonLat = addr;
 	
 			if(AddressValidator.isAddressMinimum(addr.getStreet(), addr.getHousenumber(), addr.getPostcode())){
 				if(AddressValidator.isCityname(addr.getCity())) {
