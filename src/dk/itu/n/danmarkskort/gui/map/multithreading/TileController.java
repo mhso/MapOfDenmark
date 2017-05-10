@@ -151,7 +151,7 @@ public class TileController implements ActionListener {
 		if(isBlurred() && zoomImage != null) {
 			g2d.setTransform(zoomTransform);
 			g2d.drawImage(zoomImage, 0, 0, null);
-		} else {			
+		} else {
 			String[] tileKeys = tiles.keySet().toArray(new String[tiles.size()]);
 			for(String key : tileKeys) {
 				Tile tile = tiles.get(key);
