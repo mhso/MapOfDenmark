@@ -158,6 +158,7 @@ public class WindowParsingLoadscreenNew extends JFrame implements OSMParserListe
 	
 	@Override
 	public void onStreamEnded() {
+		Main.log("onstreamended happened");
 		currentPercent = 100;
 		setProgressPercent();
 		labelRemaining.setText("Time Remaining: 0 Seconds.");
