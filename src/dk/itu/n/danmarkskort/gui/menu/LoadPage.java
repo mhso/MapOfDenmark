@@ -4,6 +4,7 @@ import javax.swing.*;
 
 import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.gui.Style;
+import dk.itu.n.danmarkskort.gui.WindowLauncher;
 import dk.itu.n.danmarkskort.gui.components.PanelFileInfo;
 
 import java.awt.*;
@@ -15,7 +16,6 @@ import java.io.File;
 public class LoadPage extends JPanel  {
 	private static final long serialVersionUID = -3622354925202477780L;
 	private Style style;
-	private JLabel lblCurrentmapfilename, lblCurrentmapfilesize, lblCurrentmapaddressesfound, lblCurrentmapbounds;
 	
     public LoadPage() {
     	style = Main.style;
@@ -56,7 +56,7 @@ public class LoadPage extends JPanel  {
         gbc_btnLoadNewMapFile.gridx = 1;
         gbc_btnLoadNewMapFile.gridy = 7;
         JButton btnLoadNewMapFile = new JButton("Load new map file");
-        btnLoadNewMapFile.addActionListener(e -> loadNewMapFile());
+        btnLoadNewMapFile.addActionListener(e -> new WindowLauncher());
         panelCenter.add(btnLoadNewMapFile, gbc_btnLoadNewMapFile);
     }
     
@@ -87,12 +87,4 @@ public class LoadPage extends JPanel  {
 	private void initContentPanel(JPanel panel){
     	
     }
-	
-	public void updateCurrentMapInfo(String mapfilename, String mapfilesize, String mapbounds, String mapaddressesfound){
-		lblCurrentmapfilename.setText(mapfilename);
-		lblCurrentmapfilesize.setText(mapfilesize);
-		lblCurrentmapbounds.setText(mapbounds);
-		lblCurrentmapaddressesfound.setText(mapaddressesfound);
-	}
-	
 }

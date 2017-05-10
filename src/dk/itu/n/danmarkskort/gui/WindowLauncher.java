@@ -12,6 +12,8 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -30,7 +32,7 @@ public class WindowLauncher extends JFrame {
 	private JLabel labelSelectedFileHeader;
 	
 	public WindowLauncher() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		Style style = new Style();
 		setTitle("Launcher");
 		setIconImage(style.frameIcon());
@@ -223,6 +225,14 @@ public class WindowLauncher extends JFrame {
 				if(e.getKeyCode() == KeyEvent.VK_ENTER && buttonLaunch.isEnabled()) buttonLaunch.doClick();
 			}
         });
+        
+        addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				if(Main.window == null) System.exit(0);
+				dispose();
+			}      	
+        });
 
 		// Colors and stuff
 
@@ -263,6 +273,7 @@ public class WindowLauncher extends JFrame {
 	
 	private void launch() {
 		dispose();
+		if(Main.window != null) Main.window.dispose();
 		Main.launch(new String[]{selectedFilePath});
 	}
 
