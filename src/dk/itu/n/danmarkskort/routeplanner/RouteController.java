@@ -36,8 +36,8 @@ public class RouteController {
 	 * @param point
 	 * @return A Vertex object
 	 */
-	public RouteVertex makeVertex(float lon, float lat){
-		RouteVertex vertex = new RouteVertex(vertexCount, new Point2D.Float(lon, lat));
+	public RouteVertex makeVertex(Point2D.Float lonLat){
+		RouteVertex vertex = new RouteVertex(vertexCount, lonLat);
 		vertexCount++;
 		return vertex;
 	}
@@ -60,6 +60,7 @@ public class RouteController {
 	}
 	
 	public void makeGraph(){
+		System.out.println("I'm here -> makeGraph");
 		routeGraph = new RouteGraph(vertexCount);
 		for(RouteEdge edge : routeEdges) routeGraph.addEdge(edge);
 		makeTree();	
@@ -83,17 +84,6 @@ public class RouteController {
 		}else{
 			RouteDijkstra routeDijkstra = new RouteDijkstra(routeGraph, from.getId(), to.getId(), weightEnum);
 			return routeDijkstra.pathTo(to.getId());
-		}
-	}
-	
-	public boolean hasRoute(RouteVertex from, RouteVertex to, WeightEnum weightEnum){
-		useDjikstraWithAStar = Main.userPreferences.useDjikstraWithAStar();
-		if(useDjikstraWithAStar) {
-			RouteDijkstraAStar routeDijkstra = new RouteDijkstraAStar(routeGraph, from, to, weightEnum);
-			return routeDijkstra.hasPathTo(to.getId());
-		}else{
-			RouteDijkstra routeDijkstra = new RouteDijkstra(routeGraph, from.getId(), to.getId(), weightEnum);	
-			return routeDijkstra.hasPathTo(to.getId());
 		}
 	}
 
