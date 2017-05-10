@@ -34,7 +34,7 @@ public class Postcode implements Serializable {
 	public void addStreet(String street){
 		Street newStreet = getStreet(street);
 		if(newStreet == null) newStreet = new Street(this, street);
-		streets.put(street.toLowerCase(), newStreet);
+		streets.put(ReuseStringObj.make(street.toLowerCase()), newStreet);
 	}
 	
 	public void addAddress(String street, String housenumber, Point2D.Float latLon){

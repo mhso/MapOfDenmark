@@ -322,7 +322,6 @@ public class OSMParser extends SAXAdapter {
     }
 
     private void finalClean() {
-    	ReuseStringObj.clear();
         System.gc();
     }
     
