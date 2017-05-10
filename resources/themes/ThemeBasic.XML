@@ -205,6 +205,11 @@
 	</areas>
 	<labels>
 		<label>
+			<type name="PLACE_NEIGHBOURHOOD"/>
+			<fontsize fontsize="14"/>
+			<layer layer="5"/>
+		</label>
+		<label>
 			<type name="PLACE_CITY"/>
 			<fontsize fontsize="30"/>
 			<layer layer="5"/>

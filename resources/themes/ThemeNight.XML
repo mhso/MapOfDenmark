@@ -138,6 +138,12 @@
 	</areas>
 	<labels>
 		<label>
+			<type name="PLACE_NEIGHBOURHOOD"/>
+			<innercolor color="FFFFFF"/>
+			<fontsize fontsize="14"/>
+			<layer layer="5"/>
+		</label>
+		<label>
 			<type name="PLACE_CITY"/>
 			<innercolor color="FFFFFF"/>
 			<fontsize fontsize="30"/>
