@@ -16,7 +16,6 @@ public class Street implements Serializable {
 	private String street;
 	private Map<String, Housenumber> housenumbers;
 	private Postcode postcode;
-	private RegionFloat region;
 	
 	public Postcode getPostcode() { return postcode; }
 	public void setPostcode(Postcode postcode) { this.postcode = postcode; }
@@ -25,29 +24,12 @@ public class Street implements Serializable {
 		this.setPostcode(postcode);
 		this.street = ReuseStringObj.make(street);
 		housenumbers = new HashMap<String, Housenumber>();
-		region = null;
+		//region = null;
 	}
 	
 	public int count(){ return housenumbers.size(); }
 	
 	public String getStreet() { return street.toString(); }
-	
-	public RegionFloat getRegion(){
-		if(region == null) region = genRegion();
-		return region;
-	}
-	
-	private RegionFloat genRegion(){
-		RegionFloat region =  new RegionFloat(Float.NEGATIVE_INFINITY, Float.NEGATIVE_INFINITY, Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY);
-		for(Housenumber hn : housenumbers.values()){
-				RegionFloat hnR = new RegionFloat(hn.getLon(), hn.getLat(), hn.getLon(), hn.getLat());
-				if(hnR.x1 > region.x1) region.x1 = hnR.x1;
-				if(hnR.y1 > region.y1) region.y1 = hnR.y1;
-				if(hnR.x2 < region.x2) region.x2 = hnR.x2;
-				if(hnR.y2 < region.y2) region.y2 = hnR.y2;
-		}
-		return region;
-	}
 
 	public Map<String, Housenumber> getHousenumbers() { return housenumbers; }
 	
@@ -55,7 +37,7 @@ public class Street implements Serializable {
 		if(housenumber != null && lonLat != null) {
 			Housenumber hn = getHousenumber(housenumber);
 			if(hn == null) hn = new Housenumber(postcode, this, housenumber, lonLat);
-			housenumbers.put(housenumber.toLowerCase(), hn);
+			housenumbers.put(ReuseStringObj.make(housenumber.toLowerCase()), hn);
 		}
 	}
 	

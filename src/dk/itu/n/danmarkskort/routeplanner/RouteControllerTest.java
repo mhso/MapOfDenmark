@@ -34,22 +34,22 @@ public class RouteControllerTest {
 		RouteVertex C2 = rc.makeVertex(21f, 21f);
 		
 		//Connection 1 oneway
-		rc.addEdge(A1, A2, 20, true, true, true, true, true, "A1<->A2");
-		rc.addEdge(A2, A3, 20, true, true, true, true, true, "A2<->A3");
-		rc.addEdge(A3, A4, 20, true, true, true, true, true, "A3<->A4");
-		rc.addEdge(A4, A5, 20, true, true, true, true, true, "A4<->A5");
-		rc.addEdge(A5, A6, 20, true, true, true, true, true, "A5<->A6");
+		rc.addEdge(A1, A2, (short)20, true, true, true, true, true, "A1<->A2");
+		rc.addEdge(A2, A3, (short)20, true, true, true, true, true, "A2<->A3");
+		rc.addEdge(A3, A4, (short)20, true, true, true, true, true, "A3<->A4");
+		rc.addEdge(A4, A5, (short)20, true, true, true, true, true, "A4<->A5");
+		rc.addEdge(A5, A6, (short)20, true, true, true, true, true, "A5<->A6");
 		
 		//Connection 2
-		rc.addEdge(A4, B1, 20, true, true, true, false, false, "A4<->B1");
-		rc.addEdge(B1, B2, 20, true, true, true, false, false, "B1<->B2");
-		rc.addEdge(B2, B3, 20, true, true, false, false, true, "B2<->B3");
+		rc.addEdge(A4, B1, (short)20, true, true, true, false, false, "A4<->B1");
+		rc.addEdge(B1, B2, (short)20, true, true, true, false, false, "B1<->B2");
+		rc.addEdge(B2, B3, (short)20, true, true, false, false, true, "B2<->B3");
 		
-		rc.addEdge(A6, C1, 20, true, true, true, true, false, "A6<->C1");
-		rc.addEdge(C1, C2, 20, true, false, true, true, false, "C1->C2");
-		rc.addEdge(C2, A3, 20, true, true, true, true, false, "C2<->A3");
+		rc.addEdge(A6, C1, (short)20, true, true, true, true, false, "A6<->C1");
+		rc.addEdge(C1, C2, (short)20, true, false, true, true, false, "C1->C2");
+		rc.addEdge(C2, A3, (short)20, true, true, true, true, false, "C2<->A3");
 		
-		rc.addEdge(B2, C1, 20, true, true, false, true, false, "B2<->C1");
+		rc.addEdge(B2, C1, (short)20, true, true, false, true, false, "B2<->C1");
 		
 		
 		System.out.println(testAll(A1, A6, "A1->A6"));

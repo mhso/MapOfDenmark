@@ -1,19 +1,20 @@
 package dk.itu.n.danmarkskort.models;
 
 public class RouteModel {
-	private final String DESCRIPTION;
+	private String description;
 	private double distance;
-	private final RouteEnum DIRECTION;
+	private RouteEnum direction;
 	private int maxSpeed;
 	
 	public RouteModel(RouteEnum direction, String description, int maxSpeed, double distance){
-		DIRECTION = direction;
-		DESCRIPTION = getStepDescription(direction, description);
+		this.direction = direction;
+		this.description = getStepDescription(direction, description);
 		this.maxSpeed = maxSpeed;
 		this.distance = distance;
 	}
 
-	public String getDescription() { return DESCRIPTION; }
+	public String getDescription() { return description; }
+	public void setDescription(String description) { this.description = description; }
 
 	public double getDistance() { return distance; }
 	public void setDistance(double distance) { this.distance = distance; }
@@ -21,7 +22,12 @@ public class RouteModel {
 	public int getMaxSpeed() { return maxSpeed; }
 	public void setMaxSpeed(int maxSpeed) { this.maxSpeed = maxSpeed; }
 
-	public RouteEnum getDirection() { return DIRECTION; }
+	public RouteEnum getDirection() { return direction; }
+	
+	public void updateDirectionAndDescription(RouteEnum direction, String description) { 
+		this.direction = direction;
+		setDescription(getStepDescription(direction, description));
+	}
 	
 	private String getStepDescription(RouteEnum routeEnum, String description){
 		String stepDirection = "";
