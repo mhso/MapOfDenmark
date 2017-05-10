@@ -8,7 +8,7 @@ public class RouteGraph implements Serializable {
 	private final int numOfVertices;			// number of vertices in this digraph
 	private int numOfEdges;						// number of edges in this digraph
 	private Bag<RouteEdge>[] adjacent;			// adj[v] = adjacency list for vertex v
-	private int[] indegree;						// indegree[v] = indegree of vertex v
+	//private int[] indegree;						// indegree[v] = indegree of vertex v
 	
 	/**
      * Initializes an empty edge-weighted digraph with {@code V} vertices and 0 edges.
@@ -19,7 +19,7 @@ public class RouteGraph implements Serializable {
         if (numOfVertices < 0) throw new IllegalArgumentException("Number of vertices in a Digraph must be nonnegative");
         this.numOfVertices = numOfVertices;
         numOfEdges = 0;
-        this.indegree = new int[numOfVertices];
+        //this.indegree = new int[numOfVertices];
         adjacent = (Bag<RouteEdge>[]) new Bag[numOfVertices];
         
         for (int i= 0; i < numOfVertices; i++) adjacent[i] = new Bag<RouteEdge>();
@@ -55,7 +55,7 @@ public class RouteGraph implements Serializable {
         validateVertex(fromId);
         validateVertex(toId);
         adjacent[fromId].add(edge);
-        indegree[toId]++;
+        //indegree[toId]++;
         numOfEdges++;
     }
 
@@ -90,10 +90,10 @@ public class RouteGraph implements Serializable {
      * @return the indegree of vertex {@code v}
      * @throws IllegalArgumentException unless {@code 0 <= v < V}
      */
-    public int indegree(int vertexId) {
-        validateVertex(vertexId);
-        return indegree[vertexId];
-    }
+//    public int indegree(int vertexId) {
+//        validateVertex(vertexId);
+//        return indegree[vertexId];
+//    }
 
     /**
      * Returns all directed edges in this edge-weighted digraph.

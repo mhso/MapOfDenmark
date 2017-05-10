@@ -221,11 +221,11 @@ public class OSMParser extends SAXAdapter {
             RouteVertex first = vertexMap.get(firstNode);
             RouteVertex second = vertexMap.get(secondNode);
             if(first == null) {
-                first = route.makeVertex(firstNode.x, firstNode.y);
+                first = route.makeVertex(firstNode);
                 vertexMap.put(firstNode, first);
             }
             if(second == null) {
-                second = route.makeVertex(secondNode.x, secondNode.y);
+                second = route.makeVertex(secondNode);
                 vertexMap.put(secondNode, second);
             }
             if(maxSpeed > 0) route.addEdge(first, second, maxSpeed, forward, backward, motorvehicle, bicycle, walk, name);
