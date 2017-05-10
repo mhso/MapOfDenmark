@@ -29,6 +29,8 @@ public class GraphicSpecLabel extends WaytypeGraphicSpec {
 	
 	public void setFontSize(int fontSize) {
 		this.fontSize = fontSize;
+		font = new Font("Tahoma", Font.BOLD, fontSize);
+		font = font.deriveFont(fontSize*DKConstants.FONTSIZE_MAGNIFYING_VALUE);
 	}
 	
 	public String toString() {
