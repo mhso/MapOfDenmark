@@ -13,6 +13,7 @@ import dk.itu.n.danmarkskort.DKConstants;
 import dk.itu.n.danmarkskort.kdtree.KDTree;
 import dk.itu.n.danmarkskort.kdtree.KDTreeNode;
 import dk.itu.n.danmarkskort.models.ParsedItem;
+import dk.itu.n.danmarkskort.models.ParsedPlace;
 import dk.itu.n.danmarkskort.models.ParsedWay;
 import dk.itu.n.danmarkskort.models.Region;
 
@@ -93,6 +94,17 @@ public class KDTreeTests {
 		KDTree<ParsedItem> kdTree = createKDTreeWithWays(100, 0, 0, -10, -10, 25);
 		Iterator<ParsedItem> it = kdTree.iterator(null);
 		assertNotNull(it);
+	}
+	
+	@Test
+	public void testKDSearchOneElement() {
+		KDTree<ParsedItem> kdTree = createKDTreeWithWays(1, 0, 0, -10, -10, 25);
+		ParsedItem item = null;
+		if(DEBUG) System.out.print("Test search one element, tree size: " + kdTree.size() + ", data size: ");
+		for (Iterator<ParsedItem> i = kdTree.iterator(new Region(-1, -1, 1, 1)); i.hasNext(); ) {
+            item = i.next();
+		}
+		assertNotNull(item);
 	}
 	
 	@Test

@@ -210,7 +210,7 @@ public class MapCanvas extends JPanel {
         	for(WaytypeGraphicSpec wayTypeLabel : labelsVisible) {
             	currentWTGSpec = wayTypeLabel;
             	KDTree<ParsedPlace> kdTree = Main.model.getEnumMapPlacesKD().get(wayTypeLabel.getWayType());
-            	if(kdTree == null) continue; 	
+            	if(kdTree == null) continue;
             	currentWTGSpec.transformPrimary(g2d);
                 for (Iterator<ParsedPlace> i = kdTree.iterator(currentRegion); i.hasNext(); ) {
                     ParsedPlace place = i.next();
@@ -259,6 +259,10 @@ public class MapCanvas extends JPanel {
 		g2d.setTransform(af);
         g2d.fillRect(-100, -100, getWidth() + 200, getHeight() + 200);
     }
+	
+	private float getLineWidthZoomFactor() {
+		return (float)((0.00005f*Math.pow(2, (20-getZoom())/2))/5);
+	}
 
 	public List<WaytypeGraphicSpec> getOnScreenGraphicsForCurrentZoom() {
 		List<WaytypeGraphicSpec> wayTypeSpecs = GraphicRepresentation.getGraphicSpecs((int)getZoom());
@@ -332,7 +336,7 @@ public class MapCanvas extends JPanel {
 		g2d.setTransform(transform);
 		if(antiAlias) g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		else g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
-		g2d.setStroke(new BasicStroke((float)(0.0012f*0.5/getZoom())));
+		g2d.setStroke(new BasicStroke(getLineWidthZoomFactor()));
 		g2d.setColor(Color.BLUE);
 		
 		if(Main.debug) {

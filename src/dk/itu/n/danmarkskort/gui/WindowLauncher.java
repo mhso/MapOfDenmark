@@ -89,6 +89,7 @@ public class WindowLauncher extends JFrame {
 		binFilesList.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				if(binFilesList.getSelectedIndex() < 0) return;
 				labelSelectedFile.setText(binFilesList.getSelectedValue());
 				selectedFilePath = binFiles.get(binFilesList.getSelectedIndex()).toString();
 				if(!buttonLaunch.isEnabled()) enableLaunchButton(true);
