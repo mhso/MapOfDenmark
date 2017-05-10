@@ -27,17 +27,18 @@ public class RouteController {
 		vertexCount = 0;
 		routeEdges = new ArrayList<RouteEdge>();
 	}
-	
+
 	/**
 	 * Creates a RouteVertex with a unique Id based on the position i the ArrayList
 	 * @param point
 	 * @return A Vertex object
 	 */
-	/*public RouteVertex makeVertex(float lon, float lat){
-		RouteVertex vertex = new RouteVertex(vertexCount, new Point2D.Float(lon, lat));
+
+	public RouteVertex makeVertex(Point2D.Float lonLat){
+		RouteVertex vertex = new RouteVertex(vertexCount, lonLat);
 		vertexCount++;
 		return vertex;
-	}*/
+	}
 	
 	public void addEdge(Point2D.Float fromVertex, Point2D.Float toVertex, short maxSpeed,
 			boolean forwardAllowed, boolean backwardAllowed, boolean carsAllowed,
@@ -57,6 +58,8 @@ public class RouteController {
 	}
 	
 	public void makeGraph(){
+		Main.log("I am makeGraph");
+
 		vertexMap = new HashMap<>();
 		for(RouteEdge edge: routeEdges) {
 			Point2D.Float from = edge.getFrom();
@@ -69,6 +72,7 @@ public class RouteController {
 		}
 		routeGraph = new RouteGraph(vertexMap.size());
 		vertexMap = null;
+
 		for(RouteEdge edge : routeEdges) routeGraph.addEdge(edge);
 		makeTree();	
 		cleanUp();
@@ -91,17 +95,6 @@ public class RouteController {
 		}else{
 			RouteDijkstra routeDijkstra = new RouteDijkstra(routeGraph, from.getId(), to.getId(), weightEnum);
 			return routeDijkstra.pathTo(to.getId());
-		}
-	}
-	
-	public boolean hasRoute(RouteVertex from, RouteVertex to, WeightEnum weightEnum){
-		useDjikstraWithAStar = Main.userPreferences.useDjikstraWithAStar();
-		if(useDjikstraWithAStar) {
-			RouteDijkstraAStar routeDijkstra = new RouteDijkstraAStar(routeGraph, from, to, weightEnum);
-			return routeDijkstra.hasPathTo(to.getId());
-		}else{
-			RouteDijkstra routeDijkstra = new RouteDijkstra(routeGraph, from.getId(), to.getId(), weightEnum);	
-			return routeDijkstra.hasPathTo(to.getId());
 		}
 	}
 

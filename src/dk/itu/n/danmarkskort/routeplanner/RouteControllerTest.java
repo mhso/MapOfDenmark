@@ -2,6 +2,8 @@ package dk.itu.n.danmarkskort.routeplanner;
 
 import static org.junit.Assert.*;
 
+import java.awt.geom.Point2D;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,19 +21,19 @@ public class RouteControllerTest {
 
 	@Test
 	public void test() {
-		RouteVertex A1 = rc.makeVertex(0f, 0f);
-		RouteVertex A2 = rc.makeVertex(1f, 1f);
-		RouteVertex A3 = rc.makeVertex(2f, 2f);
-		RouteVertex A4 = rc.makeVertex(3f, 3f);
-		RouteVertex A5 = rc.makeVertex(140f, 140f);
-		RouteVertex A6 = rc.makeVertex(5f, 5f);
+		RouteVertex A1 = rc.makeVertex(new Point2D.Float(0f, 0f));
+		RouteVertex A2 = rc.makeVertex(new Point2D.Float(1f, 1f));
+		RouteVertex A3 = rc.makeVertex(new Point2D.Float(2f, 2f));
+		RouteVertex A4 = rc.makeVertex(new Point2D.Float(3f, 3f));
+		RouteVertex A5 = rc.makeVertex(new Point2D.Float(140f, 140f));
+		RouteVertex A6 = rc.makeVertex(new Point2D.Float(5f, 5f));
 		
-		RouteVertex B1 = rc.makeVertex(10f, 10f);
-		RouteVertex B2 = rc.makeVertex(11f, 11f);
-		RouteVertex B3 = rc.makeVertex(12f, 12f);
+		RouteVertex B1 = rc.makeVertex(new Point2D.Float(10f, 10f));
+		RouteVertex B2 = rc.makeVertex(new Point2D.Float(11f, 11f));
+		RouteVertex B3 = rc.makeVertex(new Point2D.Float(12f, 12f));
 		
-		RouteVertex C1 = rc.makeVertex(20f, 20f);
-		RouteVertex C2 = rc.makeVertex(21f, 21f);
+		RouteVertex C1 = rc.makeVertex(new Point2D.Float(20f, 20f));
+		RouteVertex C2 = rc.makeVertex(new Point2D.Float(21f, 21f));
 		
 		//Connection 1 oneway
 		rc.addEdge(A1, A2, (short)20, true, true, true, true, true, "A1<->A2");
@@ -98,8 +100,8 @@ public class RouteControllerTest {
 	
 	private String getResult(RouteVertex A1, RouteVertex A6, String fromToStr, WeightEnum weightEnum) {
 		String result = null;
-		if(rc.hasRoute(A1, A6, weightEnum)) {
-			Iterable<RouteEdge> edges = rc.getRoute(A1, A6, weightEnum);
+		Iterable<RouteEdge> edges = rc.getRoute(A1, A6, weightEnum);
+		if(edges != null) {
 			double distSum = 0;
 			int count = 0;
 			StringBuilder sb =  new StringBuilder();
