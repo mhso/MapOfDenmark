@@ -43,7 +43,6 @@ public class OSMParser extends SAXAdapter {
     private transient short maxSpeed;
     private transient RouteController route;
     private transient HashMap<Point2D.Float, RouteVertex> vertexMap;
-    private transient boolean waysFinished = false;
 
     private transient boolean finished = false;
     private transient OSMReader reader;
