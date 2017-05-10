@@ -1,6 +1,7 @@
 package dk.itu.n.danmarkskort.backend;
 
 import dk.itu.n.danmarkskort.Main;
+import dk.itu.n.danmarkskort.address.AddressController;
 import dk.itu.n.danmarkskort.models.*;
 import dk.itu.n.danmarkskort.kdtree.*;
 
