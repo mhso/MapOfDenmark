@@ -18,7 +18,7 @@ import dk.itu.n.danmarkskort.models.RouteModel;
 public class RouteController {
 	private int vertexCount;
 	private List<RouteEdge> routeEdges;
-	private List<RouteVertex> vertices;
+	//private List<RouteVertex> vertices;
 	private RouteGraph routeGraph;
 	private Region routeRegion;
 	private boolean debug = false;
@@ -29,7 +29,6 @@ public class RouteController {
 	public RouteController(){
 		vertexCount = 0;
 		routeEdges = new ArrayList<RouteEdge>();
-		vertices = new ArrayList<RouteVertex>();
 	}
 	
 	/**
@@ -39,12 +38,11 @@ public class RouteController {
 	 */
 	public RouteVertex makeVertex(float lon, float lat){
 		RouteVertex vertex = new RouteVertex(vertexCount, new Point2D.Float(lon, lat));
-		vertices.add(vertex);
 		vertexCount++;
 		return vertex;
 	}
 	
-	public void addEdge(RouteVertex fromVertex, RouteVertex toVertex, Integer maxSpeed,
+	public void addEdge(RouteVertex fromVertex, RouteVertex toVertex, short maxSpeed,
 			boolean forwardAllowed, boolean backwardAllowed, boolean carsAllowed,
 			boolean bikesAllowed, boolean walkAllowed, String description){
 		
@@ -74,7 +72,6 @@ public class RouteController {
 	
 	public void cleanUp(){
 		routeEdges = null;
-		vertices = null;
 		ReuseRouteEdgeMetaObj.clear();
 	}
 	
@@ -104,11 +101,7 @@ public class RouteController {
 	
 	public int getNumOfRouteEdges() { return routeEdges.size(); }
 
-	public int getNumOfVertices() { return vertices.size(); }
-
 	public List<RouteEdge> getRouteEdges() { return routeEdges; }
-
-	public List<RouteVertex> getVertices() { return vertices; }
 	
 	public KDTree<RouteEdge> getEdgeTree() { return edgeTree; }
 	
@@ -126,7 +119,6 @@ public class RouteController {
 	
 	public String toString() {
 		return "RouteController: vertexCount=" + vertexCount
-				+ " getNumOfVertices=" + getNumOfVertices()
 				+ " getNumOfRouteEdges=" + getNumOfRouteEdges();
 	}
 	
@@ -170,12 +162,13 @@ public class RouteController {
 					lastModel.setDistance(distSum);
 				}else{
 					routeEnum = calcDirectionType(edge, lastEdge);
-					if(count == sizeOfEdges) routeEnum = RouteEnum.AT_DESTINATION;
+					
 					distSum = 0;
 					RouteModel routeModel = new RouteModel(routeEnum, edge.getDescription(), edge.getMaxSpeed(), edge.getDistance());
 					lastModel = routeModel;
 					routeModels.add(routeModel);
 				}
+				if(count == sizeOfEdges) lastModel.updateDirectionAndDescription(RouteEnum.AT_DESTINATION, lastEdge.getDescription());
 				testEdgeBounds(routeBounds, edge);
 				lastEdge = edge;
 				
