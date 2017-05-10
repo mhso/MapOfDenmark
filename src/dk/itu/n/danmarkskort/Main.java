@@ -29,7 +29,7 @@ public class Main {
 	public final static boolean saveParsedAddresses = true;
 	public final static boolean nearest = true;
 
-	public static boolean useLauncher = true;
+    public static boolean useLauncher = true;
 	public static OSMReader osmReader;
 	public static JFrame window;
 	public static OSMParser model;
@@ -41,8 +41,8 @@ public class Main {
 	public static TileController tileController;
 	public static RouteController routeController;
 	public static Style style;
-	
-	public static void main(String[] args) {
+
+    public static void main(String[] args) {
 		System.setProperty("awt.useSystemAAFontSettings","on");
 		System.setProperty("swing.aatext", "true");
 		userPreferences = (UserPreferences)Util.readObjectFromFile(DKConstants.USERPREF_PATH);
@@ -59,7 +59,6 @@ public class Main {
 	}
 
 	public static void startup(String[] args) {
-		if(window != null) window.getContentPane().removeAll();
 		addressController  =  new AddressController();
 		osmReader = new OSMReader();
 		model = new OSMParser(osmReader);
@@ -92,7 +91,7 @@ public class Main {
 			public void run() {
 				osmReader.parseFile(args[0], model);
 				ReuseStringObj.clear();
-				if(window == null) main();
+				main();
 		        shutdown();
 			}
 		};
@@ -102,7 +101,7 @@ public class Main {
 	public static void main() {
 		makeFrame();
 	}
-
+	
 	public static void shutdown() {}
 
 	public static void log(Object text) {
