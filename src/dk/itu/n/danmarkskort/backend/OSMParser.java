@@ -169,10 +169,6 @@ public class OSMParser extends SAXAdapter {
                 temporaryWayReferences.put(way.getID(), way);
                 break;
             case "relation":
-                if(!waysFinished) {
-                    waysFinished = true;
-                    vertexMap = null;
-                }
                 relation = new ParsedRelation(Long.parseLong(atts.getValue("id")));
                 temporaryRelationReferences.put(relation.getID(), relation);
                 break;
