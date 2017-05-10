@@ -19,15 +19,6 @@ public class RouteDijkstraAStar {
     private boolean debug = false;
     private int source, target;
     private RouteVertex sourceVertex, targetVertex;
-    
-    private double heuristics(RouteVertex sourceVertex, Integer maxSpeed){
-    	Point2D source = Util.toRealCoords(sourceVertex);
-    	Point2D target = Util.toRealCoords(targetVertex);
-    	double distance = Util.distanceInMeters(source, target);
-    	double speed = 1;
-    	if(maxSpeed != null) speed = maxSpeed;
-    	return distance / speed;
-    }
 
     /**
      * Computes a shortest-paths tree from the source vertex {@code s} to every other
@@ -57,7 +48,7 @@ public class RouteDijkstraAStar {
 
         // relax vertices in order of distance from s
         pq = new IndexMinPQ<Double>(graph.getNumOfVertices());
-        pq.insert(source, distTo[source] + heuristics(sourceVertex, null));
+        pq.insert(source, distTo[source] + heuristics(sourceVertex, -1));
     	while (!pq.isEmpty()) {
             int v = pq.delMin();
             if(v == target) break;
@@ -76,6 +67,21 @@ public class RouteDijkstraAStar {
 
         // check optimality conditions
         //assert check(graph, source);
+    }
+    
+    private double heuristics(RouteVertex sourceVertex, int maxSpeed){
+    	Point2D source = Util.toRealCoords(sourceVertex);
+    	Point2D target = Util.toRealCoords(targetVertex);
+    	double distance = Util.distanceInMeters(source, target);
+    	double speed = 1;
+    	if(maxSpeed == -1) maxSpeed = 1;
+    	switch(weightEnum){
+		case SPEED_CAR: speed = maxSpeed;
+			break;
+		default: speed = 1;
+			break;
+    	}
+    	return distance / speed;
     }
 
     // relax edge e and update pq if changed

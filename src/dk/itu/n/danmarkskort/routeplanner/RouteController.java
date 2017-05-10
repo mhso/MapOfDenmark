@@ -23,6 +23,7 @@ public class RouteController {
 	private Region routeRegion;
 	private boolean debug = false;
 	public boolean isDrawingDjikstra = false;
+	private boolean useDjikstraWithAStar = true;
 	KDTree<RouteEdge> edgeTree;
 	
 	public RouteController(){
@@ -78,15 +79,27 @@ public class RouteController {
 	}
 	
 	public Iterable<RouteEdge> getRoute(RouteVertex from, RouteVertex to, WeightEnum weightEnum){
-		//RouteDijkstra routeDijkstra = new RouteDijkstra(routeGraph, from.getId(), to.getId(), weightEnum);
-		RouteDijkstraAStar routeDijkstra = new RouteDijkstraAStar(routeGraph, from, to, weightEnum);
-		return routeDijkstra.pathTo(to.getId());
+		useDjikstraWithAStar = Main.userPreferences.useDjikstraWithAStar();
+		if(useDjikstraWithAStar) {
+			System.out.println("Using AStar");
+			RouteDijkstraAStar routeDijkstra = new RouteDijkstraAStar(routeGraph, from, to, weightEnum);
+			return routeDijkstra.pathTo(to.getId());
+		}else{
+			RouteDijkstra routeDijkstra = new RouteDijkstra(routeGraph, from.getId(), to.getId(), weightEnum);
+			return routeDijkstra.pathTo(to.getId());
+		}
 	}
 	
 	public boolean hasRoute(RouteVertex from, RouteVertex to, WeightEnum weightEnum){
-		//RouteDijkstra routeDijkstra = new RouteDijkstra(routeGraph, from.getId(), to.getId(), weightEnum);
-		RouteDijkstraAStar routeDijkstra = new RouteDijkstraAStar(routeGraph, from, to, weightEnum);
-		return routeDijkstra.hasPathTo(to.getId());
+		useDjikstraWithAStar = Main.userPreferences.useDjikstraWithAStar();
+		if(useDjikstraWithAStar) {
+			System.out.println("Using AStar");
+			RouteDijkstraAStar routeDijkstra = new RouteDijkstraAStar(routeGraph, from, to, weightEnum);
+			return routeDijkstra.hasPathTo(to.getId());
+		}else{
+			RouteDijkstra routeDijkstra = new RouteDijkstra(routeGraph, from.getId(), to.getId(), weightEnum);	
+			return routeDijkstra.hasPathTo(to.getId());
+		}
 	}
 
 	public int getVertexCount() { return vertexCount; }
@@ -132,8 +145,9 @@ public class RouteController {
 		RouteEdge fromEdge = searchEdgesKDTree(from);
 		RouteEdge toEdge = searchEdgesKDTree(to);
 		
-		if(fromEdge != null && toEdge != null && hasRoute(fromEdge.getFrom(), toEdge.getFrom(), weightEnum)) {
-			Iterable<RouteEdge> edges = getRoute(fromEdge.getFrom(), toEdge.getFrom(), weightEnum);
+		Iterable<RouteEdge> edges = getRoute(fromEdge.getFrom(), toEdge.getFrom(), weightEnum);
+		
+		if(fromEdge != null && toEdge != null && edges != null) {
 			
 			RouteEdge lastEdge = null;
 			RouteModel lastModel = null;
