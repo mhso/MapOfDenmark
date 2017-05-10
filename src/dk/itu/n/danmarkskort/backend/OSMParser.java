@@ -173,7 +173,6 @@ public class OSMParser extends SAXAdapter {
                 if(!waysFinished) {
                     waysFinished = true;
                     vertexMap = null;
-                    nodeMap = null; // none of the relations we save have nodes
                 }
                 relation = new ParsedRelation(Long.parseLong(atts.getValue("id")));
                 temporaryRelationReferences.put(relation.getID(), relation);
@@ -187,6 +186,7 @@ public class OSMParser extends SAXAdapter {
                 String role = atts.getValue("role");
                 switch(type) {
                     case "node":
+                        if(nodeMap.get(ref) != null) currentNodes.add(nodeMap.get(ref));
                         break;
                     case "way":
                         if(temporaryWayReferences.containsKey(ref)) relation.addMember(temporaryWayReferences.get(ref), role);
@@ -239,6 +239,7 @@ public class OSMParser extends SAXAdapter {
 
     private void addCurrent() {
         if(way != null) way.addNodes(currentNodes);
+        else if(relation != null && currentNodes.size() > 0) relation.addNodes(currentNodes);
 
         if(waytype != null) {
             if(way != null) {
