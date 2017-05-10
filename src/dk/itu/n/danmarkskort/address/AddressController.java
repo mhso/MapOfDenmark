@@ -2,17 +2,13 @@ package dk.itu.n.danmarkskort.address;
 
 import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.TimerUtil;
-import dk.itu.n.danmarkskort.Util;
 import dk.itu.n.danmarkskort.kdtree.KDTree;
 import dk.itu.n.danmarkskort.kdtree.KDTreeNode;
 import dk.itu.n.danmarkskort.models.ParsedAddress;
-import dk.itu.n.danmarkskort.models.ReuseStringObj;
-import dk.itu.n.danmarkskort.routeplanner.RouteEdge;
-import dk.itu.n.danmarkskort.routeplanner.RouteGraph;
+
 
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -161,7 +157,8 @@ public class AddressController {
 		timerUtilB.off();
 		Main.log("Addresses PostcodeCityCombination time: " + timerUtilB.toString());
 		Main.log("Addresses (accepted): " + getAddressSize());
-		Main.log("Addresses (not accepted): " + addressesNotAcceptedCount);		
+		Main.log("Addresses (not accepted): " + addressesNotAcceptedCount);	
+		Main.log("Postcodes size: " + addressHolder.postcodes.size());
 	}
 	
 	public int getAddressSize() {
@@ -171,6 +168,6 @@ public class AddressController {
 	private void makeTree(){
 		List<Housenumber> housenumbers = addressHolder.getHousenumbers();
 		Main.log("AddressController -> MakeTree size: " + housenumbers.size());
-		housenumberTree = new KDTreeNode<>(housenumbers, 2000);
+		housenumberTree = new KDTreeNode<>(housenumbers, 1000);
 	}
 }

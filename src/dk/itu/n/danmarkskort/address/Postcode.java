@@ -8,18 +8,18 @@ import java.util.Map.Entry;
 
 import org.apache.commons.lang3.StringUtils;
 
+import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.models.RegionFloat;
 import dk.itu.n.danmarkskort.models.ReuseStringObj;
 
-public class Postcode implements Serializable {
+public class Postcode  extends HashMap<String,Street> implements Serializable {
 	private static final long serialVersionUID = 2217407726502936291L;
 	private String postcode, city;
-	private Map<String, Street> streets;
 	
 	Postcode(String postcode, String city){
+		super(200);
 		this.postcode = ReuseStringObj.make(postcode);
 		setCity(city);
-		streets = new HashMap<String, Street>(2000);
 	}
 
 	public String getCity() { return city.toString(); }
@@ -27,14 +27,14 @@ public class Postcode implements Serializable {
 	
 	public int count(){
 		int size = 0;
-		for(Street st : streets.values()) size += st.count();
+		for(Street st : this.values()) size += st.count();
 		return size;
 	}
 	
 	public void addStreet(String street){
 		Street newStreet = getStreet(street);
 		if(newStreet == null) newStreet = new Street(this, street);
-		streets.put(ReuseStringObj.make(street.toLowerCase()), newStreet);
+		this.put(ReuseStringObj.make(street.toLowerCase()), newStreet);
 	}
 	
 	public void addAddress(String street, String housenumber, Point2D.Float latLon){
@@ -42,15 +42,15 @@ public class Postcode implements Serializable {
 			Street st = getStreet(street);
 			if(st == null) st = new Street(this, street);
 			st.addHousenumber(housenumber, latLon);
-			streets.put(ReuseStringObj.make(street.toLowerCase()), st);
+			this.put(ReuseStringObj.make(street.toLowerCase()), st);
 		}
 	}
 
-	public Map<String, Street> getStreets() { return streets; }
+	public Map<String, Street> getStreets() { return this; }
 	
 	public Street getStreet(String street) {
 		if(street == null) return null;
-		return streets.get(street.toLowerCase());
+		return this.get(street.toLowerCase());
 	}
 
 	public String getPostcode() { return postcode.toString(); }

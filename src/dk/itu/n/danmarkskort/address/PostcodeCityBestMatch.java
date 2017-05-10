@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.models.ReuseStringObj;
 
 public class PostcodeCityBestMatch {
@@ -16,8 +17,8 @@ public class PostcodeCityBestMatch {
 	}
 	
 	private void init(){
-		combinations = new ArrayList<Combine>(5000);
-		objMatches = new HashMap<String, Combine>(5000);
+		combinations = new ArrayList<Combine>(1200);
+		objMatches = new HashMap<String, Combine>(1200);
 	}
 	
 	public void add(String postcode, String city){

@@ -6,7 +6,7 @@ import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.routeplanner.RouteEdgeMeta;
 
 public class ReuseRouteEdgeMetaObj {
-	private static HashMap<String, RouteEdgeMeta> map = new HashMap<String, RouteEdgeMeta>();
+	private static HashMap<String, RouteEdgeMeta> map = new HashMap<String, RouteEdgeMeta>(120);
 	private static int keysTotal, keysReused, keysCreated;
 	
 	public static RouteEdgeMeta make(RouteEdgeMeta routeEdgeMeta){

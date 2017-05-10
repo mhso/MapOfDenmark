@@ -7,7 +7,7 @@ public class RouteGraph implements Serializable {
 	private static final String NEWLINE = System.getProperty("line.separator");
 	private final int numOfVertices;			// number of vertices in this digraph
 	private int numOfEdges;						// number of edges in this digraph
-	private Bag<RouteEdge>[] adjacent;			// adj[v] = adjacency list for vertex v
+	private ResizingArrayBag<RouteEdge>[] adjacent;			// adj[v] = adjacency list for vertex v
 	//private int[] indegree;						// indegree[v] = indegree of vertex v
 	
 	/**
@@ -20,9 +20,9 @@ public class RouteGraph implements Serializable {
         this.numOfVertices = numOfVertices;
         numOfEdges = 0;
         //this.indegree = new int[numOfVertices];
-        adjacent = (Bag<RouteEdge>[]) new Bag[numOfVertices];
+        adjacent = (ResizingArrayBag<RouteEdge>[]) new ResizingArrayBag[numOfVertices];
         
-        for (int i= 0; i < numOfVertices; i++) adjacent[i] = new Bag<RouteEdge>();
+        for (int i= 0; i < numOfVertices; i++) adjacent[i] = new ResizingArrayBag<RouteEdge>();
     }
 
     /**
@@ -102,7 +102,7 @@ public class RouteGraph implements Serializable {
      * @return all edges in this edge-weighted digraph, as an iterable
      */
     public Iterable<RouteEdge> edges() {
-    	Bag<RouteEdge> list = new Bag<RouteEdge>();
+    	ResizingArrayBag<RouteEdge> list = new ResizingArrayBag<RouteEdge>();
         for (int vertexId = 0; vertexId < numOfVertices; vertexId++) {
             for (RouteEdge edge : adjacent(vertexId)) {
                 list.add(edge);

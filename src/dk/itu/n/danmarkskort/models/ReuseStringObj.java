@@ -5,7 +5,7 @@ import java.util.HashMap;
 import dk.itu.n.danmarkskort.Main;
 
 public class ReuseStringObj {
-	private static HashMap<String, String> map = new HashMap<String, String>();
+	private static HashMap<String, String> map = new HashMap<String, String>(145000);
 	private static int keysTotal, keysReused, keysCreated;
 	
 	public static String make(String key){

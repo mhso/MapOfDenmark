@@ -14,17 +14,16 @@ import dk.itu.n.danmarkskort.models.ReuseStringObj;
 public class Street extends HashMap<String,Housenumber> implements Serializable {
 	private static final long serialVersionUID = -2943891636428003556L;
 	private String street;
-	//private Map<String, Housenumber> housenumbers;
 	private Postcode postcode;
+	
+	Street(Postcode postcode, String street){
+		super(50);
+		this.setPostcode(postcode);
+		this.street = ReuseStringObj.make(street);
+	}
 	
 	public Postcode getPostcode() { return postcode; }
 	public void setPostcode(Postcode postcode) { this.postcode = postcode; }
-	
-	Street(Postcode postcode, String street){
-		this.setPostcode(postcode);
-		this.street = ReuseStringObj.make(street);
-		//housenumbers = new HashMap<String, Housenumber>();
-	}
 	
 	public int count(){ return this.size(); }
 	

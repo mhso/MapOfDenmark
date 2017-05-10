@@ -25,7 +25,7 @@ public class RouteController {
 
 	public RouteController(){
 		vertexCount = 0;
-		routeEdges = new ArrayList<RouteEdge>();
+		routeEdges = new ArrayList<RouteEdge>(1610400);
 	}
 
 	/**
@@ -70,16 +70,18 @@ public class RouteController {
 			vertexMap.putIfAbsent(to, new RouteVertex(vertexMap.size(), to));
 			edge.setTo(vertexMap.get(to));
 		}
+		vertexCount = vertexMap.size();
 		routeGraph = new RouteGraph(vertexMap.size());
 		vertexMap = null;
 
-		for(RouteEdge edge : routeEdges) routeGraph.addEdge(edge);
+		for(RouteEdge edge : routeEdges) routeGraph.addEdge(edge) ;
+		Main.log("vertexMap.size(): " + vertexCount);
 		makeTree();	
 		cleanUp();
 	}
 
 	private void makeTree() {
-		edgeTree = new KDTreeNode<>(routeEdges, 2000);
+		edgeTree = new KDTreeNode<>(routeEdges, 1000);
 	}
 	
 	public void cleanUp(){
