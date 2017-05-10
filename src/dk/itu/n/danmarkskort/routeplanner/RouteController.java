@@ -81,7 +81,6 @@ public class RouteController {
 	public Iterable<RouteEdge> getRoute(RouteVertex from, RouteVertex to, WeightEnum weightEnum){
 		useDjikstraWithAStar = Main.userPreferences.useDjikstraWithAStar();
 		if(useDjikstraWithAStar) {
-			System.out.println("Using AStar");
 			RouteDijkstraAStar routeDijkstra = new RouteDijkstraAStar(routeGraph, from, to, weightEnum);
 			return routeDijkstra.pathTo(to.getId());
 		}else{
@@ -93,7 +92,6 @@ public class RouteController {
 	public boolean hasRoute(RouteVertex from, RouteVertex to, WeightEnum weightEnum){
 		useDjikstraWithAStar = Main.userPreferences.useDjikstraWithAStar();
 		if(useDjikstraWithAStar) {
-			System.out.println("Using AStar");
 			RouteDijkstraAStar routeDijkstra = new RouteDijkstraAStar(routeGraph, from, to, weightEnum);
 			return routeDijkstra.hasPathTo(to.getId());
 		}else{

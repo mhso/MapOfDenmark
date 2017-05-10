@@ -15,7 +15,6 @@ public class Postcode implements Serializable {
 	private static final long serialVersionUID = 2217407726502936291L;
 	private String postcode, city;
 	private Map<String, Street> streets;
-	private RegionFloat region;
 	
 	Postcode(String postcode, String city){
 		this.postcode = ReuseStringObj.make(postcode);
@@ -25,23 +24,6 @@ public class Postcode implements Serializable {
 
 	public String getCity() { return city.toString(); }
 	public void setCity(String city) { this.city = ReuseStringObj.make(city); }
-	
-	public RegionFloat getRegion(){
-		if(region == null) region = genRegion();
-		return region;
-	}
-
-	private RegionFloat genRegion(){
-		RegionFloat region =  new RegionFloat(Float.NEGATIVE_INFINITY, Float.NEGATIVE_INFINITY, Float.MAX_VALUE, Float.MAX_VALUE);
-		for(Street st : streets.values()){
-			RegionFloat stR = st.getRegion();
-				if(stR.x1 > region.x1) region.x1 = stR.x1;
-				if(stR.y1 > region.y1) region.y1 = stR.y1;
-				if(stR.x2 < region.x2) region.x2 = stR.x2;
-				if(stR.y2 < region.y2) region.y2 = stR.y2;
-		}
-		return region;
-	}
 	
 	public int count(){
 		int size = 0;
@@ -60,7 +42,7 @@ public class Postcode implements Serializable {
 			Street st = getStreet(street);
 			if(st == null) st = new Street(this, street);
 			st.addHousenumber(housenumber, latLon);
-			streets.put(street.toLowerCase(), st);
+			streets.put(ReuseStringObj.make(street.toLowerCase()), st);
 		}
 	}
 
