@@ -26,7 +26,6 @@ public class RouteDijkstraAStar {
     	double distance = Util.distanceInMeters(source, target);
     	double speed = 1;
     	if(maxSpeed != null) speed = maxSpeed;
-    	System.out.println(distance);
     	return distance / speed;
     }
 

@@ -142,6 +142,8 @@ public class RouteDijkstra {
 	     		 Main.map.repaint();
 	     		 timer.stop();
 	     	 }
+	     	 
+	     	Main.map.repaint();
 		}
     }
 }
