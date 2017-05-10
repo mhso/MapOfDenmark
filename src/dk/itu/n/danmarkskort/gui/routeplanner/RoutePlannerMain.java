@@ -33,13 +33,13 @@ public class RoutePlannerMain {
 	/**
 	 * Create the application.
 	 */
-	public RoutePlannerMain(BufferedImage routeImage, String routeFrom, String routeTo, String routeDistance, WeightEnum weightEnum, List<RouteModel> routeModels) {
+	public RoutePlannerMain(BufferedImage routeImage, String routeFrom, String routeTo, WeightEnum weightEnum, List<RouteModel> routeModels) {
 		ROUTE_FROM = routeFrom;
 		ROUTE_TO = routeTo;
 		this.weightEnum = weightEnum;
 		
 		initialize();
-		makeRoute(ROUTE_FROM, ROUTE_TO, routeDistance, routeModels);
+		makeRoute(ROUTE_FROM, ROUTE_TO, routeModels);
 		frmRouteplanner.setVisible(true);
 		routeImage(routeImage);
 		
@@ -157,7 +157,7 @@ public class RoutePlannerMain {
 		}
 	}
 	
-	private void makeRoute(String routeFrom, String routeTo, String routeDistance,  List<RouteModel> routeModels){
+	private void makeRoute(String routeFrom, String routeTo,  List<RouteModel> routeModels){
 		RoutePartBasic routePartBasic = new RoutePartBasic(routeFrom, routeTo, weightEnum, panelRouteDescription, routeModels);
 	}
 }

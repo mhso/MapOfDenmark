@@ -51,7 +51,7 @@ public class Address{
  	public String toStringShort(){
  		StringBuilder sb = new StringBuilder();
  			if(street != null) sb.append(street +" ");
- 			if(housenumber != null) sb.append(housenumber + " ");
+ 			if(housenumber != null) sb.append(housenumber + ", ");
  			if(postcode != null) sb.append(postcode + " ");
  			if(getCity() != null) sb.append(getCity());
  		return sb.toString().trim();
