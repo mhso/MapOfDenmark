@@ -2,6 +2,8 @@ package dk.itu.n.danmarkskort.models;
 
 import java.util.HashMap;
 
+import dk.itu.n.danmarkskort.Main;
+
 public class ReuseStringObj {
 	private static HashMap<String, String> map = new HashMap<String, String>();
 	private static int keysTotal, keysReused, keysCreated;
@@ -21,7 +23,7 @@ public class ReuseStringObj {
 	}
 	
 	public static void clear(){
-		System.out.println("ReuseStringObj, keysTotal: " + keysTotal + " keysReused: " + keysReused + " keysCreated: " + keysCreated);
+		Main.log("ReuseStringObj, keysTotal: " + keysTotal + " keysReused: " + keysReused + " keysCreated: " + keysCreated);
 		map.clear();
 	}
 }

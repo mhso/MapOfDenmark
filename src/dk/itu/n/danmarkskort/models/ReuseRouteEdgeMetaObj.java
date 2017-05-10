@@ -2,6 +2,7 @@ package dk.itu.n.danmarkskort.models;
 
 import java.util.HashMap;
 
+import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.routeplanner.RouteEdgeMeta;
 
 public class ReuseRouteEdgeMetaObj {
@@ -22,7 +23,7 @@ public class ReuseRouteEdgeMetaObj {
 	}
 	
 	public static void clear(){
-		System.out.println("ReuseRouteEdgeMetaObj, keysTotal: " + keysTotal + " keysReused: " + keysReused + " keysCreated: " + keysCreated);
+		Main.log("ReuseRouteEdgeMetaObj, keysTotal: " + keysTotal + " keysReused: " + keysReused + " keysCreated: " + keysCreated);
 		map.clear();
 	}
 }
