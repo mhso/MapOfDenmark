@@ -20,12 +20,18 @@ public class RouteDijkstraAStar {
     private int source, target;
     private RouteVertex sourceVertex, targetVertex;
     
-    private double heuristics(RouteVertex sourceVertex, Integer maxSpeed){
+    private double heuristics(RouteVertex sourceVertex, int maxSpeed){
     	Point2D source = Util.toRealCoords(sourceVertex);
     	Point2D target = Util.toRealCoords(targetVertex);
     	double distance = Util.distanceInMeters(source, target);
     	double speed = 1;
-    	if(maxSpeed != null) speed = maxSpeed;
+    	if(maxSpeed == -1) maxSpeed = 1;
+    	switch(weightEnum){
+		case SPEED_CAR: speed = maxSpeed;
+			break;
+		default: speed = 1;
+			break;
+    	}
     	return distance / speed;
     }
 
@@ -57,7 +63,7 @@ public class RouteDijkstraAStar {
 
         // relax vertices in order of distance from s
         pq = new IndexMinPQ<Double>(graph.getNumOfVertices());
-        pq.insert(source, distTo[source] + heuristics(sourceVertex, null));
+        pq.insert(source, distTo[source] + heuristics(sourceVertex, -1));
     	while (!pq.isEmpty()) {
             int v = pq.delMin();
             if(v == target) break;

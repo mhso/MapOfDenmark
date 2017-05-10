@@ -335,6 +335,23 @@ public class SettingsPage extends JPanel {
         
         centerPanel.add(Box.createRigidArea(new Dimension(20, 10)));
         
+        JPanel useDjikstraWithAStarPanel = new JPanel();
+        useDjikstraWithAStarPanel.setOpaque(false);
+        centerPanel.add(useDjikstraWithAStarPanel);
+        useDjikstraWithAStarPanel.setLayout(new BorderLayout(15, 0));
+        
+        JLabel useDjikstraWithAStarLabel = new JLabel("Use Djikstra with A* as search algorithm: ");
+        useDjikstraWithAStarPanel.add(useDjikstraWithAStarLabel, BorderLayout.WEST);
+        
+        JCheckBox useDjikstraWithAStarCheckBox = new JCheckBox();
+        useDjikstraWithAStarCheckBox.addActionListener(e ->
+        		Main.userPreferences.setUseDjikstraWithAStar(useDjikstraWithAStarCheckBox.isSelected()));
+        useDjikstraWithAStarCheckBox.setBackground(panelCenter.getBackground());
+        useDjikstraWithAStarCheckBox.setSelected(Main.userPreferences.useDjikstraWithAStar());
+        useDjikstraWithAStarPanel.add(useDjikstraWithAStarCheckBox, BorderLayout.EAST);
+        
+        centerPanel.add(Box.createRigidArea(new Dimension(20, 10)));
+        
         JPanel drawDjikstraPanel = new JPanel();
         drawDjikstraPanel.setOpaque(false);
         centerPanel.add(drawDjikstraPanel);
@@ -343,11 +360,11 @@ public class SettingsPage extends JPanel {
         JLabel drawDjikstraLabel = new JLabel("DEBUG: Draw Djikstra/A*");
         drawDjikstraPanel.add(drawDjikstraLabel, BorderLayout.WEST);
         
-        JCheckBox drawDjikstraButton = new JCheckBox();
-        drawDjikstraButton.addActionListener(e -> Main.routeController.isDrawingDjikstra = drawDjikstraButton.isSelected());
-        drawDjikstraButton.setBackground(panelCenter.getBackground());
-        drawDjikstraButton.setSelected(Main.userPreferences.isHighlightingNearestRoad());
-        drawDjikstraPanel.add(drawDjikstraButton, BorderLayout.EAST);
+        JCheckBox drawDjikstraCheckBox = new JCheckBox();
+        drawDjikstraCheckBox.addActionListener(e -> Main.routeController.isDrawingDjikstra = drawDjikstraCheckBox.isSelected());
+        drawDjikstraCheckBox.setBackground(panelCenter.getBackground());
+        drawDjikstraCheckBox.setSelected(Main.userPreferences.isHighlightingNearestRoad());
+        drawDjikstraPanel.add(drawDjikstraCheckBox, BorderLayout.EAST);
         
         JPanel panelSouth = new JPanel();
         panelSouth.setOpaque(false);
