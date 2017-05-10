@@ -43,7 +43,6 @@ public class OSMParser extends SAXAdapter {
     private transient int maxSpeed;
     private transient RouteController route;
     private transient HashMap<Point2D.Float, RouteVertex> vertexMap;
-    private transient boolean waysFinished = false;
 
     private transient boolean finished = false;
     private transient OSMReader reader;
@@ -170,10 +169,6 @@ public class OSMParser extends SAXAdapter {
                 temporaryWayReferences.put(way.getID(), way);
                 break;
             case "relation":
-                if(!waysFinished) {
-                    waysFinished = true;
-                    vertexMap = null;
-                }
                 relation = new ParsedRelation(Long.parseLong(atts.getValue("id")));
                 temporaryRelationReferences.put(relation.getID(), relation);
                 break;
@@ -315,15 +310,15 @@ public class OSMParser extends SAXAdapter {
     }
 
     private void temporaryClean() {
-
+        ReuseStringObj.clear();
+        vertexMap = null;
         nodeMap = null;
         temporaryWayReferences = null;
         temporaryRelationReferences = null;
     }
 
     private void finalClean() {
-    	ReuseStringObj.clear();
-        System.gc();
+        if(Main.debug) System.gc();
     }
     
     public boolean isFinished() {
