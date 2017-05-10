@@ -13,11 +13,7 @@ import java.awt.geom.Point2D;
 import java.io.Serializable;
 import java.util.*;
 
-public class OSMParser extends SAXAdapter implements Serializable {
-	private static final long serialVersionUID = 8120338349077111532L;
-
-	private float minLatBoundary, minLonBoundary, maxLatBoundary, maxLonBoundary, lonFactor;
-
+public class OSMParser extends SAXAdapter {
     private transient NodeMap nodeMap;
     private transient HashMap<Long, ParsedWay> temporaryWayReferences;
     private transient HashMap<Long, ParsedRelation> temporaryRelationReferences;
@@ -25,8 +21,6 @@ public class OSMParser extends SAXAdapter implements Serializable {
 
     private transient EnumMap<WayType, ArrayList<ParsedItem>> enumMap;
     private transient EnumMap<WayType, ArrayList<ParsedPlace>> places;
-    public EnumMap<WayType, KDTree<ParsedItem>> enumMapKD;
-    private EnumMap<WayType, KDTree<ParsedPlace>> enumMapPlacesKD;
 
     private transient ParsedWay way;
     private transient ParsedRelation relation;
@@ -87,8 +81,8 @@ public class OSMParser extends SAXAdapter implements Serializable {
         Main.log("Ways and Relations saved: " + numItemsSaved);
 
         temporaryClean();
-        enumMapKD = new EnumMap<>(WayType.class);
-        enumMapPlacesKD = new EnumMap<>(WayType.class);
+        Main.model.enumMapKD = new EnumMap<>(WayType.class);
+        Main.model.enumMapPlacesKD = new EnumMap<>(WayType.class);
         Main.log("Splitting data into KDTrees");
 
         for(WayType wt : WayType.values()) {
@@ -109,8 +103,8 @@ public class OSMParser extends SAXAdapter implements Serializable {
                 	if(suburbs.isEmpty()) suburbsTree = null;
                 	else suburbsTree = new KDTreeNode<>(suburbs);
                 	
-                	enumMapPlacesKD.put(WayType.PLACE_TOWN, townsTree);
-                	enumMapPlacesKD.put(WayType.PLACE_SUBURB, suburbsTree);
+                	Main.model.enumMapPlacesKD.put(WayType.PLACE_TOWN, townsTree);
+                	Main.model.enumMapPlacesKD.put(WayType.PLACE_SUBURB, suburbsTree);
                 }
             }
             else {
@@ -120,17 +114,17 @@ public class OSMParser extends SAXAdapter implements Serializable {
             }
             
             enumMap.remove(wt);
-            if(tree != null) enumMapKD.put(wt, tree);
+            if(tree != null) Main.model.enumMapKD.put(wt, tree);
         }
 
         Main.log("Deleting nodes, adding float[] coords");
-        for(Map.Entry<WayType, KDTree<ParsedItem>> entry : enumMapKD.entrySet()) {
+        for(Map.Entry<WayType, KDTree<ParsedItem>> entry : Main.model.enumMapKD.entrySet()) {
             KDTree<ParsedItem> current = entry.getValue();
             if(current != null) for(ParsedItem item : current) item.nodesToCoords();
         }
 
         Main.log("Deleting old references");
-        for(Map.Entry<WayType, KDTree<ParsedItem>> entry : enumMapKD.entrySet()) {
+        for(Map.Entry<WayType, KDTree<ParsedItem>> entry : Main.model.enumMapKD.entrySet()) {
             KDTree<ParsedItem> current = entry.getValue();
             if(current != null) for (ParsedItem item : current) item.deleteOldRefs();
         }
@@ -147,23 +141,28 @@ public class OSMParser extends SAXAdapter implements Serializable {
     public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
     	switch(qName) {
             case "bounds":
-                minLatBoundary = Float.parseFloat(atts.getValue("minlat"));
-                minLonBoundary = Float.parseFloat(atts.getValue("minlon"));
-                maxLatBoundary = Float.parseFloat(atts.getValue("maxlat"));
-                maxLonBoundary = Float.parseFloat(atts.getValue("maxlon"));
+            	float minLatBoundary = Float.parseFloat(atts.getValue("minlat"));
+            	float minLonBoundary = Float.parseFloat(atts.getValue("minlon"));
+            	float maxLatBoundary = Float.parseFloat(atts.getValue("maxlat"));
+                float maxLonBoundary = Float.parseFloat(atts.getValue("maxlon"));
                 float avglat = minLatBoundary + (maxLatBoundary - minLatBoundary) / 2;
-                lonFactor = (float) Math.cos(avglat / 180 * Math.PI);
+                float lonFactor = (float) Math.cos(avglat / 180 * Math.PI);
                 minLonBoundary *= lonFactor;
                 maxLonBoundary *= lonFactor;
                 minLatBoundary = -minLatBoundary;
                 maxLatBoundary = -maxLatBoundary;
+                Main.model.setLonFactor(lonFactor);
+                Main.model.setMinLat(minLatBoundary);
+            	Main.model.setMinLon(minLonBoundary);
+            	Main.model.setMaxLat(maxLatBoundary);
+                Main.model.setMaxLon(maxLonBoundary);
                 Main.log("Updated bounds.");
                 break;
             case "node":
                 long id = Long.parseLong(atts.getValue("id"));
                 float lon = Float.parseFloat(atts.getValue("lon"));
                 float lat = Float.parseFloat(atts.getValue("lat"));
-                nodeMap.put(id, lon * lonFactor, -lat);
+                nodeMap.put(id, lon * Main.model.getLonFactor(), -lat);
                 node = nodeMap.get(id);
                 break;
             case "way":
@@ -174,7 +173,6 @@ public class OSMParser extends SAXAdapter implements Serializable {
                 if(!waysFinished) {
                     waysFinished = true;
                     vertexMap = null;
-                    nodeMap = null; // none of the relations we save have nodes
                 }
                 relation = new ParsedRelation(Long.parseLong(atts.getValue("id")));
                 temporaryRelationReferences.put(relation.getID(), relation);
@@ -188,6 +186,7 @@ public class OSMParser extends SAXAdapter implements Serializable {
                 String role = atts.getValue("role");
                 switch(type) {
                     case "node":
+                        if(nodeMap.get(ref) != null) currentNodes.add(nodeMap.get(ref));
                         break;
                     case "way":
                         if(temporaryWayReferences.containsKey(ref)) relation.addMember(temporaryWayReferences.get(ref), role);
@@ -240,6 +239,7 @@ public class OSMParser extends SAXAdapter implements Serializable {
 
     private void addCurrent() {
         if(way != null) way.addNodes(currentNodes);
+        else if(relation != null && currentNodes.size() > 0) relation.addNodes(currentNodes);
 
         if(waytype != null) {
             if(way != null) {
@@ -328,42 +328,6 @@ public class OSMParser extends SAXAdapter implements Serializable {
     
     public boolean isFinished() {
     	return finished;
-    }
-    
-    public float getMinLon() {
-    	return this.minLonBoundary;
-    }
-    
-    public float getMaxLon() {
-    	return this.maxLonBoundary;
-    }
-    
-    public float getMinLat() {
-    	return this.minLatBoundary;
-    }
-    
-    public float getMaxLat() {
-    	return this.maxLatBoundary;
-    }
-    
-    public Region getMapRegion() {
-    	float x1 = getMinLon();
-    	float y1 = getMinLat();
-    	float x2 = getMaxLon();
-    	float y2 = getMaxLat();
-    	return new Region(x1, y1, x2, y2);
-    }
-
-    public float getLonFactor() {
-        return lonFactor;
-    }
-    
-    public EnumMap<WayType, KDTree<ParsedItem>> getEnumMapKD() {
-    	return enumMapKD;
-    }
-    
-    public EnumMap<WayType, KDTree<ParsedPlace>> getEnumMapPlacesKD() {
-    	return enumMapPlacesKD;
     }
 
     public void parseTagInformation(String k, String v) {
