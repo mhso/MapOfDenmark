@@ -32,4 +32,10 @@ public class ParsedNode extends Point2D.Float{
     public String toString() {
     	return "ParsedNode [" + "key=" + key + ", lon=" + x + ", lat=" + y + "]";
     }
+
+    public void killNextReference() {
+        if(next == null) return;
+        next.killNextReference();
+        next = null;
+    }
 }

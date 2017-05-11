@@ -231,8 +231,8 @@ public class MapCanvas extends JPanel {
             	KDTree<ParsedPlace> kdTree = Main.model.getEnumMapPlacesKD().get(wayTypeLabel.getWayType());
             	if(kdTree == null) continue;
             	currentWTGSpec.transformPrimary(g2d);
-                for (Iterator<ParsedPlace> i = kdTree.iterator(currentRegion); i.hasNext(); ) {
-                    ParsedPlace place = i.next();
+				for (Iterator<ParsedPlace> i = kdTree.iterator(currentRegion); i.hasNext(); ) {
+					ParsedPlace place = i.next();
                     g2d.drawString(place.getName(), place.x, place.y);
                     shapesDrawn++;
                 }
