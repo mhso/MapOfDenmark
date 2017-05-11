@@ -86,6 +86,7 @@ public class KDTreeNode<T extends KDComparable> extends KDTree<T> {
     public float getRightSplit() { return rightSplit; }
 
     public List<KDComparable[]> getItems(Region reg) {
+        if(reg == null) throw new IllegalArgumentException("Can't find items by region if region is null");
         return getItems(reg, true);
     }
 
