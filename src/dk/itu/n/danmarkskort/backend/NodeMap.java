@@ -37,4 +37,11 @@ public class NodeMap {
     private int getHash(long key) {
         return Long.hashCode(key) & allowedRange;
     }
+
+    public void killNextReferences() {
+        for(int i = 0; i < nodes.length; i++) {
+            if(nodes[i] != null) nodes[i].killNextReference();
+            nodes[i] = null;
+        }
+    }
 }
