@@ -56,7 +56,8 @@ public class AddressValidator {
 
 	public static String insertDotAfterSingleChar(String inputStr){
 		return inputStr.replaceAll("^([0-9]{1,3})\\s", "$1. ") //replace single digit  "* " with "*. "
-				.replaceAll("\\t(["+allowedAlphaSet+"]{1})\\s", " $1. "); //replace single letter " * " with " *. "
+				.replaceAll("\\s(["+allowedAlphaSet+"]{1})\\s", " $1. ") //replace single letter " * " with " *. "
+				.replaceAll("^(["+allowedAlphaSet+"]{1})\\s", " $1. "); //replace single letter " * " with " *. "
 	}
 	
 	public static String replaceDashSpaces(String inputStr){

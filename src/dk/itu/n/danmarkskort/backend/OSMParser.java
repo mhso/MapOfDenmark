@@ -301,7 +301,7 @@ public class OSMParser extends SAXAdapter {
     }
 
     private void temporaryClean() {
-
+        nodeMap.killNextReferences();
         nodeMap = null;
         temporaryWayReferences = null;
         temporaryRelationReferences = null;
