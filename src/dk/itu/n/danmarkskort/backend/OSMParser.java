@@ -592,6 +592,9 @@ public class OSMParser extends SAXAdapter {
                     maxSpeed = 0;
                 }
                 break;
+            case "junction":
+            	if(v.equals("roundabout")) backward = false;
+            	break;
             case "bicycle":
                 switch(v) {
                     case "no":

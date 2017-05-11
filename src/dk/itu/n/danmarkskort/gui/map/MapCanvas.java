@@ -77,6 +77,11 @@ public class MapCanvas extends JPanel {
 		drawMap((Graphics2D)_g);
 	}
 	
+	/**
+	 * Add a Listener in order to receive different events from the MapCanvas.
+	 * 
+	 * @param l The CanvasListener.
+	 */
 	public void addCanvasListener(CanvasListener l) {
 		listeners.add(l);
 	}
@@ -89,6 +94,11 @@ public class MapCanvas extends JPanel {
 		return actualTransform;
 	}
 	
+	/**
+	 * The main method for the different drawing methods.
+	 * 
+	 * @param g2d The Graphics2D object to be drawn with, derived from the overriden paintComponent method.
+	 */
 	public void drawMap(Graphics2D g2d) {
 		if(Main.buffered) {
 			Main.tileController.draw(g2d);
@@ -114,6 +124,15 @@ public class MapCanvas extends JPanel {
 		repaint();
 	}
 
+	/**
+	 * This method is where all the shapes received from the KD-trees are drawn onto the Canvas.
+	 * The method receives a list of WaytypeGraphicSpec objects that correspond to the current zoom level
+	 * and draws them according to their visual attributes.
+	 * 
+	 * @param g2d The Graphics2D object to be drawn with, derived from the overriden paintComponent method.
+	 * @param region The currently visible Geographical Region of the map.
+	 * @param at The AffineTransform that should be used when drawing.
+	 */
 	public void drawMapShapes(Graphics2D g2d, Region region, AffineTransform at) {
 		Region currentRegion = region;
 		drawBackground(g2d);
@@ -220,6 +239,7 @@ public class MapCanvas extends JPanel {
             }
         }
 
+        // Draw the KD-tree debug rectangle.
         if(Main.debugExtra && !Main.buffered) {
             g2d.setStroke(new BasicStroke(0.0001f));
             g2d.setColor(Color.BLACK);
