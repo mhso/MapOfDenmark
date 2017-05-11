@@ -41,8 +41,7 @@ public class KDTreeLeaf<T extends KDComparable> extends KDTree<T> {
 
     @Override
     List<KDComparable[]> getItems(Region reg, boolean sortByLon) {
-        if(overlaps(reg)) return getAllItems();
-        else return Collections.emptyList();
+        return getItems(reg);
     }
 
     @Override
@@ -69,10 +68,10 @@ public class KDTreeLeaf<T extends KDComparable> extends KDTree<T> {
     }
     
     private boolean overlaps(Region reg) {
-        return minLon < reg.x1 + reg.getWidth() &&
-                minLon + (maxLon - minLon) > reg.x1 &&
-                minLat < reg.y1 + reg.getHeight() &&
-                minLat + (maxLat - minLat) > reg.y1;
+        return minLon <= reg.x1 + reg.getWidth() &&
+                minLon + (maxLon - minLon) >= reg.x1 &&
+                minLat <= reg.y1 + reg.getHeight() &&
+                minLat + (maxLat - minLat) >= reg.y1;
     }
 
     @SuppressWarnings("unchecked")
