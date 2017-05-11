@@ -225,7 +225,6 @@ public class MapCanvas extends JPanel {
         
         // draw all labels        
         if(getZoom() < 14) {
-        	g2d.setFont(g2d.getFont().deriveFont((float)(g2d.getFont().getSize2D()*1/getZoom()*2)));
         	for(WaytypeGraphicSpec wayTypeLabel : labelsVisible) {
             	currentWTGSpec = wayTypeLabel;
             	KDTree<ParsedPlace> kdTree = Main.model.getEnumMapPlacesKD().get(wayTypeLabel.getWayType());
@@ -280,8 +279,8 @@ public class MapCanvas extends JPanel {
         g2d.fillRect(-100, -100, getWidth() + 200, getHeight() + 200);
     }
 	
-	private float getLineWidthZoomFactor() {
-		return (float)((0.00005f*Math.pow(2, (20-getZoom())/2))/5);
+	private float getZoomSizeFactor(float base) {
+		return (float)((base*Math.pow(2, (20-getZoom())/2))/5);
 	}
 
 	public List<WaytypeGraphicSpec> getOnScreenGraphicsForCurrentZoom() {
@@ -356,7 +355,7 @@ public class MapCanvas extends JPanel {
 		g2d.setTransform(transform);
 		if(antiAlias) g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		else g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
-		g2d.setStroke(new BasicStroke(getLineWidthZoomFactor()));
+		g2d.setStroke(new BasicStroke(getZoomSizeFactor(0.00005f)));
 		g2d.setColor(Color.BLUE);
 		
 		if(Main.debug) {
