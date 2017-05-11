@@ -192,7 +192,7 @@ public class SettingsPage extends JPanel {
         
         JButton buttonBack = new JButton("Back");
         buttonBack.addActionListener(e -> showDefaultPanel());
-        panelSouth.add(buttonBack, BorderLayout.EAST);
+        panelSouth.add(buttonBack, BorderLayout.WEST);
         
         CustomToggleButton[] buttons = {buttonBasicToggle, buttonNightToggle, buttonBWToggle};
         for(CustomToggleButton button : buttons) {
