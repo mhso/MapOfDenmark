@@ -9,7 +9,6 @@ import java.util.List;
 
 import org.junit.Test;
 
-import dk.itu.n.danmarkskort.DKConstants;
 import dk.itu.n.danmarkskort.kdtree.KDTree;
 import dk.itu.n.danmarkskort.kdtree.KDTreeNode;
 import dk.itu.n.danmarkskort.models.ParsedItem;
@@ -31,6 +30,7 @@ public class KDTreeTests {
 		}
 		return new KDTreeNode<>(items, kdSize);
 	}
+
 	public KDTree<ParsedPlace> createKDTreeWithPlace(int dataSize, float lon, float lat, int kdSize) {
 		List<ParsedPlace> items = new ArrayList<>();
 		for(int i = 0; i < dataSize; i++) {
@@ -85,8 +85,8 @@ public class KDTreeTests {
 		int level = 4;
 		int expected = 8;
 		if(DEBUG) System.out.println("Test node amount at level "+level+", expected "+expected+", got " + 
-				kdTree.nodeSizeAt(level));
-		assertTrue(kdTree.nodeSizeAt(level) == expected);
+				kdTree.nodesAndLeafsAtDepth(level));
+		assertTrue(kdTree.nodesAndLeafsAtDepth(level) == expected);
 	}
 	
 	@Test
@@ -107,8 +107,10 @@ public class KDTreeTests {
 	public void testKDSearchOneElement() {
 		KDTree<ParsedItem> itemTree = createKDTreeWithWays(1, 0, 0, -10, -10, 25);
 		KDTree<ParsedPlace> placeTree = createKDTreeWithPlace(1, 0, 0, 25);
+
 		ParsedItem item = null, item2 = null, nullItem = null;
 		ParsedPlace place = null, place2 = null, nullPlace = null;
+
 		if(DEBUG) System.out.print("Test search one element, tree size: " + itemTree.size() + ", data size: ");
 
         for(ParsedItem pt: itemTree) item = pt;
