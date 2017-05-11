@@ -3,7 +3,6 @@ package dk.itu.n.danmarkskort.kdtree.unittests;
 import static org.junit.Assert.*;
 
 import dk.itu.n.danmarkskort.kdtree.KDComparable;
-import dk.itu.n.danmarkskort.kdtree.KDTree;
 import dk.itu.n.danmarkskort.kdtree.KDTreeLeaf;
 import dk.itu.n.danmarkskort.models.ParsedWay;
 import dk.itu.n.danmarkskort.models.Region;
@@ -11,7 +10,6 @@ import org.junit.Test;
 
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
-import java.util.List;
 
 public class KDTreeLeafTest {
 
@@ -37,7 +35,7 @@ public class KDTreeLeafTest {
         Region regionSurrounding = new Region(-10, -10, 20, 20);
         Region regionSurrounded = new Region(2, 2, 5, 5);
         Region regionLeftOf = new Region(-20, 1, -10, 10);
-        Region regionTopOf = new Region(1, 20, 10, 10);
+        Region regionTopOf = new Region(1, 30, 10, 20);
         Region regionRightOf = new Region(20, 1, 30, 10);
         Region regionBottomOf = new Region(10, -20, 1, -10);
         Region regionBarelyTouching = new Region(-10, -10, 1, 1);
@@ -51,16 +49,6 @@ public class KDTreeLeafTest {
         assertEquals(0, leaf.getItems(regionRightOf).size());
         assertEquals(0, leaf.getItems(regionBottomOf).size());
         assertEquals(numItems, leaf.getItems(regionBarelyTouching).get(0).length);
-        // this last one fails. Shouldn't we handle that??
         assertEquals(numItems, leaf.getItems(regionReversedSurrounding).get(0).length);
     }
-
-    @Test
-    public void testOverlapping() {
-
-
-    }
-
-
-
 }
