@@ -411,7 +411,7 @@ public class MapCanvas extends JPanel {
 	}
 	
 	public BufferedImage getRoutePreviewImage() {
-		return Util.screenshot(new Rectangle(70, 100, getWidth()-140, getHeight()-120), 1500);
+		return Util.screenshot(new Rectangle(Main.window.getLocation().x+75, Main.window.getLocation().y+105, getWidth()-150, getHeight()-130), 1500);
 	}
 	
 	public void pan(double dx, double dy) {
