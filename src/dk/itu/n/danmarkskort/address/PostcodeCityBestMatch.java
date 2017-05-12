@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.models.ReuseStringObj;
 
 public class PostcodeCityBestMatch {

@@ -2,19 +2,16 @@ package dk.itu.n.danmarkskort.gui.routeplanner;
 
 import javax.swing.JPanel;
 
-import dk.itu.n.danmarkskort.models.RouteEnum;
 import dk.itu.n.danmarkskort.models.RouteModel;
 import dk.itu.n.danmarkskort.routeplanner.WeightEnum;
 
 import java.awt.GridBagLayout;
-
-import javax.swing.JLabel;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
-import java.util.ArrayList;
-import java.util.List;
-import java.awt.Component;
 import java.awt.Font;
+
+import javax.swing.JLabel;
+import java.util.List;
 
 public class RoutePartBasic extends JPanel {
 	private static final long serialVersionUID = 3150387631326599889L;

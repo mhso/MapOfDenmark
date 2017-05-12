@@ -13,10 +13,8 @@ import java.awt.Font;
 
 public class RoutePartStep extends JPanel {
 	private final String STEP_DESCRIPTION, STEP_DISTANCE, STEP_POSITION;
-	private final RouteModel routeModel;
 	
 	public RoutePartStep(int stepPosition, ImageIcon stepIcon, RouteModel routeModel) {
-		this.routeModel = routeModel;
 		STEP_POSITION = stepPosition+"";
 		STEP_DESCRIPTION = routeModel.getDescription();
 		STEP_DISTANCE = makeDistance(routeModel.getDistance());
