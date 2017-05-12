@@ -119,10 +119,7 @@ public abstract class KDTree<T extends KDComparable> implements Serializable, It
     public static double shortestDistance(Point2D.Float query, float[] coords) {
         double shortestDistance = Double.POSITIVE_INFINITY;
         if(coords.length == 2) {
-        	double distance = KDTree.distancePointToLine(
-        			new Point2D.Float(coords[0], coords[1]),
-        			new Point2D.Float(coords[0], coords[1]), 
-        			query);
+        	double distance = KDTree.calcDistance(query, new Point2D.Float(coords[0], coords[1]));
             if(distance < shortestDistance) shortestDistance = distance;
         } else {
 	        for(int i = 0; i < coords.length - 2; i+=2) {

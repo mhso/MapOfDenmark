@@ -112,13 +112,13 @@
 			<layer layer="0"/>
 		</area>
 		<area>
-			<type name="BRIDGE"/>
-			<innercolor color="B8B8B8"/>
+			<type name="WATER"/>
+			<innercolor color="6EC0FF"/>
 			<layer layer="2"/>
 		</area>
 		<area>
-			<type name="WATER"/>
-			<innercolor color="6EC0FF"/>
+			<type name="BRIDGE"/>
+			<innercolor color="B8B8B8"/>
 			<layer layer="2"/>
 		</area>
 		<area>
