@@ -125,7 +125,9 @@ public class AboutUsPage extends JPanel  {
         		+ "<br>- Darryl Burke for his AlphaImageIcon implementation:"
         		+ "<br>  https://tips4java.wordpress.com/2010/08/22/alpha-icons."
         		+ "<br>- 'user1079877' from Stackoverflow for his JAR entries"
-        		+ "<br>  stream.";
+        		+ "<br>  stream."
+        		+ "<br>- Finally, a big thank you to openstreetmap.org for their"
+        		+ "<br>  great (and free) data and mapping system.";
         
         JLabel lblAppDescription = new JLabel(appDescription);
         GridBagConstraints gbc_lblNewLabel = new GridBagConstraints();
