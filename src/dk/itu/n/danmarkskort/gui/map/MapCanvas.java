@@ -77,6 +77,11 @@ public class MapCanvas extends JPanel {
 		drawMap((Graphics2D)_g);
 	}
 	
+	/**
+	 * Add a Listener in order to receive different events from the MapCanvas.
+	 * 
+	 * @param l The CanvasListener.
+	 */
 	public void addCanvasListener(CanvasListener l) {
 		listeners.add(l);
 	}
@@ -89,6 +94,11 @@ public class MapCanvas extends JPanel {
 		return actualTransform;
 	}
 	
+	/**
+	 * The main method for the different drawing methods.
+	 * 
+	 * @param g2d The Graphics2D object to be drawn with, derived from the overriden paintComponent method.
+	 */
 	public void drawMap(Graphics2D g2d) {
 		if(Main.buffered) {
 			Main.tileController.draw(g2d);
@@ -114,6 +124,15 @@ public class MapCanvas extends JPanel {
 		repaint();
 	}
 
+	/**
+	 * This method is where all the shapes received from the KD-trees are drawn onto the Canvas.
+	 * The method receives a list of WaytypeGraphicSpec objects that correspond to the current zoom level
+	 * and draws them according to their visual attributes.
+	 * 
+	 * @param g2d The Graphics2D object to be drawn with, derived from the overriden paintComponent method.
+	 * @param region The currently visible Geographical Region of the map.
+	 * @param at The AffineTransform that should be used when drawing.
+	 */
 	public void drawMapShapes(Graphics2D g2d, Region region, AffineTransform at) {
 		Region currentRegion = region;
 		drawBackground(g2d);
@@ -206,20 +225,20 @@ public class MapCanvas extends JPanel {
         
         // draw all labels        
         if(getZoom() < 14) {
-        	g2d.setFont(g2d.getFont().deriveFont((float)(g2d.getFont().getSize2D()*1/getZoom()*2)));
         	for(WaytypeGraphicSpec wayTypeLabel : labelsVisible) {
             	currentWTGSpec = wayTypeLabel;
             	KDTree<ParsedPlace> kdTree = Main.model.getEnumMapPlacesKD().get(wayTypeLabel.getWayType());
-            	if(kdTree == null) continue; 	
+            	if(kdTree == null) continue;
             	currentWTGSpec.transformPrimary(g2d);
-                for (Iterator<ParsedPlace> i = kdTree.iterator(currentRegion); i.hasNext(); ) {
-                    ParsedPlace place = i.next();
+				for (Iterator<ParsedPlace> i = kdTree.iterator(currentRegion); i.hasNext(); ) {
+					ParsedPlace place = i.next();
                     g2d.drawString(place.getName(), place.x, place.y);
                     shapesDrawn++;
                 }
             }
         }
 
+        // Draw the KD-tree debug rectangle.
         if(Main.debugExtra && !Main.buffered) {
             g2d.setStroke(new BasicStroke(0.0001f));
             g2d.setColor(Color.BLACK);
@@ -259,6 +278,10 @@ public class MapCanvas extends JPanel {
 		g2d.setTransform(af);
         g2d.fillRect(-100, -100, getWidth() + 200, getHeight() + 200);
     }
+	
+	private float getZoomSizeFactor(float base) {
+		return (float)((base*Math.pow(2, (20-getZoom())/2))/5);
+	}
 
 	public List<WaytypeGraphicSpec> getOnScreenGraphicsForCurrentZoom() {
 		List<WaytypeGraphicSpec> wayTypeSpecs = GraphicRepresentation.getGraphicSpecs((int)getZoom());
@@ -332,7 +355,7 @@ public class MapCanvas extends JPanel {
 		g2d.setTransform(transform);
 		if(antiAlias) g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		else g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
-		g2d.setStroke(new BasicStroke((float)(0.0012f*0.5/getZoom())));
+		g2d.setStroke(new BasicStroke(getZoomSizeFactor(0.00005f)));
 		g2d.setColor(Color.BLUE);
 		
 		if(Main.debug) {

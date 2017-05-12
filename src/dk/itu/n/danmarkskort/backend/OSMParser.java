@@ -76,9 +76,12 @@ public class OSMParser extends SAXAdapter {
         Main.log("Parsing finished.");
 
         int numItemsSaved = 0;
-        for(WayType wt : WayType.values()) if(!wt.toString().startsWith("PLACE_")) 
-        	numItemsSaved += enumMap.get(wt).size();
-        Main.log("Ways and Relations saved: " + numItemsSaved);
+        for(WayType wt : WayType.values()) {
+        	if(wt.toString().startsWith("PLACE_")) numItemsSaved += places.get(wt).size();
+        	else numItemsSaved += enumMap.get(wt).size();
+        }
+       
+        Main.log("Ways, Relations and Places saved: " + numItemsSaved);
 
         temporaryClean();
         Main.model.enumMapKD = new EnumMap<>(WayType.class);
@@ -94,9 +97,9 @@ public class OSMParser extends SAXAdapter {
             else if(wt.toString().startsWith("PLACE_")) {
             	if(!places.isEmpty()) {
                 	KDTree<ParsedPlace> placeTree;
-                	ArrayList<ParsedPlace> towns = places.get(wt);
-                	if(towns.isEmpty()) placeTree = null;
-                	else placeTree = new KDTreeNode<>(towns);
+                	ArrayList<ParsedPlace> placeList = places.get(wt);
+                	if(placeList.isEmpty()) placeTree = null;
+                	else placeTree = new KDTreeNode<>(placeList);
                 	
                 	Main.model.enumMapPlacesKD.put(wt, placeTree);
                 }
@@ -298,7 +301,7 @@ public class OSMParser extends SAXAdapter {
     }
 
     private void temporaryClean() {
-
+        nodeMap.killNextReferences();
         nodeMap = null;
         temporaryWayReferences = null;
         temporaryRelationReferences = null;
@@ -340,6 +343,7 @@ public class OSMParser extends SAXAdapter {
                 		case "city":
                 			place = new ParsedPlace(name, node.x, node.y);
                 			waytype = WayType.PLACE_CITY;
+                			return;
                 		case "town":
                 			place = new ParsedPlace(name, node.x, node.y);
                 			waytype = WayType.PLACE_TOWN;
@@ -588,6 +592,9 @@ public class OSMParser extends SAXAdapter {
                     maxSpeed = 0;
                 }
                 break;
+            case "junction":
+            	if(v.equals("roundabout")) backward = false;
+            	break;
             case "bicycle":
                 switch(v) {
                     case "no":

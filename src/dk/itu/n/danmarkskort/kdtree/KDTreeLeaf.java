@@ -1,6 +1,5 @@
 package dk.itu.n.danmarkskort.kdtree;
 
-import dk.itu.n.danmarkskort.models.ParsedNode;
 import dk.itu.n.danmarkskort.models.Region;
 
 import java.awt.geom.Point2D;
@@ -41,8 +40,7 @@ public class KDTreeLeaf<T extends KDComparable> extends KDTree<T> {
 
     @Override
     List<KDComparable[]> getItems(Region reg, boolean sortByLon) {
-        if(overlaps(reg)) return getAllItems();
-        else return Collections.emptyList();
+        return getItems(reg);
     }
 
     @Override
@@ -51,28 +49,27 @@ public class KDTreeLeaf<T extends KDComparable> extends KDTree<T> {
         arrList.add(data);
         return arrList;
     }
-    
-    protected int leafSize(int currentSize) {
-    	return ++currentSize;
-    }
-    
-    protected int size(int currentSize) {
-    	return currentSize += data.length;
-    }
 
-    protected int nodeSizeAt(int depth, int currentDepth, int currentSize) {
+    public int nodeSize() { return 0; }
+
+    public int leafSize() { return 1; }
+    
+    public int size() { return data.length; }
+
+    protected int nodesAndLeafsAtDepth(int targetDepth, int currentDepth) {
     	currentDepth++;
-    	if(depth == currentDepth) {
-    		currentSize++;
-    	}
-    	return currentSize;
+    	if(targetDepth == currentDepth) return 1;
+    	return 0;
     }
     
     private boolean overlaps(Region reg) {
-        return minLon < reg.x1 + reg.getWidth() &&
-                minLon + (maxLon - minLon) > reg.x1 &&
-                minLat < reg.y1 + reg.getHeight() &&
-                minLat + (maxLat - minLat) > reg.y1;
+        double minX = reg.x1 < reg.x2 ? reg.x1 : reg.x2;
+        double minY = reg.y1 < reg.y2 ? reg.y1 : reg.y2;
+
+        return minLon <= minX + reg.getWidth() &&
+                minLon + (maxLon - minLon) >= minX &&
+                minLat <= minY + reg.getHeight() &&
+                minLat + (maxLat - minLat) >= minY;
     }
 
     @SuppressWarnings("unchecked")

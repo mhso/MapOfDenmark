@@ -9,10 +9,10 @@ import java.util.List;
 
 import org.junit.Test;
 
-import dk.itu.n.danmarkskort.DKConstants;
 import dk.itu.n.danmarkskort.kdtree.KDTree;
 import dk.itu.n.danmarkskort.kdtree.KDTreeNode;
 import dk.itu.n.danmarkskort.models.ParsedItem;
+import dk.itu.n.danmarkskort.models.ParsedPlace;
 import dk.itu.n.danmarkskort.models.ParsedWay;
 import dk.itu.n.danmarkskort.models.Region;
 
@@ -27,6 +27,15 @@ public class KDTreeTests {
 			way.addNode(new Point2D.Float(i+shiftValueX1, i+shiftValueY1));
 			way.addNode(new Point2D.Float(i+shiftValueX2, i+shiftValueY2));
 			items.add(way);
+		}
+		return new KDTreeNode<>(items, kdSize);
+	}
+
+	public KDTree<ParsedPlace> createKDTreeWithPlace(int dataSize, float lon, float lat, int kdSize) {
+		List<ParsedPlace> items = new ArrayList<>();
+		for(int i = 0; i < dataSize; i++) {
+			ParsedPlace place = new ParsedPlace("", lon+i, lat+i);
+			items.add(place);
 		}
 		return new KDTreeNode<>(items, kdSize);
 	}
@@ -76,8 +85,8 @@ public class KDTreeTests {
 		int level = 4;
 		int expected = 8;
 		if(DEBUG) System.out.println("Test node amount at level "+level+", expected "+expected+", got " + 
-				kdTree.nodeSizeAt(level));
-		assertTrue(kdTree.nodeSizeAt(level) == expected);
+				kdTree.nodesAndLeafsAtDepth(level));
+		assertTrue(kdTree.nodesAndLeafsAtDepth(level) == expected);
 	}
 	
 	@Test
@@ -88,46 +97,42 @@ public class KDTreeTests {
 		assertTrue(kdTree.size() == expected);
 	}
 	
-	@Test
+	@Test(expected=IllegalArgumentException.class)
 	public void testKDSearchNullInput() {
 		KDTree<ParsedItem> kdTree = createKDTreeWithWays(100, 0, 0, -10, -10, 25);
 		Iterator<ParsedItem> it = kdTree.iterator(null);
-		assertNotNull(it);
+	}
+	
+	@Test
+	public void testKDSearchOneElement() {
+		KDTree<ParsedItem> itemTree = createKDTreeWithWays(1, 0, 0, -10, -10, 25);
+		KDTree<ParsedPlace> placeTree = createKDTreeWithPlace(1, 0, 0, 25);
+
+		ParsedItem item = null, item2 = null, nullItem = null;
+		ParsedPlace place = null, place2 = null, nullPlace = null;
+
+		if(DEBUG) System.out.print("Test search one element, tree size: " + itemTree.size() + ", data size: ");
+
+        for(ParsedItem pt: itemTree) item = pt;
+        for(Iterator<ParsedItem> iter = itemTree.iterator(new Region(-1, -1, 1, 1)); iter.hasNext(); ) item2 = iter.next();
+		for(Iterator<ParsedItem> iter = itemTree.iterator(new Region(-30, -30, -20, -20)); iter.hasNext();) nullItem = iter.next();
+
+		for(ParsedPlace pl: placeTree) place = pl;
+        for(Iterator<ParsedPlace> iter = placeTree.iterator(new Region(-1, -1, 1, 1)); iter.hasNext();) place2 = iter.next();
+        for(Iterator<ParsedPlace> iter = placeTree.iterator(new Region(40, 40 , 50, 50)); iter.hasNext();) nullPlace = iter.next();
+
+		assertNotNull(item);
+        assertNotNull(item2);
+		assertNull(nullItem);
+
+		assertNotNull(place);
+		assertNotNull(place2);
+		assertNull(nullPlace);
 	}
 	
 	@Test
 	public void testKDcreationEmptyData() {
 		KDTree<ParsedItem> kdTree = createKDTreeWithWays(0, 0, 0, -10, -10, 25);
 		assertTrue(kdTree.size() == 0);
-	}
-	
-	@Test
-	public void testKDSearchLeafSize5000() {
-		long timePassed = testKDSearchLeafSize(5000);
-		if(DEBUG) System.out.println("Test Tree Search, KDSize " + DKConstants.KD_SIZE + ": " + 
-		timePassed + " ms.");
-		assertTrue(timePassed < 10);
-	}
-	
-	@Test
-	public void testKDSearchLeafSize50() {
-		long timePassed = testKDSearchLeafSize(50);
-		if(DEBUG) System.out.println("Test Tree Search, KDSize " + DKConstants.KD_SIZE + ": " + 
-		timePassed + " ms.");
-		assertTrue(timePassed < 10);
-	}
-	
-	private long testKDSearchLeafSize(int leafSize) {
-		KDTree<ParsedItem> kdTree = createKDTreeWithWays(1_000_000, 10, 10, 0, 0, leafSize);
-		long beforeGet = System.currentTimeMillis();
-		int itemAmount = 0;
-		for (Iterator<ParsedItem> i = kdTree.iterator(new Region(5000, 5000, 5500, 5500)); i.hasNext(); ) {
-			ParsedItem item = i.next();
-			item.nodesToCoords();
-			item.getShape();
-			itemAmount++;
-		}
-		System.out.println("Items: " + itemAmount);
-		return System.currentTimeMillis()-beforeGet;
 	}
 }

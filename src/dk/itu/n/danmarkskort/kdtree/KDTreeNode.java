@@ -1,8 +1,6 @@
 package dk.itu.n.danmarkskort.kdtree;
 
 import dk.itu.n.danmarkskort.DKConstants;
-import dk.itu.n.danmarkskort.Main;
-import dk.itu.n.danmarkskort.models.ParsedNode;
 import dk.itu.n.danmarkskort.models.Region;
 
 import java.awt.geom.Point2D;
@@ -18,15 +16,11 @@ public class KDTreeNode<T extends KDComparable> extends KDTree<T> {
     private float rightSplit;
 
     public KDTreeNode(List<T> list) {
-        this(KDTree.listToArray(list), true);
+        this(KDTree.listToArray(list), true, DKConstants.KD_SIZE);
     }
     
     public KDTreeNode(List<T> list, int kd_size) {
         this(KDTree.listToArray(list), true, kd_size);
-    }
-
-    private KDTreeNode(KDComparable[] arr, boolean sortByLon) {
-        createStructure(arr, sortByLon, DKConstants.KD_SIZE);
     }
     
     private KDTreeNode(KDComparable[] arr, boolean sortByLon, int kd_size) {
@@ -36,7 +30,7 @@ public class KDTreeNode<T extends KDComparable> extends KDTree<T> {
     private void createStructure(KDComparable[] array, boolean sortByLon, int kd_size) {
 
         if(array.length < 2) {
-            leftChild = new KDTreeLeaf<T>(array);
+            leftChild = new KDTreeLeaf<>(array);
             rightChild = null;
             return;
         }
@@ -73,10 +67,10 @@ public class KDTreeNode<T extends KDComparable> extends KDTree<T> {
                 for(Point2D.Float node : item.getNodes()) rightSplit = node.y < rightSplit ? node.y : rightSplit; // nederst er værdierne størst
             }
         }
-        if(leftArray.length > kd_size) leftChild = new KDTreeNode<>(leftArray, !sortByLon);
+        if(leftArray.length > kd_size) leftChild = new KDTreeNode<>(leftArray, !sortByLon, kd_size);
         else leftChild = new KDTreeLeaf<>(leftArray);
 
-        if(rightArray.length > kd_size) rightChild = new KDTreeNode<>(rightArray, !sortByLon);
+        if(rightArray.length > kd_size) rightChild = new KDTreeNode<>(rightArray, !sortByLon, kd_size);
         else rightChild = new KDTreeLeaf<>(rightArray);
     }
 
@@ -86,6 +80,7 @@ public class KDTreeNode<T extends KDComparable> extends KDTree<T> {
     public float getRightSplit() { return rightSplit; }
 
     public List<KDComparable[]> getItems(Region reg) {
+        if(reg == null) throw new IllegalArgumentException("Can't find items by region if region is null");
         return getItems(reg, true);
     }
 
@@ -118,7 +113,7 @@ public class KDTreeNode<T extends KDComparable> extends KDTree<T> {
         if(sortByLon) {
             nearestPossibleLT = (query.x < leftSplit) ? 0 : calcDistance(query, new Point2D.Float(leftSplit, query.y));
             nearestPossibleRB = (query.x > rightSplit) ? 0 : calcDistance(query, new Point2D.Float(rightSplit, query.y));
-        } else { // FIXME: is query.x correct?
+        } else {
             nearestPossibleLT = (query.y < leftSplit) ? 0 : calcDistance(query, new Point2D.Float(query.x, leftSplit));
             nearestPossibleRB = (query.y > rightSplit) ? 0 : calcDistance(query, new Point2D.Float(query.x, rightSplit));
         }
@@ -164,37 +159,37 @@ public class KDTreeNode<T extends KDComparable> extends KDTree<T> {
         // maybe nothing of interest found (it could be null, but it could also be amazing)
         return candidate;
     }
-    
-    protected int nodeSize(int currentDepth) {
-    	currentDepth++;
-    	if(leftChild != null) currentDepth = leftChild.nodeSize(currentDepth);
-    	if(rightChild != null) currentDepth = rightChild.nodeSize(currentDepth);
-    	return currentDepth;
+
+    public int nodeSize() {
+    	int count = 0;
+    	if(leftChild != null) count += leftChild.nodeSize();
+    	if(rightChild != null) count += rightChild.nodeSize();
+    	return ++count;
     }
     
-    protected int nodeSizeAt(int depth, int currentDepth, int currentSize) {
+    protected int nodesAndLeafsAtDepth(int targetDepth, int currentDepth) {
     	currentDepth++;
-    	if(depth == currentDepth) {
-    		currentSize++;
-    	}
+    	int size = 0;
+    	if(targetDepth == currentDepth) return 1;
     	else {
-    		if(leftChild != null) currentSize = leftChild.nodeSizeAt(depth, currentDepth, currentSize);
-    		if(rightChild != null) currentSize = rightChild.nodeSizeAt(depth, currentDepth, currentSize);
-    		
+    		if(leftChild != null) size += leftChild.nodesAndLeafsAtDepth(targetDepth, currentDepth);
+    		if(rightChild != null) size += rightChild.nodesAndLeafsAtDepth(targetDepth, currentDepth);
     	}
-    	return currentSize;
+    	return size;
+    }
+
+    public int leafSize() {
+        int count = 0;
+    	if(leftChild != null) count += leftChild.leafSize();
+    	if(rightChild != null) count += rightChild.leafSize();
+    	return count;
     }
     
-    protected int leafSize(int currentDepth) {
-    	if(leftChild != null) currentDepth = leftChild.leafSize(currentDepth);
-    	if(rightChild != null) currentDepth = rightChild.leafSize(currentDepth);
-    	return currentDepth;
-    }
-    
-    protected int size(int currentSize) {
-    	if(leftChild != null) currentSize = leftChild.size(currentSize);
-    	if(rightChild != null) currentSize = rightChild.size(currentSize);
-    	return currentSize;
+    public int size() {
+        int size = 0;
+    	if(leftChild != null) size += leftChild.size();
+    	if(rightChild != null) size += rightChild.size();
+    	return size;
     }
     
     public String toString() {
