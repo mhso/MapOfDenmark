@@ -55,7 +55,9 @@ public abstract class KDTree<T extends KDComparable> implements Serializable, It
          */
         @Override
         public boolean hasNext() {
-            while(i < arrList.size() && arrList.get(i) == null) i++;
+            while(i < arrList.size() && arrList.get(i) == null) {
+                i++;
+            }
             return i < arrList.size();
         }
 

@@ -18,6 +18,7 @@
 	</zoomlevel>
 	<zoomlevel level="5">
 		<type name="INDUSTRIAL"/>
+		<type name="BRIDGE"/>
 	</zoomlevel>
 	<zoomlevel level="6">
 		<type name="PLACE_CITY"/>
@@ -33,6 +34,7 @@
 	</zoomlevel>
 	<zoomlevel level="9">
 		<type name="PLACE_NEIGHBOURHOOD"/>
+		<type name="PIER"/>
 		<type name="WETLAND"/>
 		<type name="PARK"/>
 		<type name="CONSTRUCTION"/>

@@ -32,6 +32,13 @@ public class KDTreeNode<T extends KDComparable> extends KDTree<T> {
         if(array.length < 2) {
             leftChild = new KDTreeLeaf<>(array);
             rightChild = null;
+            if(sortByLon) {
+                leftSplit = Float.MIN_VALUE;
+                for(Point2D.Float node : array[0].getNodes()) leftSplit = node.x > leftSplit ? node.x : leftSplit;
+            } else {
+                leftSplit = Float.MAX_VALUE;
+                for(Point2D.Float node : array[0].getNodes()) leftSplit = node.y > leftSplit ? node.y : leftSplit;
+            }
             return;
         }
 
@@ -86,13 +93,18 @@ public class KDTreeNode<T extends KDComparable> extends KDTree<T> {
 
     public List<KDComparable[]> getItems(Region reg, boolean sortByLon) {
         List<KDComparable[]> items = new ArrayList<>();
+        double minX = reg.x1 < reg.x2 ? reg.x1 : reg.x2;
+        double maxX = reg.x1 < reg.x2 ? reg.x2 : reg.x1;
+        double minY = reg.x1 < reg.x2 ? reg.y1 : reg.y2;
+        double maxY = reg.x1 < reg.x2 ? reg.y2 : reg.y1;
+
         if(sortByLon) {
-            if(reg.x1 < leftSplit && leftChild != null) items.addAll(leftChild.getItems(reg, false));
-            if(reg.x2 > rightSplit && rightChild != null) items.addAll(rightChild.getItems(reg, false));
+            if(minX <= leftSplit && leftChild != null) items.addAll(leftChild.getItems(reg, false));
+            if(maxX >= rightSplit && rightChild != null) items.addAll(rightChild.getItems(reg, false));
         }
         else {
-            if(reg.y1 < leftSplit && leftChild != null) items.addAll(leftChild.getItems(reg, true));
-            if(reg.y2 > rightSplit && rightChild != null) items.addAll(rightChild.getItems(reg, true));
+            if(minY <= leftSplit && leftChild != null) items.addAll(leftChild.getItems(reg, true));
+            if(maxY >= rightSplit && rightChild != null) items.addAll(rightChild.getItems(reg, true));
         }
         return items;
     }

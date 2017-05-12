@@ -21,10 +21,7 @@ import dk.itu.n.danmarkskort.routeplanner.WeightEnum;
 import dk.itu.n.danmarkskort.search.SearchController;
 
 import java.awt.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;

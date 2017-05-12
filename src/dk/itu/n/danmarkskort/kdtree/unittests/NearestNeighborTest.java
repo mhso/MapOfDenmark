@@ -12,6 +12,7 @@ import dk.itu.n.danmarkskort.kdtree.KDTree;
 import dk.itu.n.danmarkskort.kdtree.KDTreeNode;
 
 public class NearestNeighborTest {
+
 	@Test
 	public void testNearestItem() {
 		AddressHolder addr = Main.addressController.getAddressHolder();
