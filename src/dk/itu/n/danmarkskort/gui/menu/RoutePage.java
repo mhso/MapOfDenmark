@@ -319,7 +319,7 @@ public class RoutePage extends JPanel {
 		    			Main.map.zoomToRouteRegion(Main.routeController.getRouteRegion());
 		    			bufferedImage = Main.map.getRoutePreviewImage();
 						
-						RoutePlannerMain routePlannerMain =  new RoutePlannerMain(bufferedImage, addrFrom.toStringShort(), addrTo.toStringShort(), 
+						RoutePlannerMain routePlannerMain = new RoutePlannerMain(bufferedImage, addrFrom.toStringShort(), addrTo.toStringShort(),
 								weightEnum, routemodels);
 					}else {
 						menu.blockVisibility(true);

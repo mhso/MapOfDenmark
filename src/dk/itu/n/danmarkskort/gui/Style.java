@@ -21,7 +21,8 @@ public class Style {
     private int margin, smallMargin, topPanelBorderWidth, menuItemInsets;
     private float alphaFloat, alphaHover, menuAlpha, menuAlphaHover;
     private Color panelBG, inputFieldBG, panelTextColor, zoomButtonBG, menuContentBG, menuItemsBG, scrollBarThumb, scrollBarThumbActive,
-                dropdownItemBG, dropdownItemBGActive, dropdowItemTextColor, dropdownItemTextColorActive, launcherVersionText, launcherSelectionBG;
+                dropdownItemBG, dropdownItemBGActive, dropdowItemTextColor, dropdownItemTextColorActive, launcherVersionText, launcherSelectionBG,
+                routeOuterBG, routeInnerBG, routeText, routeTextLight;
     private CustomButton searchButton, menuButton, routeButton, centerViewButton, zoomInButton, zoomOutButton,
             menuLayerButton, menuSaveButton, menuOpenButton, menuSettingsButton, menuRouteButton, menuInfoButton, 
             menuPinPointButton, pinPointPanButton, pinPointDeleteButton, arrowUpDownButton;
@@ -54,9 +55,13 @@ public class Style {
         dropdowItemTextColor = new Color(0,0,0);
         dropdownItemTextColorActive = new Color(255, 255, 255);
 
-
         launcherVersionText = new Color(160, 160, 160);
         launcherSelectionBG = new Color(130, 170, 200);
+
+        routeOuterBG = panelBG;
+        routeInnerBG = inputFieldBG;
+        routeText = new Color(180, 180, 180);
+        routeTextLight = new Color(255, 255, 255);
 
         searchButton = new CustomButton("resources/icons/search.png", alphaFloat, alphaHover);
         menuButton = new CustomButton("resources/icons/menu.png", alphaFloat, alphaHover);
@@ -71,7 +76,6 @@ public class Style {
         menuPinPointButton = new CustomButton("resources/icons/pinpointmenu.png", menuAlpha, menuAlphaHover);
         
         menuOpenButton = new CustomButton("resources/icons/open.png", menuAlpha, menuAlphaHover);
-        
 
         arrowUpDownButton = new CustomButton("resources/icons/arrowupdown.png", menuAlpha, menuAlphaHover);
         
@@ -198,4 +202,9 @@ public class Style {
     public ImageIcon launcherOptionsIcon() { return launcherOptionsIcon; }
     public ImageIcon launcherLoadIcon() { return launcherLoadIcon; }
     public Color launcherSelectionBG() { return launcherSelectionBG; }
+
+    public Color routeOuterBG() { return routeOuterBG; }
+    public Color routeInnerBG() { return routeInnerBG; }
+    public Color routeText() { return routeText; }
+    public Color routeTextLight() { return routeTextLight; }
 }

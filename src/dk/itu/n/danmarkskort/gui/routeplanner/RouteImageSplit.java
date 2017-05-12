@@ -21,8 +21,8 @@ public class RouteImageSplit {
 	
 	private void createSubImages() {
 		try {
-			if(Main.production) mainImage = ImageIO.read(getClass().getResourceAsStream("/resources/routeplanner/routing-sprite-osm_medium.png"));
-			else mainImage = ImageIO.read(new File("resources/routeplanner/routing-sprite-osm_medium.png"));
+			if(Main.production) mainImage = ImageIO.read(getClass().getResourceAsStream("/resources/routeplanner/routing-sprite-osm_medium-WHITE.png"));
+			else mainImage = ImageIO.read(new File("resources/routeplanner/routing-sprite-osm_medium-WHITE.png"));
 			int subImageWidth = mainImage.getWidth() / (NUMBER_OF_SUBIMAGES);
 			int subImageX = 0;
 			for(int i = 0; i < NUMBER_OF_SUBIMAGES; i++) {
