@@ -2,6 +2,8 @@ package dk.itu.n.danmarkskort.gui.routeplanner;
 
 import javax.swing.JPanel;
 
+import dk.itu.n.danmarkskort.Main;
+import dk.itu.n.danmarkskort.gui.Style;
 import dk.itu.n.danmarkskort.models.RouteModel;
 
 import java.awt.GridBagLayout;
@@ -14,8 +16,10 @@ import java.awt.Font;
 public class RoutePartStep extends JPanel {
 	private final String STEP_DESCRIPTION, STEP_DISTANCE, STEP_POSITION;
 	private final RouteModel routeModel;
+	private Style style;
 	
 	public RoutePartStep(int stepPosition, ImageIcon stepIcon, RouteModel routeModel) {
+		style = Main.style;
 		this.routeModel = routeModel;
 		STEP_POSITION = stepPosition+"";
 		STEP_DESCRIPTION = routeModel.getDescription();
@@ -37,7 +41,7 @@ public class RoutePartStep extends JPanel {
 		add(lblRouteIcon, gbc_lblRouteIcon);
 		
 		JLabel lblRoutePosition = new JLabel(STEP_POSITION);
-		lblRoutePosition.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		lblRoutePosition.setFont(style.normalText());
 		GridBagConstraints gbc_lblRouteposition = new GridBagConstraints();
 		gbc_lblRouteposition.insets = new Insets(0, 0, 5, 5);
 		gbc_lblRouteposition.gridx = 1;
@@ -45,7 +49,7 @@ public class RoutePartStep extends JPanel {
 		add(lblRoutePosition, gbc_lblRouteposition);
 		
 		JLabel lblRoutedescription = new JLabel(STEP_DESCRIPTION);
-		lblRoutedescription.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		lblRoutedescription.setFont(style.smallHeadline());
 		GridBagConstraints gbc_lblRoutedescription = new GridBagConstraints();
 		gbc_lblRoutedescription.anchor = GridBagConstraints.WEST;
 		gbc_lblRoutedescription.insets = new Insets(0, 0, 5, 5);
@@ -54,7 +58,7 @@ public class RoutePartStep extends JPanel {
 		add(lblRoutedescription, gbc_lblRoutedescription);
 		
 		JLabel lblRoutedistance = new JLabel(STEP_DISTANCE);
-		lblRoutedistance.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		lblRoutedistance.setFont(style.smallHeadline());
 		GridBagConstraints gbc_lblRoutedistance = new GridBagConstraints();
 		gbc_lblRoutedistance.insets = new Insets(0, 0, 5, 0);
 		gbc_lblRoutedistance.anchor = GridBagConstraints.EAST;

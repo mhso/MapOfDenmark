@@ -68,7 +68,7 @@ public class RoutePage extends JPanel {
         panelHeadline.setBackground(style.menuContentBG());
         panelPage.add(panelHeadline, BorderLayout.NORTH);
         JLabel lblPageHeadline = new JLabel("Find Route");
-        lblPageHeadline.setFont(new Font("Tahoma", Font.BOLD, 18));
+        lblPageHeadline.setFont(style.defaultHeadline());
         panelHeadline.add(lblPageHeadline);
         
         JPanel panelSouth = new JPanel();

@@ -36,7 +36,7 @@ public class PinPointPage extends JPanel {
         panelPage.add(panelHeadline, BorderLayout.NORTH);
         
         JLabel lblPageHeadline = new JLabel("Your Point of Interests");
-        lblPageHeadline.setFont(new Font("Tahoma", Font.BOLD, 18));
+        lblPageHeadline.setFont(style.defaultHeadline());
         panelHeadline.add(lblPageHeadline);
         
         JPanel panelSouth = new JPanel();

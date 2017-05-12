@@ -135,4 +135,9 @@ public class KDTreeTests {
 		KDTree<ParsedItem> kdTree = createKDTreeWithWays(0, 0, 0, -10, -10, 25);
 		assertTrue(kdTree.size() == 0);
 	}
+
+	@Test
+    public void testIterator() {
+
+    }
 }

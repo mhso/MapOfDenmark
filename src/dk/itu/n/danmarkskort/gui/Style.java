@@ -27,7 +27,7 @@ public class Style {
             menuPinPointButton, pinPointPanButton, pinPointDeleteButton, arrowUpDownButton;
     private ImageIcon scaleIndicator, basicThemePreview, nightThemePreview, bwThemePreview, logo, launcherOptionsIcon, launcherLoadIcon;
     private Image frameIcon;
-    private Font normalText, smallHeadline, mediumHeadline, largeHeadline, largeHeadlineSpacing;
+    private Font normalText, smallHeadline, mediumHeadline, largeHeadline, largeHeadlineSpacing, defaultLabelText, defaultHeadline, mapLabelFont;
 
     
     public Style() {
@@ -98,16 +98,22 @@ public class Style {
 
         try {
         	if(Main.production) {
-        		normalText= Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/resources/fonts/Roboto-Regular.ttf")).deriveFont(16f);
+        	    defaultLabelText = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/resources/fonts/Roboto-Medium.ttf")).deriveFont(13f);
+        		normalText = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/resources/fonts/Roboto-Regular.ttf")).deriveFont(16f);
                 smallHeadline = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/resources/fonts/Roboto-Medium.ttf")).deriveFont(18f);
+                defaultHeadline = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/resources/fonts/Roboto-Medium.ttf")).deriveFont(20f);
                 mediumHeadline = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/resources/fonts/Roboto-Light.ttf")).deriveFont(20f);
                 largeHeadline = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/resources/fonts/Roboto-Light.ttf")).deriveFont(42f);
+                mapLabelFont = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/resources/font/Roboto-Medium.ttf"));
         	}
         	else {
-        		normalText= Font.createFont(Font.TRUETYPE_FONT, new File("resources/fonts/Roboto-Regular.ttf")).deriveFont(16f);
+                defaultLabelText = Font.createFont(Font.TRUETYPE_FONT, new File("resources/fonts/Roboto-Medium.ttf")).deriveFont(13f);
+                normalText = Font.createFont(Font.TRUETYPE_FONT, new File("resources/fonts/Roboto-Regular.ttf")).deriveFont(16f);
                 smallHeadline = Font.createFont(Font.TRUETYPE_FONT, new File("resources/fonts/Roboto-Medium.ttf")).deriveFont(18f);
+                defaultHeadline = Font.createFont(Font.TRUETYPE_FONT, new File("resources/fonts/Roboto-Medium.ttf")).deriveFont(20f);
                 mediumHeadline = Font.createFont(Font.TRUETYPE_FONT, new File("resources/fonts/Roboto-Light.ttf")).deriveFont(20f);
                 largeHeadline = Font.createFont(Font.TRUETYPE_FONT, new File("resources/fonts/Roboto-Light.ttf")).deriveFont(42f);
+                mapLabelFont = Font.createFont(Font.TRUETYPE_FONT, new File("resources/fonts/Roboto-Medium.ttf"));
         	}
         } catch (FontFormatException e) {
             e.printStackTrace();
@@ -178,10 +184,13 @@ public class Style {
     
     public Image frameIcon() { return frameIcon; }
 
+    public Font defaultLabelText() { return defaultLabelText; }
     public Font normalText() { return normalText; }
     public Font smallHeadline() { return smallHeadline; }
+    public Font defaultHeadline() { return defaultHeadline; }
     public Font mediumHeadline() { return mediumHeadline; }
     public Font largeHeadline() { return largeHeadline; }
+    public Font mapLabelFont() { return mapLabelFont; }
     public Font largeHeadlineSpacing() { return largeHeadlineSpacing; }
 
     public Color launcherVersionText() { return launcherVersionText; }

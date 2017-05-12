@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 
 import dk.itu.n.danmarkskort.DKConstants;
+import dk.itu.n.danmarkskort.Main;
 
 public class GraphicSpecLabel extends WaytypeGraphicSpec {
 	private int fontSize;
@@ -13,7 +14,7 @@ public class GraphicSpecLabel extends WaytypeGraphicSpec {
 	public GraphicSpecLabel(int fontSize, Color fontColor) {
 		this.fontSize = fontSize;
 		setInnerColor(fontColor);
-		font = new Font("Tahoma", Font.BOLD, fontSize);
+		font = Main.style.mapLabelFont();
 		font = font.deriveFont(fontSize*DKConstants.FONTSIZE_MAGNIFYING_VALUE);
 	}
 
@@ -29,8 +30,7 @@ public class GraphicSpecLabel extends WaytypeGraphicSpec {
 	
 	public void setFontSize(int fontSize) {
 		this.fontSize = fontSize;
-		font = new Font("Tahoma", Font.BOLD, fontSize);
-		font = font.deriveFont(fontSize*DKConstants.FONTSIZE_MAGNIFYING_VALUE);
+		font = font.deriveFont(fontSize * DKConstants.FONTSIZE_MAGNIFYING_VALUE);
 	}
 	
 	public String toString() {
