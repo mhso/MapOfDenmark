@@ -96,10 +96,9 @@ public class AddressController {
 	
 	public Housenumber searchHousenumberKDTree(Point2D.Float lonLat){		
 		if(lonLat != null) {
-			Main.log(housenumberTree.size());
 			Housenumber hn = housenumberTree.nearest(lonLat);
 			if(hn != null) { Main.log("RouteController found house: " + hn.toString()); }
-			else { Main.log("No edge found"); }
+			else { Main.log("No house found"); }
 			return hn;
 		}
 		return null;

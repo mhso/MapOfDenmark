@@ -98,6 +98,12 @@
 			<lineproperties linewidth="8"/>
 			<layer layer="2"/>
 		</line>
+		<line>
+			<type name="PIER"/>
+			<innercolor color="EEEEEE"/>
+			<lineproperties linewidth="30"/>
+			<layer layer="2"/>
+		</line>
 	</lines>
 	<areas>
 		<area>
@@ -108,6 +114,11 @@
 		<area>
 			<type name="WATER"/>
 			<innercolor color="6EC0FF"/>
+			<layer layer="2"/>
+		</area>
+		<area>
+			<type name="BRIDGE"/>
+			<innercolor color="B8B8B8"/>
 			<layer layer="2"/>
 		</area>
 		<area>

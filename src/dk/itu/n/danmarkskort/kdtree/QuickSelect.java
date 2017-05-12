@@ -2,11 +2,6 @@ package dk.itu.n.danmarkskort.kdtree;
 
 import java.util.Random;
 
-import dk.itu.n.danmarkskort.Main;
-import dk.itu.n.danmarkskort.models.ParsedItem;
-import dk.itu.n.danmarkskort.models.ParsedRelation;
-import dk.itu.n.danmarkskort.models.ParsedWay;
-
 public class QuickSelect {
 
     // finds the Kth smallest item of the list.

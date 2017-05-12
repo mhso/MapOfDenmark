@@ -152,7 +152,7 @@ public class Util {
 	}
 
 	public static Point2D toRealCoords(Point2D fakeCoords) {
-		return new Point2D.Float((float)fakeCoords.getX()/Main.model.getLonFactor(), (float)-fakeCoords.getY());
+		return new Point2D.Double(fakeCoords.getX()/Main.model.getLonFactor(), -fakeCoords.getY());
 	}
 
 	public static Point2D toFakeCoords(Point2D realCoords) {
@@ -165,9 +165,8 @@ public class Util {
 		float lon = Float.parseFloat(strArr[1]);
 		Point2D realCoords = new Point2D.Float(lon, lat);
 		Point2D fakeCoords = Util.toFakeCoords(realCoords);
-		System.out.println(realCoords);
-		System.out.println(fakeCoords);
-		return new Point2D.Float((float)fakeCoords.getX(), (float)fakeCoords.getY());
+		Point2D.Float coord = new Point2D.Float((float)fakeCoords.getX(), (float)fakeCoords.getY());
+		return coord;
 	}
 
 	public static String getBinaryFilePath() {
