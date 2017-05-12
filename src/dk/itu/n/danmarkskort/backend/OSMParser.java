@@ -455,6 +455,7 @@ public class OSMParser extends SAXAdapter {
                         break;
                     case "meadow":
                     	waytype = WayType.MEADOW;
+                    	break;
                     case "industrial":
                         waytype = WayType.INDUSTRIAL;
                         break;
@@ -522,11 +523,12 @@ public class OSMParser extends SAXAdapter {
                 break;
             case "man_made":
                 switch(v) {
-                    case "breakwater":
-                        waytype = WayType.BREAKWATER;
-                        break;
                     case "pier":
                         waytype = WayType.PIER;
+                        break;
+                    case "breakwater":
+                    case "bridge":
+                        waytype = WayType.BRIDGE;
                         break;
                     case "embankment":
                         waytype = WayType.EMBANKMENT;
@@ -548,9 +550,11 @@ public class OSMParser extends SAXAdapter {
                     case "stadium":
                         waytype = WayType.STADIUM;
                         break;
-                    case "park":
                     case "common":
+                        waytype = WayType.MEADOW;
+                        break;
                     case "garden":
+                    case "park":
                         waytype = WayType.PARK;
                         break;
                     case "playground":
