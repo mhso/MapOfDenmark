@@ -47,7 +47,7 @@ public class SettingsPage extends JPanel {
         panelPage.add(panelHeadline, BorderLayout.NORTH);
         
         JLabel lblPageHeadline = new JLabel("Settings");
-        lblPageHeadline.setFont(new Font("Tahoma", Font.BOLD, 18));
+        lblPageHeadline.setFont(style.defaultHeadline());
         panelHeadline.add(lblPageHeadline);
         
         JPanel panelSouth = new JPanel();

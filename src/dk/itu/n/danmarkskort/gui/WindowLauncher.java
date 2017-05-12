@@ -106,7 +106,7 @@ public class WindowLauncher extends JFrame {
 		JScrollPane scroll = new JScrollPane(binFilesList);
 		scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 		scroll.getVerticalScrollBar().setUnitIncrement(6);
-		scroll.getVerticalScrollBar().setUI(new CustomScrollBarUI(style));
+		scroll.getVerticalScrollBar().setUI(new CustomScrollBarUI());
 		scroll.setBorder(null);
 		panelParsedFiles.add(scroll);
 		
