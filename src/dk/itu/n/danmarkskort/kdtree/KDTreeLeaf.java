@@ -61,14 +61,16 @@ public class KDTreeLeaf<T extends KDComparable> extends KDTree<T> {
     	if(targetDepth == currentDepth) return 1;
     	return 0;
     }
-    
+
     private boolean overlaps(Region reg) {
         double minX = reg.x1 < reg.x2 ? reg.x1 : reg.x2;
         double minY = reg.y1 < reg.y2 ? reg.y1 : reg.y2;
+        double width = Math.abs(reg.getWidth());
+        double height = Math.abs(reg.getHeight());
 
-        return minLon <= minX + reg.getWidth() &&
+        return minLon <= minX + width &&
                 minLon + (maxLon - minLon) >= minX &&
-                minLat <= minY + reg.getHeight() &&
+                minLat <= minY + height &&
                 minLat + (maxLat - minLat) >= minY;
     }
 

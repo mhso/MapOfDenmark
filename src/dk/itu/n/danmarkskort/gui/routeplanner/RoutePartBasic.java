@@ -2,7 +2,8 @@ package dk.itu.n.danmarkskort.gui.routeplanner;
 
 import javax.swing.JPanel;
 
-import dk.itu.n.danmarkskort.models.RouteEnum;
+import dk.itu.n.danmarkskort.Main;
+import dk.itu.n.danmarkskort.gui.Style;
 import dk.itu.n.danmarkskort.models.RouteModel;
 import dk.itu.n.danmarkskort.routeplanner.WeightEnum;
 
@@ -11,10 +12,7 @@ import java.awt.GridBagLayout;
 import javax.swing.JLabel;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
-import java.util.ArrayList;
 import java.util.List;
-import java.awt.Component;
-import java.awt.Font;
 
 public class RoutePartBasic extends JPanel {
 	private static final long serialVersionUID = 3150387631326599889L;
@@ -23,11 +21,16 @@ public class RoutePartBasic extends JPanel {
 	private double routeTotalDistance;
 	private int routeSeconds;
 	private RouteImageSplit routeImageSplit;
+	private Style style;
+
 	public RoutePartBasic(String routeFrom, String routeTo, WeightEnum weightEnum, JPanel parent,  List<RouteModel> routeModels) {
 		ROUTE_FROM = routeFrom;
 		ROUTE_TO = routeTo;
 		this.weightEnum = weightEnum;
 		routeImageSplit = new RouteImageSplit();
+
+		style = Main.style;
+		setBackground(style.routeInnerBG());
 		
 		initRouteSteps(parent, routeModels);
 		
@@ -45,8 +48,9 @@ public class RoutePartBasic extends JPanel {
 		gbc_lblRouteIcon.gridy = 0;
 		add(lblRouteIcon, gbc_lblRouteIcon);
 		
-		JLabel lblHereYouGo = new JLabel("Here you go, a wonderful route has been planned");
-		lblHereYouGo.setFont(new Font("Tahoma", Font.BOLD, 22));
+		JLabel lblHereYouGo = new JLabel("Here you go. A wonderful route has been planned just for you");
+		lblHereYouGo.setForeground(style.routeTextLight());
+		lblHereYouGo.setFont(style.defaultHeadline());
 		GridBagConstraints gbc_lblHereYouGo = new GridBagConstraints();
 		gbc_lblHereYouGo.anchor = GridBagConstraints.WEST;
 		gbc_lblHereYouGo.insets = new Insets(0, 0, 5, 5);
@@ -55,7 +59,8 @@ public class RoutePartBasic extends JPanel {
 		add(lblHereYouGo, gbc_lblHereYouGo);
 		
 		JLabel lblFrom = new JLabel("From: "+ROUTE_FROM);
-		lblFrom.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		lblFrom.setForeground(style.routeText());
+		lblFrom.setFont(style.smallHeadline());
 		GridBagConstraints gbc_lblFrom = new GridBagConstraints();
 		gbc_lblFrom.anchor = GridBagConstraints.WEST;
 		gbc_lblFrom.insets = new Insets(0, 0, 5, 5);
@@ -64,7 +69,8 @@ public class RoutePartBasic extends JPanel {
 		add(lblFrom, gbc_lblFrom);
 		
 		JLabel lblTo = new JLabel("To: "+ROUTE_TO);
-		lblTo.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		lblTo.setForeground(style.routeText());
+		lblTo.setFont(style.smallHeadline());
 		GridBagConstraints gbc_lblTo = new GridBagConstraints();
 		gbc_lblTo.anchor = GridBagConstraints.WEST;
 		gbc_lblTo.insets = new Insets(0, 0, 5, 5);
@@ -72,8 +78,9 @@ public class RoutePartBasic extends JPanel {
 		gbc_lblTo.gridy = 2;
 		add(lblTo, gbc_lblTo);
 		
-		JLabel lblRouteDistance = new JLabel("Distance: " + makeDistance(routeTotalDistance) + " estimated time: " + makeTime(routeSeconds));
-		lblRouteDistance.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		JLabel lblRouteDistance = new JLabel("Distance: " + makeDistance(routeTotalDistance) + " Estimated time: " + makeTime(routeSeconds));
+		lblRouteDistance.setForeground(style.routeTextLight());
+		lblRouteDistance.setFont(style.normalText());
 		GridBagConstraints gbc_lblRouteDistance = new GridBagConstraints();
 		gbc_lblRouteDistance.insets = new Insets(0, 0, 5, 0);
 		gbc_lblRouteDistance.anchor = GridBagConstraints.WEST;
@@ -123,9 +130,9 @@ public class RoutePartBasic extends JPanel {
 			if(minutes > 60) {
 				int hours = minutes/60;
 				minutes = minutes%60;
-				result = hours + " hours, " + minutes + " minutes and " + (int)seconds + " seconds.";
+				result = hours + " hours, " + minutes + " minutes and " + seconds + " seconds.";
 			}
-			else result = minutes + " minutes and " + (int)seconds + " seconds.";
+			else result = minutes + " minutes and " + seconds + " seconds.";
 		}
 		else result = seconds + " seconds.";
 		return result;

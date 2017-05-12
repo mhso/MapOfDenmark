@@ -20,7 +20,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Observable;
 
-import javax.swing.JPanel;
+import javax.swing.*;
 
 import dk.itu.n.danmarkskort.DKConstants;
 import dk.itu.n.danmarkskort.Main;
@@ -229,8 +229,8 @@ public class MapCanvas extends JPanel {
             	currentWTGSpec = wayTypeLabel;
             	KDTree<ParsedPlace> kdTree = Main.model.getEnumMapPlacesKD().get(wayTypeLabel.getWayType());
             	if(kdTree == null) continue;
-            	currentWTGSpec.transformPrimary(g2d);
-				for (Iterator<ParsedPlace> i = kdTree.iterator(currentRegion); i.hasNext(); ) {
+                currentWTGSpec.transformPrimary(g2d);
+				for(Iterator<ParsedPlace> i = kdTree.iterator(currentRegion); i.hasNext(); ) {
 					ParsedPlace place = i.next();
                     g2d.drawString(place.getName(), place.x, place.y);
                     shapesDrawn++;
