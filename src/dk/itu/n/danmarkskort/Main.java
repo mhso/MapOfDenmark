@@ -24,7 +24,7 @@ public class Main {
 	public final static String APP_NAME = "Yak Maps";
 	public final static String APP_VERSION = "0.9";
 	public final static boolean debug = true;
-	public final static boolean debugExtra = true;
+	public final static boolean debugExtra = false;
 	public final static boolean production = false;
 	public final static boolean buffered = true;
 	public final static boolean saveParsedAddresses = true;
@@ -48,6 +48,7 @@ public class Main {
     public static void main(String[] args) {
 		System.setProperty("awt.useSystemAAFontSettings","on");
 		System.setProperty("swing.aatext", "true");
+
 		userPreferences = (UserPreferences)Util.readObjectFromFile(DKConstants.USERPREF_PATH);
 		if(userPreferences == null) {
 			userPreferences = new UserPreferences();
@@ -69,6 +70,8 @@ public class Main {
 		
 		routeController = new RouteController();
 		style = new Style();
+		UIManager.put("Label.font", style.defaultLabelText());
+
 		if(args.length > 0) prepareParser(args);
 		else prepareParser(new String[]{userPreferences.getDefaultMapFile()});
 		if(userPreferences.getCurrentMapTheme() != null) {

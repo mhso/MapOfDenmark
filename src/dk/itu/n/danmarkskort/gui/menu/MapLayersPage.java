@@ -38,7 +38,7 @@ public class MapLayersPage extends JPanel {
         panelHeadline.setBackground(style.menuContentBG());
         panelPage.add(panelHeadline, BorderLayout.NORTH);
         JLabel lblPageHeadline = new JLabel("Map Layers");
-        lblPageHeadline.setFont(new Font("Tahoma", Font.BOLD, 18));
+        lblPageHeadline.setFont(style.defaultHeadline());
         panelHeadline.add(lblPageHeadline);
         
         JPanel panelSouth = new JPanel();
@@ -67,7 +67,6 @@ public class MapLayersPage extends JPanel {
         panelDefault.setLayout(new BorderLayout(30, 0));
         
         JLabel labelDefaultPreset = new JLabel("Default Preset");
-        labelDefaultPreset.setFont(new Font("Tahoma", Font.PLAIN, 12));
         panelDefault.add(labelDefaultPreset, BorderLayout.CENTER);
         
         JRadioButton buttonDefault = new JRadioButton("");
@@ -86,7 +85,6 @@ public class MapLayersPage extends JPanel {
         panelBike.setLayout(new BorderLayout(30, 0));
         
         JLabel labelBikePreset = new JLabel("Biking/Walking Preset");
-        labelBikePreset.setFont(new Font("Tahoma", Font.PLAIN, 12));
         panelBike.add(labelBikePreset, BorderLayout.CENTER);
         
         JRadioButton buttonBike = new JRadioButton("");
@@ -106,7 +104,6 @@ public class MapLayersPage extends JPanel {
         panelCar.setLayout(new BorderLayout(30, 0));
         
         JLabel labelCarPreset = new JLabel("Car Preset");
-        labelCarPreset.setFont(new Font("Tahoma", Font.PLAIN, 12));
         panelCar.add(labelCarPreset, BorderLayout.CENTER);
         
         JRadioButton buttonCar = new JRadioButton("");
@@ -127,7 +124,6 @@ public class MapLayersPage extends JPanel {
         panelCustomize.setLayout(new BorderLayout(30, 0));
         
         JLabel labelCustomize = new JLabel("Custom Preset");
-        labelCustomize.setFont(new Font("Tahoma", Font.PLAIN, 12));
         panelCustomize.add(labelCustomize, BorderLayout.CENTER);
         
         JRadioButton buttonCustom = new JRadioButton("");

@@ -21,10 +21,7 @@ import dk.itu.n.danmarkskort.routeplanner.WeightEnum;
 import dk.itu.n.danmarkskort.search.SearchController;
 
 import java.awt.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -68,7 +65,7 @@ public class RoutePage extends JPanel {
         panelHeadline.setBackground(style.menuContentBG());
         panelPage.add(panelHeadline, BorderLayout.NORTH);
         JLabel lblPageHeadline = new JLabel("Find Route");
-        lblPageHeadline.setFont(new Font("Tahoma", Font.BOLD, 18));
+        lblPageHeadline.setFont(style.defaultHeadline());
         panelHeadline.add(lblPageHeadline);
         
         JPanel panelSouth = new JPanel();
@@ -319,7 +316,7 @@ public class RoutePage extends JPanel {
 		    			Main.map.zoomToRouteRegion(Main.routeController.getRouteRegion());
 		    			bufferedImage = Main.map.getRoutePreviewImage();
 						
-						RoutePlannerMain routePlannerMain =  new RoutePlannerMain(bufferedImage, addrFrom.toStringShort(), addrTo.toStringShort(), 
+						RoutePlannerMain routePlannerMain = new RoutePlannerMain(bufferedImage, addrFrom.toStringShort(), addrTo.toStringShort(),
 								weightEnum, routemodels);
 					}else {
 						menu.blockVisibility(true);

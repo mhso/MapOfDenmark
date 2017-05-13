@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import dk.itu.n.danmarkskort.Main;
 import org.apache.commons.lang3.StringUtils;
 
 import dk.itu.n.danmarkskort.models.RegionFloat;
