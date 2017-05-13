@@ -165,8 +165,7 @@ public class Util {
 		float lon = Float.parseFloat(strArr[1]);
 		Point2D realCoords = new Point2D.Float(lon, lat);
 		Point2D fakeCoords = Util.toFakeCoords(realCoords);
-		Point2D.Float coord = new Point2D.Float((float)fakeCoords.getX(), (float)fakeCoords.getY());
-		return coord;
+		return new Point2D.Float((float)fakeCoords.getX(), (float)fakeCoords.getY());
 	}
 
 	public static String getBinaryFilePath() {
