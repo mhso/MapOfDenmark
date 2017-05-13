@@ -29,8 +29,8 @@ public class KDTreeLeafTest {
 
     @Test
     public void testGetItems() {
-        int numItems = 10;
-        KDTreeLeaf<KDComparable> leaf = makeKDTreeLeaf(numItems, 1, 1, 1);
+        int size = 10;
+        KDTreeLeaf<KDComparable> leaf = makeKDTreeLeaf(size, 1, 1, 1);
 
         Region regionSurrounding = new Region(-10, -10, 20, 20);
         Region regionSurrounded = new Region(2, 2, 5, 5);
@@ -41,14 +41,14 @@ public class KDTreeLeafTest {
         Region regionBarelyTouching = new Region(-10, -10, 1, 1);
         Region regionReversedSurrounding = new Region(20, 20, -10, -10);
 
-        assertEquals(numItems, leaf.getAllItems().get(0).length);
-        assertEquals(numItems, leaf.getItems(regionSurrounding).get(0).length);
-        assertEquals(numItems, leaf.getItems(regionSurrounded).get(0).length);
+        assertEquals(size, leaf.getAllItems().get(0).length);
+        assertEquals(size, leaf.getItems(regionSurrounding).get(0).length);
+        assertEquals(size, leaf.getItems(regionSurrounded).get(0).length);
         assertEquals(0, leaf.getItems(regionLeftOf).size());
         assertEquals(0, leaf.getItems(regionTopOf).size());
         assertEquals(0, leaf.getItems(regionRightOf).size());
         assertEquals(0, leaf.getItems(regionBottomOf).size());
-        assertEquals(numItems, leaf.getItems(regionBarelyTouching).get(0).length);
-        assertEquals(numItems, leaf.getItems(regionReversedSurrounding).get(0).length);
+        assertEquals(size, leaf.getItems(regionBarelyTouching).get(0).length);
+        assertEquals(size, leaf.getItems(regionReversedSurrounding).get(0).length);
     }
 }

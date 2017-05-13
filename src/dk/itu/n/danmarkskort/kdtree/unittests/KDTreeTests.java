@@ -19,7 +19,7 @@ import dk.itu.n.danmarkskort.models.Region;
 public class KDTreeTests {
 	private final boolean DEBUG = true;
 	
-	public KDTree<ParsedItem> createKDTreeWithWays(int dataSize, int shiftValueX1, int shiftValueY1, 
+	public KDTree<ParsedItem> makeKDTreeWithWays(int dataSize, int shiftValueX1, int shiftValueY1,
 			int shiftValueX2, int shiftValueY2, int kdSize) {
 		List<ParsedItem> items = new ArrayList<>();
 		for(int i = 0; i < dataSize; i++) {
@@ -31,7 +31,7 @@ public class KDTreeTests {
 		return new KDTreeNode<>(items, kdSize);
 	}
 
-	public KDTree<ParsedPlace> createKDTreeWithPlace(int dataSize, float lon, float lat, int kdSize) {
+	public KDTree<ParsedPlace> makeKDTreeWithPlace(int dataSize, float lon, float lat, int kdSize) {
 		List<ParsedPlace> items = new ArrayList<>();
 		for(int i = 0; i < dataSize; i++) {
 			ParsedPlace place = new ParsedPlace("", lon+i, lat+i);
@@ -42,14 +42,14 @@ public class KDTreeTests {
 	
 	@Test
 	public void testKDTreeNotNull() {
-		KDTree<ParsedItem> kdTree = createKDTreeWithWays(101, 0, 0, -10, -10, 25);
+		KDTree<ParsedItem> kdTree = makeKDTreeWithWays(101, 0, 0, -10, -10, 25);
 		if(DEBUG) System.out.println("Test not Null: " + kdTree);
 		assertNotNull(kdTree);
 	}
 	
 	@Test
 	public void testNodeAmount() {
-		KDTree<ParsedItem> kdTree = createKDTreeWithWays(101, 0, 0, -10, -10, 25);
+		KDTree<ParsedItem> kdTree = makeKDTreeWithWays(101, 0, 0, -10, -10, 25);
 		int expected = 4;
 		if(DEBUG) System.out.println("Test node amount, expected "+expected+", got " + kdTree.nodeSize());
 		assertTrue(kdTree.nodeSize() == expected);
@@ -57,7 +57,7 @@ public class KDTreeTests {
 	
 	@Test
 	public void testLeafAmount() {
-		KDTree<ParsedItem> kdTree = createKDTreeWithWays(101, 0, 0, -10, -10, 25);
+		KDTree<ParsedItem> kdTree = makeKDTreeWithWays(101, 0, 0, -10, -10, 25);
 		int expected = 5;
 		if(DEBUG) System.out.println("Test leaf amount, expected "+expected+", got " + kdTree.leafSize());
 		assertTrue(kdTree.leafSize() == expected);
@@ -65,7 +65,7 @@ public class KDTreeTests {
 	
 	@Test
 	public void testNodeAmountWithSkewedValues() {
-		KDTree<ParsedItem> kdTree = createKDTreeWithWays(1, 0, 0, -10, -10, 25);
+		KDTree<ParsedItem> kdTree = makeKDTreeWithWays(1, 0, 0, -10, -10, 25);
 		int expected = 1;
 		if(DEBUG) System.out.println("Test node amount, expected "+expected+", got " + kdTree.nodeSize());
 		assertTrue(kdTree.nodeSize() == expected);
@@ -73,7 +73,7 @@ public class KDTreeTests {
 	
 	@Test
 	public void testLeafAmountWithSkewedValues() {
-		KDTree<ParsedItem> kdTree = createKDTreeWithWays(2, 0, 0, -10, -10, 25);
+		KDTree<ParsedItem> kdTree = makeKDTreeWithWays(2, 0, 0, -10, -10, 25);
 		int expected = 2;
 		if(DEBUG) System.out.println("Test leaf amount, expected "+expected+", got " + kdTree.leafSize());
 		assertTrue(kdTree.leafSize() == expected);
@@ -81,7 +81,7 @@ public class KDTreeTests {
 	
 	@Test
 	public void testNodeAmountAtDepth() {
-		KDTree<ParsedItem> kdTree = createKDTreeWithWays(150, 0, 0, -10, -10, 25);
+		KDTree<ParsedItem> kdTree = makeKDTreeWithWays(150, 0, 0, -10, -10, 25);
 		int level = 4;
 		int expected = 8;
 		if(DEBUG) System.out.println("Test node amount at level "+level+", expected "+expected+", got " + 
@@ -91,7 +91,7 @@ public class KDTreeTests {
 	
 	@Test
 	public void testSize() {
-		KDTree<ParsedItem> kdTree = createKDTreeWithWays(100, 0, 0, -10, -10, 25);
+		KDTree<ParsedItem> kdTree = makeKDTreeWithWays(100, 0, 0, -10, -10, 25);
 		int expected = 100;
 		if(DEBUG) System.out.println("Test tree size, expected "+expected+", got " + kdTree.size());
 		assertTrue(kdTree.size() == expected);
@@ -99,14 +99,14 @@ public class KDTreeTests {
 	
 	@Test(expected=IllegalArgumentException.class)
 	public void testKDSearchNullInput() {
-		KDTree<ParsedItem> kdTree = createKDTreeWithWays(100, 0, 0, -10, -10, 25);
+		KDTree<ParsedItem> kdTree = makeKDTreeWithWays(100, 0, 0, -10, -10, 25);
 		Iterator<ParsedItem> it = kdTree.iterator(null);
 	}
 	
 	@Test
 	public void testKDSearchOneElement() {
-		KDTree<ParsedItem> itemTree = createKDTreeWithWays(1, 0, 0, -10, -10, 25);
-		KDTree<ParsedPlace> placeTree = createKDTreeWithPlace(1, 0, 0, 25);
+		KDTree<ParsedItem> itemTree = makeKDTreeWithWays(1, 0, 0, -10, -10, 25);
+		KDTree<ParsedPlace> placeTree = makeKDTreeWithPlace(1, 0, 0, 25);
 
 		ParsedItem item = null, item2 = null, nullItem = null;
 		ParsedPlace place = null, place2 = null, nullPlace = null;
@@ -132,7 +132,7 @@ public class KDTreeTests {
 	
 	@Test
 	public void testKDcreationEmptyData() {
-		KDTree<ParsedItem> kdTree = createKDTreeWithWays(0, 0, 0, -10, -10, 25);
+		KDTree<ParsedItem> kdTree = makeKDTreeWithWays(0, 0, 0, -10, -10, 25);
 		assertTrue(kdTree.size() == 0);
 	}
 }
