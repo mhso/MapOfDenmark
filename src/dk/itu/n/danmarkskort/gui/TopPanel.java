@@ -6,7 +6,6 @@ import dk.itu.n.danmarkskort.address.Address;
 import dk.itu.n.danmarkskort.gui.components.SearchField;
 import dk.itu.n.danmarkskort.gui.map.PinPoint;
 import dk.itu.n.danmarkskort.gui.menu.DropdownMenu;
-import dk.itu.n.danmarkskort.gui.menu.PinPointPage;
 import dk.itu.n.danmarkskort.models.Region;
 import dk.itu.n.danmarkskort.search.SearchController;
 
@@ -162,7 +161,7 @@ public class TopPanel extends JPanel {
     	if(!address.isEmpty()) {
     		Address addr = SearchController.getSearchFieldAddressObj(address);
         	if(addr != null ) { 
-        		System.out.println("Toppanel->searchForAddress: "+addr.toString());
+        		Main.log("Toppanel->searchForAddress: "+addr.toString());
         		panZoomToCoordinates(addr.getLonLatAsPoint());
         	} else {
         		JOptionPane.showMessageDialog(null, "No match found.", "Missing information", JOptionPane.INFORMATION_MESSAGE);
