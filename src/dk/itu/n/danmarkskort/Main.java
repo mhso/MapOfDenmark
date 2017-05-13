@@ -99,7 +99,6 @@ public class Main {
 				osmReader.parseFile(args[0], parser);
 				ReuseStringObj.clear();
 				main();
-		        shutdown();
 			}
 		};
 		new Thread(r, "ParseThread").start();

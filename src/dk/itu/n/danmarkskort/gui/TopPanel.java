@@ -7,6 +7,7 @@ import dk.itu.n.danmarkskort.gui.components.SearchField;
 import dk.itu.n.danmarkskort.gui.map.PinPoint;
 import dk.itu.n.danmarkskort.gui.menu.DropdownMenu;
 import dk.itu.n.danmarkskort.gui.menu.PinPointPage;
+import dk.itu.n.danmarkskort.models.Region;
 import dk.itu.n.danmarkskort.search.SearchController;
 
 import javax.swing.*;
@@ -175,9 +176,7 @@ public class TopPanel extends JPanel {
     	Main.log("Toppanel->panZoomToCoordinats (lon, lat): " + input.toString() + "\n -->, real (lon, lat): " + Util.toRealCoords(input));
     	String pinPointName = "SearchLocation - " + input.toString();
     	makePinPoint(input, pinPointName);
-    	Main.map.panToPosition(new Point2D.Float(input.x, input.y));
-    	Main.mainPanel.revalidate();
-    	Main.mainPanel.repaint();
+    	Main.map.zoomToRegion(new Region(input.x-0.02, input.y-0.02, input.x+0.02, input.y+0.02));
 	}
     
     private void makePinPoint(Point2D inputScreenCords, String pinPointName) {
