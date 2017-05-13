@@ -73,9 +73,7 @@ public class SettingsPage extends JPanel {
         defaultCenterPanel.setLayout(new GridLayout(0, 1, 0, 10));
         panelCenter.add(defaultCenterPanel, "name_default");
         
-        JButton buttonChangeMapTheme = new JButton("Change Map Theme");
-        buttonChangeMapTheme.setBackground(new Color(224, 255, 255));
-        buttonChangeMapTheme.setBorder(new LineBorder(new Color(0, 153, 204), 2, true));
+        JButton buttonChangeMapTheme = style.themeMenuButton();
         buttonChangeMapTheme.addActionListener(e -> showMapThemePanel());
         defaultCenterPanel.add(buttonChangeMapTheme);
         
@@ -86,7 +84,7 @@ public class SettingsPage extends JPanel {
         defaultCenterPanel.add(buttonChangePreferences);
         
         // Hack! Couldn't get ScrollPane to work properly with CardLayout, so inserting a RigidArea here to push setting buttons to the top.
-        defaultCenterPanel.add(Box.createRigidArea(new Dimension(20, 20)));
+        defaultCenterPanel.add(Box.createRigidArea(new Dimension(20, 30)));
         
         createMapThemePanel();
         
@@ -100,7 +98,7 @@ public class SettingsPage extends JPanel {
     	JPanel panelMapTheme = new JPanel();
         panelMapTheme.setOpaque(false);
         panelCenter.add(panelMapTheme, "name_maptheme");
-        panelMapTheme.setLayout(new BorderLayout(0, 5));
+        panelMapTheme.setLayout(new BorderLayout(0, 0));
         
         JLabel labelChangeTheme = new JLabel("Change Map Theme");
         labelChangeTheme.setFont(new Font("Tahoma", Font.PLAIN, 20));
@@ -373,7 +371,7 @@ public class SettingsPage extends JPanel {
         
         JButton buttonBack = new JButton("Back");
         buttonBack.addActionListener(e -> showDefaultPanel());
-        panelSouth.add(buttonBack, BorderLayout.EAST);
+        panelSouth.add(buttonBack, BorderLayout.WEST);
         
         // Hack! Couldn't get ScrollPane to work properly with CardLayout, so inserting a RigidArea here to push preference buttons to the top.
         panelSouth.add(Box.createRigidArea(new Dimension(20, 60)), BorderLayout.SOUTH);

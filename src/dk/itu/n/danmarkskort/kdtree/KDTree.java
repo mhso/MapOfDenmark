@@ -16,34 +16,16 @@ public abstract class KDTree<T extends KDComparable> implements Serializable, It
     abstract List<KDComparable[]> getItems(Region reg, boolean sortByLon);
 
     abstract List<KDComparable[]> getAllItems();
+
+    public abstract int nodeSize();
+
+    public int nodesAndLeafsAtDepth(int targetDepth) { return nodesAndLeafsAtDepth(targetDepth, 0); }
     
-    public int nodeSize() {
-    	return nodeSize(0);
-    }
-    
-    protected int nodeSize(int currentSize) {
-    	return currentSize;
-    }
-    
-    public int nodeSizeAt(int depth) {
-    	return nodeSizeAt(depth, 0, 0);
-    }
-    
-    protected abstract int nodeSizeAt(int depth, int currentDepth, int currentSize);
-    
-    public int leafSize() {
-    	return leafSize(0);
-    }
-    
-    public int size() {
-    	return size(0);
-    }
-    
-    protected int size(int currentSize) {
-    	return currentSize;
-    }
-    
-    protected abstract int leafSize(int currentSize);
+    abstract int nodesAndLeafsAtDepth(int targetDepth, int currentDepth);
+
+    public abstract int size();
+
+    public abstract int leafSize();
 
     public Iterator<T> iterator() { return new KDTreeIterator(); }
 

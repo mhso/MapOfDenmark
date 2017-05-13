@@ -83,6 +83,16 @@
 		<area>
 			<type name="COASTLINE"/>
 			<innercolor color="333333"/>
+			<layer layer="0"/>
+		</area>
+		<area>
+			<type name="RESIDENTIAL"/>
+			<innercolor color="767776"/>
+			<layer layer="1"/>
+		</area>
+		<area>
+			<type name="INDUSTRIAL"/>
+			<innercolor color="4F524F"/>
 			<layer layer="1"/>
 		</area>
 		<area>
@@ -98,8 +108,13 @@
 			<layer layer="3"/>
 		</area>
 		<area>
+			<type name="WETLAND"/>
+			<innercolor color="232C2C"/>
+			<layer layer="2"/>
+		</area>
+		<area>
 			<type name="WOOD"/>
-			<innercolor color="8BA282"/>
+			<innercolor color="768970"/>
 			<layer layer="2"/>
 		</area>
 		<area>
@@ -115,7 +130,12 @@
 		</area>
 		<area>
 			<type name="FARMLAND"/>
-			<innercolor color="B7AF93"/>
+			<innercolor color="9F9774"/>
+			<layer layer="2"/>
+		</area>
+		<area>
+			<type name="RAILWAY"/>
+			<innercolor color="353535"/>
 			<layer layer="2"/>
 		</area>
 		<area>
@@ -146,7 +166,7 @@
 		<label>
 			<type name="PLACE_CITY"/>
 			<innercolor color="FFFFFF"/>
-			<fontsize fontsize="30"/>
+			<fontsize fontsize="32"/>
 			<layer layer="5"/>
 		</label>
 		<label>
