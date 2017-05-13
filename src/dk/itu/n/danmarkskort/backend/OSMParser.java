@@ -1,51 +1,48 @@
 package dk.itu.n.danmarkskort.backend;
 
 import dk.itu.n.danmarkskort.Main;
-import dk.itu.n.danmarkskort.address.AddressController;
 import dk.itu.n.danmarkskort.models.*;
 import dk.itu.n.danmarkskort.kdtree.*;
 
 import dk.itu.n.danmarkskort.routeplanner.RouteController;
-import dk.itu.n.danmarkskort.routeplanner.RouteVertex;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 import java.awt.geom.Point2D;
-import java.io.Serializable;
 import java.util.*;
 
 public class OSMParser extends SAXAdapter {
-    private transient NodeMap nodeMap;
-    private transient HashMap<Long, ParsedWay> temporaryWayReferences;
-    private transient HashMap<Long, ParsedRelation> temporaryRelationReferences;
-    private transient HashMap<Point2D.Float, ParsedWay> coastlineMap;
+    private NodeMap nodeMap;
+    private HashMap<Long, ParsedWay> temporaryWayReferences;
+    private HashMap<Long, ParsedRelation> temporaryRelationReferences;
+    private HashMap<Point2D.Float, ParsedWay> coastlineMap;
 
-    private transient EnumMap<WayType, ArrayList<ParsedItem>> enumMap;
-    private transient EnumMap<WayType, ArrayList<ParsedPlace>> places;
+    private EnumMap<WayType, ArrayList<ParsedItem>> enumMap;
+    private EnumMap<WayType, ArrayList<ParsedPlace>> places;
 
-    private transient ParsedWay way;
-    private transient ParsedRelation relation;
-    private transient ParsedNode node;
-    private transient ParsedAddress address;
-    private transient ParsedPlace place;
+    private ParsedWay way;
+    private ParsedRelation relation;
+    private ParsedNode node;
+    private ParsedAddress address;
+    private ParsedPlace place;
 
-    private transient WayType waytype;
-    private transient ArrayList<Point2D.Float> currentNodes;
+    private WayType waytype;
+    private ArrayList<Point2D.Float> currentNodes;
 
-    private transient String name;
-    private transient boolean isHighway;
-    private transient boolean isArea;
-    private transient boolean bicycle;
-    private transient boolean forward;
-    private transient boolean backward;
-    private transient boolean motorvehicle;
-    private transient boolean walk;
-    private transient boolean toGraph;
-    private transient short maxSpeed;
-    private transient RouteController route;
+    private String name;
+    private boolean isHighway;
+    private boolean isArea;
+    private boolean bicycle;
+    private boolean forward;
+    private boolean backward;
+    private boolean motorvehicle;
+    private boolean walk;
+    private boolean toGraph;
+    private short maxSpeed;
+    private RouteController route;
 
-    private transient boolean finished = false;
-    private transient OSMReader reader;
+    private boolean finished = false;
+    private OSMReader reader;
 
     public OSMParser(OSMReader reader) {
     	this.reader = reader;
