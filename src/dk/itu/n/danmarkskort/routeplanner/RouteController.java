@@ -46,14 +46,11 @@ public class RouteController {
 		
 		RouteEdgeMeta routeEdgeMeta = new RouteEdgeMeta(maxSpeed, forwardAllowed, backwardAllowed,
 				carsAllowed, bikesAllowed, walkAllowed);
-		RouteEdgeMeta reuseRouteEdgeMeta = ReuseRouteEdgeMetaObj.make(routeEdgeMeta);
 		if(forwardAllowed){
-			RouteEdge edge = new RouteEdge(fromVertex, toVertex, reuseRouteEdgeMeta, description);
-			routeEdges.add(edge);
+			routeEdges.add(new RouteEdge(fromVertex, toVertex, routeEdgeMeta, description));
 		}
 		if(backwardAllowed){
-			RouteEdge edge = new RouteEdge(toVertex, fromVertex, reuseRouteEdgeMeta, description);
-			routeEdges.add(edge);
+			routeEdges.add(new RouteEdge(toVertex, fromVertex, routeEdgeMeta, description));
 		}
 	}
 	
