@@ -27,6 +27,12 @@ public class AddressValidator {
 	public AddressValidator(){
 	}
 
+	/**
+	 * Method takes and uncleand string, and perform different actions to ensure that the string,
+	 * conforms to a specific pattern.
+	 * @param inputStr uncleaned string
+	 * @return a cleaned address string
+	 */
 	public static String cleanAddress(String inputStr){
 		inputStr = cleanExcessSpaces(inputStr);
 		inputStr = inputStr.replaceAll("[\\t\\u002C\\u002E]"," ") //replace tabs, Comma, dots
@@ -135,19 +141,12 @@ public class AddressValidator {
 		return postcode;
 	}
 	
-	
-	private static String rxHousenumber123 = ".*\\s[0-9]{1,3}";
-	
-	public static final Pattern PAT_FINDHOUSENUMBER = Pattern.compile("(.*)(?<housenumber>"+rxHousenumber123+"\\s)(.*)");
-	public static String findHousenumber(String inputStr){
-		Matcher matcher = PAT_FINDHOUSENUMBER.matcher(inputStr);
-		String housenumber = null;
-		while(matcher.find()){
-			housenumber = matcher.group("housenumber");
-		}
-		return housenumber;
-	}
-	
+	/**
+	 * Capitalize first letter in every word in a string.
+	 * 
+	 * @param inputStr
+	 * @return Capitalize first letter in words 
+	 */
 	public static String capitalizeFully(String inputStr){
 		return WordUtils.capitalizeFully(inputStr);
 	}
@@ -155,7 +154,6 @@ public class AddressValidator {
 	public static final Pattern PAT_SPLITUPPERCASELETTERS = Pattern.compile("([A-Z]+)([A-Z]+)");
 	public static String splitUppercaseLetters(String inputStr){
 		return PAT_SPLITUPPERCASELETTERS.matcher(inputStr).replaceAll("$1\\-$2");
-		
 	}
 	
 	public static String prepStreetname(String street){
@@ -186,8 +184,6 @@ public class AddressValidator {
 		}
 		return null;
 	}
-	
-	
 	
 	public static String prepPostcode(String postcode){
 		if(postcode != null && !postcode.isEmpty()) return removeSpaces(extractPostcode(postcode));

@@ -6,6 +6,7 @@ import dk.itu.n.danmarkskort.address.Address;
 import dk.itu.n.danmarkskort.gui.components.SearchField;
 import dk.itu.n.danmarkskort.gui.map.PinPoint;
 import dk.itu.n.danmarkskort.gui.menu.DropdownMenu;
+
 import dk.itu.n.danmarkskort.models.Region;
 import dk.itu.n.danmarkskort.search.SearchController;
 

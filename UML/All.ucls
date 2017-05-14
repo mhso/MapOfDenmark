@@ -1,0 +1,2823 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class-diagram version="1.2.0" icons="true" automaticImage="PNG" always-add-relationships="false" generalizations="true" 
+  realizations="true" associations="true" dependencies="false" nesting-relationships="true" router="FAN">  
+  <class id="1" language="java" name="dk.itu.n.danmarkskort.Util.ScreenshotDelayer" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/Util.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="192" x="4567" y="143"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="2" language="java" name="dk.itu.n.danmarkskort.MainCanvas" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/MainCanvas.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="146" x="9168" y="143"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="3" language="java" name="dk.itu.n.danmarkskort.TimerUtil" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/TimerUtil.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="146" x="10830" y="249"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="4" language="java" name="dk.itu.n.danmarkskort.DKConstants" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/DKConstants.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="146" x="10644" y="249"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="5" language="java" name="dk.itu.n.danmarkskort.MemoryUtil" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/MemoryUtil.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="146" x="2398" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="6" language="java" name="dk.itu.n.danmarkskort.Util" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/Util.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="146" x="4653" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="7" language="java" name="dk.itu.n.danmarkskort.Main" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/Main.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="146" x="9356" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="8" language="java" name="dk.itu.n.danmarkskort.address.Postcode" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/address/Postcode.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="201" x="13003" y="365"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <enumeration id="9" language="java" name="dk.itu.n.danmarkskort.address.SearchEnum" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/address/SearchEnum.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="201" x="3353" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </enumeration>  
+  <class id="10" language="java" name="dk.itu.n.danmarkskort.address.Street" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/address/Street.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="201" x="13123" y="249"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="11" language="java" name="dk.itu.n.danmarkskort.address.PostcodeCityBestMatch" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/address/PostcodeCityBestMatch.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="66" width="233" x="11272" y="249"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="12" language="java" name="dk.itu.n.danmarkskort.address.AddressValidator" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/address/AddressValidator.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="201" x="1870" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="13" language="java" name="dk.itu.n.danmarkskort.address.AddressHolder" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/address/AddressHolder.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="201" x="12882" y="249"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="14" language="java" name="dk.itu.n.danmarkskort.address.AddressSuggestion" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/address/AddressSuggestion.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="201" x="11545" y="249"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="15" language="java" name="dk.itu.n.danmarkskort.address.PostcodeCityBestMatch.Combine" 
+    project="BFST17_DK_Kort" file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/address/PostcodeCityBestMatch.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="201" x="11272" y="365"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="16" language="java" name="dk.itu.n.danmarkskort.address.AddressController" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/address/AddressController.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="201" x="11479" y="143"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="17" language="java" name="dk.itu.n.danmarkskort.address.Address" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/address/Address.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="201" x="11545" y="365"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="18" language="java" name="dk.itu.n.danmarkskort.address.Housenumber" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/address/Housenumber.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="201" x="12842" y="143"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="19" language="java" name="dk.itu.n.danmarkskort.address.AddressParser" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/address/AddressParser.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="201" x="45" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <interface id="20" language="java" name="dk.itu.n.danmarkskort.backend.ProgressListener" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/backend/ProgressListener.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="204" x="8943" y="365"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </interface>  
+  <class id="21" language="java" name="dk.itu.n.danmarkskort.backend.ProgressMonitor.ProgressTimer" 
+    project="BFST17_DK_Kort" file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/backend/ProgressMonitor.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="204" x="10400" y="365"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="22" language="java" name="dk.itu.n.danmarkskort.backend.NodeMap" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/backend/NodeMap.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="204" x="12596" y="249"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <interface id="23" language="java" name="dk.itu.n.danmarkskort.backend.OSMParserListener" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/backend/OSMParserListener.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="204" x="2494" y="365"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </interface>  
+  <class id="24" language="java" name="dk.itu.n.danmarkskort.backend.SAXAdapter" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/backend/SAXAdapter.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="204" x="9622" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="25" language="java" name="dk.itu.n.danmarkskort.backend.BinaryWrapper" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/backend/BinaryWrapper.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="204" x="13364" y="143"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="26" language="java" name="dk.itu.n.danmarkskort.backend.OSMReader" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/backend/OSMReader.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="204" x="8903" y="249"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="27" language="java" name="dk.itu.n.danmarkskort.backend.ProgressMonitor" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/backend/ProgressMonitor.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="204" x="10400" y="249"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="28" language="java" name="dk.itu.n.danmarkskort.backend.OSMParser" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/backend/OSMParser.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="204" x="12042" y="143"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="29" language="java" name="dk.itu.n.danmarkskort.backend.ParserUtil" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/backend/ParserUtil.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="204" x="2819" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="30" language="java" name="dk.itu.n.danmarkskort.extras.AlphaImageIcon" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/extras/AlphaImageIcon.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="188" x="1352" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="31" language="java" name="dk.itu.n.danmarkskort.gui.DropdownRightClick" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/gui/DropdownRightClick.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="203" x="2818" y="249"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="32" language="java" name="dk.itu.n.danmarkskort.gui.WindowParsingLoadscreenNew.BGImage" 
+    project="BFST17_DK_Kort" file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/gui/WindowParsingLoadscreenNew.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="169" x="2152" y="365"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="33" language="java" name="dk.itu.n.danmarkskort.gui.WindowLauncherConfigure" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/gui/WindowLauncherConfigure.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="66" width="262" x="4351" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="34" language="java" name="dk.itu.n.danmarkskort.gui.WindowLauncher" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/gui/WindowLauncher.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="176" x="4351" y="143"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="35" language="java" name="dk.itu.n.danmarkskort.gui.BottomPanel" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/gui/BottomPanel.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="169" x="9187" y="365"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="36" language="java" name="dk.itu.n.danmarkskort.gui.DropdownMenu" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/gui/DropdownMenu.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="169" x="4500" y="249"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="37" language="java" name="dk.itu.n.danmarkskort.gui.BottomPanel.SliderListener" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/gui/BottomPanel.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="169" x="8985" y="481"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="38" language="java" name="dk.itu.n.danmarkskort.gui.GUIManager" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/gui/GUIManager.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="169" x="9168" y="249"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="39" language="java" name="dk.itu.n.danmarkskort.gui.DropdownAddressSearch" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/gui/DropdownAddressSearch.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="248" x="4137" y="481"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="40" language="java" name="dk.itu.n.danmarkskort.gui.Style" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/gui/Style.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="169" x="3888" y="597"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="41" language="java" name="dk.itu.n.danmarkskort.gui.TopPanel.SearchFilter" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/gui/TopPanel.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="169" x="3928" y="481"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="42" language="java" name="dk.itu.n.danmarkskort.gui.WindowParsingLoadscreenNew" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/gui/WindowParsingLoadscreenNew.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="66" width="302" x="2152" y="249"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="43" language="java" name="dk.itu.n.danmarkskort.gui.TopPanel" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/gui/TopPanel.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="169" x="3926" y="365"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="44" language="java" name="dk.itu.n.danmarkskort.gui.WindowParsingLoadscreen" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/gui/WindowParsingLoadscreen.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="66" width="263" x="2494" y="249"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="45" language="java" name="dk.itu.n.danmarkskort.gui.components.CustomToggleButton" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/gui/components/CustomToggleButton.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="66" width="250" x="2112" y="809"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="46" language="java" name="dk.itu.n.danmarkskort.gui.components.PanelFileInfo" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/gui/components/PanelFileInfo.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="66" width="250" x="3063" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="47" language="java" name="dk.itu.n.danmarkskort.gui.components.ScaleLabel" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/gui/components/ScaleLabel.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="250" x="1580" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="48" language="java" name="dk.itu.n.danmarkskort.gui.components.CustomScrollBarUI" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/gui/components/CustomScrollBarUI.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="66" width="250" x="3348" y="481"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="49" language="java" name="dk.itu.n.danmarkskort.gui.components.CustomDropdown" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/gui/components/CustomDropdown.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="66" width="250" x="3330" y="143"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="50" language="java" name="dk.itu.n.danmarkskort.gui.components.SearchField" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/gui/components/SearchField.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="66" width="250" x="832" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="51" language="java" name="dk.itu.n.danmarkskort.gui.components.CustomButton" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/gui/components/CustomButton.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="66" width="250" x="3888" y="703"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="52" language="java" name="dk.itu.n.danmarkskort.gui.components.CustomDropdown.CustomDropdownMenuItem" 
+    project="BFST17_DK_Kort" file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/gui/components/CustomDropdown.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="269" x="3061" y="249"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <interface id="53" language="java" name="dk.itu.n.danmarkskort.gui.map.CanvasListener" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/gui/map/CanvasListener.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="200" x="9194" y="481"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </interface>  
+  <class id="54" language="java" name="dk.itu.n.danmarkskort.gui.map.MapMouseController" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/gui/map/MapMouseController.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="66" width="205" x="9396" y="143"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="55" language="java" name="dk.itu.n.danmarkskort.gui.map.PinPointManager" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/gui/map/PinPointManager.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="200" x="7660" y="143"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="56" language="java" name="dk.itu.n.danmarkskort.gui.map.PinPoint" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/gui/map/PinPoint.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="200" x="6955" y="249"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="57" language="java" name="dk.itu.n.danmarkskort.gui.map.MapCanvas" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/gui/map/MapCanvas.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="200" x="9377" y="249"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="58" language="java" name="dk.itu.n.danmarkskort.gui.map.multithreading.Tile" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/gui/map/multithreading/Tile.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="66" width="293" x="5192" y="249"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="59" language="java" name="dk.itu.n.danmarkskort.gui.map.multithreading.TileController" 
+    project="BFST17_DK_Kort" file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/gui/map/multithreading/TileController.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="293" x="6194" y="143"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="60" language="java" name="dk.itu.n.danmarkskort.gui.map.multithreading.TileRenderTask" 
+    project="BFST17_DK_Kort" file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/gui/map/multithreading/TileRenderTask.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="293" x="5626" y="143"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="61" language="java" name="dk.itu.n.danmarkskort.gui.menu.RoutePage" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/gui/menu/RoutePage.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="208" x="4103" y="143"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="62" language="java" name="dk.itu.n.danmarkskort.gui.menu.SettingsPage" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/gui/menu/SettingsPage.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="208" x="2778" y="143"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="63" language="java" name="dk.itu.n.danmarkskort.gui.menu.AboutUsPage" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/gui/menu/AboutUsPage.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="208" x="3659" y="481"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="64" language="java" name="dk.itu.n.danmarkskort.gui.menu.SettingsPage.ButtonSelecter" 
+    project="BFST17_DK_Kort" file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/gui/menu/SettingsPage.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="66" width="208" x="2112" y="703"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="65" language="java" name="dk.itu.n.danmarkskort.gui.menu.SavePage" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/gui/menu/SavePage.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="208" x="2549" y="481"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="66" language="java" name="dk.itu.n.danmarkskort.gui.menu.LoadPage" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/gui/menu/LoadPage.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="208" x="2301" y="481"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="67" language="java" name="dk.itu.n.danmarkskort.gui.menu.DropdownMenu" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/gui/menu/DropdownMenu.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="208" x="3660" y="249"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="68" language="java" name="dk.itu.n.danmarkskort.gui.menu.MapLayersPage.WayTypeCustomize" 
+    project="BFST17_DK_Kort" file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/gui/menu/MapLayersPage.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="66" width="208" x="4709" y="249"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="69" language="java" name="dk.itu.n.danmarkskort.gui.menu.MapLayersPage.ButtonSelecter" 
+    project="BFST17_DK_Kort" file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/gui/menu/MapLayersPage.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="66" width="208" x="3391" y="249"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="70" language="java" name="dk.itu.n.danmarkskort.gui.menu.PinPointPage" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/gui/menu/PinPointPage.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="208" x="3069" y="481"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="71" language="java" name="dk.itu.n.danmarkskort.gui.menu.RoutePage.SearchFilter" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/gui/menu/RoutePage.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="208" x="3908" y="249"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="72" language="java" name="dk.itu.n.danmarkskort.gui.menu.MapLayersPage" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/gui/menu/MapLayersPage.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="208" x="3620" y="143"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="73" language="java" name="dk.itu.n.danmarkskort.gui.menu.PinPointRow" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/gui/menu/PinPointRow.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="208" x="6527" y="143"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="74" language="java" name="dk.itu.n.danmarkskort.gui.routeplanner.RoutePartStep" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/gui/routeplanner/RoutePartStep.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="66" width="254" x="5322" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="75" language="java" name="dk.itu.n.danmarkskort.gui.routeplanner.RoutePartBasic" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/gui/routeplanner/RoutePartBasic.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="66" width="254" x="5525" y="249"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="76" language="java" name="dk.itu.n.danmarkskort.gui.routeplanner.RoutePlannerMain" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/gui/routeplanner/RoutePlannerMain.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="66" width="254" x="6661" y="249"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="77" language="java" name="dk.itu.n.danmarkskort.gui.routeplanner.RouteImageSplit" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/gui/routeplanner/RouteImageSplit.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="66" width="254" x="6700" y="365"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="78" language="java" name="dk.itu.n.danmarkskort.kdtree.KDTreeNode" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/kdtree/KDTreeNode.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="190" x="13641" y="249"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="79" language="java" name="dk.itu.n.danmarkskort.kdtree.KDTree" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/kdtree/KDTree.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="190" x="13364" y="365"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="80" language="java" name="dk.itu.n.danmarkskort.kdtree.KDTreeLeaf" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/kdtree/KDTreeLeaf.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="190" x="12882" y="481"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="81" language="java" name="dk.itu.n.danmarkskort.kdtree.KDTree.KDTreeIterator" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/kdtree/KDTree.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="190" x="13112" y="481"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="82" language="java" name="dk.itu.n.danmarkskort.kdtree.QuickSelect" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/kdtree/QuickSelect.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="190" x="1122" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <interface id="83" language="java" name="dk.itu.n.danmarkskort.kdtree.KDComparable" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/kdtree/KDComparable.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="190" x="12258" y="597"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </interface>  
+  <class id="84" language="java" name="dk.itu.n.danmarkskort.kdtree.unittests.KDTreeTests" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/kdtree/unittests/KDTreeTests.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="66" width="247" x="3594" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="85" language="java" name="dk.itu.n.danmarkskort.kdtree.unittests.NearestNeighborTest" 
+    project="BFST17_DK_Kort" file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/kdtree/unittests/NearestNeighborTest.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="247" x="2111" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="86" language="java" name="dk.itu.n.danmarkskort.mapgfx.WaytypeGraphicSpec" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/mapgfx/WaytypeGraphicSpec.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="209" x="9859" y="365"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="87" language="java" name="dk.itu.n.danmarkskort.mapgfx.ThemeCreatorMain.ButtonListener" 
+    project="BFST17_DK_Kort" file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/mapgfx/ThemeCreatorMain.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="195" x="3868" y="143"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="88" language="java" name="dk.itu.n.danmarkskort.mapgfx.GraphicSpecArea" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/mapgfx/GraphicSpecArea.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="195" x="10139" y="481"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="89" language="java" name="dk.itu.n.danmarkskort.mapgfx.GraphicRepresentation" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/mapgfx/GraphicRepresentation.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="66" width="226" x="10104" y="143"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="90" language="java" name="dk.itu.n.danmarkskort.mapgfx.GraphicSpecLabel" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/mapgfx/GraphicSpecLabel.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="195" x="9904" y="481"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="91" language="java" name="dk.itu.n.danmarkskort.mapgfx.ThemeCreator.ThemeContentHandler" 
+    project="BFST17_DK_Kort" file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/mapgfx/ThemeCreator.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="66" width="222" x="8406" y="249"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="92" language="java" name="dk.itu.n.danmarkskort.mapgfx.GraphicRepresentation.GraphicsHandler" 
+    project="BFST17_DK_Kort" file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/mapgfx/GraphicRepresentation.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="195" x="10165" y="249"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="93" language="java" name="dk.itu.n.danmarkskort.mapgfx.GraphicSpecIcon" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/mapgfx/GraphicSpecIcon.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="195" x="9669" y="481"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="94" language="java" name="dk.itu.n.danmarkskort.mapgfx.ThemeCreator.ZoomChanger" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/mapgfx/ThemeCreator.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="195" x="7900" y="249"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="95" language="java" name="dk.itu.n.danmarkskort.mapgfx.ThemeCreator" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/mapgfx/ThemeCreator.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="195" x="7900" y="143"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="96" language="java" name="dk.itu.n.danmarkskort.mapgfx.ThemeCreatorMain" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/mapgfx/ThemeCreatorMain.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="195" x="4116" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="97" language="java" name="dk.itu.n.danmarkskort.mapgfx.ThemeCreator.LayerChanger" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/mapgfx/ThemeCreator.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="195" x="7195" y="249"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="98" language="java" name="dk.itu.n.danmarkskort.mapgfx.ThemeAddElement" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/mapgfx/ThemeAddElement.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="195" x="7900" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="99" language="java" name="dk.itu.n.danmarkskort.mapgfx.ThemeCreator.ZoomHandler" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/mapgfx/ThemeCreator.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="195" x="8668" y="249"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="100" language="java" name="dk.itu.n.danmarkskort.mapgfx.GraphicRepresentation.ZoomHandler" 
+    project="BFST17_DK_Kort" file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/mapgfx/GraphicRepresentation.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="195" x="9617" y="249"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="101" language="java" name="dk.itu.n.danmarkskort.mapgfx.GraphicSpecLine" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/mapgfx/GraphicSpecLine.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="195" x="10374" y="481"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="102" language="java" name="dk.itu.n.danmarkskort.mapgfx.ThemeCreator.WidthChanger" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/mapgfx/ThemeCreator.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="195" x="7665" y="249"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="103" language="java" name="dk.itu.n.danmarkskort.mapgfx.ThemeCreator.ColorChanger" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/mapgfx/ThemeCreator.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="195" x="7430" y="249"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="104" language="java" name="dk.itu.n.danmarkskort.mapgfx.unittests.GraphicRepresentationTests" 
+    project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/mapgfx/unittests/GraphicRepresentationTests.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="66" width="273" x="519" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="105" language="java" name="dk.itu.n.danmarkskort.models.Region" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/models/Region.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="195" x="10644" y="365"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="106" language="java" name="dk.itu.n.danmarkskort.models.ParsedNode" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/models/ParsedNode.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="195" x="12616" y="365"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="107" language="java" name="dk.itu.n.danmarkskort.models.ParsedPlace" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/models/ParsedPlace.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="195" x="11786" y="249"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="108" language="java" name="dk.itu.n.danmarkskort.models.UserPreferences" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/models/UserPreferences.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="195" x="5959" y="143"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="109" language="java" name="dk.itu.n.danmarkskort.models.ParsedWay" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/models/ParsedWay.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="195" x="12258" y="365"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="110" language="java" name="dk.itu.n.danmarkskort.models.RegionFloat" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/models/RegionFloat.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="195" x="2584" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="111" language="java" name="dk.itu.n.danmarkskort.models.ReuseRouteEdgeMetaObj" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/models/ReuseRouteEdgeMetaObj.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="66" width="249" x="6390" y="365"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="112" language="java" name="dk.itu.n.danmarkskort.models.ParsedAddress" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/models/ParsedAddress.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="195" x="11016" y="249"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="113" language="java" name="dk.itu.n.danmarkskort.models.ParsedData" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/models/ParsedData.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="195" x="13364" y="249"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <enumeration id="114" language="java" name="dk.itu.n.danmarkskort.models.WayType" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/models/WayType.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="195" x="9434" y="481"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </enumeration>  
+  <enumeration id="115" language="java" name="dk.itu.n.danmarkskort.models.RouteEnum" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/models/RouteEnum.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="195" x="4957" y="249"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </enumeration>  
+  <class id="116" language="java" name="dk.itu.n.danmarkskort.models.ParsedItem" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/models/ParsedItem.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="195" x="12340" y="249"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="117" language="java" name="dk.itu.n.danmarkskort.models.RouteModel" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/models/RouteModel.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="195" x="5112" y="143"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="118" language="java" name="dk.itu.n.danmarkskort.models.ParsedRelation" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/models/ParsedRelation.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="195" x="12042" y="249"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="119" language="java" name="dk.itu.n.danmarkskort.models.ReuseStringObj" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/models/ReuseStringObj.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="195" x="3881" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <enumeration id="120" language="java" name="dk.itu.n.danmarkskort.multithreading.TaskPriority" 
+    project="BFST17_DK_Kort" file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/multithreading/TaskPriority.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="239" x="5347" y="143"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </enumeration>  
+  <class id="121" language="java" name="dk.itu.n.danmarkskort.multithreading.Queue" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/multithreading/Queue.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="239" x="6090" y="249"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="122" language="java" name="dk.itu.n.danmarkskort.multithreading.Task" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/multithreading/Task.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="239" x="5616" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="123" language="java" name="dk.itu.n.danmarkskort.routeplanner.RouteVertex" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/routeplanner/RouteVertex.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="231" x="8135" y="365"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="124" language="java" name="dk.itu.n.danmarkskort.routeplanner.Stack" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/routeplanner/Stack.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="231" x="5051" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="125" language="java" name="dk.itu.n.danmarkskort.routeplanner.Stack.Node" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/routeplanner/Stack.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="231" x="4219" y="249"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="126" language="java" name="dk.itu.n.danmarkskort.routeplanner.RouteController" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/routeplanner/RouteController.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="66" width="231" x="9852" y="249"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="127" language="java" name="dk.itu.n.danmarkskort.routeplanner.IndexMinPQ.HeapIterator" 
+    project="BFST17_DK_Kort" file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/routeplanner/IndexMinPQ.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="231" x="5819" y="249"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="128" language="java" name="dk.itu.n.danmarkskort.routeplanner.ResizingArrayBag" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/routeplanner/ResizingArrayBag.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="66" width="242" x="10609" y="481"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="129" language="java" name="dk.itu.n.danmarkskort.routeplanner.RouteDijkstraAStar" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/routeplanner/RouteDijkstraAStar.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="66" width="231" x="8135" y="249"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="130" language="java" name="dk.itu.n.danmarkskort.routeplanner.RouteControllerTest" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/routeplanner/RouteControllerTest.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="66" width="231" x="9833" y="143"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="131" language="java" name="dk.itu.n.danmarkskort.routeplanner.Stack.ListIterator" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/routeplanner/Stack.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="231" x="4799" y="143"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="132" language="java" name="dk.itu.n.danmarkskort.routeplanner.IndexMinPQ" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/routeplanner/IndexMinPQ.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="231" x="6994" y="365"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="133" language="java" name="dk.itu.n.danmarkskort.routeplanner.RouteEdge" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/routeplanner/RouteEdge.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="231" x="8672" y="365"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="134" language="java" name="dk.itu.n.danmarkskort.routeplanner.RouteGraph" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/routeplanner/RouteGraph.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="231" x="10129" y="365"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="135" language="java" name="dk.itu.n.danmarkskort.routeplanner.ResizingArrayBag.ArrayIterator" 
+    project="BFST17_DK_Kort" file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/routeplanner/ResizingArrayBag.java" 
+    binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="231" x="10609" y="597"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="136" language="java" name="dk.itu.n.danmarkskort.routeplanner.RouteEdgeMeta" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/routeplanner/RouteEdgeMeta.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="66" width="231" x="8672" y="481"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <class id="137" language="java" name="dk.itu.n.danmarkskort.routeplanner.RouteDijkstra" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/routeplanner/RouteDijkstra.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="66" width="231" x="6390" y="249"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <enumeration id="138" language="java" name="dk.itu.n.danmarkskort.routeplanner.WeightEnum" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/routeplanner/WeightEnum.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="231" x="7265" y="365"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </enumeration>  
+  <class id="139" language="java" name="dk.itu.n.danmarkskort.search.SearchController" project="BFST17_DK_Kort" 
+    file="/BFST17_DK_Kort/src/dk/itu/n/danmarkskort/search/SearchController.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="66" width="193" x="286" y="37"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="false"/>      
+      <operations public="false" package="false" protected="false" private="false" static="false"/>    
+    </display>  
+  </class>  
+  <generalization id="140">    
+    <bendpoint x="9344" y="143"/>    
+    <end type="SOURCE" refId="99"/>    
+    <end type="TARGET" refId="24"/>  
+  </generalization>  
+  <association id="141">    
+    <bendpoint x="9137" y="143"/>    
+    <bendpoint x="9137" y="249"/>    
+    <bendpoint x="8620" y="365"/>    
+    <bendpoint x="8620" y="481"/>    
+    <end type="SOURCE" refId="7" navigable="false">      
+      <attribute id="142" name="style"/>      
+      <multiplicity id="143" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="40" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="144">    
+    <end type="SOURCE" refId="16" navigable="false">      
+      <attribute id="145" name="addressSuggestion"/>      
+      <multiplicity id="146" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="14" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="147">    
+    <bendpoint x="3628" y="365"/>    
+    <bendpoint x="3628" y="481"/>    
+    <end type="SOURCE" refId="67" navigable="false">      
+      <attribute id="148" name="style"/>      
+      <multiplicity id="149" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="40" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="150">    
+    <end type="SOURCE" refId="55" navigable="false">      
+      <attribute id="151" name="pinPoints"/>      
+      <multiplicity id="152" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="56" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="153">    
+    <end type="SOURCE" refId="33" navigable="false">      
+      <attribute id="154" name="parent"/>      
+      <multiplicity id="155" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="34" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="156">    
+    <end type="SOURCE" refId="60" navigable="false">      
+      <attribute id="157" name="tile"/>      
+      <multiplicity id="158" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="58" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="159">    
+    <end type="SOURCE" refId="131" navigable="false">      
+      <attribute id="160" name="current"/>      
+      <multiplicity id="161" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="125" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="162">    
+    <end type="SOURCE" refId="2" navigable="false">      
+      <attribute id="163" name="guiManager"/>      
+      <multiplicity id="164" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="38" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="165">    
+    <bendpoint x="4167" y="249"/>    
+    <bendpoint x="4167" y="365"/>    
+    <end type="SOURCE" refId="61" navigable="false">      
+      <attribute id="166" name="dropSuggestionsAddrFrom"/>      
+      <multiplicity id="167" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="39" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="168">    
+    <bendpoint x="12309" y="249"/>    
+    <end type="SOURCE" refId="28" navigable="false">      
+      <attribute id="169" name="way"/>      
+      <multiplicity id="170" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="109" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="171">    
+    <end type="SOURCE" refId="126" navigable="false">      
+      <attribute id="172" name="routeRegion"/>      
+      <multiplicity id="173" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="105" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="174">    
+    <end type="SOURCE" refId="60"/>    
+    <end type="TARGET" refId="122"/>  
+  </generalization>  
+  <realization id="175">    
+    <bendpoint x="12267" y="481"/>    
+    <end type="SOURCE" refId="109"/>    
+    <end type="TARGET" refId="83"/>  
+  </realization>  
+  <realization id="176">    
+    <bendpoint x="12851" y="249"/>    
+    <bendpoint x="12851" y="365"/>    
+    <bendpoint x="12851" y="481"/>    
+    <end type="SOURCE" refId="18"/>    
+    <end type="TARGET" refId="83"/>  
+  </realization>  
+  <generalization id="177">    
+    <bendpoint x="9631" y="143"/>    
+    <end type="SOURCE" refId="100"/>    
+    <end type="TARGET" refId="24"/>  
+  </generalization>  
+  <generalization id="178">    
+    <bendpoint x="9116" y="143"/>    
+    <end type="SOURCE" refId="91"/>    
+    <end type="TARGET" refId="24"/>  
+  </generalization>  
+  <association id="179">    
+    <bendpoint x="5081" y="143"/>    
+    <end type="SOURCE" refId="124" navigable="false">      
+      <attribute id="180" name="first"/>      
+      <multiplicity id="181" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="125" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <nesting id="182">    
+    <bendpoint x="5060" y="143"/>    
+    <end type="SOURCE" refId="124"/>    
+    <end type="TARGET" refId="125"/>  
+  </nesting>  
+  <association id="183">    
+    <bendpoint x="11241" y="249"/>    
+    <bendpoint x="11241" y="365"/>    
+    <end type="SOURCE" refId="28" navigable="false">      
+      <attribute id="184" name="waytype"/>      
+      <multiplicity id="185" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="114" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="186">    
+    <end type="SOURCE" refId="133" navigable="false">      
+      <attribute id="187" name="routeEdgeMeta"/>      
+      <multiplicity id="188" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="136" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="189">    
+    <end type="SOURCE" refId="93"/>    
+    <end type="TARGET" refId="86"/>  
+  </generalization>  
+  <association id="190">    
+    <end type="SOURCE" refId="76" navigable="false">      
+      <attribute id="191" name="weightEnum"/>      
+      <multiplicity id="192" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="138" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="193">    
+    <end type="SOURCE" refId="66" navigable="false">      
+      <attribute id="194" name="style"/>      
+      <multiplicity id="195" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="40" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="196">    
+    <end type="SOURCE" refId="28" navigable="false">      
+      <attribute id="197" name="reader"/>      
+      <multiplicity id="198" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="26" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="199">    
+    <end type="SOURCE" refId="67" navigable="false">      
+      <attribute id="200" name="routePage"/>      
+      <multiplicity id="201" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="61" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <realization id="202">    
+    <end type="SOURCE" refId="42"/>    
+    <end type="TARGET" refId="23"/>  
+  </realization>  
+  <association id="203">    
+    <end type="SOURCE" refId="78" navigable="false">      
+      <attribute id="204" name="rightChild"/>      
+      <multiplicity id="205" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="79" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="206">    
+    <bendpoint x="9386" y="365"/>    
+    <end type="SOURCE" refId="57" navigable="false">      
+      <attribute id="207" name="listeners"/>      
+      <multiplicity id="208" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="53" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="209">    
+    <end type="SOURCE" refId="118" navigable="false">      
+      <attribute id="210" name="outers"/>      
+      <multiplicity id="211" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="109" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="212">    
+    <end type="SOURCE" refId="25" navigable="false">      
+      <attribute id="213" name="addressHolder"/>      
+      <multiplicity id="214" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="13" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="215">    
+    <end type="SOURCE" refId="57" navigable="false">      
+      <attribute id="216" name="labelsVisible"/>      
+      <multiplicity id="217" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="86" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="218">    
+    <bendpoint x="12011" y="249"/>    
+    <end type="SOURCE" refId="25" navigable="false">      
+      <attribute id="219" name="routeGraph"/>      
+      <multiplicity id="220" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="134" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="221">    
+    <end type="SOURCE" refId="10" navigable="false">      
+      <attribute id="222" name="postcode"/>      
+      <multiplicity id="223" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="8" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <nesting id="224">    
+    <end type="SOURCE" refId="132"/>    
+    <end type="TARGET" refId="127"/>  
+  </nesting>  
+  <association id="225">    
+    <end type="SOURCE" refId="40" navigable="false">      
+      <attribute id="226" name="pinPointPanButton"/>      
+      <multiplicity id="227" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="51" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="228">    
+    <end type="SOURCE" refId="28" navigable="false">      
+      <attribute id="229" name="nodeMap"/>      
+      <multiplicity id="230" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="22" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="231">    
+    <end type="SOURCE" refId="78" navigable="false">      
+      <attribute id="232" name="leftChild"/>      
+      <multiplicity id="233" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="79" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="234">    
+    <bendpoint x="4436" y="365"/>    
+    <bendpoint x="4436" y="481"/>    
+    <end type="SOURCE" refId="36" navigable="false">      
+      <attribute id="235" name="style"/>      
+      <multiplicity id="236" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="40" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="237">    
+    <end type="SOURCE" refId="129" navigable="false">      
+      <attribute id="238" name="targetVertex"/>      
+      <multiplicity id="239" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="123" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="240">    
+    <end type="SOURCE" refId="40" navigable="false">      
+      <attribute id="241" name="routeButton"/>      
+      <multiplicity id="242" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="51" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <realization id="243">    
+    <end type="SOURCE" refId="44"/>    
+    <end type="TARGET" refId="23"/>  
+  </realization>  
+  <association id="244">    
+    <end type="SOURCE" refId="127" navigable="false">      
+      <attribute id="245" name="copy"/>      
+      <multiplicity id="246" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="132" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="247">    
+    <end type="SOURCE" refId="78"/>    
+    <end type="TARGET" refId="79"/>  
+  </generalization>  
+  <association id="248">    
+    <end type="SOURCE" refId="125" navigable="false">      
+      <attribute id="249" name="next"/>      
+      <multiplicity id="250" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="125" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="251">    
+    <end type="SOURCE" refId="28" navigable="false">      
+      <attribute id="252" name="route"/>      
+      <multiplicity id="253" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="126" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="254">    
+    <end type="SOURCE" refId="7" navigable="false">      
+      <attribute id="255" name="mainPanel"/>      
+      <multiplicity id="256" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="2" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <realization id="257">    
+    <end type="SOURCE" refId="42"/>    
+    <end type="TARGET" refId="20"/>  
+  </realization>  
+  <association id="258">    
+    <end type="SOURCE" refId="27" navigable="false">      
+      <attribute id="259" name="timer"/>      
+      <multiplicity id="260" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="21" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="261">    
+    <bendpoint x="4125" y="365"/>    
+    <end type="SOURCE" refId="71" navigable="false">      
+      <attribute id="262" name="das"/>      
+      <multiplicity id="263" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="39" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="264">    
+    <end type="SOURCE" refId="57" navigable="false">      
+      <attribute id="265" name="currentWTGSpec"/>      
+      <multiplicity id="266" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="86" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="267">    
+    <end type="SOURCE" refId="11" navigable="false">      
+      <attribute id="268" name="combinations"/>      
+      <multiplicity id="269" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="15" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="270">    
+    <end type="SOURCE" refId="35" navigable="false">      
+      <attribute id="271" name="highways"/>      
+      <multiplicity id="272" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="114" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="273">    
+    <end type="SOURCE" refId="61" navigable="false">      
+      <attribute id="274" name="menu"/>      
+      <multiplicity id="275" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="67" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="276">    
+    <end type="SOURCE" refId="70" navigable="false">      
+      <attribute id="277" name="instance"/>      
+      <multiplicity id="278" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="70" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <nesting id="279">    
+    <end type="SOURCE" refId="89"/>    
+    <end type="TARGET" refId="100"/>  
+  </nesting>  
+  <association id="280">    
+    <bendpoint x="10098" y="365"/>    
+    <end type="SOURCE" refId="92" navigable="false">      
+      <attribute id="281" name="mapElement"/>      
+      <multiplicity id="282" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="114" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <realization id="283">    
+    <bendpoint x="12031" y="365"/>    
+    <bendpoint x="12031" y="481"/>    
+    <end type="SOURCE" refId="107"/>    
+    <end type="TARGET" refId="83"/>  
+  </realization>  
+  <association id="284">    
+    <end type="SOURCE" refId="118" navigable="false">      
+      <attribute id="285" name="inners"/>      
+      <multiplicity id="286" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="109" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="287">    
+    <end type="SOURCE" refId="73" navigable="false">      
+      <attribute id="288" name="pinPoint"/>      
+      <multiplicity id="289" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="56" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="290">    
+    <bendpoint x="3649" y="365"/>    
+    <bendpoint x="3360" y="249"/>    
+    <end type="SOURCE" refId="39"/>    
+    <end type="TARGET" refId="49"/>  
+  </generalization>  
+  <association id="291">    
+    <end type="SOURCE" refId="7" navigable="false">      
+      <attribute id="292" name="userPreferences"/>      
+      <multiplicity id="293" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="108" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <realization id="294">    
+    <end type="SOURCE" refId="35"/>    
+    <end type="TARGET" refId="53"/>  
+  </realization>  
+  <association id="295">    
+    <end type="SOURCE" refId="22" navigable="false">      
+      <attribute id="296" name="nodes"/>      
+      <multiplicity id="297" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="106" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="298">    
+    <bendpoint x="3897" y="481"/>    
+    <end type="SOURCE" refId="43" navigable="false">      
+      <attribute id="299" name="style"/>      
+      <multiplicity id="300" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="40" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="301">    
+    <end type="SOURCE" refId="13" navigable="false">      
+      <attribute id="302" name="postcodes"/>      
+      <multiplicity id="303" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="8" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="304">    
+    <end type="SOURCE" refId="4" navigable="false">      
+      <attribute id="305" name="BOUNDS_DENMARK"/>      
+      <multiplicity id="306" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="105" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <nesting id="307">    
+    <end type="SOURCE" refId="11"/>    
+    <end type="TARGET" refId="15"/>  
+  </nesting>  
+  <association id="308">    
+    <bendpoint x="6359" y="249"/>    
+    <bendpoint x="6359" y="365"/>    
+    <bendpoint x="6359" y="481"/>    
+    <end type="SOURCE" refId="73" navigable="false">      
+      <attribute id="309" name="style"/>      
+      <multiplicity id="310" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="40" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="311">    
+    <bendpoint x="13589" y="249"/>    
+    <end type="SOURCE" refId="25" navigable="false">      
+      <attribute id="312" name="edgeTree"/>      
+      <multiplicity id="313" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="79" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="314">    
+    <bendpoint x="10113" y="249"/>    
+    <end type="SOURCE" refId="89" navigable="false">      
+      <attribute id="315" name="overriddenSpecs"/>      
+      <multiplicity id="316" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="86" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="317">    
+    <end type="SOURCE" refId="7" navigable="false">      
+      <attribute id="318" name="tileController"/>      
+      <multiplicity id="319" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="59" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="320">    
+    <bendpoint x="9365" y="143"/>    
+    <end type="SOURCE" refId="7" navigable="false">      
+      <attribute id="321" name="map"/>      
+      <multiplicity id="322" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="57" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="323">    
+    <bendpoint x="8641" y="365"/>    
+    <bendpoint x="8641" y="481"/>    
+    <end type="SOURCE" refId="38" navigable="false">      
+      <attribute id="324" name="style"/>      
+      <multiplicity id="325" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="40" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="326">    
+    <end type="SOURCE" refId="111" navigable="false">      
+      <attribute id="327" name="map"/>      
+      <multiplicity id="328" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="136" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="329">    
+    <end type="SOURCE" refId="28" navigable="false">      
+      <attribute id="330" name="address"/>      
+      <multiplicity id="331" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="112" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="332">    
+    <end type="SOURCE" refId="16" navigable="false">      
+      <attribute id="333" name="postcodeCityBestMatch"/>      
+      <multiplicity id="334" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="11" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="335">    
+    <end type="SOURCE" refId="63" navigable="false">      
+      <attribute id="336" name="style"/>      
+      <multiplicity id="337" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="40" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <realization id="338">    
+    <bendpoint x="8954" y="481"/>    
+    <end type="SOURCE" refId="133"/>    
+    <end type="TARGET" refId="83"/>  
+  </realization>  
+  <generalization id="339">    
+    <end type="SOURCE" refId="109"/>    
+    <end type="TARGET" refId="116"/>  
+  </generalization>  
+  <association id="340">    
+    <end type="SOURCE" refId="117" navigable="false">      
+      <attribute id="341" name="direction"/>      
+      <multiplicity id="342" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="115" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="343">    
+    <end type="SOURCE" refId="126" navigable="false">      
+      <attribute id="344" name="vertexMap"/>      
+      <multiplicity id="345" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="123" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="346">    
+    <end type="SOURCE" refId="90"/>    
+    <end type="TARGET" refId="86"/>  
+  </generalization>  
+  <association id="347">    
+    <end type="SOURCE" refId="43" navigable="false">      
+      <attribute id="348" name="dropMenu"/>      
+      <multiplicity id="349" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="67" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <nesting id="350">    
+    <end type="SOURCE" refId="89"/>    
+    <end type="TARGET" refId="92"/>  
+  </nesting>  
+  <association id="351">    
+    <end type="SOURCE" refId="55" navigable="false">      
+      <attribute id="352" name="systemPinPoints"/>      
+      <multiplicity id="353" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="56" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <nesting id="354">    
+    <end type="SOURCE" refId="95"/>    
+    <end type="TARGET" refId="94"/>  
+  </nesting>  
+  <nesting id="355">    
+    <end type="SOURCE" refId="72"/>    
+    <end type="TARGET" refId="69"/>  
+  </nesting>  
+  <association id="356">    
+    <end type="SOURCE" refId="62" navigable="false">      
+      <attribute id="357" name="menu"/>      
+      <multiplicity id="358" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="67" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="359">    
+    <end type="SOURCE" refId="40" navigable="false">      
+      <attribute id="360" name="searchButton"/>      
+      <multiplicity id="361" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="51" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="362">    
+    <end type="SOURCE" refId="40" navigable="false">      
+      <attribute id="363" name="menuPinPointButton"/>      
+      <multiplicity id="364" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="51" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="365">    
+    <end type="SOURCE" refId="7" navigable="false">      
+      <attribute id="366" name="pinPointManager"/>      
+      <multiplicity id="367" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="55" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="368">    
+    <end type="SOURCE" refId="14" navigable="false">      
+      <attribute id="369" name="lastSearchAddress"/>      
+      <multiplicity id="370" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="17" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <realization id="371">    
+    <bendpoint x="12483" y="365"/>    
+    <bendpoint x="12483" y="481"/>    
+    <end type="SOURCE" refId="116"/>    
+    <end type="TARGET" refId="83"/>  
+  </realization>  
+  <nesting id="372">    
+    <end type="SOURCE" refId="124"/>    
+    <end type="TARGET" refId="131"/>  
+  </nesting>  
+  <association id="373">    
+    <end type="SOURCE" refId="39" navigable="false">      
+      <attribute id="374" name="style"/>      
+      <multiplicity id="375" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="40" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <nesting id="376">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="1"/>  
+  </nesting>  
+  <association id="377">    
+    <bendpoint x="3629" y="249"/>    
+    <bendpoint x="3473" y="365"/>    
+    <bendpoint x="3317" y="481"/>    
+    <end type="SOURCE" refId="72" navigable="false">      
+      <attribute id="378" name="style"/>      
+      <multiplicity id="379" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="40" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <nesting id="380">    
+    <end type="SOURCE" refId="128"/>    
+    <end type="TARGET" refId="135"/>  
+  </nesting>  
+  <association id="381">    
+    <end type="SOURCE" refId="64" navigable="false">      
+      <attribute id="382" name="buttons"/>      
+      <multiplicity id="383" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="45" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="384">    
+    <end type="SOURCE" refId="57" navigable="false">      
+      <attribute id="385" name="wayTypesVisible"/>      
+      <multiplicity id="386" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="86" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="387">    
+    <end type="SOURCE" refId="118"/>    
+    <end type="TARGET" refId="109"/>  
+  </generalization>  
+  <association id="388">    
+    <end type="SOURCE" refId="122" navigable="false">      
+      <attribute id="389" name="priority"/>      
+      <multiplicity id="390" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="120" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="391">    
+    <end type="SOURCE" refId="40" navigable="false">      
+      <attribute id="392" name="menuButton"/>      
+      <multiplicity id="393" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="51" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="394">    
+    <bendpoint x="10134" y="249"/>    
+    <end type="SOURCE" refId="89" navigable="false">      
+      <attribute id="395" name="zoomLevelArr"/>      
+      <multiplicity id="396" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="86" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="397">    
+    <bendpoint x="4146" y="249"/>    
+    <bendpoint x="4146" y="365"/>    
+    <end type="SOURCE" refId="61" navigable="false">      
+      <attribute id="398" name="dropSuggestionsAddrTo"/>      
+      <multiplicity id="399" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="39" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="400">    
+    <bendpoint x="10360" y="143"/>    
+    <end type="SOURCE" refId="92"/>    
+    <end type="TARGET" refId="24"/>  
+  </generalization>  
+  <generalization id="401">    
+    <end type="SOURCE" refId="28"/>    
+    <end type="TARGET" refId="24"/>  
+  </generalization>  
+  <association id="402">    
+    <end type="SOURCE" refId="40" navigable="false">      
+      <attribute id="403" name="centerViewButton"/>      
+      <multiplicity id="404" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="51" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="405">    
+    <end type="SOURCE" refId="137" navigable="false">      
+      <attribute id="406" name="pq"/>      
+      <multiplicity id="407" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="132" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="408">    
+    <bendpoint x="4188" y="249"/>    
+    <bendpoint x="4302" y="365"/>    
+    <bendpoint x="4415" y="481"/>    
+    <end type="SOURCE" refId="61" navigable="false">      
+      <attribute id="409" name="style"/>      
+      <multiplicity id="410" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="40" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="411">    
+    <end type="SOURCE" refId="75" navigable="false">      
+      <attribute id="412" name="routeImageSplit"/>      
+      <multiplicity id="413" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="77" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="414">    
+    <bendpoint x="9652" y="143"/>    
+    <end type="SOURCE" refId="7" navigable="false">      
+      <attribute id="415" name="routeController"/>      
+      <multiplicity id="416" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="126" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="417">    
+    <end type="SOURCE" refId="26" navigable="false">      
+      <attribute id="418" name="inputListeners"/>      
+      <multiplicity id="419" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="20" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="420">    
+    <end type="SOURCE" refId="40" navigable="false">      
+      <attribute id="421" name="pinPointDeleteButton"/>      
+      <multiplicity id="422" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="51" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="423">    
+    <bendpoint x="9415" y="365"/>    
+    <end type="SOURCE" refId="57" navigable="false">      
+      <attribute id="424" name="currentHighlighedWaytype"/>      
+      <multiplicity id="425" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="114" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="426">    
+    <end type="SOURCE" refId="36" navigable="false">      
+      <attribute id="427" name="topPanel"/>      
+      <multiplicity id="428" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="43" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="429">    
+    <end type="SOURCE" refId="57" navigable="false">      
+      <attribute id="430" name="areasVisible"/>      
+      <multiplicity id="431" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="86" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="432">    
+    <end type="SOURCE" refId="54" navigable="false">      
+      <attribute id="433" name="canvas"/>      
+      <multiplicity id="434" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="57" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="435">    
+    <bendpoint x="2787" y="249"/>    
+    <bendpoint x="2787" y="365"/>    
+    <bendpoint x="2787" y="481"/>    
+    <end type="SOURCE" refId="62" navigable="false">      
+      <attribute id="436" name="style"/>      
+      <multiplicity id="437" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="40" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="438">    
+    <end type="SOURCE" refId="88"/>    
+    <end type="TARGET" refId="86"/>  
+  </generalization>  
+  <nesting id="439">    
+    <end type="SOURCE" refId="95"/>    
+    <end type="TARGET" refId="97"/>  
+  </nesting>  
+  <association id="440">    
+    <end type="SOURCE" refId="40" navigable="false">      
+      <attribute id="441" name="menuSaveButton"/>      
+      <multiplicity id="442" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="51" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="443">    
+    <end type="SOURCE" refId="129" navigable="false">      
+      <attribute id="444" name="edgeTo"/>      
+      <multiplicity id="445" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="133" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="446">    
+    <bendpoint x="13073" y="143"/>    
+    <end type="SOURCE" refId="7" navigable="false">      
+      <attribute id="447" name="model"/>      
+      <multiplicity id="448" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="113" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="449">    
+    <end type="SOURCE" refId="81" navigable="false">      
+      <attribute id="450" name="arrList"/>      
+      <multiplicity id="451" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="83" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="452">    
+    <end type="SOURCE" refId="75" navigable="false">      
+      <attribute id="453" name="weightEnum"/>      
+      <multiplicity id="454" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="138" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="455">    
+    <end type="SOURCE" refId="40" navigable="false">      
+      <attribute id="456" name="menuRouteButton"/>      
+      <multiplicity id="457" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="51" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <nesting id="458">    
+    <end type="SOURCE" refId="35"/>    
+    <end type="TARGET" refId="37"/>  
+  </nesting>  
+  <association id="459">    
+    <end type="SOURCE" refId="86" navigable="false">      
+      <attribute id="460" name="wayType"/>      
+      <multiplicity id="461" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="114" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="462">    
+    <end type="SOURCE" refId="74" navigable="false">      
+      <attribute id="463" name="routeModel"/>      
+      <multiplicity id="464" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="117" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="465">    
+    <end type="SOURCE" refId="27" navigable="false">      
+      <attribute id="466" name="listeners"/>      
+      <multiplicity id="467" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="20" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="468">    
+    <end type="SOURCE" refId="38" navigable="false">      
+      <attribute id="469" name="topPanel"/>      
+      <multiplicity id="470" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="43" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="471">    
+    <end type="SOURCE" refId="55" navigable="false">      
+      <attribute id="472" name="canvas"/>      
+      <multiplicity id="473" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="57" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="474">    
+    <end type="SOURCE" refId="7" navigable="false">      
+      <attribute id="475" name="parser"/>      
+      <multiplicity id="476" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="28" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <nesting id="477">    
+    <end type="SOURCE" refId="72"/>    
+    <end type="TARGET" refId="68"/>  
+  </nesting>  
+  <association id="478">    
+    <end type="SOURCE" refId="92" navigable="false">      
+      <attribute id="479" name="gs"/>      
+      <multiplicity id="480" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="86" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="481">    
+    <end type="SOURCE" refId="126" navigable="false">      
+      <attribute id="482" name="routeEdges"/>      
+      <multiplicity id="483" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="133" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="484">    
+    <end type="SOURCE" refId="137" navigable="false">      
+      <attribute id="485" name="edgeTo"/>      
+      <multiplicity id="486" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="133" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="487">    
+    <end type="SOURCE" refId="67" navigable="false">      
+      <attribute id="488" name="topPanel"/>      
+      <multiplicity id="489" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="43" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="490">    
+    <end type="SOURCE" refId="80" navigable="false">      
+      <attribute id="491" name="data"/>      
+      <multiplicity id="492" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="83" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="493">    
+    <bendpoint x="12830" y="249"/>    
+    <end type="SOURCE" refId="28" navigable="false">      
+      <attribute id="494" name="node"/>      
+      <multiplicity id="495" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="106" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="496">    
+    <end type="SOURCE" refId="59" navigable="false">      
+      <attribute id="497" name="tileQueue"/>      
+      <multiplicity id="498" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="121" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="499">    
+    <end type="SOURCE" refId="31"/>    
+    <end type="TARGET" refId="49"/>  
+  </generalization>  
+  <association id="500">    
+    <end type="SOURCE" refId="57" navigable="false">      
+      <attribute id="501" name="currentRoute"/>      
+      <multiplicity id="502" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="133" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="503">    
+    <bendpoint x="12288" y="249"/>    
+    <end type="SOURCE" refId="28" navigable="false">      
+      <attribute id="504" name="temporaryWayReferences"/>      
+      <multiplicity id="505" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="109" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="506">    
+    <bendpoint x="12565" y="249"/>    
+    <end type="SOURCE" refId="16" navigable="false">      
+      <attribute id="507" name="housenumberTree"/>      
+      <multiplicity id="508" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="79" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="509">    
+    <end type="SOURCE" refId="25" navigable="false">      
+      <attribute id="510" name="model"/>      
+      <multiplicity id="511" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="113" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="512">    
+    <end type="SOURCE" refId="40" navigable="false">      
+      <attribute id="513" name="zoomOutButton"/>      
+      <multiplicity id="514" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="51" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="515">    
+    <end type="SOURCE" refId="101"/>    
+    <end type="TARGET" refId="86"/>  
+  </generalization>  
+  <association id="516">    
+    <end type="SOURCE" refId="40" navigable="false">      
+      <attribute id="517" name="menuOpenButton"/>      
+      <multiplicity id="518" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="51" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="519">    
+    <end type="SOURCE" refId="16" navigable="false">      
+      <attribute id="520" name="addressHolder"/>      
+      <multiplicity id="521" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="13" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="522">    
+    <end type="SOURCE" refId="113" navigable="false">      
+      <attribute id="523" name="enumMapKD"/>      
+      <multiplicity id="524" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="79" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="525">    
+    <end type="SOURCE" refId="7" navigable="false">      
+      <attribute id="526" name="addressController"/>      
+      <multiplicity id="527" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="16" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <nesting id="528">    
+    <end type="SOURCE" refId="61"/>    
+    <end type="TARGET" refId="71"/>  
+  </nesting>  
+  <nesting id="529">    
+    <end type="SOURCE" refId="79"/>    
+    <end type="TARGET" refId="81"/>  
+  </nesting>  
+  <association id="530">    
+    <end type="SOURCE" refId="40" navigable="false">      
+      <attribute id="531" name="zoomInButton"/>      
+      <multiplicity id="532" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="51" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <nesting id="533">    
+    <end type="SOURCE" refId="49"/>    
+    <end type="TARGET" refId="52"/>  
+  </nesting>  
+  <nesting id="534">    
+    <end type="SOURCE" refId="95"/>    
+    <end type="TARGET" refId="91"/>  
+  </nesting>  
+  <association id="535">    
+    <end type="SOURCE" refId="16" navigable="false">      
+      <attribute id="536" name="timerUtilA"/>      
+      <multiplicity id="537" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="3" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="538">    
+    <end type="SOURCE" refId="40" navigable="false">      
+      <attribute id="539" name="arrowUpDownButton"/>      
+      <multiplicity id="540" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="51" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="541">    
+    <end type="SOURCE" refId="126" navigable="false">      
+      <attribute id="542" name="routeGraph"/>      
+      <multiplicity id="543" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="134" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <nesting id="544">    
+    <end type="SOURCE" refId="42"/>    
+    <end type="TARGET" refId="32"/>  
+  </nesting>  
+  <association id="545">    
+    <bendpoint x="8933" y="481"/>    
+    <end type="SOURCE" refId="35" navigable="false">      
+      <attribute id="546" name="style"/>      
+      <multiplicity id="547" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="40" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="548">    
+    <end type="SOURCE" refId="59" navigable="false">      
+      <attribute id="549" name="tiles"/>      
+      <multiplicity id="550" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="58" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="551">    
+    <end type="SOURCE" refId="134" navigable="false">      
+      <attribute id="552" name="adjacent"/>      
+      <multiplicity id="553" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="128" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="554">    
+    <end type="SOURCE" refId="40" navigable="false">      
+      <attribute id="555" name="menuLayerButton"/>      
+      <multiplicity id="556" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="51" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <nesting id="557">    
+    <end type="SOURCE" refId="95"/>    
+    <end type="TARGET" refId="99"/>  
+  </nesting>  
+  <generalization id="558">    
+    <end type="SOURCE" refId="67"/>    
+    <end type="TARGET" refId="49"/>  
+  </generalization>  
+  <association id="559">    
+    <end type="SOURCE" refId="137" navigable="false">      
+      <attribute id="560" name="weightEnum"/>      
+      <multiplicity id="561" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="138" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="562">    
+    <end type="SOURCE" refId="129" navigable="false">      
+      <attribute id="563" name="weightEnum"/>      
+      <multiplicity id="564" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="138" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="565">    
+    <end type="SOURCE" refId="28" navigable="false">      
+      <attribute id="566" name="place"/>      
+      <multiplicity id="567" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="107" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="568">    
+    <end type="SOURCE" refId="57" navigable="false">      
+      <attribute id="569" name="linesVisible"/>      
+      <multiplicity id="570" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="86" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="571">    
+    <end type="SOURCE" refId="126" navigable="false">      
+      <attribute id="572" name="edgeTree"/>      
+      <multiplicity id="573" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="79" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <nesting id="574">    
+    <end type="SOURCE" refId="95"/>    
+    <end type="TARGET" refId="102"/>  
+  </nesting>  
+  <association id="575">    
+    <end type="SOURCE" refId="28" navigable="false">      
+      <attribute id="576" name="temporaryRelationReferences"/>      
+      <multiplicity id="577" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="118" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="578">    
+    <end type="SOURCE" refId="40" navigable="false">      
+      <attribute id="579" name="menuInfoButton"/>      
+      <multiplicity id="580" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="51" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="581">    
+    <end type="SOURCE" refId="64" navigable="false">      
+      <attribute id="582" name="sourceButton"/>      
+      <multiplicity id="583" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="45" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="584">    
+    <end type="SOURCE" refId="38" navigable="false">      
+      <attribute id="585" name="bottomPanel"/>      
+      <multiplicity id="586" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="35" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="587">    
+    <bendpoint x="9095" y="143"/>    
+    <end type="SOURCE" refId="7" navigable="false">      
+      <attribute id="588" name="osmReader"/>      
+      <multiplicity id="589" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="26" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="590">    
+    <end type="SOURCE" refId="18" navigable="false">      
+      <attribute id="591" name="street"/>      
+      <multiplicity id="592" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="10" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="593">    
+    <end type="SOURCE" refId="65" navigable="false">      
+      <attribute id="594" name="style"/>      
+      <multiplicity id="595" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="40" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <nesting id="596">    
+    <end type="SOURCE" refId="95"/>    
+    <end type="TARGET" refId="103"/>  
+  </nesting>  
+  <association id="597">    
+    <bendpoint x="13610" y="249"/>    
+    <end type="SOURCE" refId="25" navigable="false">      
+      <attribute id="598" name="housenumberTree"/>      
+      <multiplicity id="599" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="79" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="600">    
+    <end type="SOURCE" refId="106" navigable="false">      
+      <attribute id="601" name="next"/>      
+      <multiplicity id="602" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="106" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <nesting id="603">    
+    <end type="SOURCE" refId="43"/>    
+    <end type="TARGET" refId="41"/>  
+  </nesting>  
+  <nesting id="604">    
+    <end type="SOURCE" refId="96"/>    
+    <end type="TARGET" refId="87"/>  
+  </nesting>  
+  <association id="605">    
+    <end type="SOURCE" refId="129" navigable="false">      
+      <attribute id="606" name="pq"/>      
+      <multiplicity id="607" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="132" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="608">    
+    <bendpoint x="6669" y="365"/>    
+    <end type="SOURCE" refId="68" navigable="false">      
+      <attribute id="609" name="wayType"/>      
+      <multiplicity id="610" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="114" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="611">    
+    <end type="SOURCE" refId="45"/>    
+    <end type="TARGET" refId="51"/>  
+  </generalization>  
+  <association id="612">    
+    <bendpoint x="12267" y="249"/>    
+    <end type="SOURCE" refId="28" navigable="false">      
+      <attribute id="613" name="coastlineMap"/>      
+      <multiplicity id="614" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="109" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <nesting id="615">    
+    <bendpoint x="2121" y="249"/>    
+    <bendpoint x="2121" y="365"/>    
+    <bendpoint x="2121" y="481"/>    
+    <bendpoint x="2121" y="597"/>    
+    <end type="SOURCE" refId="62"/>    
+    <end type="TARGET" refId="64"/>  
+  </nesting>  
+  <association id="616">    
+    <end type="SOURCE" refId="11" navigable="false">      
+      <attribute id="617" name="objMatches"/>      
+      <multiplicity id="618" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="15" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="619">    
+    <end type="SOURCE" refId="80"/>    
+    <end type="TARGET" refId="79"/>  
+  </generalization>  
+  <association id="620">    
+    <end type="SOURCE" refId="26" navigable="false">      
+      <attribute id="621" name="parserListeners"/>      
+      <multiplicity id="622" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="23" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="623">    
+    <end type="SOURCE" refId="98" navigable="false">      
+      <attribute id="624" name="tc"/>      
+      <multiplicity id="625" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="95" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="626">    
+    <end type="SOURCE" refId="16" navigable="false">      
+      <attribute id="627" name="timerUtilB"/>      
+      <multiplicity id="628" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="3" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="629">    
+    <end type="SOURCE" refId="113" navigable="false">      
+      <attribute id="630" name="enumMapPlacesKD"/>      
+      <multiplicity id="631" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="79" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="632">    
+    <end type="SOURCE" refId="40" navigable="false">      
+      <attribute id="633" name="menuSettingsButton"/>      
+      <multiplicity id="634" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="51" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="635">    
+    <end type="SOURCE" refId="43" navigable="false">      
+      <attribute id="636" name="dropSuggestions"/>      
+      <multiplicity id="637" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="39" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="638">    
+    <end type="SOURCE" refId="129" navigable="false">      
+      <attribute id="639" name="sourceVertex"/>      
+      <multiplicity id="640" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="123" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="641">    
+    <end type="SOURCE" refId="72" navigable="false">      
+      <attribute id="642" name="menu"/>      
+      <multiplicity id="643" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="67" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="644">    
+    <end type="SOURCE" refId="28" navigable="false">      
+      <attribute id="645" name="relation"/>      
+      <multiplicity id="646" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="118" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="647">    
+    <end type="SOURCE" refId="70" navigable="false">      
+      <attribute id="648" name="style"/>      
+      <multiplicity id="649" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="40" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="650">    
+    <end type="SOURCE" refId="130" navigable="false">      
+      <attribute id="651" name="rc"/>      
+      <multiplicity id="652" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="126" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <nesting id="653">    
+    <end type="SOURCE" refId="27"/>    
+    <end type="TARGET" refId="21"/>  
+  </nesting>  
+  <association id="654">    
+    <end type="SOURCE" refId="48" navigable="false">      
+      <attribute id="655" name="style"/>      
+      <multiplicity id="656" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="40" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+    sort-features="false" accessors="true" visibility="true">    
+    <attributes public="false" package="false" protected="false" private="false" static="false"/>    
+    <operations public="false" package="false" protected="false" private="false" static="false"/>  
+  </classifier-display>  
+  <association-display labels="true" multiplicity="true"/>
+</class-diagram>

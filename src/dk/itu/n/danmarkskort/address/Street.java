@@ -4,12 +4,10 @@ import java.awt.geom.Point2D;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import dk.itu.n.danmarkskort.Main;
 import org.apache.commons.lang3.StringUtils;
 
-import dk.itu.n.danmarkskort.models.RegionFloat;
 import dk.itu.n.danmarkskort.models.ReuseStringObj;
 
 public class Street extends HashMap<String,Housenumber> implements Serializable {
@@ -18,7 +16,7 @@ public class Street extends HashMap<String,Housenumber> implements Serializable 
 	private Postcode postcode;
 	
 	Street(Postcode postcode, String street){
-		super(50);
+		super(50); // Initialize housenumber map with a average size per streets.
 		this.setPostcode(postcode);
 		this.street = ReuseStringObj.make(street);
 	}
@@ -32,6 +30,14 @@ public class Street extends HashMap<String,Housenumber> implements Serializable 
 
 	public Map<String, Housenumber> getHousenumbers() { return this; }
 	
+	/**
+	 * Used for adding a housenumber and location to the datastructur.
+	 * If housenumber exists, add location to existing housenumber object.
+	 * 
+	 * @param street
+	 * @param housenumber
+	 * @param latLon
+	 */
 	public void addHousenumber(String housenumber, Point2D.Float lonLat){
 		if(housenumber != null && lonLat != null) {
 			Housenumber hn = getHousenumber(housenumber);
@@ -45,7 +51,13 @@ public class Street extends HashMap<String,Housenumber> implements Serializable 
 		return this.get(housenumber.toLowerCase());
 	}
 
-	
+	/**
+	 * Narrows down a map input by checking if housenumbers key contains the find value.
+	 * 
+	 * @param input map of housenumbers to search in.
+	 * @param find search string
+	 * @return a map with housenumbers matching.
+	 */
 	private Map<String, Housenumber> housenumberContains(Map<String, Housenumber> input, String housenumber){
 		Map<String, Housenumber> result = new HashMap<String, Housenumber>();
 		if(housenumber == null) return result;
@@ -57,6 +69,13 @@ public class Street extends HashMap<String,Housenumber> implements Serializable 
 		return result;
 	}
 	
+	/**
+	 * Narrows down a map input by checking if housenumbers key starts with find value.
+	 * 
+	 * @param input map of housenumbers to search in.
+	 * @param find search string
+	 * @return a map with housenumbers matching.
+	 */
 	private Map<String, Housenumber> housenumberStartsWith(Map<String, Housenumber> input, String housenumber){
 		Map<String, Housenumber> result = new HashMap<String, Housenumber>();
 		if(housenumber == null) return result;
@@ -68,6 +87,13 @@ public class Street extends HashMap<String,Housenumber> implements Serializable 
 		return result;
 	}
 	
+	/**
+	 * Narrows down a map input by checking if housenumber key is within LevenshteinDistance 1-2 of the find value.
+	 * 
+	 * @param input map of housenumbers to search in.
+	 * @param find search string
+	 * @return a map with housenumbers matching.
+	 */
 	private Map<String, Housenumber> housenumberLevenshteinDistance(Map<String, Housenumber> input, String housenumber){
 		Map<String, Housenumber> result = new HashMap<String, Housenumber>();
 		int minValue = 0, maxValue = 3;
@@ -81,6 +107,14 @@ public class Street extends HashMap<String,Housenumber> implements Serializable 
 		return result;
 	}
 	
+	/**
+	 * Method is used to make the search for housenumbers, by criteria for all parts.
+	 * 
+	 * @param input map of housenumbers to search in.
+	 * @param addr, address object with search values.
+	 * @param streetType
+	 * @return a map with housenumbers matching.
+	 */
 	public Map<String, Housenumber> search(Map<String, Housenumber> input, Address addr, SearchEnum housenumberType){
 		Map<String, Housenumber> result = new HashMap<String, Housenumber>();
 			switch(housenumberType){

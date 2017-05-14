@@ -183,6 +183,6 @@ public class RoutePlannerMain {
 	}
 	
 	private void makeRoute(String routeFrom, String routeTo,  List<RouteModel> routeModels){
-		RoutePartBasic routePartBasic = new RoutePartBasic(routeFrom, routeTo, weightEnum, panelRouteDescription, routeModels);
+		new RoutePartBasic(routeFrom, routeTo, weightEnum, panelRouteDescription, routeModels);
 	}
 }
