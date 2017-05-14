@@ -23,8 +23,8 @@ public class KDTreeNode<T extends KDComparable> extends KDTree<T> {
         this(KDTree.listToArray(list), true, leafSize);
     }
     
-    private KDTreeNode(KDComparable[] arr, boolean sortByLon, int kd_size) {
-        makeStructure(arr, sortByLon, kd_size);
+    private KDTreeNode(KDComparable[] arr, boolean sortByLon, int leafSize) {
+        makeStructure(arr, sortByLon, leafSize);
     }
 
     /**
@@ -149,14 +149,15 @@ public class KDTreeNode<T extends KDComparable> extends KDTree<T> {
     }
 
     /**
-     * Finds the element, among all the objects stored in the KDTree, that has a line segment which has the shortest
+     * Finds the element, among all the objects stored in the KDTree, that has a line segment with the shortest
      * distance to the query point.
      *
      * @param query The query point used to match against.
      * @param currentShortest The shortest known distance (from a different part of the KDTree).
      * @param sortByLon Whether this depth is ordered according to longitude (true) or latitude (false) values.
      * @return Null if no element in this part of the tree can possibly be closer to the query point, than the already
-     * known shortestDistance. Else returns the element that is closest to the query point.
+     * known shortestDistance, or the method didn't find a candidate with shorter distance.
+     * Else returns the element that is closest to the query point.
      */
     protected T nearest(Point2D.Float query, double currentShortest, boolean sortByLon) {
         if(query == null) return null;

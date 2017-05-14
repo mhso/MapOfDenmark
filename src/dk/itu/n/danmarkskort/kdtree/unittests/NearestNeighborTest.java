@@ -92,16 +92,4 @@ public class NearestNeighborTest {
         assertEquals(target2, tree.nearest(query2).getFirstNode());
         assertNotEquals(target1, tree.nearest(query2).getFirstNode());
     }
-    @Test
-    public void testWithWays() {
-
-    }
-
-	/*@Test
-	public void testNearestItem() {
-		AddressHolder addr = Main.addressController.getAddressHolder();
-		KDTree<Housenumber> houseNumberTree = new KDTreeNode<>(addr.getHousenumbers());
-		assertTrue(houseNumberTree.nearest(Util.stringCordsToPointFloat("55.65963, 12.59105")).getStreet().equals("Rued Langgaards Vej"));
-	}*/
-
 }

@@ -2,6 +2,19 @@ package dk.itu.n.danmarkskort.kdtree;
 
 import java.util.Random;
 
+/**
+ * All methods in this class, except the less() method, are from the book Algorithms, by Robert Sedgewick and Kevin Wayne
+ * (4th edition)
+ *
+ * It's an implementation of the QuickSelect algorithm, which is able to find the k'th largest element in an array, and
+ * in the process order the array such that all items with a lower index than k i smaller than the k'th item, and every
+ * item with a higher index is not smaller.
+ *
+ * Worst-case performance is O(n^2), but since we start out by shuffling the array, we reach the best-case/average-case
+ * of O(n).
+ *
+ */
+
 public class QuickSelect {
 
     /**
@@ -87,7 +100,7 @@ public class QuickSelect {
     }
 
     /**
-     * Compares to KDComparable objects, and determines if the first objects firstNode (coordinate) is smaller than
+     * Compares two KDComparable objects, and determines if the first objects firstNode (coordinate) is smaller than
      * the second's.
      *
      * @param a The first object.

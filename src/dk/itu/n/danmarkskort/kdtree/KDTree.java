@@ -36,6 +36,14 @@ public abstract class KDTree<T extends KDComparable> implements Serializable, It
      */
     abstract List<KDComparable[]> getItems(Region reg, boolean sortByLon);
 
+    /**
+     * If a specific KDTree object is an instance of KDTreeNode, all children are asked to return all their elements,
+     * as arrays inside ArrayLists. These lists are then merged.
+     *
+     * If a KDTree object is an instance of KDTreeLeaf, the element data is returned as an array inside an ArrayList.
+     *
+     * @return All the objects stored in a KDTree structure.
+     */
     abstract List<KDComparable[]> getAllItems();
 
     public abstract int nodeSize();
@@ -160,7 +168,7 @@ public abstract class KDTree<T extends KDComparable> implements Serializable, It
      * @param query The point, whose shortest distance to the line we want to find.
      * @return The shortest distance between the line and the query point.
      */
-    private static double distancePointToLine(Point2D.Float a, Point2D.Float b, Point2D.Float query) {
+    public static double distancePointToLine(Point2D.Float a, Point2D.Float b, Point2D.Float query) {
         double lengthSquared = distanceSquared(a, b);
         // if point 'a' and 'b' are equal (length returns 0) we just need to return the distance between 'a' (or 'b')
         // and the query point
@@ -185,8 +193,21 @@ public abstract class KDTree<T extends KDComparable> implements Serializable, It
         return (x * x) + (y * y);
     }
 
+    /**
+     * Returns the KDComparable items in a KDTree, closest to the query point.
+     * @param query The point the KDTree's elements are matched against.
+     * @return The nearest object.
+     */
     public T nearest(Point2D.Float query) { return nearest(query, Double.POSITIVE_INFINITY, true); }
 
+
+    /**
+     * Returns the KDComparable items in a KDTree, closest to the query point.
+     * @param query The point which the KDTree's objects are matched against.
+     * @param currentShortest The currently shortest known distance between query and a line segment in the KDTree.
+     * @param sortByLon Whether we compare by longitude (true) or latitude (false) at this depth.
+     * @return The nearest object, or null of none in this part of the KDTree is closer than currentShortest.
+     */
     abstract T nearest(Point2D.Float query, double currentShortest, boolean sortByLon);
 
     /**
