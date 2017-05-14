@@ -25,7 +25,7 @@ public class SearchController{
 		if(inputStr == null || inputStr.isEmpty()) return null;
 		
 		if(isCoordinates(inputStr)) {
-			return Main.addressController.getSearchResult(Util.stringCordsToPointFloat(inputStr));
+			return Main.addressController.getSearchResultByCoords(Util.stringCordsToPointFloat(inputStr));
 		} else {
 			return Main.addressController.getSearchResult(inputStr);
 		}
