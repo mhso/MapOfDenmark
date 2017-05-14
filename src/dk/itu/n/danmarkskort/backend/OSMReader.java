@@ -81,9 +81,15 @@ public class OSMReader {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			BinaryWrapper binary = (BinaryWrapper) Util.readObjectFromFile(fileName, inputListeners);
-			Util.extractAllFromBinary(binary);
-			for(ProgressListener listener : inputListeners) listener.onSetupDone();
+			try {
+				BinaryWrapper binary = (BinaryWrapper) Util.readObjectFromFile(fileName, inputListeners);
+				Util.extractAllFromBinary(binary);
+				for(ProgressListener listener : inputListeners) listener.onSetupDone();
+			}
+			catch (ClassCastException e) {
+				Main.handleError("Invalid binary file.", true);
+			}
+			
 		}
 		else {
 			try {
@@ -105,7 +111,11 @@ public class OSMReader {
                         for (ProgressListener inListener : inputListeners) monitor.addListener(inListener);
                         loadOSM(new InputSource(monitor), contentHandler);
                     } catch (FileNotFoundException e) {
-                        e.printStackTrace();
+                        Main.handleError("File not found.", true);
+                    } catch (IOException e) {
+                        Main.handleError("Error occured when loading file.", true);
+                    } catch(SAXException e) {
+                    	Main.handleError("Could not parse OSM data.", true);
                     }
 
                 } else if (fileName.endsWith(".zip")) {
@@ -117,9 +127,11 @@ public class OSMReader {
                         for (ProgressListener inListener : inputListeners) monitor.addListener(inListener);
                         loadOSM(new InputSource(zip), contentHandler);
                     } catch (FileNotFoundException e) {
-                        e.printStackTrace();
+                        Main.handleError("File not found.", true);
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        Main.handleError("Error occured when loading file.", true);
+                    } catch(SAXException e) {
+                    	Main.handleError("Could not parse OSM data.", true);
                     }
                 }
             	
@@ -147,14 +159,10 @@ public class OSMReader {
 		Main.logRamUsage();
 	}
 
-	private void loadOSM(InputSource source, ContentHandler contentHandler) {
-		try {
-			XMLReader reader = XMLReaderFactory.createXMLReader();
-			reader.setContentHandler(contentHandler);
-			reader.parse(source);
-		} catch (SAXException | IOException e) {
-			e.printStackTrace();
-		}
+	private void loadOSM(InputSource source, ContentHandler contentHandler) throws SAXException, IOException {
+		XMLReader reader = XMLReaderFactory.createXMLReader();
+		reader.setContentHandler(contentHandler);
+		reader.parse(source);
 	}
 	
 	private boolean checkSumExists(String checkSum) {

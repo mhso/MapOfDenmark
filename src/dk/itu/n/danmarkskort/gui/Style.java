@@ -25,7 +25,7 @@ public class Style {
                 routeOuterBG, routeInnerBG, routeText, routeTextLight;
     private CustomButton searchButton, menuButton, routeButton, centerViewButton, zoomInButton, zoomOutButton,
             menuLayerButton, menuSaveButton, menuOpenButton, menuSettingsButton, menuRouteButton, menuInfoButton, 
-            menuPinPointButton, pinPointPanButton, pinPointDeleteButton, arrowUpDownButton;
+            menuPinPointButton, pinPointPanButton, pinPointDeleteButton, arrowUpDownButton, themeMenuButton;
     private ImageIcon scaleIndicator, basicThemePreview, nightThemePreview, bwThemePreview, logo, launcherOptionsIcon, launcherLoadIcon;
     private Image frameIcon;
     private Font normalText, smallHeadline, mediumHeadline, largeHeadline, largeHeadlineSpacing, defaultLabelText, defaultHeadline, mapLabelFont;
@@ -82,7 +82,8 @@ public class Style {
         centerViewButton = new CustomButton("resources/icons/target.png", alphaFloat, alphaHover, zoomButtonBG);
         zoomInButton = new CustomButton("resources/icons/zoomin.png", alphaFloat, alphaHover, zoomButtonBG);
         zoomOutButton = new CustomButton("resources/icons/zoomout.png", alphaFloat, alphaHover, zoomButtonBG);
-
+        themeMenuButton = new CustomButton("resources/icons/thememenu.png", alphaFloat, alphaHover, Color.WHITE);
+        
         basicThemePreview = getImageIcon("resources/icons/previewthemebasic.png");
         nightThemePreview = getImageIcon("resources/icons/previewthemenight.png");
         bwThemePreview = getImageIcon("resources/icons/previewthemebw.png");
@@ -177,6 +178,7 @@ public class Style {
     public CustomButton pinPointPanButton() { return pinPointPanButton; }
     public CustomButton pinPointDeleteButton() { return pinPointDeleteButton; }
     public CustomButton arrowUpDownButton() { return arrowUpDownButton; }
+    public CustomButton themeMenuButton() { return themeMenuButton; }
     
     public CustomToggleButton toggleButton() { return new CustomToggleButton(1.0f, 0.8f); }
     
