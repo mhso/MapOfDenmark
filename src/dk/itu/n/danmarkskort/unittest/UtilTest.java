@@ -86,6 +86,8 @@ public class UtilTest {
 		assertEquals(true, Util.valueIsBetween(5, 10, 0));
 		assertEquals(true, Util.valueIsBetween(-5, 0, -10));
 		assertEquals(true, Util.valueIsBetween(-5, -10, 0));
+		assertEquals(false, Util.valueIsBetween(5, 0, 4));
+		assertEquals(false, Util.valueIsBetween(-5, 4, -4));
 	}
 	
 	@Test
