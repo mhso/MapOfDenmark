@@ -300,7 +300,7 @@ public class SettingsPage extends JPanel {
         maximizeOnStartupPanel.setLayout(new BorderLayout(15, 0));
         centerPanel.add(maximizeOnStartupPanel);
         
-        JLabel maximizeLabel = new JLabel("Maximize On Startup: ");
+        JLabel maximizeLabel = new JLabel("Maximize On Startup");
         maximizeOnStartupPanel.add(maximizeLabel, BorderLayout.WEST);
         
         JCheckBox maximizeButton = new JCheckBox();
@@ -338,7 +338,7 @@ public class SettingsPage extends JPanel {
         centerPanel.add(useDjikstraWithAStarPanel);
         useDjikstraWithAStarPanel.setLayout(new BorderLayout(15, 0));
         
-        JLabel useDjikstraWithAStarLabel = new JLabel("Use Djikstra with A* as search algorithm: ");
+        JLabel useDjikstraWithAStarLabel = new JLabel("Use Djikstra with A* as search algorithm");
         useDjikstraWithAStarPanel.add(useDjikstraWithAStarLabel, BorderLayout.WEST);
         
         JCheckBox useDjikstraWithAStarCheckBox = new JCheckBox();
@@ -359,7 +359,10 @@ public class SettingsPage extends JPanel {
         drawDjikstraPanel.add(drawDjikstraLabel, BorderLayout.WEST);
         
         JCheckBox drawDjikstraCheckBox = new JCheckBox();
-        drawDjikstraCheckBox.addActionListener(e -> Main.routeController.isDrawingDjikstra = drawDjikstraCheckBox.isSelected());
+        drawDjikstraCheckBox.addActionListener(e -> {
+        	Main.routeController.isDrawingDjikstra = drawDjikstraCheckBox.isSelected();
+        	Util.writeObjectToFile(Main.userPreferences, DKConstants.USERPREF_PATH);
+        });
         drawDjikstraCheckBox.setBackground(panelCenter.getBackground());
         drawDjikstraCheckBox.setSelected(Main.userPreferences.isHighlightingNearestRoad());
         drawDjikstraPanel.add(drawDjikstraCheckBox, BorderLayout.EAST);

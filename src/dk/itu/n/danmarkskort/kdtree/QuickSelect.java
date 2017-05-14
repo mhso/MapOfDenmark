@@ -27,7 +27,7 @@ public class QuickSelect {
      * @param sortByLon If true we compare elements by their longitude values, if false: latitude values.
      * @return the k-index element in the rearranged array.
      */
-    static KDComparable quickSelect(KDComparable[] array, int k, boolean sortByLon) {
+    public static KDComparable quickSelect(KDComparable[] array, int k, boolean sortByLon) {
         // shuffling decreases the chances of hitting the worst-case scenario
         shuffle(array);
 
