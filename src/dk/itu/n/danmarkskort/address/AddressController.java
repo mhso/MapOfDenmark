@@ -42,6 +42,7 @@ public class AddressController {
 	
 	/**
 	 * Returns a list of search suggestions by string input
+	 * 
 	 * @param find, search string
 	 * @param limitAmountOfResults limit number of return suggestions
 	 * @return a list of suggestions or empty list if non.
@@ -52,6 +53,7 @@ public class AddressController {
 	
 	/**
 	 * Returns nearst address as single result, but in a list form.
+	 * 
 	 * @param find, search coords
 	 * @return a list with nearst address suggestions or empty list if non.
 	 */
@@ -64,6 +66,7 @@ public class AddressController {
 	
 	/**
 	 * Method used for searching for an address by a string value.
+	 * 
 	 * @param find, the address string as one line.
 	 * @return an build Address Object from the result, null if nothing found.
 	 */
@@ -109,6 +112,7 @@ public class AddressController {
 
 	/**
 	 * Used for finding the nearst housenumber object, by (fake) coords.
+	 * 
 	 * @param find by coords input.
 	 * @return an Address object, for the nearst house.
 	 */
@@ -131,6 +135,7 @@ public class AddressController {
 	/**
 	 * Adds an address to the address datastruture.
 	 * (as Postcode -> Street -> Housenumber).
+	 * 
 	 * @param lonLat, address coords
 	 * @param street, address streetname
 	 * @param housenumber, address housenumber
@@ -155,6 +160,7 @@ public class AddressController {
 	/**
 	 * The method is called i the parsing process, it expects and complete address.
 	 * Because it is made up of userinput we need to validate the values.
+	 * 
 	 * @param addr an object build in the OSM parsing process
 	 */
 	public void addressParsed(ParsedAddress addr) {
