@@ -27,26 +27,16 @@ public class KDTreeNode<T extends KDComparable> extends KDTree<T> {
         makeStructure(arr, sortByLon, kd_size);
     }
 
-    /*
-     * Recursive method that makes the KDTree.
-     * If the input array's length is smaller or same size as the leafSize, the leftChild is created as an leaf, with
-     * the array, and the rightChild is set as null.
+    /**
+     * Recursive method that creates a 2-dimensional KDTree (with the dimensions being Longitude and latitude values).
      *
-     * Else if the input array's length is larger, the median is found, in accordance to whether this depth sorts by longitude
-     * values or latitude value, using Quick Select.
+     * QuickSelect is used to find the median, and order the array according to it. The reordered array is then split
+     * into to new arrays, by the median, and then either used to make a new KDTreeNode (if larger than leafSize) or
+     * used to create an KDTreeLeaf
      *
-     * Besides finding the median, Quick Select also makes a rough sort, such that on the left/top of the median's index in the array
-     * all elements have a lower firstNode (or point, or coordinate) that the median, and all elements on the right/bottom side has
-     * higher values.
-     *
-     * The array is then split into two new arrays.
-     *
-     * For each array we iterate over all elements coordinates, and find the one value that diverges the most (se splitValue() explanation).
-     *
-     * For each array, if the length is larger than leafSize we create a new KDTreeNode with the array as input (and that KDTreeNode object
-     * then calls makeStructure on itself).
-     * If the length is smaller or equal we make a KDTreeLeaf, and pass the array as parameter.
-     *
+     * @param array Array of KDComparable elements.
+     * @param sortByLon Whether sorting by longitude (true) og latitude (false) values.
+     * @param leafSize The maximum size of the element data contained in a KDTreeLeaf.
      */
     private void makeStructure(KDComparable[] array, boolean sortByLon, int leafSize) {
         if(array.length <= leafSize) {
@@ -75,20 +65,16 @@ public class KDTreeNode<T extends KDComparable> extends KDTree<T> {
         else rightChild = new KDTreeLeaf<>(rightArray);
     }
 
-    /*
-     *   This method finds the value among an array's elements that diverges the most from the rest.
-     *   In the order that left-top contains the lowest values, and thus we look for the highest value among them,
-     *   and with right-bottom we look for the lowest value among them.
+    /**
+     *  Finds the value among an array's elements that diverges the most from the rest.
+     *  In the order that left-top contains the lowest values, and thus we look for the highest value among them,
+     *  and with right-bottom we look for the lowest value among them.
      *
-     *   Boolean combinations:
-     *   sortByLon == true: we are sorting according to elements' longitude values
-     *      left == true: array is the left side
-     *      left == false: array is the right side
-     *   sortByLon == false: we are sorting according to elements' latitude values
-     *      left == true: array is the top part
-     *      left == false: array is the bottom part
+     * @param arr Array to be looked at.
+     * @param sortByLon Whether we check for longitude (true) or latitude (false) values.
+     * @param left Whether its the left-top side of the array, or right-bottom.
+     * @return The value that, among all the coordinates of all the KDComparable objects in the array, diverges the most.
      */
-
     private float splitValue(KDComparable[] arr, boolean sortByLon, boolean left) {
         float value;
         if(left) value = Float.MIN_VALUE; // left-top has lowest values
@@ -124,11 +110,14 @@ public class KDTreeNode<T extends KDComparable> extends KDTree<T> {
     public float getLeftSplit() { return leftSplit; }
     public float getRightSplit() { return rightSplit; }
 
-    public List<KDComparable[]> getItems(Region reg) {
-        if(reg == null) throw new IllegalArgumentException("Can't find items by region if region is null");
-        return getItems(reg, true);
-    }
-
+    /**
+     * Recursive method that checks whether any of the children of the KDTreeNode is within either the given Region's
+     * longitude or latitude values. If they are, this method is called on them.
+     *
+     * @param reg Used to determine whether a KDTree leaf or node is worth looking at.
+     * @param sortByLon Whether we check by longitude or latitude values.
+     * @return All the items returned by the children, merged together in an ArrayList.
+     */
     public List<KDComparable[]> getItems(Region reg, boolean sortByLon) {
         List<KDComparable[]> items = new ArrayList<>();
         double minX = reg.x1 < reg.x2 ? reg.x1 : reg.x2;
@@ -147,6 +136,11 @@ public class KDTreeNode<T extends KDComparable> extends KDTree<T> {
         return items;
     }
 
+    /**
+     * Asks both children to hand over all their elements, without any conditions.
+     *
+     * @return A List of arrays of childrens elements, gotten through the same method recursively.
+     */
     public List<KDComparable[]> getAllItems() {
         List<KDComparable[]> arrList = new ArrayList<>();
         if(leftChild != null) arrList.addAll(leftChild.getAllItems());
@@ -154,6 +148,16 @@ public class KDTreeNode<T extends KDComparable> extends KDTree<T> {
         return arrList;
     }
 
+    /**
+     * Finds the element, among all the objects stored in the KDTree, that has a line segment which has the shortest
+     * distance to the query point.
+     *
+     * @param query The query point used to match against.
+     * @param currentShortest The shortest known distance (from a different part of the KDTree).
+     * @param sortByLon Whether this depth is ordered according to longitude (true) or latitude (false) values.
+     * @return Null if no element in this part of the tree can possibly be closer to the query point, than the already
+     * known shortestDistance. Else returns the element that is closest to the query point.
+     */
     protected T nearest(Point2D.Float query, double currentShortest, boolean sortByLon) {
         if(query == null) return null;
 
