@@ -4,6 +4,7 @@ import java.awt.geom.Point2D;
 import java.util.*;
 
 import dk.itu.n.danmarkskort.Main;
+import dk.itu.n.danmarkskort.Util;
 import dk.itu.n.danmarkskort.kdtree.KDTree;
 import dk.itu.n.danmarkskort.kdtree.KDTreeNode;
 import dk.itu.n.danmarkskort.models.Region;
@@ -45,14 +46,11 @@ public class RouteController {
 		
 		RouteEdgeMeta routeEdgeMeta = new RouteEdgeMeta(maxSpeed, forwardAllowed, backwardAllowed,
 				carsAllowed, bikesAllowed, walkAllowed);
-		RouteEdgeMeta reuseRouteEdgeMeta = ReuseRouteEdgeMetaObj.make(routeEdgeMeta);
 		if(forwardAllowed){
-			RouteEdge edge = new RouteEdge(fromVertex, toVertex, reuseRouteEdgeMeta, description);
-			routeEdges.add(edge);
+			routeEdges.add(new RouteEdge(fromVertex, toVertex, routeEdgeMeta, description));
 		}
 		if(backwardAllowed){
-			RouteEdge edge = new RouteEdge(toVertex, fromVertex, reuseRouteEdgeMeta, description);
-			routeEdges.add(edge);
+			routeEdges.add(new RouteEdge(toVertex, fromVertex, routeEdgeMeta, description));
 		}
 	}
 	
