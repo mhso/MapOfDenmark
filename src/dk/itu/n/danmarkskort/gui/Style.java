@@ -109,7 +109,7 @@ public class Style {
                 defaultHeadline = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/resources/fonts/Roboto-Medium.ttf")).deriveFont(20f);
                 mediumHeadline = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/resources/fonts/Roboto-Light.ttf")).deriveFont(20f);
                 largeHeadline = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/resources/fonts/Roboto-Light.ttf")).deriveFont(42f);
-                mapLabelFont = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/resources/font/Roboto-Medium.ttf"));
+                mapLabelFont = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/resources/fonts/Roboto-Medium.ttf"));
         	}
         	else {
                 defaultLabelText = Font.createFont(Font.TRUETYPE_FONT, new File("resources/fonts/Roboto-Medium.ttf")).deriveFont(13f);
