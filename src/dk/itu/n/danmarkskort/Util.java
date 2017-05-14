@@ -99,7 +99,6 @@ public class Util {
 			lnr.close();
 			return lnr.getLineNumber() + 1;
 		} catch (Exception e) {
-			e.printStackTrace();
 			return 0;
 		}
 	}
