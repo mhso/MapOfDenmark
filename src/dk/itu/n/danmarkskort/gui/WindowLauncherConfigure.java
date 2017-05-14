@@ -23,11 +23,9 @@ import javax.swing.BoxLayout;
 public class WindowLauncherConfigure extends JDialog {
 
 	private JPanel contentPane;
-	private WindowLauncher parent;
 
 	public WindowLauncherConfigure(WindowLauncher parent) {
 		super(parent);
-		this.parent = parent;
 		Style style = new Style();
 		setModal(true);
 		setBounds(100, 100, 450, 300);

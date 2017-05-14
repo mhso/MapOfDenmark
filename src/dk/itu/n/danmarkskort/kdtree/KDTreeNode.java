@@ -19,23 +19,44 @@ public class KDTreeNode<T extends KDComparable> extends KDTree<T> {
         this(KDTree.listToArray(list), true, DKConstants.KD_SIZE);
     }
     
-    public KDTreeNode(List<T> list, int kd_size) {
-        this(KDTree.listToArray(list), true, kd_size);
+    public KDTreeNode(List<T> list, int leafSize) {
+        this(KDTree.listToArray(list), true, leafSize);
     }
     
     private KDTreeNode(KDComparable[] arr, boolean sortByLon, int kd_size) {
-        createStructure(arr, sortByLon, kd_size);
+        makeStructure(arr, sortByLon, kd_size);
     }
 
-    private void createStructure(KDComparable[] array, boolean sortByLon, int kd_size) {
-
-        if(array.length < 2) {
+    /*
+     * Recursive method that makes the KDTree.
+     * If the input array's length is smaller or same size as the leafSize, the leftChild is created as an leaf, with
+     * the array, and the rightChild is set as null.
+     *
+     * Else if the input array's length is larger, the median is found, in accordance to whether this depth sorts by longitude
+     * values or latitude value, using Quick Select.
+     *
+     * Besides finding the median, Quick Select also makes a rough sort, such that on the left/top of the median's index in the array
+     * all elements have a lower firstNode (or point, or coordinate) that the median, and all elements on the right/bottom side has
+     * higher values.
+     *
+     * The array is then split into two new arrays.
+     *
+     * For each array we iterate over all elements coordinates, and find the one value that diverges the most (se splitValue() explanation).
+     *
+     * For each array, if the length is larger than leafSize we create a new KDTreeNode with the array as input (and that KDTreeNode object
+     * then calls makeStructure on itself).
+     * If the length is smaller or equal we make a KDTreeLeaf, and pass the array as parameter.
+     *
+     */
+    private void makeStructure(KDComparable[] array, boolean sortByLon, int leafSize) {
+        if(array.length <= leafSize) {
             leftChild = new KDTreeLeaf<>(array);
             rightChild = null;
+            leftSplit = splitValue(array, sortByLon, true);
+            rightSplit = Float.MAX_VALUE;
             return;
         }
 
-        //  finds the median of the given list, either by lon or lat values
         KDComparable median = QuickSelect.quickSelect(array, (array.length + 1) / 2, sortByLon);
 
         KDComparable[] leftArray = new KDComparable[(array.length + 1) / 2];
@@ -44,34 +65,58 @@ public class KDTreeNode<T extends KDComparable> extends KDTree<T> {
         KDComparable[] rightArray = new KDComparable[array.length - leftArray.length];
         for(int i = 0; i < rightArray.length; i ++) rightArray[i] = array[i + leftArray.length];
 
-        if(sortByLon) {
-            // left side
-            leftSplit = median.getFirstNode().x;
-            for(KDComparable item : leftArray) {
-                for(Point2D.Float node : item.getNodes()) leftSplit = node.x > leftSplit ? node.x : leftSplit; // til højre er værdierne størst
-            }
-            // right side
-            rightSplit = median.getFirstNode().x;
-            for(KDComparable item : rightArray) {
-                for(Point2D.Float node : item.getNodes()) rightSplit = node.x < rightSplit ? node.x: rightSplit; // til højre er værdierne størst
-            }
-        } else {
-            // top part
-            leftSplit = median.getFirstNode().y;
-            for(KDComparable item : leftArray) {
-                for(Point2D.Float node : item.getNodes()) leftSplit = node.y > leftSplit ? node.y : leftSplit; // nederst er værdierne størst (stadig minus, men tættere på 0)
-            }
-            // bottom part
-            rightSplit = median.getFirstNode().y;
-            for(KDComparable item : rightArray) {
-                for(Point2D.Float node : item.getNodes()) rightSplit = node.y < rightSplit ? node.y : rightSplit; // nederst er værdierne størst
-            }
-        }
-        if(leftArray.length > kd_size) leftChild = new KDTreeNode<>(leftArray, !sortByLon, kd_size);
+        leftSplit = splitValue(leftArray, sortByLon, true);
+        rightSplit = splitValue(rightArray, sortByLon, false);
+
+        if(leftArray.length > leafSize) leftChild = new KDTreeNode<>(leftArray, !sortByLon, leafSize);
         else leftChild = new KDTreeLeaf<>(leftArray);
 
-        if(rightArray.length > kd_size) rightChild = new KDTreeNode<>(rightArray, !sortByLon, kd_size);
+        if(rightArray.length > leafSize) rightChild = new KDTreeNode<>(rightArray, !sortByLon, leafSize);
         else rightChild = new KDTreeLeaf<>(rightArray);
+    }
+
+    /*
+     *   This method finds the value among an array's elements that diverges the most from the rest.
+     *   In the order that left-top contains the lowest values, and thus we look for the highest value among them,
+     *   and with right-bottom we look for the lowest value among them.
+     *
+     *   Boolean combinations:
+     *   sortByLon == true: we are sorting according to elements' longitude values
+     *      left == true: array is the left side
+     *      left == false: array is the right side
+     *   sortByLon == false: we are sorting according to elements' latitude values
+     *      left == true: array is the top part
+     *      left == false: array is the bottom part
+     */
+
+    private float splitValue(KDComparable[] arr, boolean sortByLon, boolean left) {
+        float value;
+        if(left) value = Float.MIN_VALUE; // left-top has lowest values
+        else value = Float.MAX_VALUE; // top-left has highest values
+
+        if(sortByLon) {
+            if(left) {
+                for (KDComparable item : arr)
+                    for (Point2D.Float node : item.getNodes())
+                        value = node.x > value ? node.x : value; // left side has lowest values
+            } else {
+                for(KDComparable item : arr)
+                    for(Point2D.Float node : item.getNodes())
+                        value = node.x < value ? node.x: value; // right side has highest values
+            }
+        } else {
+            if(left) {
+                for (KDComparable item : arr)
+                    for (Point2D.Float node : item.getNodes())
+                        value = node.y > value ? node.y : value; // top has lowest values
+            } else {
+                for (KDComparable item : arr) {
+                    for (Point2D.Float node : item.getNodes())
+                        value = node.y < value ? node.y : value; // bottom part has highest values
+                }
+            }
+        }
+        return value;
     }
 
     public KDTree getRightChild() { return rightChild; }
@@ -86,13 +131,18 @@ public class KDTreeNode<T extends KDComparable> extends KDTree<T> {
 
     public List<KDComparable[]> getItems(Region reg, boolean sortByLon) {
         List<KDComparable[]> items = new ArrayList<>();
+        double minX = reg.x1 < reg.x2 ? reg.x1 : reg.x2;
+        double maxX = reg.x1 < reg.x2 ? reg.x2 : reg.x1;
+        double minY = reg.x1 < reg.x2 ? reg.y1 : reg.y2;
+        double maxY = reg.x1 < reg.x2 ? reg.y2 : reg.y1;
+
         if(sortByLon) {
-            if(reg.x1 < leftSplit && leftChild != null) items.addAll(leftChild.getItems(reg, false));
-            if(reg.x2 > rightSplit && rightChild != null) items.addAll(rightChild.getItems(reg, false));
+            if(minX <= leftSplit && leftChild != null) items.addAll(leftChild.getItems(reg, false));
+            if(maxX >= rightSplit && rightChild != null) items.addAll(rightChild.getItems(reg, false));
         }
         else {
-            if(reg.y1 < leftSplit && leftChild != null) items.addAll(leftChild.getItems(reg, true));
-            if(reg.y2 > rightSplit && rightChild != null) items.addAll(rightChild.getItems(reg, true));
+            if(minY <= leftSplit && leftChild != null) items.addAll(leftChild.getItems(reg, true));
+            if(maxY >= rightSplit && rightChild != null) items.addAll(rightChild.getItems(reg, true));
         }
         return items;
     }
@@ -105,6 +155,8 @@ public class KDTreeNode<T extends KDComparable> extends KDTree<T> {
     }
 
     protected T nearest(Point2D.Float query, double currentShortest, boolean sortByLon) {
+        if(query == null) return null;
+
         double nearestPossibleLT, nearestPossibleRB;
         double shortest = currentShortest;
         T candidate = null;

@@ -84,5 +84,5 @@ public enum WayType {
 	PLACE_CITY,				// En storby
 	PLACE_TOWN,				// En by
 	PLACE_SUBURB,			// En forstad
-	PLACE_NEIGHBOURHOOD		// Et nabolag
+    BRIDGE, PLACE_NEIGHBOURHOOD		// Et nabolag
 }

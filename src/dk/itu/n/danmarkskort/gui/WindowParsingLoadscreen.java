@@ -24,6 +24,11 @@ import java.awt.Component;
 
 import javax.swing.Box;
 
+/**
+ * Older Loadscreen class, is not in use anymore and has not been updated for a while.
+ * 
+ * @author Team N ITU
+ */
 public class WindowParsingLoadscreen extends JFrame implements OSMParserListener {
 	private static final long serialVersionUID = -6160623215890001556L;
 	private JPanel contentPane;

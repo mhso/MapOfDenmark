@@ -24,7 +24,7 @@ public class Main {
 	public final static String APP_NAME = "Yak Maps";
 	public final static String APP_VERSION = "0.9";
 	public final static boolean debug = true;
-	public final static boolean debugExtra = true;
+	public final static boolean debugExtra = false;
 	public final static boolean production = false;
 	public final static boolean buffered = true;
 	public final static boolean saveParsedAddresses = true;
@@ -48,6 +48,7 @@ public class Main {
     public static void main(String[] args) {
 		System.setProperty("awt.useSystemAAFontSettings","on");
 		System.setProperty("swing.aatext", "true");
+
 		userPreferences = (UserPreferences)Util.readObjectFromFile(DKConstants.USERPREF_PATH);
 		if(userPreferences == null) {
 			userPreferences = new UserPreferences();
@@ -69,6 +70,8 @@ public class Main {
 		
 		routeController = new RouteController();
 		style = new Style();
+		UIManager.put("Label.font", style.defaultLabelText());
+
 		if(args.length > 0) prepareParser(args);
 		else prepareParser(new String[]{userPreferences.getDefaultMapFile()});
 		if(userPreferences.getCurrentMapTheme() != null) {
@@ -96,7 +99,6 @@ public class Main {
 				osmReader.parseFile(args[0], parser);
 				ReuseStringObj.clear();
 				main();
-		        shutdown();
 			}
 		};
 		new Thread(r, "ParseThread").start();
@@ -106,7 +108,13 @@ public class Main {
 		makeFrame();
 	}
 	
-	public static void shutdown() {}
+	public static void handleError(String errorMessage, boolean abort) {
+		if(window != null && abort) window.dispose();
+		JOptionPane.showMessageDialog(null, errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
+		shutdown();
+	}
+	
+	public static void shutdown() { System.exit(0); }
 
 	public static void log(Object text) {
 		if(debug) System.out.println("[" + APP_NAME + " " + APP_VERSION + "] " + text.toString());

@@ -20,7 +20,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Observable;
 
-import javax.swing.JPanel;
+import javax.swing.*;
 
 import dk.itu.n.danmarkskort.DKConstants;
 import dk.itu.n.danmarkskort.Main;
@@ -229,8 +229,8 @@ public class MapCanvas extends JPanel {
             	currentWTGSpec = wayTypeLabel;
             	KDTree<ParsedPlace> kdTree = Main.model.getEnumMapPlacesKD().get(wayTypeLabel.getWayType());
             	if(kdTree == null) continue;
-            	currentWTGSpec.transformPrimary(g2d);
-				for (Iterator<ParsedPlace> i = kdTree.iterator(currentRegion); i.hasNext(); ) {
+                currentWTGSpec.transformPrimary(g2d);
+				for(Iterator<ParsedPlace> i = kdTree.iterator(currentRegion); i.hasNext(); ) {
 					ParsedPlace place = i.next();
                     g2d.drawString(place.getName(), place.x, place.y);
                     shapesDrawn++;
@@ -252,6 +252,11 @@ public class MapCanvas extends JPanel {
         }
     }
 	
+	/**
+	 * Draws all the shapes, but for a single Tile, this is used when rendering the BufferedImages.
+	 * 
+	 * @param tile The Tile to draw on.
+	 */
 	public void drawMapShapesForTile(Tile tile) {
 		if(tile.isRendered()) return;
 		Graphics2D g2d = (Graphics2D)tile.getGraphics();
@@ -261,6 +266,12 @@ public class MapCanvas extends JPanel {
 		drawMapShapes(g2d, currentRegion, at);
     }
 
+	/**
+	 * Draw the Canvas background. If no Coastlines are present in the current map file, the background is painted according to the current Theme's
+	 * background color, else the background is painted according to Coastlines' color.
+	 * 
+	 * @param g2d The Graphics2D object to draw with.
+	 */
 	private void drawBackground(Graphics2D g2d) {
         Region region = Main.model.getMapRegion();
         Path2D background = new Path2D.Double();
@@ -283,6 +294,11 @@ public class MapCanvas extends JPanel {
 		return (float)((base*Math.pow(2, (20-getZoom())/2))/5);
 	}
 
+	/**
+	 * Return a list of the WaytypeGraphicSpecs for all the elements that should be drawn at the current zoom level.
+	 * 
+	 * @return A list of the WaytypeGraphicSpecs for all the elements that should be drawn at the current zoom level.
+	 */
 	public List<WaytypeGraphicSpec> getOnScreenGraphicsForCurrentZoom() {
 		List<WaytypeGraphicSpec> wayTypeSpecs = GraphicRepresentation.getGraphicSpecs((int)getZoom());
 		zoomChanged = false;
@@ -411,7 +427,7 @@ public class MapCanvas extends JPanel {
 	}
 	
 	public BufferedImage getRoutePreviewImage() {
-		return Util.screenshot(new Rectangle(70, 100, getWidth()-140, getHeight()-120), 1500);
+		return Util.screenshot(new Rectangle(Main.window.getLocation().x+75, Main.window.getLocation().y+105, getWidth()-150, getHeight()-130), 1500);
 	}
 	
 	public void pan(double dx, double dy) {

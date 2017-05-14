@@ -109,7 +109,7 @@ public class DropdownMenu extends CustomDropdown {
         contentPane.setPreferredSize(new Dimension(topPanel.getTopPanelDimension().width - topPanel.getMenuWidth(), menuItems.getPreferredSize().height));
         contentPane.getViewport().setBackground(style.menuContentBG());
         contentPane.getVerticalScrollBar().setUnitIncrement(6);
-        contentPane.getVerticalScrollBar().setUI(new CustomScrollBarUI(style));
+        contentPane.getVerticalScrollBar().setUI(new CustomScrollBarUI());
         
         contentPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 

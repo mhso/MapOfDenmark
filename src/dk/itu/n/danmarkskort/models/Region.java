@@ -31,11 +31,11 @@ public class Region {
 	}
 
 	public double getWidth() {
-		return Math.abs(x2 - x1);
+		return x2 - x1;
 	}
 
 	public double getHeight() {
-		return Math.abs(y2 - y1);
+		return y2 - y1;
 	}
 
 	public String toString() {

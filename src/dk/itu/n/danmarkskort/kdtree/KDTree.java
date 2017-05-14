@@ -54,11 +54,12 @@ public abstract class KDTree<T extends KDComparable> implements Serializable, It
          * @return {@code true} if the iteration has more elements
          */
         @Override
-        public boolean hasNext() { 
-        	while(i < arrList.size() && arrList.get(i) == null) {
-        		i++;
-        	}
-        	return i < arrList.size(); }
+        public boolean hasNext() {
+            while(i < arrList.size() && arrList.get(i) == null) {
+                i++;
+            }
+            return i < arrList.size();
+        }
 
         /**
          * Returns the next element in the iteration.
@@ -70,8 +71,9 @@ public abstract class KDTree<T extends KDComparable> implements Serializable, It
         @Override
         public T next() {
         
-            T next = (T) arrList.get(i)[j++];
-            if(j > arrList.get(i).length - 1) {
+            T next = (T) arrList.get(i)[j];
+            j++;
+            if(j >= arrList.get(i).length) {
                 j = 0;
                 i++;
             }
@@ -117,10 +119,7 @@ public abstract class KDTree<T extends KDComparable> implements Serializable, It
     public static double shortestDistance(Point2D.Float query, float[] coords) {
         double shortestDistance = Double.POSITIVE_INFINITY;
         if(coords.length == 2) {
-        	double distance = KDTree.distancePointToLine(
-        			new Point2D.Float(coords[0], coords[1]),
-        			new Point2D.Float(coords[0], coords[1]), 
-        			query);
+        	double distance = KDTree.calcDistance(query, new Point2D.Float(coords[0], coords[1]));
             if(distance < shortestDistance) shortestDistance = distance;
         } else {
 	        for(int i = 0; i < coords.length - 2; i+=2) {

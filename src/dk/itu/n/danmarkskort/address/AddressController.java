@@ -92,7 +92,7 @@ public class AddressController {
 		if(lonLat != null) {
 			Housenumber hn = housenumberTree.nearest(lonLat);
 			if(hn != null) { Main.log("RouteController found house: " + hn.toString()); }
-			else { Main.log("No edge found"); }
+			else { Main.log("No house found"); }
 			return hn;
 		}
 		return null;

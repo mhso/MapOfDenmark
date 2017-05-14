@@ -5,6 +5,7 @@
 		<type name="FARMLAND"/>
 		<type name="FOREST"/>
 		<type name="HIGHWAY_MOTORWAY"/>
+		<type name="BRIDGE"/>
 		<type name="WATER"/>
 	</zoomlevel>
 	<zoomlevel level="2">
@@ -33,6 +34,7 @@
 	</zoomlevel>
 	<zoomlevel level="9">
 		<type name="PLACE_NEIGHBOURHOOD"/>
+		<type name="PIER"/>
 		<type name="WETLAND"/>
 		<type name="PARK"/>
 		<type name="CONSTRUCTION"/>

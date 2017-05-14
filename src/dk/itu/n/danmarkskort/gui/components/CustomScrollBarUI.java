@@ -3,6 +3,7 @@ package dk.itu.n.danmarkskort.gui.components;
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 
+import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.gui.Style;
 
 import java.awt.*;
@@ -13,13 +14,17 @@ public class CustomScrollBarUI extends BasicScrollBarUI {
     private final Dimension emptyDimension = new Dimension();
     private Color background;
 
-    public CustomScrollBarUI(Style style) {
-        this(style, style.menuContentBG());
+    public CustomScrollBarUI() {
+        this(null);
     }
 
-    public CustomScrollBarUI(Style style, Color background) {
-        this.style = style;
-        this.background = background;
+    public CustomScrollBarUI(Color background) {
+        this.style = Main.style;
+        if(background == null) {
+            if(style == null) style = new Style();
+            this.background = style.menuContentBG();
+        }
+        else this.background = background;
     }
 
     @Override
