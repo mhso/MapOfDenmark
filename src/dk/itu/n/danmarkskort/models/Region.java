@@ -3,11 +3,12 @@ package dk.itu.n.danmarkskort.models;
 import java.awt.Shape;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.io.Serializable;
 
 import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.Util;
 
-public class Region {
+public class Region implements Serializable {
 
 	public double x1, x2, y1, y2;
 
