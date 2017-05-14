@@ -149,20 +149,6 @@ public class MapCanvas extends JPanel {
 		}
 		shapesDrawn = 0;
 
-        if(Main.debugExtra && !Main.buffered) {
-            double x1 = currentRegion.x1;
-            double x2 = currentRegion.x2;
-            double y1 = currentRegion.y1;
-            double y2 = currentRegion.y2;
-            double width = currentRegion.getWidth();
-            double height = currentRegion.getHeight();
-            currentRegion = new Region(
-                    x1 + (width * 0.25),
-                    y1 + (height * 0.25),
-                    x2 - (width * 0.25),
-                    y2 - (height * 0.25));
-        }
-
         // drawing all areas
         for (WaytypeGraphicSpec wayTypeArea : areasVisible) {
             currentWTGSpec = wayTypeArea;
