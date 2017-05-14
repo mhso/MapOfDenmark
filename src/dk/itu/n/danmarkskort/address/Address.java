@@ -4,6 +4,8 @@ import java.awt.geom.Point2D;
 
 /**
  * Class is used for representing a complete or partial address used for handling information between data-structures.
+ * The addres extends Point2D.Float to store information about its location.
+ * @author Group N
  */
 public class Address extends Point2D.Float{
 	private String street, housenumber, city, postcode;

@@ -2,6 +2,7 @@ package dk.itu.n.danmarkskort.address;
 
 import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.TimerUtil;
+import dk.itu.n.danmarkskort.Util;
 import dk.itu.n.danmarkskort.kdtree.KDTree;
 import dk.itu.n.danmarkskort.kdtree.KDTreeNode;
 import dk.itu.n.danmarkskort.models.ParsedAddress;
