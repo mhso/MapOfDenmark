@@ -60,9 +60,6 @@ public class RouteDijkstraAStar {
         	Main.map.setRoute(edgesInRoute);
         	Main.map.repaint();
         }
-
-        // check optimality conditions
-        //assert check(graph, source);
     }
     
     private double heuristics(Point2D.Float sourceVertex, int maxSpeed){

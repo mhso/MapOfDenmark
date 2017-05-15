@@ -20,6 +20,7 @@ public class RouteEdge implements KDComparable, Serializable {
 
 	/**
 	 * Class constructor, initilize the edge.
+	 * 
 	 * @param from, location coordinates.
 	 * @param to, location coordinate.
 	 * @param routeEdgeMeta, extended meta for the edge.
@@ -52,6 +53,7 @@ public class RouteEdge implements KDComparable, Serializable {
 	
 	/**
 	 * Real world distance between from/to location coordinats in metres.
+	 * 
 	 * @return distance in metres.
 	 */
 	private double distance(){ return Util.distanceInMeters(from, to); }
@@ -61,6 +63,7 @@ public class RouteEdge implements KDComparable, Serializable {
 	
 	/**
 	 * Calculate the weight dependend of the maximum allowed speed of the road stretch. 
+	 * 
 	 * @return distance devided by speed.
 	 */
 	public double getWeightBySpeed(){ return distance() / (double)routeEdgeMeta.getMaxSpeed(); }
@@ -70,6 +73,7 @@ public class RouteEdge implements KDComparable, Serializable {
 	
 	/**
 	 * Decide edge weight based on travel perferences (car, bike etc.).
+	 * 
 	 * @param weightEnum
 	 * @return the edge "weight" base on travel type.
 	 */
@@ -92,6 +96,7 @@ public class RouteEdge implements KDComparable, Serializable {
 	
 	/**
 	 * Tells whether edge allows a traveltype.
+	 * 
 	 * @param weightEnum
 	 * @return true if edge allows the traveltype, based on weight
 	 */

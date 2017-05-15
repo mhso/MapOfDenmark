@@ -17,7 +17,6 @@ public class RouteController {
 	private List<RouteEdge> routeEdges;
 	private RouteGraph routeGraph;
 	private Region routeRegion;
-	private boolean debug = false;
 	public boolean isDrawingDjikstra = false;
 	private boolean useDjikstraWithAStar = true;
 	KDTree<RouteEdge> edgeTree;
@@ -25,7 +24,7 @@ public class RouteController {
 
 	public RouteController(){
 		vertexCount = 0;
-		routeEdges = new ArrayList<RouteEdge>(1610400);
+		routeEdges = new ArrayList<RouteEdge>(1610400); // Initialize the array to match the amount of edges expected for Denmark
 	}
 
 	/**
@@ -33,27 +32,46 @@ public class RouteController {
 	 * @param point
 	 * @return A Vertex object
 	 */
-
 	public RouteVertex makeVertex(Point2D.Float lonLat){
 		RouteVertex vertex = new RouteVertex(vertexCount, lonLat);
 		vertexCount++;
 		return vertex;
 	}
 	
+	/**
+	 * Method used for creating metadata and edges, depended on forward/backward values the edges
+	 * are then added to the map, for later handling.
+	 * 
+	 * @param fromVertex
+	 * @param toVertex
+	 * @param maxSpeed
+	 * @param forwardAllowed
+	 * @param backwardAllowed
+	 * @param carsAllowed
+	 * @param bikesAllowed
+	 * @param walkAllowed
+	 * @param description, could be streetname, or names area.
+	 */
 	public void addEdge(Point2D.Float fromVertex, Point2D.Float toVertex, short maxSpeed,
 			boolean forwardAllowed, boolean backwardAllowed, boolean carsAllowed,
 			boolean bikesAllowed, boolean walkAllowed, String description){
 		
+		// EdgeMeta created, will be reused if one has equal values.
 		RouteEdgeMeta routeEdgeMeta = new RouteEdgeMeta(maxSpeed, forwardAllowed, backwardAllowed,
 				carsAllowed, bikesAllowed, walkAllowed);
-		if(forwardAllowed){
+		
+		if(forwardAllowed) // Added forward going edge to the map.
 			routeEdges.add(new RouteEdge(fromVertex, toVertex, routeEdgeMeta, description));
-		}
-		if(backwardAllowed){
+		if(backwardAllowed) // Added backward going edge to the ma.
 			routeEdges.add(new RouteEdge(toVertex, fromVertex, routeEdgeMeta, description));
-		}
 	}
 	
+	/**
+	 * When all vertex and edges have established, this method will create the actual graph datastructure.
+	 * Method will create uniq ids for every vertex used in the graph.
+	 * Afterwards the makeTree methods i called for creating a KD-Tree of edges.
+	 * At last the cleanUp method, removes unused references etc.
+	 */
 	public void makeGraph(){
 		Main.log("I am makeGraph");
 
@@ -77,8 +95,11 @@ public class RouteController {
 		cleanUp();
 	}
 
+	/**
+	 * Creates a KD-Tree of edges, for finding nearest neighbor, i the edge structure. 
+	 */
 	private void makeTree() {
-		edgeTree = new KDTreeNode<>(routeEdges, 1000);
+		edgeTree = new KDTreeNode<>(routeEdges, 1000); // Initializes a KDTree with leaf size of 1000 elements.
 	}
 	
 	public void cleanUp(){
@@ -86,6 +107,14 @@ public class RouteController {
 		ReuseRouteEdgeMetaObj.clear();
 	}
 	
+	/**
+	 * Method make a call to Dijkstra or DijkstraAStar depended of userPreferences.
+	 * If a route is found a collection of edges is returned.
+	 * @param from, vertex
+	 * @param to, vertex
+	 * @param weightEnum, based on traveltype (speed, distance, car, bike etc..)
+	 * @return an Iterator of RouteEdge
+	 */
 	public Iterable<RouteEdge> getRoute(RouteVertex from, RouteVertex to, WeightEnum weightEnum){
 		useDjikstraWithAStar = Main.userPreferences.useDjikstraWithAStar();
 		if(useDjikstraWithAStar) {
@@ -117,11 +146,18 @@ public class RouteController {
 		routeGraph = graph;
 	}
 	
+	@Override
 	public String toString() {
 		return "RouteController: vertexCount=" + vertexCount
 				+ " getNumOfRouteEdges=" + getNumOfRouteEdges();
 	}
 	
+	/**
+	 * Method call nearest on the KD-Tree of edges and return a nearest neighbor.
+	 * 
+	 * @param lonLat coordinates to find a neighbor to.
+	 * @return nearest edge to input coordinates.
+	 */
 	public RouteEdge searchEdgesKDTree(Point2D.Float lonLat){		
 		if(lonLat != null) {
 			RouteEdge edge = edgeTree.nearest(lonLat);
@@ -130,6 +166,16 @@ public class RouteController {
 		return null;
 	}
 
+	/**
+	 * Method will if able return a route based in the from/to and weight of the traveltype.
+	 * The created RouteModels are given a direction description, like left, right, at destination etc.
+	 * based on the relationship between to edges.
+	 * 
+	 * @param from, coordinates
+	 * @param to, coordinates
+	 * @param weightEnum, based on travel type
+	 * @return a list of RouteModels as a route, or empty collections if no route found.
+	 */
 	public List<RouteModel> makeRoute(Point2D.Float from, Point2D.Float to, WeightEnum weightEnum){
 		List<RouteModel> routeModels = new ArrayList<RouteModel>();
 		RouteEdge fromEdge = searchEdgesKDTree(from);
@@ -166,11 +212,13 @@ public class RouteController {
 					routeEnum = calcDirectionType(edge, lastEdge);
 					
 					distSum = 0;
-					RouteModel routeModel = new RouteModel(routeEnum, edge.getDescription(), edge.getMaxSpeed(), edge.getDistance());
+					RouteModel routeModel = new RouteModel(routeEnum, 
+							edge.getDescription(), edge.getMaxSpeed(), edge.getDistance());
 					lastModel = routeModel;
 					routeModels.add(routeModel);
 				}
-				if(count == sizeOfEdges) lastModel.updateDirectionAndDescription(RouteEnum.AT_DESTINATION, lastEdge.getDescription());
+				if(count == sizeOfEdges)
+					lastModel.updateDirectionAndDescription(RouteEnum.AT_DESTINATION, lastEdge.getDescription());
 				testEdgeBounds(routeBounds, edge);
 				lastEdge = edge;
 				
@@ -190,6 +238,14 @@ public class RouteController {
 		if(edgeTo.getY() > currentRouteBounds[3]) currentRouteBounds[3] = edgeTo.getY();
 	}
 
+	/**
+	 * Finds a direction between to edges.
+	 * The heuristic calculation is based upon the angle between to edges.
+	 * 
+	 * @param edge, actual edge
+	 * @param lastEdge, former edge
+	 * @return a enum representing a direction.
+	 */
 	private RouteEnum calcDirectionType(RouteEdge edge, RouteEdge lastEdge) {
 		RouteEnum routeEnum = RouteEnum.CONTINUE_ON;
 		if(lastEdge == null){
@@ -214,6 +270,14 @@ public class RouteController {
 		return routeEnum;
 	}
 	
+	/**
+	 * Calculations the angle between 2 coherent lines, represented by 3 vertex points.
+	 * 
+	 * @param center 
+	 * @param current
+	 * @param previous 
+	 * @return a calculation of the angle from the 3 points.
+	 */
 	private double angleBetween2Edges(Point2D.Float center, Point2D.Float current, Point2D.Float previous) {
 		  return Math.toDegrees(Math.atan2(current.x - center.x,current.y - center.y) -
 		                        Math.atan2(previous.x - center.x,previous.y - center.y));

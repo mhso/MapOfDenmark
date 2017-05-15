@@ -1,4 +1,4 @@
-package dk.itu.n.danmarkskort.routeplanner;
+package dk.itu.n.danmarkskort.routeplanner.unittest;
 
 import static org.junit.Assert.*;
 
@@ -7,6 +7,11 @@ import java.awt.geom.Point2D;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import dk.itu.n.danmarkskort.routeplanner.RouteController;
+import dk.itu.n.danmarkskort.routeplanner.RouteEdge;
+import dk.itu.n.danmarkskort.routeplanner.RouteVertex;
+import dk.itu.n.danmarkskort.routeplanner.WeightEnum;
 
 public class RouteControllerTest {
 	RouteController rc;
