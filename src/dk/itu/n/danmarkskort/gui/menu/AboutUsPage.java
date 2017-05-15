@@ -125,6 +125,9 @@ public class AboutUsPage extends JPanel  {
         		+ "<br>  https://tips4java.wordpress.com/2010/08/22/alpha-icons."
         		+ "<br>- 'user1079877' from Stackoverflow for his JAR entries"
         		+ "<br>  stream."
+        		+ "<br>- Princeton for user of their IndexMinPriorityQueue, "
+        		+ "<br>  ResizingArrayBag, Stack, WeightedDigraph and Djikstra "
+        		+ "<br>  implementations."
         		+ "<br>- Finally, a big thank you to openstreetmap.org for their"
         		+ "<br>  great (and free) data and mapping system.";
         

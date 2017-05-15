@@ -202,5 +202,4 @@ public class AddressControllerTest {
 		Address addr = ac.getSearchResultByCoords(new Point2D.Float(12.588990f, 55.6598890f));
 		assertEquals("Rued Langgårdsvej 7, 2300 København S", addr.toStringShort());
 	}
-
 }

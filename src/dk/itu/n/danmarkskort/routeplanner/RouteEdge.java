@@ -56,7 +56,7 @@ public class RouteEdge implements KDComparable, Serializable {
 	 * 
 	 * @return distance in metres.
 	 */
-	private double distance(){ return Util.distanceInMeters(from, to); }
+	private double distance(){ return Util.distanceInMeters(Util.toRealCoords(from), Util.toRealCoords(to)); }
 	
 	public String getDescription(){ return description; }
 	public double getDistance(){ return distance(); }

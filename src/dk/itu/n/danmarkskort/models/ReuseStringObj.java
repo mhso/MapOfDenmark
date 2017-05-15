@@ -22,6 +22,10 @@ public class ReuseStringObj {
 		}
 	}
 	
+	public static int keysReused() { return keysReused; }
+	
+	public static int keysCreated() { return keysCreated; }
+	
 	public static void clear(){
 		Main.log("ReuseStringObj, keysTotal: " + keysTotal + " keysReused: " + keysReused + " keysCreated: " + keysCreated);
 		map.clear();

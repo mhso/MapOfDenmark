@@ -24,6 +24,8 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class RoutePage extends JPanel {
 	private static final long serialVersionUID = 6134418299293182669L;
@@ -243,6 +245,14 @@ public class RoutePage extends JPanel {
         JButton btnFind = new JButton("Find Route");
         btnFind.addActionListener( e -> openFindRoute());
         
+        JButton btnReset = new JButton("Reset");
+        btnReset.addActionListener(e -> reset());
+        GridBagConstraints gbc_btnReset = new GridBagConstraints();
+        gbc_btnReset.insets = new Insets(0, 0, 0, 5);
+        gbc_btnReset.gridx = 2;
+        gbc_btnReset.gridy = 6;
+        panelCenter.add(btnReset, gbc_btnReset);
+        
         GridBagConstraints gbc_btnFind = new GridBagConstraints();
         gbc_btnFind.anchor = GridBagConstraints.EAST;
         gbc_btnFind.insets = new Insets(0, 0, 0, 5);
@@ -253,7 +263,15 @@ public class RoutePage extends JPanel {
         validateToFromFields();
     }
     
-    public void setFromText(String from) {
+    private void reset() {
+		setFromText("");
+		setToText("");
+		Main.pinPointManager.setTemporaryPinPoints(new ArrayList<PinPoint>());
+		Main.map.setRoute(null);
+		Main.map.repaint();
+	}
+
+	public void setFromText(String from) {
     	txtAddrFrom.setText(from);
     }
     
