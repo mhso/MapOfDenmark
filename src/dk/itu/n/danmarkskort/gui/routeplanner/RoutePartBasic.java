@@ -4,6 +4,7 @@ import javax.swing.JPanel;
 
 
 import dk.itu.n.danmarkskort.Main;
+import dk.itu.n.danmarkskort.TimerUtil;
 import dk.itu.n.danmarkskort.gui.Style;
 import dk.itu.n.danmarkskort.models.RouteModel;
 import dk.itu.n.danmarkskort.routeplanner.WeightEnum;
@@ -79,7 +80,8 @@ public class RoutePartBasic extends JPanel {
 		gbc_lblTo.gridy = 2;
 		add(lblTo, gbc_lblTo);
 		
-		JLabel lblRouteDistance = new JLabel("Distance: " + makeDistance(routeTotalDistance) + " Estimated time: " + makeTime(routeSeconds));
+		JLabel lblRouteDistance = new JLabel("Distance: " + makeDistance(routeTotalDistance) + 
+				" Estimated time: " + formatTime(routeSeconds));
 		lblRouteDistance.setForeground(style.routeTextLight());
 		lblRouteDistance.setFont(style.normalText());
 		GridBagConstraints gbc_lblRouteDistance = new GridBagConstraints();
@@ -123,19 +125,8 @@ public class RoutePartBasic extends JPanel {
 		return String.format("%.0f", input) + " metres.";
 	}
 	
-	private String makeTime(int seconds) {
-		String result = "";
-		if(seconds > 60) {
-			int minutes = seconds/60;
-			seconds = seconds%60;		
-			if(minutes > 60) {
-				int hours = minutes/60;
-				minutes = minutes%60;
-				result = hours + " hours, " + minutes + " minutes and " + seconds + " seconds.";
-			}
-			else result = minutes + " minutes and " + seconds + " seconds.";
-		}
-		else result = seconds + " seconds.";
-		return result;
+	String formatTime(int seconds) {
+		TimerUtil timer = new TimerUtil();
+		return timer.getSimpleTimeString(seconds) + ".";
 	}
 }
