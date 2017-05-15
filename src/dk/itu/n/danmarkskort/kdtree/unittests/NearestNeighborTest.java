@@ -16,6 +16,7 @@ import java.util.List;
 
 public class NearestNeighborTest {
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public KDTreeNode<KDComparable> makeKDTreeWithWays(int dataSize, int coordsPerElement, float startLon, float startLat, int leafSize) {
 		List<ParsedWay> list = new ArrayList<>();
 		for(int i = 0; i < dataSize; i++) {
@@ -30,6 +31,7 @@ public class NearestNeighborTest {
 		return new KDTreeNode(list, leafSize);
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public KDTree<KDComparable> makeKDTreeWithPoints(int dataSize, float lon, float lat, int leafSize) {
 		List<Housenumber> items = new ArrayList<>();
 		for(int i = 0; i < dataSize; i++) {
@@ -51,9 +53,9 @@ public class NearestNeighborTest {
 		Point2D.Float target1 = new Point2D.Float(1, 1);
 		Point2D.Float query1 = target1;
 		Point2D.Float target2 = new Point2D.Float(2, 2);
-		Point2D.Float query2 = target2;
+		//Point2D.Float query2 = target2;
 		Point2D.Float target3 = new Point2D.Float(500, 500);
-		Point2D.Float query3 = target3;
+		//Point2D.Float query3 = target3;
 		Point2D.Float target4 = new Point2D.Float(1000, 1000);
 		Point2D.Float query4 = new Point2D.Float(2000, 2000);
         Point2D.Float query5 = new Point2D.Float(-10, -10);

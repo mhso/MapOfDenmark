@@ -23,6 +23,7 @@ public class GraphicRepresentation {
 	private static Color canvasBGColor;
 	private static Color coastlineColor;
 	
+	@SuppressWarnings("unchecked")
 	private static ArrayList<WaytypeGraphicSpec>[] zoomLevelArr = new ArrayList[20];
 	private static List<WaytypeGraphicSpec> overriddenSpecs = new ArrayList<>();
 	private static EnumMap<WayType, Integer> zoomMap = new EnumMap<>(WayType.class);

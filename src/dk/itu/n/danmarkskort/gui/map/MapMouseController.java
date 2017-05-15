@@ -13,8 +13,6 @@ import javax.swing.SwingUtilities;
 import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.Util;
 import dk.itu.n.danmarkskort.gui.DropdownRightClick;
-import dk.itu.n.danmarkskort.models.ParsedNode;
-import dk.itu.n.danmarkskort.models.WayType;
 public class MapMouseController extends MouseAdapter {
 
 	MapCanvas canvas;

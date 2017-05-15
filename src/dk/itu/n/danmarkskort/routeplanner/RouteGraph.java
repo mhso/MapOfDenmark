@@ -39,7 +39,8 @@ public class RouteGraph implements Serializable {
      * @param  V the number of vertices
      * @throws IllegalArgumentException if {@code V < 0}
      */
-    public RouteGraph(int numOfVertices) {
+    @SuppressWarnings("unchecked")
+	public RouteGraph(int numOfVertices) {
         if (numOfVertices < 0) throw new IllegalArgumentException("Number of vertices in a Digraph must be nonnegative");
         this.numOfVertices = numOfVertices;
         numOfEdges = 0;

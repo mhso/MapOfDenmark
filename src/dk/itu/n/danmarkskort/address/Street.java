@@ -5,7 +5,6 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-import dk.itu.n.danmarkskort.Main;
 import org.apache.commons.lang3.StringUtils;
 
 import dk.itu.n.danmarkskort.models.ReuseStringObj;

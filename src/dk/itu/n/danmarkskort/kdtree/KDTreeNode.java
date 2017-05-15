@@ -47,7 +47,7 @@ public class KDTreeNode<T extends KDComparable> extends KDTree<T> {
             return;
         }
 
-        KDComparable median = QuickSelect.quickSelect(array, (array.length + 1) / 2, sortByLon);
+        QuickSelect.quickSelect(array, (array.length + 1) / 2, sortByLon);
 
         KDComparable[] leftArray = new KDComparable[(array.length + 1) / 2];
         for(int i = 0; i < leftArray.length; i++) leftArray[i] = array[i];
@@ -105,8 +105,6 @@ public class KDTreeNode<T extends KDComparable> extends KDTree<T> {
         return value;
     }
 
-    public KDTree getRightChild() { return rightChild; }
-    public KDTree getLeftChild() { return leftChild; }
     public float getLeftSplit() { return leftSplit; }
     public float getRightSplit() { return rightSplit; }
 

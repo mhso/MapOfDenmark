@@ -15,7 +15,6 @@ import dk.itu.n.danmarkskort.gui.Style;
 import dk.itu.n.danmarkskort.gui.components.SearchField;
 import dk.itu.n.danmarkskort.gui.map.PinPoint;
 import dk.itu.n.danmarkskort.gui.routeplanner.RoutePlannerMain;
-import dk.itu.n.danmarkskort.models.RouteEnum;
 import dk.itu.n.danmarkskort.models.RouteModel;
 import dk.itu.n.danmarkskort.routeplanner.WeightEnum;
 import dk.itu.n.danmarkskort.search.SearchController;
@@ -316,8 +315,7 @@ public class RoutePage extends JPanel {
 		    			Main.map.zoomToRouteRegion(Main.routeController.getRouteRegion());
 		    			bufferedImage = Main.map.getRoutePreviewImage();
 						
-						RoutePlannerMain routePlannerMain = new RoutePlannerMain(bufferedImage, addrFrom.toStringShort(), addrTo.toStringShort(),
-								weightEnum, routemodels);
+						new RoutePlannerMain(bufferedImage, addrFrom.toStringShort(), addrTo.toStringShort(), weightEnum, routemodels);
 					}else {
 						menu.blockVisibility(true);
 			    		JOptionPane.showMessageDialog(RoutePage.this, "Unable to find route, we're sorry.", "No route", JOptionPane.INFORMATION_MESSAGE);

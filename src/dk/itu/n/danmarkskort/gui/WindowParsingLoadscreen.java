@@ -17,7 +17,6 @@ import java.awt.Dimension;
 import javax.swing.border.LineBorder;
 
 import dk.itu.n.danmarkskort.Main;
-import dk.itu.n.danmarkskort.Util;
 import dk.itu.n.danmarkskort.backend.OSMParserListener;
 
 import java.awt.Component;
@@ -36,8 +35,6 @@ public class WindowParsingLoadscreen extends JFrame implements OSMParserListener
 	private JPanel panel;
 	private Component rigidArea;
 	private JLabel labelStatus;
-	private int lineCountHundreds;
-	private long fileLength;
 	private boolean showObjectString = true;
 	
 	public static void main(String[] args) {
@@ -88,18 +85,11 @@ public class WindowParsingLoadscreen extends JFrame implements OSMParserListener
 	
 	private void getFileLength(String fileName) {
 		File file = new File(fileName);
-		fileLength = Util.getNumberOfLines(file);
 		long b = file.length();
 		long kb = b/1024;
 		long mb = kb/1024;
 		Main.log("File Name: " + file.getName()); 
 		Main.log("File Size: " + mb + " MB");
-	}
-	
-	private void setProgressPercent() {
-		double currentLine = lineCountHundreds * 100;
-		double percent = (currentLine/fileLength) * 100;
-		progressBar.setValue((int)percent);
 	}
 	
 	@Override
