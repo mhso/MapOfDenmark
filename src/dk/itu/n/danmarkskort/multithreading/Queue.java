@@ -8,6 +8,8 @@ public class Queue implements Runnable {
 	private boolean interrupt = false;
 	private boolean wait = false;
 	
+	/** This will add a task to the queue.<br>
+	It will run automatically if the queue is already running. */
 	public void addTask(Task task) {
 		if(!tasks.containsKey(task.getPriority())) {
 			ArrayList<Task> taskList = new ArrayList<Task>();
@@ -19,6 +21,8 @@ public class Queue implements Runnable {
 		wait = false;
 	}
 	
+	/** This will run a list of tasks.<br>
+	Tasks with higher priority will run first.*/
 	private void runTaskList(ArrayList<Task> taskList) {
 		while(taskList.size() > 0) {
 			Task task = taskList.get(0);
@@ -29,14 +33,20 @@ public class Queue implements Runnable {
 		}
 	}
 	
+	/** This will stop the queue. */
 	public void interrupt() {
 		interrupt = true;
 	}
 	
+	/** This will make the queue sleep until a new task is added. */
 	private void yield() {
 		while(wait)try{Thread.sleep(1);}catch(InterruptedException e){}
 	}
 	
+	/** This will run the queue internally.<br>
+	If it is not interrupted, it will run the tasks added. <br>
+	When the tasks are done, it will wait for new tasks.<br>
+	Don't use this method for starting a queue, but use the static Queue.run(). **/
 	public void run() {
 		while(!interrupt) {
 			yield();
@@ -52,11 +62,13 @@ public class Queue implements Runnable {
 		}
 	}
 	
+	/** This will start a queue on a seperate thread. */
 	public static void run(Queue queue) {
 		Thread thread = new Thread(queue);
 		thread.start();
 	}
 	
+	/** This will return the number of tasks in a queue. */
 	public int size() {
 		int size = 0;
 		for(TaskPriority priority : tasks.keySet()) size += tasks.get(priority).size();
