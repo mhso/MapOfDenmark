@@ -223,4 +223,12 @@ public class KDIteratorTest {
         assertEquals(0, nextCount(tree, alwaysOutsidePositive));
         assertEquals(size, nextCountWithoutRegion(tree));
     }
+    
+    @Test
+    public void testIsSortingByLon() {
+    	int size = 100;
+        int coordSize = 100;
+        tree = makeKDTree(size, coordSize, 1, 1, 25);
+        assertTrue(tree.isSortingByLon(4));
+    }
 }

@@ -27,17 +27,6 @@ public class RouteController {
 		vertexCount = 0;
 		routeEdges = new ArrayList<RouteEdge>(1610400); // Initialize the array to match the amount of edges expected for Denmark
 	}
-
-	/**
-	 * Creates a RouteVertex with a unique Id based on the position i the ArrayList
-	 * @param point
-	 * @return A Vertex object
-	 */
-	public RouteVertex makeVertex(Point2D.Float lonLat){
-		RouteVertex vertex = new RouteVertex(vertexCount, lonLat);
-		vertexCount++;
-		return vertex;
-	}
 	
 	/**
 	 * Method used for creating metadata and edges, depended on forward/backward values the edges
@@ -124,6 +113,17 @@ public class RouteController {
 			return routeDijkstra.pathTo(to.getId());
 		}
 	}
+
+	public int getRelaxCount(RouteVertex from, RouteVertex to, WeightEnum type) {
+        useDjikstraWithAStar = Main.userPreferences.useDjikstraWithAStar();
+        if(useDjikstraWithAStar) {
+            RouteDijkstraAStar routeDijkstra = new RouteDijkstraAStar(routeGraph, from, to, type);
+            return routeDijkstra.getRelaxCount();
+        }else{
+            RouteDijkstra routeDijkstra = new RouteDijkstra(routeGraph, from.getId(), to.getId(), type);
+            return routeDijkstra.getRelaxCount();
+        }
+    }
 
 	public int getVertexCount() { return vertexCount; }
 	

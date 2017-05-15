@@ -67,6 +67,8 @@ public class KDTreeLeaf<T extends KDComparable> extends KDTree<T> {
     
     public int size() { return data.length; }
 
+    public boolean isSortingByLon(int currentDepth, int depth) { return currentDepth%2 == 0; }
+    
     protected int nodesAndLeafsAtDepth(int targetDepth, int currentDepth) {
     	currentDepth++;
     	if(targetDepth == currentDepth) return 1;

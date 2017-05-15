@@ -190,4 +190,8 @@ public class ParsedRelation extends ParsedWay {
         for(ParsedItem outer: outers) size += outer.size();
         return size;
     }
+
+    public ArrayList<ParsedWay> getOuters() { return outers; }
+    public ArrayList<ParsedWay> getInners() { return inners; }
+
 }
