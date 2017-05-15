@@ -21,6 +21,7 @@ import dk.itu.n.danmarkskort.models.UserPreferences;
 import dk.itu.n.danmarkskort.routeplanner.RouteController;
 
 public class Main {
+	
 	public final static String APP_NAME = "Yak Maps";
 	public final static String APP_VERSION = "0.9";
 	public final static boolean debug = true;
