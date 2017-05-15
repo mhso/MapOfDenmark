@@ -48,7 +48,7 @@ public class SearchController{
 	 * @param inputStr a string
 	 * @return true if is coordinates.
 	 */
-	private static boolean isCoordinates(String inputStr){
+	public static boolean isCoordinates(String inputStr){
 		String cordRegex = "((\\-{0,1})([0-9]{1,3})(\\.)(\\-{0,1})([0-9]{5,9}))";
 		String cordsRegex = cordRegex + "(\\,\\s)" + cordRegex;
 		if(inputStr.matches(cordsRegex)) return true;
