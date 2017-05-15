@@ -1,6 +1,7 @@
 package dk.itu.n.danmarkskort.multithreading;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 
 public class Queue implements Runnable {
 
@@ -71,7 +72,8 @@ public class Queue implements Runnable {
 	/** This will return the number of tasks in a queue. */
 	public int size() {
 		int size = 0;
-		for(TaskPriority priority : tasks.keySet()) size += tasks.get(priority).size();
+		Iterator<ArrayList<Task>> it = tasks.values().iterator();
+		while(it.hasNext()) size += it.next().size();
 		return size;
 	}
 	
