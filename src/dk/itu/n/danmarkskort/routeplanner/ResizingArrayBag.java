@@ -29,7 +29,8 @@ public class ResizingArrayBag<Item> implements Iterable<Item>, Serializable {
     /**
      * Initializes an empty bag.
      */
-    public ResizingArrayBag() {
+    @SuppressWarnings("unchecked")
+	public ResizingArrayBag() {
         a = (Item[]) new Object[2];
         n = 0;
     }
@@ -51,7 +52,8 @@ public class ResizingArrayBag<Item> implements Iterable<Item>, Serializable {
     }
 
     // resize the underlying array holding the elements
-    private void resize(int capacity) {
+    @SuppressWarnings("unchecked")
+	private void resize(int capacity) {
         assert capacity >= n;
         Item[] temp = (Item[]) new Object[capacity];
         for (int i = 0; i < n; i++)

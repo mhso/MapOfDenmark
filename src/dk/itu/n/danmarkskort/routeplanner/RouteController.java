@@ -3,8 +3,9 @@ package dk.itu.n.danmarkskort.routeplanner;
 import java.awt.geom.Point2D;
 import java.util.*;
 
+import com.github.davidmoten.guavamini.Lists;
+
 import dk.itu.n.danmarkskort.Main;
-import dk.itu.n.danmarkskort.Util;
 import dk.itu.n.danmarkskort.kdtree.KDTree;
 import dk.itu.n.danmarkskort.kdtree.KDTreeNode;
 import dk.itu.n.danmarkskort.models.Region;
@@ -73,8 +74,6 @@ public class RouteController {
 	 * At last the cleanUp method, removes unused references etc.
 	 */
 	public void makeGraph(){
-		Main.log("I am makeGraph");
-
 		vertexMap = new HashMap<>();
 		for(RouteEdge edge: routeEdges) {
 			Point2D.Float from = edge.getFrom();
@@ -197,7 +196,7 @@ public class RouteController {
 			double maxRouteY = Math.max(from.getY(), to.getY());
 			double[] routeBounds = {minRouteX, minRouteY, maxRouteX, maxRouteY};
 			
-			for(RouteEdge edge : edges) sizeOfEdges++;
+			sizeOfEdges = Lists.newArrayList(edges).size();
 			
 			if(Main.map.getRoute() != null && !isDrawingDjikstra) Main.map.setRoute(null);
 			int count = 0;

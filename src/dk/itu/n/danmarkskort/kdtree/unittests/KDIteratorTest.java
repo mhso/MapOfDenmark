@@ -50,7 +50,8 @@ public class KDIteratorTest {
         tree = null;
     }
 
-    public KDTreeNode<KDComparable> makeKDTree(int dataSize, int coordsPerElement, float startLon, float startLat, int leafSize) {
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+	public KDTreeNode<KDComparable> makeKDTree(int dataSize, int coordsPerElement, float startLon, float startLat, int leafSize) {
         ArrayList<ParsedWay> list = new ArrayList<>();
         for(int i = 0; i < dataSize; i++) {
             ParsedWay way = new ParsedWay(i);
@@ -64,13 +65,13 @@ public class KDIteratorTest {
         return new KDTreeNode(list, leafSize);
     }
 
-    public int nextCount(KDTree<KDComparable> tree, Region region) {
+	public int nextCount(KDTree<KDComparable> tree, Region region) {
         int count = 0;
         if(region == null) {
-            for(KDComparable item: tree) count++;
+            count = tree.size();
         } else {
             for (Iterator<KDComparable> iter = tree.iterator(region); iter.hasNext(); ) {
-                KDComparable item = iter.next();
+                iter.next();
                 count++;
             }
         }
@@ -78,7 +79,6 @@ public class KDIteratorTest {
     }
 
     public KDComparable getElement(KDTree<KDComparable> tree, Region region) {
-        KDComparable element;
         for(Iterator<KDComparable> iter = tree.iterator(region); iter.hasNext();) return iter.next();
         return null;
     }

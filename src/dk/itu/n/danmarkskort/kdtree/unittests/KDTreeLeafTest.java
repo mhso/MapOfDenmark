@@ -3,6 +3,7 @@ package dk.itu.n.danmarkskort.kdtree.unittests;
 import static org.junit.Assert.*;
 
 import dk.itu.n.danmarkskort.kdtree.KDComparable;
+import dk.itu.n.danmarkskort.kdtree.KDTree;
 import dk.itu.n.danmarkskort.kdtree.KDTreeLeaf;
 import dk.itu.n.danmarkskort.models.ParsedWay;
 import dk.itu.n.danmarkskort.models.Region;
@@ -13,7 +14,8 @@ import java.util.ArrayList;
 
 public class KDTreeLeafTest {
 
-    public KDTreeLeaf<KDComparable> makeKDTreeLeaf(int dataSize, int coordsPerElement, float startLon, float startLat) {
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+	public KDTreeLeaf<KDComparable> makeKDTreeLeaf(int dataSize, int coordsPerElement, float startLon, float startLat) {
         ArrayList<ParsedWay> list = new ArrayList<>();
         for(int i = 0; i < dataSize; i++) {
             ParsedWay way = new ParsedWay(i);
@@ -50,5 +52,10 @@ public class KDTreeLeafTest {
         assertEquals(0, leaf.getItems(regionBottomOf).size());
         assertEquals(size, leaf.getItems(regionBarelyTouching).get(0).length);
         assertEquals(size, leaf.getItems(regionReversedSurrounding).get(0).length);
+    }
+
+    @Test
+    public void testGetAllItems() {
+
     }
 }
