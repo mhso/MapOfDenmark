@@ -143,6 +143,18 @@ public class AddressControllerTest {
 	}
 	
 	@Test
+	public void testSuggestionPostcode() {
+		createTempAdresses();
+		String find = "1760";
+		List<String> list = ac.getSearchSuggestions(find, 10l);
+		for(String str : list) System.out.println(str);
+		assertEquals(3, list.size());
+		assertEquals("Ny Carlsberg Vej", list.get(0));
+		assertEquals("Ny Carlsberg Vej 35, 1760 København V", list.get(1));
+		assertEquals("Ny Carlsberg Vej 36A, 1760 København V", list.get(2));
+	}
+	
+	@Test
 	public void testEqualsResult() {
 		createTempAdresses();
 		String find = "Rued Langgårdsvej 8, 2300 København S";
@@ -162,7 +174,7 @@ public class AddressControllerTest {
 	@Test
 	public void testEqualsWithSpellingError() {
 		createTempAdresses();
-		String find = "Rued Langårdsvej 7 2300";
+		String find = "Rued Langgårdsvej 7 2300";
 		Address addr = ac.getSearchResult(find);
 		assertEquals("Rued Langgårdsvej 7, 2300 København S", addr.toStringShort());
 	}
@@ -176,20 +188,19 @@ public class AddressControllerTest {
 	}
 	
 	@Test
-	public void testSuggestionCoord() {
+	public void testSuggestionByCoordinates() {
 		createTempAdresses();
 		ac.onLWParsingFinished();
-		List<String> list = ac.getSearchSuggestionsByCoords(new Point2D.Float(55.6598896f, 12.588997f));
+		List<String> list = ac.getSearchSuggestionsByCoords(new Point2D.Float(12.588990f, 55.6598890f));
 		assertEquals("Rued Langgårdsvej 7, 2300 København S", list.get(0));
 	}
-//	
-//	@Test
-//	public void testSuggestionStartsWith() {
-//		String find = "Rued";
-//		ac.getSearchResult(find);
-//		ac.getSearchResultByCoords(find);
-//		ac.getSearchSuggestionsByCoords(find);
-//		ac.getSearchSuggestions(find, limitAmountOfResults);
-//	}
+
+	@Test
+	public void testResultByCoordinates() {
+		createTempAdresses();
+		ac.onLWParsingFinished();
+		Address addr = ac.getSearchResultByCoords(new Point2D.Float(12.588990f, 55.6598890f));
+		assertEquals("Rued Langgårdsvej 7, 2300 København S", addr.toStringShort());
+	}
 
 }

@@ -65,9 +65,9 @@ public class AddressSuggestion {
 			String[] strArr = find.split(postcode);
 			if(strArr.length>0) streetAndNumber = strArr[0].trim();
 			
-			if(Main.addressController.getAddressHolder().getPostcode(postcode) != null){
+			if(addressController.getAddressHolder().getPostcode(postcode) != null){
 				addr.setPostcode(postcode);
-				addr.setCity(Main.addressController.getAddressHolder().getPostcode(postcode).getCity());
+				addr.setCity(addressController.getAddressHolder().getPostcode(postcode).getCity());
 			}
 		}
 		
@@ -76,7 +76,7 @@ public class AddressSuggestion {
 			for(int i=streetAndNumber.length(); i>0; i--){
 				String part = streetAndNumber.substring(0, i).trim();
 				addr.setStreet(part);
-				if(Main.addressController.getAddressHolder()
+				if(addressController.getAddressHolder()
 						.search(addr, SearchEnum.EQUALS, SearchEnum.ANY, SearchEnum.ANY, SearchEnum.ANY).size() > 0) {
 					if(debug) System.out.println("Analysed S, found: " + part);
 					streetAndNumber = streetAndNumber.substring(part.length());
@@ -93,7 +93,7 @@ public class AddressSuggestion {
 			for(int i=streetAndNumber.length(); i>0; i--){
 				String part = streetAndNumber.substring(0, i).trim();
 				addr.setHousenumber(part);
-				if(Main.addressController.getAddressHolder()
+				if(addressController.getAddressHolder()
 						.search(addr, SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.ANY, SearchEnum.ANY).size() > 0){
 					if(debug) System.out.println("Analysed N, found: " + part);
 					break;
@@ -113,7 +113,7 @@ public class AddressSuggestion {
 				for(int i=str.length(); i>0; i--){
 					String part = str.substring(0, i).trim();
 					addr.setCity(part);
-					if(Main.addressController.getAddressHolder()
+					if(addressController.getAddressHolder()
 							.search(addr, SearchEnum.ANY, SearchEnum.ANY, SearchEnum.ANY, SearchEnum.EQUALS).size() > 0){
 						if(debug) System.out.println("Analysed C, found: " + part);
 						break;

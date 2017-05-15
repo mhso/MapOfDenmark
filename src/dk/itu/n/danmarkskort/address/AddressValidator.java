@@ -85,7 +85,7 @@ public class AddressValidator {
 	
 	private static String insertDotAfterDoubleChar(String inputStr){
 		return inputStr
-				.replaceAll("\\b(["+allowedAlphaSet+"]{2})\\s", " $1. "); //replace double letter " * " with " *. "
+				.replaceAll("\\b(["+allowedAlphaSet+"]{2})\\s", " $1. ").replaceAll("(?i)Ny.", "Ny"); //replace double letter " * " with " *. "
 	}
 	
 	private static String removeEndingDot(String inputStr){
