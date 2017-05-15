@@ -49,7 +49,7 @@ public class RoutePartBasic extends JPanel {
 		gbc_lblRouteIcon.gridy = 0;
 		add(lblRouteIcon, gbc_lblRouteIcon);
 		
-		JLabel lblHereYouGo = new JLabel("Here you go. A wonderful route has been planned just for you");
+		JLabel lblHereYouGo = new JLabel("Route directions");
 		lblHereYouGo.setForeground(style.routeTextLight());
 		lblHereYouGo.setFont(style.defaultHeadline());
 		GridBagConstraints gbc_lblHereYouGo = new GridBagConstraints();
