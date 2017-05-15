@@ -1,4 +1,4 @@
-package dk.itu.n.danmarkskort.models.unittest;
+package dk.itu.n.danmarkskort.models.unittests;
 
 import static org.junit.Assert.assertEquals;
 

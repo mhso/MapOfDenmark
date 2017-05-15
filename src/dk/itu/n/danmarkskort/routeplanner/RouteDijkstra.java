@@ -31,6 +31,7 @@ public class RouteDijkstra {
     private WeightEnum weightEnum;
     private boolean debug = false;
     private int source, target;
+    private int relaxCount = 0; // not part of the book's implementation
 
     /**
      * Computes a shortest-paths tree from the source vertex {@code s} to every other
@@ -78,6 +79,8 @@ public class RouteDijkstra {
 
     // relax edge e and update pq if changed
     private void relax(RouteEdge edge) {
+        relaxCount++; // not part of the books implementation
+
         int fromId = edge.getFromId(), toId = edge.getToId();
         
         if (distTo[toId] > distTo[fromId] + edge.getWeight(weightEnum)) {
@@ -136,6 +139,9 @@ public class RouteDijkstra {
         if (vertexId < 0 || vertexId >= V)
             throw new IllegalArgumentException("vertex " + vertexId + " is not between 0 and " + (V-1));
     }
+
+    // not part of the book's implementation
+    public int getRelaxCount() { return relaxCount; }
 }
 
 /******************************************************************************
