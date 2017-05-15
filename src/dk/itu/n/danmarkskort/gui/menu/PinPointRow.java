@@ -18,7 +18,6 @@ public class PinPointRow extends JPanel {
 	private JButton btnPan;
 	private JButton btnDelete;
 	private JLabel name;
-	private PinPoint pinPoint;
 	private Style style;
 	
 	/**
@@ -26,7 +25,6 @@ public class PinPointRow extends JPanel {
 	 */
 	public PinPointRow(PinPoint pinPoint) {
 		style = Main.style;
-		this.pinPoint = pinPoint;
 		setLayout(new BorderLayout(0, 0));
 		
 		JPanel panel = new JPanel();

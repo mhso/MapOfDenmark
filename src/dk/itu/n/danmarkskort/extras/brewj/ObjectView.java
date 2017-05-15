@@ -125,7 +125,6 @@ public class ObjectView {
 	void drawRef(Graphics2D g, ObjectView otherView, double y1, Rectangle2D viewrect) {
     	double x1, dx, dy, x2, y2;
     	x2 = otherView.x + otherView.w / 2;
-    	int mincurve = 50;
     	if (x + w / 2 < otherView.x + otherView.w / 2) {
     		x1 = x + w;
     		dx = -10;

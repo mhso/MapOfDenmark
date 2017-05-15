@@ -276,6 +276,7 @@ public class ThemeAddElement extends JFrame {
 		dialog.setVisible(true);
 	}
 	
+	@SuppressWarnings("unused")
 	private void showElementsDialog() {
 		JDialog dialog = new JDialog(this);
 		dialog.setModal(true);

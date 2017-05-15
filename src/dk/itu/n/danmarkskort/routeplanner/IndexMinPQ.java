@@ -4,6 +4,35 @@ import java.io.Serializable;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+/**
+ *  The {@code IndexMinPQ} class represents an indexed priority queue of generic keys.
+ *  It supports the usual <em>insert</em> and <em>delete-the-minimum</em>
+ *  operations, along with <em>delete</em> and <em>change-the-key</em> 
+ *  methods. In order to let the client refer to keys on the priority queue,
+ *  an integer between {@code 0} and {@code maxN - 1}
+ *  is associated with each key—the client uses this integer to specify
+ *  which key to delete or change.
+ *  It also supports methods for peeking at the minimum key,
+ *  testing if the priority queue is empty, and iterating through
+ *  the keys.
+ *  <p>
+ *  This implementation uses a binary heap along with an array to associate
+ *  keys with integers in the given range.
+ *  The <em>insert</em>, <em>delete-the-minimum</em>, <em>delete</em>,
+ *  <em>change-key</em>, <em>decrease-key</em>, and <em>increase-key</em>
+ *  operations take logarithmic time.
+ *  The <em>is-empty</em>, <em>size</em>, <em>min-index</em>, <em>min-key</em>,
+ *  and <em>key-of</em> operations take constant time.
+ *  Construction takes time proportional to the specified capacity.
+ *  <p>
+ *  For additional documentation, see <a href="http://algs4.cs.princeton.edu/24pq">Section 2.4</a> of
+ *  <i>Algorithms, 4th Edition</i> by Robert Sedgewick and Kevin Wayne.
+ *
+ *  @author Robert Sedgewick
+ *  @author Kevin Wayne
+ *
+ *  @param <Key> the generic type of key on this priority queue
+ */
 public class IndexMinPQ<Key extends Comparable<Key>> implements Iterable<Integer>, Serializable {
 	private static final long serialVersionUID = -2577636856958292518L;
 	private int maxN;        // maximum number of elements on PQ
@@ -19,7 +48,8 @@ public class IndexMinPQ<Key extends Comparable<Key>> implements Iterable<Integer
      *         {@code maxN - 1}
      * @throws IllegalArgumentException if {@code maxN < 0}
      */
-    public IndexMinPQ(int maxN) {
+    @SuppressWarnings("unchecked")
+	public IndexMinPQ(int maxN) {
         if (maxN < 0) throw new IllegalArgumentException();
         this.maxN = maxN;
         n = 0;
@@ -330,3 +360,27 @@ public class IndexMinPQ<Key extends Comparable<Key>> implements Iterable<Integer
 
     }
 }
+
+/******************************************************************************
+ *  Copyright 2002-2016, Robert Sedgewick and Kevin Wayne.
+ *
+ *  This file is part of algs4.jar, which accompanies the textbook
+ *
+ *      Algorithms, 4th edition by Robert Sedgewick and Kevin Wayne,
+ *      Addison-Wesley Professional, 2011, ISBN 0-321-57351-X.
+ *      http://algs4.cs.princeton.edu
+ *
+ *
+ *  algs4.jar is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  algs4.jar is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with algs4.jar.  If not, see http://www.gnu.org/licenses.
+ ******************************************************************************/

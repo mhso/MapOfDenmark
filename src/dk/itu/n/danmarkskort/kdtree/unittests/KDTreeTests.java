@@ -100,7 +100,7 @@ public class KDTreeTests {
 	@Test(expected=IllegalArgumentException.class)
 	public void testKDSearchNullInput() {
 		KDTree<ParsedItem> kdTree = makeKDTreeWithWays(100, 0, 0, -10, -10, 25);
-		Iterator<ParsedItem> it = kdTree.iterator(null);
+		kdTree.iterator(null);
 	}
 	
 	@Test

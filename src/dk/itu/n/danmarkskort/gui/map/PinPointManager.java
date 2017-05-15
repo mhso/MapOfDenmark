@@ -3,7 +3,6 @@ package dk.itu.n.danmarkskort.gui.map;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.Serializable;
 import java.nio.file.Files;
@@ -231,6 +230,7 @@ public class PinPointManager implements Serializable {
 		return true;
 	}
 	
+	@SuppressWarnings("unused")
 	public void save() {
 		if(Main.production && Main.osmReader.getFileName().endsWith("resources/default.bin")) {
 			if(!Files.exists(Paths.get("parsedOSMFiles/default"))) {
@@ -269,6 +269,7 @@ public class PinPointManager implements Serializable {
 		return systemPinPoints.size();
 	}
 	
+	@SuppressWarnings("unused")
 	public static PinPointManager load(MapCanvas canvas) {
 		PinPointManager manager = null;
 		if(Main.production && Main.osmReader.getFileName().endsWith("resources/default.bin"))

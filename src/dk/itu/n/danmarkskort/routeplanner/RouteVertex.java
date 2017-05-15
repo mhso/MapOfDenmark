@@ -15,9 +15,4 @@ public class RouteVertex extends Point2D.Float {
 	public String toString(){
 		return "Id: " + id + ", " + "Point[" + x + ", " + y + "]";
 	}
-	
-	public boolean isEqualPoint(Point2D.Float to){
-		if(x == to.x && y == to.y) return true;
-		return false;
-	}
 }
