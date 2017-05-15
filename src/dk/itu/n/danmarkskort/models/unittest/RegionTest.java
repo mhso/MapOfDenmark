@@ -31,17 +31,12 @@ public class RegionTest {
 	}
 	
 	@Test
-	public void containsPoint() {
+	public void testContainsPoint() {
 		Point2D pointInside = new Point2D.Double(5, 5);
 		Point2D pointOutside = new Point2D.Double(100, 100);
 		Region region = new Region(0, 0, 10, 10);
 		assertEquals(true, region.containsPoint(pointInside));
 		assertEquals(false, region.containsPoint(pointOutside));
-	}
-	
-	@Test
-	public void testContainsPoint() {
-		
 	}
 	
 }
