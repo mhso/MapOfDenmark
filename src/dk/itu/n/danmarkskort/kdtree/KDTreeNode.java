@@ -22,6 +22,10 @@ public class KDTreeNode<T extends KDComparable> extends KDTree<T> {
     public KDTreeNode(List<T> list, int leafSize) {
         this(KDTree.listToArray(list), true, leafSize);
     }
+
+    public KDTreeNode(List<T> list, boolean sortByLon) {
+        this(KDTree.listToArray(list), sortByLon, DKConstants.KD_SIZE);
+    }
     
     private KDTreeNode(KDComparable[] arr, boolean sortByLon, int leafSize) {
         makeStructure(arr, sortByLon, leafSize);
@@ -157,8 +161,9 @@ public class KDTreeNode<T extends KDComparable> extends KDTree<T> {
      * known shortestDistance, or the method didn't find a candidate with shorter distance.
      * Else returns the element that is closest to the query point.
      */
-    protected T nearest(Point2D.Float query, double currentShortest, boolean sortByLon) {
+    public T nearest(Point2D.Float query, double currentShortest, boolean sortByLon) {
         if(query == null) return null;
+
 
         double nearestPossibleLT, nearestPossibleRB;
         double shortest = currentShortest;
@@ -213,6 +218,12 @@ public class KDTreeNode<T extends KDComparable> extends KDTree<T> {
 
         // maybe nothing of interest found (it could be null, but it could also be amazing)
         return candidate;
+    }
+    
+    public boolean isSortingByLon(int currentDepth, int depth) {
+    	if(depth == currentDepth) return currentDepth%2 == 0;
+    	if(leftChild != null) return leftChild.isSortingByLon(++currentDepth, depth);
+    	else return currentDepth%2 == 0;
     }
 
     public int nodeSize() {
