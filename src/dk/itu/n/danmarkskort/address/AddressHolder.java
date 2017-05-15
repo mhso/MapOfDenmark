@@ -222,7 +222,7 @@ public class AddressHolder implements Serializable {
 			default:
 				break;
 			}
-			result.putAll(searchCity(result, addr, cityType));
+			result = searchCity(result, addr, cityType);
 		return result;
 	}
 	
@@ -274,8 +274,12 @@ public class AddressHolder implements Serializable {
 			Map<String, Postcode> result = new HashMap<String, Postcode>();
 			for(Postcode pc : searchPostcode(postcodes, addr, postcodeType, cityType).values()){
 				for(Street st : pc.search(pc.getStreets(), addr, streetType).values()){
+					int limitResult = 0;
 					for(Housenumber hn : st.search(st.getHousenumbers(), addr, housenumberType).values()) {
 						searchToMap(result, hn);
+						limitResult++;
+						if(limitResult > 10) break;
+						
 					}
 				}
 			}

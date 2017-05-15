@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 /**
- * This class handles the management of creating and access of the address datatructure. 
+ * This class handles the management of creating and access of the address data structure. 
  * @author Group N
  *
  */
@@ -27,7 +27,7 @@ public class AddressController {
 	public AddressController(){
 		addressHolder = new AddressHolder();
 		postcodeCityBestMatch = new PostcodeCityBestMatch();
-		addressSuggestion = new AddressSuggestion();
+		addressSuggestion = new AddressSuggestion(this);
 	}
 	
 	public AddressHolder getAddressHolder() { return addressHolder; }
@@ -55,7 +55,7 @@ public class AddressController {
 	 * @param find, search coords
 	 * @return a list with nearst address suggestions or empty list if non.
 	 */
-	public List<String> getSearchSuggestions(Point2D.Float find){
+	public List<String> getSearchSuggestionsByCoords(Point2D.Float find){
 		List<String> result = new ArrayList<String>();
 		Housenumber hn = searchHousenumberKDTree(find);
 		if(hn != null) result.add(hn.toString());
@@ -140,7 +140,7 @@ public class AddressController {
 	 * @param postcode, address postcode
 	 * @param city, address cityname
 	 */
-	public void addAddress(Point2D.Float lonLat, String street, String housenumber, String postcode, String city){
+	private void addAddress(Point2D.Float lonLat, String street, String housenumber, String postcode, String city){
 		Postcode pc = addressHolder.postcodes.get(postcode);
 		if(pc == null) pc = new Postcode(postcode, city);
 		pc.addAddress(street, housenumber, lonLat);
@@ -165,7 +165,7 @@ public class AddressController {
         if(addr != null) {
         	// Checks whether the input atleast contains a valid street, housenumber and postcode.
 			if(AddressValidator.isAddressMinimum(addr.getStreet(), addr.getHousenumber(), addr.getPostcode())){
-				// If valid city, accept city, else dont save it.
+				// If valid city, accept city, else do not save it.
 				if(AddressValidator.isCityname(addr.getCity())) {
 					addAddress(addr, addr.getStreet(), addr.getHousenumber(), addr.getPostcode(), addr.getCity());
 				}else{

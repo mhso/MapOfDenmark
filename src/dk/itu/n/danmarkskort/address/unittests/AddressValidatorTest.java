@@ -18,23 +18,5 @@ public class AddressValidatorTest {
 	public void tearDown() throws Exception {
 	}
 
-	@Test
-	public void isStreetStandardReturnTrue() {
-		assertEquals(true, AddressValidator.isStreetname("Håndværkervænget"));
-	}
-	
-	@Test
-	public void isStreetStartWithNumberReturnTrue() {
-		assertEquals(true, AddressValidator.isStreetname("10. Håndværkervænget"));
-	}
-	
-	@Test
-	public void isStreetContainsNumberReturnTrue() {
-		assertEquals(true, AddressValidator.isStreetname("Håndværker 10 vænget"));
-	}
-	
-	@Test
-	public void isStreetEndsWithNumberReturnTrue() {
-		assertEquals(true, AddressValidator.isStreetname("Håndværkervænget 10"));
-	}
+
 }
