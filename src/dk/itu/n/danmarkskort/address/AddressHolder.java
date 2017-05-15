@@ -222,7 +222,7 @@ public class AddressHolder implements Serializable {
 			default:
 				break;
 			}
-			result.putAll(searchCity(result, addr, cityType));
+			result = searchCity(result, addr, cityType);
 		return result;
 	}
 	
@@ -271,25 +271,18 @@ public class AddressHolder implements Serializable {
 	 */
 	public Map<String, Postcode> search(Address addr,
 			SearchEnum streetType, SearchEnum housenumberType, SearchEnum postcodeType, SearchEnum cityType){
-			System.out.println("search: " + addr.toString());
-			System.out.println("streetType: " + streetType.toString() + ", housenumberType: " + housenumberType.toString() 
-			+ ", postcodeType: " + postcodeType.toString() + ", cityType: " + cityType.toString());
 			Map<String, Postcode> result = new HashMap<String, Postcode>();
 			for(Postcode pc : searchPostcode(postcodes, addr, postcodeType, cityType).values()){
 				for(Street st : pc.search(pc.getStreets(), addr, streetType).values()){
 					int limitResult = 0;
 					for(Housenumber hn : st.search(st.getHousenumbers(), addr, housenumberType).values()) {
 						searchToMap(result, hn);
-						System.out.println(hn.toString());
 						limitResult++;
 						if(limitResult > 10) break;
 						
 					}
 				}
 			}
-			System.out.println("search: " + addr.toString());
-			System.out.println("streetType: " + streetType.toString() + ", housenumberType: " + housenumberType.toString() 
-			+ ", postcodeType: " + postcodeType.toString() + ", cityType: " + cityType.toString());
 		return result;
 	}
 	

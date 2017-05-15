@@ -137,43 +137,54 @@ public class AddressSuggestion {
 		return result;
 	}
 	
+	/**
+	 * Suggestion part 1, try to find best results, if nothing is found less precise search methods is called.
+	 * 
+	 * @param result, working result list.
+	 * @param addr, parsedAddress.
+	 * @param limitAmountOfResults, result limitation.
+	 */
 	private void searchSuggestionsPart1(List<String> result, Address addr, long limitAmountOfResults) {
-		System.out.println("searchSuggestionsPart1: " + addr.getStreet() + ", result size: " + result.size());
-		if(addr.getStreet() != null){
-			
+		
 		result.addAll(resizeSearcResult(addressController.getAddressHolder()
-				.search(addr, SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.EQUALS), 5, 3, 10l));
-			if(addr.getHousenumber() != null){
-				ifListNotOneAndListLessThanLimit(result, limitAmountOfResults, addr, 
-						SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.ANY);
-				ifListNotOneAndListLessThanLimit(result, limitAmountOfResults, addr, 
-						SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.ANY, SearchEnum.ANY);
-				ifListLessThanLimit(result, limitAmountOfResults, addr, 
-						SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.STARTSWITH, SearchEnum.ANY);
-				ifListLessThanLimit(result, limitAmountOfResults, addr, 
-						SearchEnum.EQUALS, SearchEnum.STARTSWITH, SearchEnum.ANY, SearchEnum.ANY);
-			}
-			ifListNotOneAndListLessThanLimit(result, limitAmountOfResults, addr,
+				.search(addr, SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.EQUALS), 5, 3, limitAmountOfResults));
+			
+		ifListNotOneAndListLessThanLimit(result, limitAmountOfResults, addr, 
+					SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.ANY);
+			
+		ifListNotOneAndListLessThanLimit(result, limitAmountOfResults, addr, 
+					SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.ANY, SearchEnum.ANY);
+			
+		ifListLessThanLimit(result, limitAmountOfResults, addr, 
+					SearchEnum.EQUALS, SearchEnum.EQUALS, SearchEnum.STARTSWITH, SearchEnum.ANY);
+			
+		ifListLessThanLimit(result, limitAmountOfResults, addr, 
+					SearchEnum.EQUALS, SearchEnum.STARTSWITH, SearchEnum.ANY, SearchEnum.ANY);
+			
+		ifListNotOneAndListLessThanLimit(result, limitAmountOfResults, addr,
 					SearchEnum.EQUALS, SearchEnum.ANY, SearchEnum.ANY, SearchEnum.ANY);
-		}
-		if(addr.getPostcode() != null)
-			ifListNotOneAndListLessThanLimit(result, limitAmountOfResults, addr,
+		
+		ifListNotOneAndListLessThanLimit(result, limitAmountOfResults, addr,
 					SearchEnum.ANY, SearchEnum.ANY, SearchEnum.EQUALS, SearchEnum.ANY);
-		if(addr.getCity() != null)
-			ifListNotOneAndListLessThanLimit(result, limitAmountOfResults, addr, 
-				SearchEnum.ANY, SearchEnum.ANY, SearchEnum.ANY, SearchEnum.EQUALS);
+			
+		ifListNotOneAndListLessThanLimit(result, limitAmountOfResults, addr, 
+					SearchEnum.ANY, SearchEnum.ANY, SearchEnum.ANY, SearchEnum.EQUALS);
 	}
 
+	/**
+	 * Suggestion part 2, try to find best results, if nothing is found less precise search methods is called.
+	 * @param result
+	 * @param addr
+	 * @param limitAmountOfResults
+	 * @param find
+	 */
 	private void searchSuggestionsPart2(List<String> result, Address addr, long limitAmountOfResults, String find){
 		Address tempAddr = new Address();
 		tempAddr.setStreet(find);
-		System.out.println("addr" + addr.getStreet() + " temp: " + tempAddr.getStreet() + ", result size: " + result.size());
 		ifListNotOneAndListLessThanLimit(result, limitAmountOfResults, tempAddr, SearchEnum.STARTSWITH, SearchEnum.ANY, SearchEnum.ANY, SearchEnum.ANY);
-		System.out.println(tempAddr.getStreet() + ", result size: " + result.size());
 		ifListEmptySearchAndAddAll(result, addr, SearchEnum.LEVENSHTEIN, SearchEnum.ANY, SearchEnum.ANY, SearchEnum.ANY);
 		ifListEmptySearchAndAddAll(result, tempAddr, SearchEnum.LEVENSHTEIN, SearchEnum.ANY, SearchEnum.ANY, SearchEnum.ANY);
 		ifListEmptySearchAndAddAll(result, addr, SearchEnum.ANY, SearchEnum.ANY, SearchEnum.ANY, SearchEnum.LEVENSHTEIN);
-		ifListEmptySearchAndAddAll(result, tempAddr, SearchEnum.ANY, SearchEnum.ANY, SearchEnum.ANY, SearchEnum.LEVENSHTEIN);
 		ifListEmptySearchAndAddAll(result, tempAddr, SearchEnum.ANY, SearchEnum.ANY, SearchEnum.ANY, SearchEnum.LEVENSHTEIN);
 	}
 	
@@ -192,8 +203,8 @@ public class AddressSuggestion {
 	 */
 	private void ifListNotOneAndListLessThanLimit(List<String> result, long limitAmountOfResults, Address addr,  
 			SearchEnum streetType, SearchEnum housenumberType, SearchEnum postcodeType, SearchEnum cityType){
-		if(result.size() != 1 && result.size() < limitAmountOfResults) {
-			System.out.println("ifListNotOneAndListLessThanLimit -> Called, size: " + result.size());
+		boolean isRelevant = isRelevantSearch(addr, streetType, housenumberType, postcodeType, cityType);
+		if(isRelevant && result.size() != 1 && result.size() < limitAmountOfResults) {
 			result.addAll(resizeSearcResult(addressController.getAddressHolder()
 					.search(addr, streetType, housenumberType, postcodeType, cityType), 5, 3, 10l));
 		}
@@ -214,8 +225,8 @@ public class AddressSuggestion {
 	 */
 	private void ifListLessThanLimit(List<String> result, long limitAmountOfResults, Address addr,  
 			SearchEnum streetType, SearchEnum housenumberType, SearchEnum postcodeType, SearchEnum cityType){
-		if(result.size() < limitAmountOfResults) {
-			System.out.println("ifListLessThanLimit -> Called, size: " + result.size());
+		boolean isRelevant = isRelevantSearch(addr, streetType, housenumberType, postcodeType, cityType);
+		if(isRelevant && result.size() < limitAmountOfResults) {
 			result.addAll(resizeSearcResult(addressController.getAddressHolder()
 					.search(addr, streetType, housenumberType, postcodeType, cityType), 5, 3, 10l));
 		}
@@ -235,8 +246,8 @@ public class AddressSuggestion {
 	 */
 	private void ifListEmptySearchAndAddAll(List<String> result, Address addr, 
 			SearchEnum streetType, SearchEnum housenumberType, SearchEnum postcodeType, SearchEnum cityType){
-		if(result.isEmpty()) {
-			System.out.println("ifListEmptySearchAndAddAll -> Called");
+		boolean isRelevant = isRelevantSearch(addr, streetType, housenumberType, postcodeType, cityType);
+		if(isRelevant && result.isEmpty()) {
 			result.addAll(resizeSearcResult(addressController.getAddressHolder()
 					.search(addr, streetType, housenumberType, postcodeType, cityType), 5, 3, 10l));
 		}
@@ -271,5 +282,14 @@ public class AddressSuggestion {
 		Collections.sort(result, String.CASE_INSENSITIVE_ORDER); // Sort list
 		result = result.parallelStream().distinct().limit(limitAmountOfResults).collect(Collectors.toList());
 		return result;
+	}
+	
+	private boolean isRelevantSearch(Address addr, 
+			SearchEnum streetType, SearchEnum housenumberType, SearchEnum postcodeType, SearchEnum cityType){
+		if(streetType != SearchEnum.ANY && addr.getStreet() == null) return false;
+		if(housenumberType != SearchEnum.ANY && addr.getHousenumber() == null) return false;
+		if(postcodeType != SearchEnum.ANY && addr.getPostcode() == null) return false;
+		if(cityType != SearchEnum.ANY && addr.getCity() == null) return false;
+		return true;
 	}
 }
