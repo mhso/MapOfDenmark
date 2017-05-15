@@ -76,7 +76,7 @@ public class ParsedWay extends ParsedItem implements KDComparable, Serializable 
      * Creates and returns an array that has all the nodes (coordinate points) held, in reversed order.
      * @return New array containing all the nodes (coordinate points) in reversed order.
      */
-    Point2D.Float[] getReversedNodes() {
+    public Point2D.Float[] getReversedNodes() {
         Point2D.Float[] revNodes = new Point2D.Float[nodes.length];
         int i = revNodes.length;
         for(Point2D.Float pn: nodes) revNodes[--i] = pn;

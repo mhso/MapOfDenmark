@@ -43,7 +43,7 @@ public class DropdownRightClick extends CustomDropdown {
 			Main.mainPanel.getDropMenu().openRoutePage(null, (float)mousePoint.getY() + ", " + (float)mousePoint.getX(), true);
 		} else if(text.equals("Find tweets near this position")) {
 			Point2D mousePoint = Util.toRealCoords(getGeographical());
-			String url = "https://twitter.com/search?l=&q=near%3A%22" + mousePoint.getY() + "%2C" + mousePoint.getX() + "%20%22%20within%3A1mi&src=typd";
+			String url = "https://twitter.com/search?l=&q=near%3A%22" + mousePoint.getY() + "%2C" + mousePoint.getX() + "%20%22%20within%3A1km&src=typd";
 			Util.openWebpage(url);
 		}
 	}

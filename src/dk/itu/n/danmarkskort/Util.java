@@ -152,6 +152,7 @@ public class Util {
 	}
 
 	public static Point2D toRealCoords(Point2D fakeCoords) {
+		if(Main.model == null) return new Point2D.Double(fakeCoords.getX()/DKConstants.FACTOR_LON_DENMARK, -fakeCoords.getY());
 		return new Point2D.Double(fakeCoords.getX()/Main.model.getLonFactor(), -fakeCoords.getY());
 	}
 
