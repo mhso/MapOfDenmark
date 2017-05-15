@@ -1,8 +1,6 @@
 package dk.itu.n.danmarkskort.address;
 
 import dk.itu.n.danmarkskort.Main;
-import dk.itu.n.danmarkskort.TimerUtil;
-import dk.itu.n.danmarkskort.Util;
 import dk.itu.n.danmarkskort.kdtree.KDTree;
 import dk.itu.n.danmarkskort.kdtree.KDTreeNode;
 import dk.itu.n.danmarkskort.models.ParsedAddress;
@@ -210,7 +208,7 @@ public class AddressController {
 		for(Entry<String, Postcode> entry : addressHolder.postcodes.entrySet()){
 			entry.getValue().setCity(postcodeCityBestMatch.getMatch(entry.getKey()));
 		}
-		postcodeCityBestMatch.cleanup();
+		postcodeCityBestMatch.cleanUp();
 	}
 	
 	/**
