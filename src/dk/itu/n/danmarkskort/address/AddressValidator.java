@@ -88,6 +88,10 @@ public class AddressValidator {
 				.replaceAll("\\b(["+allowedAlphaSet+"]{2})\\s", " $1. ").replaceAll("(?i)Ny.", "Ny"); //replace double letter " * " with " *. "
 	}
 	
+	public static String insertSpaceAfterDotChar(String inputStr){
+		return inputStr.replaceAll("(.\\.)(["+allowedAlphaSet+"]*)", "$1 $2");
+	}
+	
 	private static String removeEndingDot(String inputStr){
 		inputStr = cleanExcessSpaces(inputStr);
 		if(inputStr.endsWith("\\u002E")) return inputStr.substring(0, inputStr.length()-1);

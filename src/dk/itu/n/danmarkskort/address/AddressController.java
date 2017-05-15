@@ -141,6 +141,7 @@ public class AddressController {
 	 * @param city, address cityname
 	 */
 	private void addAddress(Point2D.Float lonLat, String street, String housenumber, String postcode, String city){
+		street = AddressValidator.insertSpaceAfterDotChar(street);
 		Postcode pc = addressHolder.postcodes.get(postcode);
 		if(pc == null) pc = new Postcode(postcode, city);
 		pc.addAddress(street, housenumber, lonLat);
