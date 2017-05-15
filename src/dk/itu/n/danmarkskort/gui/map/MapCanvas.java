@@ -13,7 +13,6 @@ import java.awt.geom.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -140,7 +139,6 @@ public class MapCanvas extends JPanel {
 		g2d.setTransform(at);
 		if(antiAlias) g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		else g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
-		drawMapRegion(g2d);
 		if(zoomChanged) {
 			wayTypesVisible = getOnScreenGraphicsForCurrentZoom();
 			if(wayTypesVisible == null) return;
@@ -291,13 +289,6 @@ public class MapCanvas extends JPanel {
 		zoomChanged = false;
 		if(wayTypeSpecs == null) return new ArrayList<>();
 		return wayTypeSpecs;
-	}
-	
-	public void drawMapRegion(Graphics2D g2d) {
-		g2d.setColor(Color.RED);
-		g2d.setStroke(new BasicStroke(Float.MIN_VALUE));
-		Region mapRegion = Main.model.getMapRegion();
-		g2d.draw(new Rectangle2D.Double(mapRegion.x1, mapRegion.y1, mapRegion.getWidth(), mapRegion.getHeight()));
 	}
 	
 	public void highlightWay(WayType wayType, Shape shape) {
