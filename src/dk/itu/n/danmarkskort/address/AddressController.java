@@ -208,7 +208,7 @@ public class AddressController {
 		for(Entry<String, Postcode> entry : addressHolder.postcodes.entrySet()){
 			entry.getValue().setCity(postcodeCityBestMatch.getMatch(entry.getKey()));
 		}
-		postcodeCityBestMatch.cleanup();
+		postcodeCityBestMatch.cleanUp();
 	}
 	
 	/**

@@ -5,6 +5,25 @@ import java.util.List;
 
 import dk.itu.n.danmarkskort.Main;
 
+/**
+ *  The {@code DijkstraSP} class represents a data type for solving the
+ *  single-source shortest paths problem in edge-weighted digraphs
+ *  where the edge weights are nonnegative.
+ *  <p>
+ *  This implementation uses Dijkstra's algorithm with a binary heap.
+ *  The constructor takes time proportional to <em>E</em> log <em>V</em>,
+ *  where <em>V</em> is the number of vertices and <em>E</em> is the number of edges.
+ *  Afterwards, the {@code distTo()} and {@code hasPathTo()} methods take
+ *  constant time and the {@code pathTo()} method takes time proportional to the
+ *  number of edges in the shortest path returned.
+ *  <p>
+ *  For additional documentation,    
+ *  see <a href="http://algs4.cs.princeton.edu/44sp">Section 4.4</a> of    
+ *  <i>Algorithms, 4th Edition</i> by Robert Sedgewick and Kevin Wayne. 
+ *
+ *  @author Robert Sedgewick
+ *  @author Kevin Wayne
+ */
 public class RouteDijkstra {
 	private double[] distTo;         		// distTo[v] = distance  of shortest s->v path
     private RouteEdge[] edgeTo;    			// edgeTo[v] = last edge on shortest s->v path
@@ -118,3 +137,27 @@ public class RouteDijkstra {
             throw new IllegalArgumentException("vertex " + vertexId + " is not between 0 and " + (V-1));
     }
 }
+
+/******************************************************************************
+ *  Copyright 2002-2016, Robert Sedgewick and Kevin Wayne.
+ *
+ *  This file is part of algs4.jar, which accompanies the textbook
+ *
+ *      Algorithms, 4th edition by Robert Sedgewick and Kevin Wayne,
+ *      Addison-Wesley Professional, 2011, ISBN 0-321-57351-X.
+ *      http://algs4.cs.princeton.edu
+ *
+ *
+ *  algs4.jar is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  algs4.jar is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with algs4.jar.  If not, see http://www.gnu.org/licenses.
+ ******************************************************************************/
