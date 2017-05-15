@@ -204,6 +204,7 @@ public class Util {
 		}
 	}
 
+	@SuppressWarnings("unused")
 	public static Object readObjectFromFile(String fileName, List<ProgressListener> listeners) {
 		try {
 			BufferedInputStream fout;

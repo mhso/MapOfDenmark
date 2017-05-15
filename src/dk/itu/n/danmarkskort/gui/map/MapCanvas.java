@@ -133,6 +133,7 @@ public class MapCanvas extends JPanel {
 	 * @param region The currently visible Geographical Region of the map.
 	 * @param at The AffineTransform that should be used when drawing.
 	 */
+	@SuppressWarnings("unused")
 	public void drawMapShapes(Graphics2D g2d, Region region, AffineTransform at) {
 		Region currentRegion = region;
 		drawBackground(g2d);
