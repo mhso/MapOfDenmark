@@ -3,6 +3,7 @@ package dk.itu.n.danmarkskort.unittest;
 import static org.junit.Assert.*;
 
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Point2D;
 import java.io.File;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
@@ -116,4 +117,10 @@ public class UtilTest {
 		assertEquals(-25, transform.getTranslateX(), 0);	
 	}
 	
+	@Test
+	public void testDistanceInMeters() {
+		double expectedOutcome = 12765.8776;
+		assertEquals(Util.distanceInMeters
+				(new Point2D.Double(12.5, 55.62), new Point2D.Double(12.6, 55.72)), expectedOutcome, 0.001);
+	}
 }

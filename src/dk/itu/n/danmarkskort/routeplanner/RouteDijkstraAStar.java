@@ -68,7 +68,7 @@ public class RouteDijkstraAStar {
     private double heuristics(Point2D.Float sourceVertex, int maxSpeed){
     	Point2D source = Util.toRealCoords(sourceVertex);
     	Point2D target = Util.toRealCoords(targetVertex);
-    	double distance = Util.distanceInMeters(source, target);
+    	double distance = Util.distanceInMeters(Util.toRealCoords(source), Util.toRealCoords(target));
     	double speed = 1;
     	if(maxSpeed == -1) maxSpeed = 1;
     	switch(weightEnum){

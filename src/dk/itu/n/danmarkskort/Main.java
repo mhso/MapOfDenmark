@@ -22,7 +22,7 @@ import dk.itu.n.danmarkskort.routeplanner.RouteController;
 
 public class Main {
 	public final static String APP_NAME = "Yak Maps";
-	public final static String APP_VERSION = "0.9";
+	public final static String APP_VERSION = "1.0";
 	public final static boolean debug = true;
 	public final static boolean debugExtra = false;
 	public final static boolean production = false;
