@@ -45,6 +45,10 @@ public abstract class KDTree<T extends KDComparable> implements Serializable, It
      * @return All the objects stored in a KDTree structure.
      */
     abstract List<KDComparable[]> getAllItems();
+    
+    public boolean isSortingByLon(int depth) { return isSortingByLon(0, depth); }
+    
+    abstract boolean isSortingByLon(int currentDepth, int depth);
 
     public abstract int nodeSize();
 

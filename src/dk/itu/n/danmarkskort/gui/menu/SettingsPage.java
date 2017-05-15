@@ -73,7 +73,9 @@ public class SettingsPage extends JPanel {
         defaultCenterPanel.setLayout(new GridLayout(0, 1, 0, 10));
         panelCenter.add(defaultCenterPanel, "name_default");
         
-        JButton buttonChangeMapTheme = style.themeMenuButton();
+        JButton buttonChangeMapTheme = new JButton("Change Map Theme");
+        buttonChangeMapTheme.setBackground(new Color(224, 255, 255));
+        buttonChangeMapTheme.setBorder(new LineBorder(new Color(0, 153, 204), 2, true));
         buttonChangeMapTheme.addActionListener(e -> showMapThemePanel());
         defaultCenterPanel.add(buttonChangeMapTheme);
         
@@ -198,7 +200,7 @@ public class SettingsPage extends JPanel {
         }
         
         if(Main.userPreferences.getCurrentMapTheme().equals("Basic")) buttonBasicToggle.setSelected(true);
-        else if(Main.userPreferences.getCurrentMapTheme().equals("Night")) buttonBWToggle.setSelected(true);
+        else if(Main.userPreferences.getCurrentMapTheme().equals("Night")) buttonNightToggle.setSelected(true);
         else if(Main.userPreferences.getCurrentMapTheme().equals("BW")) buttonBWToggle.setSelected(true);
     }
     

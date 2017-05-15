@@ -136,8 +136,6 @@ public class Util {
 	}
 
 	public static double distanceInMeters(Point2D p1, Point2D p2) {
-		p1 = toRealCoords(p1);
-		p2 = toRealCoords(p2);
 		double earthRadius = 6371*1000;
 		double latRad1 = Math.toRadians(p1.getY());
 		double latRad2 = Math.toRadians(p2.getY());
@@ -150,7 +148,7 @@ public class Util {
 
 		return earthRadius * formular;
 	}
-
+	
 	public static Point2D toRealCoords(Point2D fakeCoords) {
 		if(Main.model == null) return new Point2D.Double(fakeCoords.getX()/DKConstants.FACTOR_LON_DENMARK, -fakeCoords.getY());
 		return new Point2D.Double(fakeCoords.getX()/Main.model.getLonFactor(), -fakeCoords.getY());

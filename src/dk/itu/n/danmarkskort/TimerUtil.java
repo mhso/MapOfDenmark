@@ -11,7 +11,7 @@ public class TimerUtil{
     private long seconds = 0;
     private long milliseconds = 0;
     private long nanoseconds = 0;
-    private String nameHour, nameHours, nameMinute, nameMinutes, nameSecond, nameSeconds, nameMillisecond, nameMilliseconds, nameNanosecond, nameNanoseconds;
+    private String nameDay, nameDays, nameHour, nameHours, nameMinute, nameMinutes, nameSecond, nameSeconds, nameMillisecond, nameMilliseconds, nameNanosecond, nameNanoseconds;
     
     public TimerUtil(){
         initDescriptionNames();
@@ -27,6 +27,8 @@ public class TimerUtil{
     }
     
     private void initDescriptionNames(){
+    	nameDay = "Day";
+    	nameDays = "Days";
         nameHour = "Hour";
         nameHours = "Hours";
         nameMinute = "Minute";
@@ -120,32 +122,50 @@ public class TimerUtil{
         return floorLongToInt(milliseconds);
     }
     
-    public String getHoursNamed(){
-        int value = floorLongToInt(hours);
-        String str = value + " ";
+    public String getDaysNamed(int value) {
+    	String str = "";
+    	if(value == 0) {
+        	return "";
+        }
+    	else if(value < 10){str = "0";}
+        str = value + " ";
         if(value == 1) {
+            str += nameDay;
+        } else {
+            str += nameDays;
+        }
+        return str + ", ";
+    }
+    
+    public String getHoursNamed(int value){
+        String str = value + " ";
+        if(value == 0) {
+        	return "";
+        }
+        else if(value == 1) {
             str += nameHour;
         } else {
             str += nameHours;
         }
-        return str;
+        return str + ", ";
     }
     
-    public String getMinutesNamed(){
-        int value = floorLongToInt(minutes);
-        String str = "";
-        if(value < 10){str = "0";}
+    public String getMinutesNamed(int value){
+        String str = ", ";
+        if(value == 0) {
+        	return "";
+        }
+        else if(value < 10){str = "0";}
         str = value + " ";
         if(value == 1) {
             str += nameMinute;
         } else {
             str += nameMinutes;
         }
-        return str;
+        return str + ", ";
     }
     
-    public String getSecondsNamed(){
-        int value = floorLongToInt(seconds);
+    public String getSecondsNamed(int value){
         String str = "";
         if(value < 10){str = "0";}
         str = value + " ";
@@ -157,8 +177,7 @@ public class TimerUtil{
         return str;
     }
     
-    public String getMillisecondsNamed(){
-        int value = floorLongToInt(milliseconds);
+    public String getMillisecondsNamed(int value){
         String str = "";
         if(value < 10){str = "00";}
         if(value >= 10 && value < 100){str = "0";}
@@ -168,7 +187,7 @@ public class TimerUtil{
         } else {
             str += nameMilliseconds;
         }
-        return str;
+        return str + ", ";
     }
     
     public String getNanosecondsNamed(){
@@ -201,7 +220,42 @@ public class TimerUtil{
         this.nameNanoseconds = nameNanoseconds;  
     }
     
+    public String getSimpleTimeString(int seconds) {
+    	int minutes = seconds/60;
+    	int hours = minutes/60;
+    	int days = hours/24;
+    	String str = "";
+    	if(days > 0) {
+    		if(days > 1) str += days + " " + nameDays;
+    		else str += days + " " + nameDay;
+    		str += ", ";
+    	}
+    	int hoursMod = hours;
+		if(days > 0) hoursMod = hours%24;
+    	if(hoursMod > 0) {
+    		if(hoursMod > 1) str += hoursMod + " " + nameHours;
+    		else str += hoursMod + " " + nameHour;
+    		str += ", ";
+    	}
+    	int minutesMod = minutes;
+		if(hours > 0) minutesMod = minutes%60;
+    	if(minutesMod > 0) {
+    		if(minutesMod > 1) str += minutesMod + " " + nameMinutes;
+    		else str += minutesMod + " " + nameMinute;
+    	}
+    	int secondsMod = seconds;
+		if(minutes > 0) secondsMod = seconds%60;
+    	if(secondsMod > 0) {
+    		if(secondsMod > 1) {
+    			if(seconds > 60) str += " and " + secondsMod + " " + nameSeconds;
+    			else str += secondsMod + " " + nameSeconds;
+    		}
+    		else str += secondsMod + " " + nameSecond;
+    	}
+    	return str;
+    }
+    
     public String toString(){
-        return getHoursNamed()+" "+getMinutesNamed()+" "+getSecondsNamed()+" "+getMillisecondsNamed()+ " "+getNanosecondsNamed();
+        return getHoursNamed(floorLongToInt(hours))+getMinutesNamed(floorLongToInt(minutes))+getSecondsNamed(floorLongToInt(seconds))+ ", " +getMillisecondsNamed(floorLongToInt(milliseconds))+getNanosecondsNamed();
     }
 }

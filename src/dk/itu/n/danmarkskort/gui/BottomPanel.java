@@ -153,7 +153,8 @@ public class BottomPanel extends JPanel implements CanvasListener {
 
     private void setScale() {
     	Region view = Main.map.getGeographicalRegion();
-        double viewLonM = Util.distanceInMeters(new Point2D.Double(view.x1, view.y2), new Point2D.Double(view.x2, view.y2));
+        double viewLonM = Util.distanceInMeters(Util.toRealCoords(new Point2D.Double(view.x1, view.y2)), 
+        		Util.toRealCoords(new Point2D.Double(view.x2, view.y2)));
     	
         String scaleString = " m";
         double mScale = viewLonM/(Main.window.getWidth()/scale.getWidth());
