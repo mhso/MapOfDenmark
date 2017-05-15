@@ -26,6 +26,7 @@ public class NearestNeighborTest {
 				nodes[j] = new Point2D.Float(startLon + i + j, startLat + i + j);
 			}
 			way.addNodes(nodes);
+			way.nodesToCoords();
 			list.add(way);
 		}
 		return new KDTreeNode(list, leafSize);
@@ -51,22 +52,19 @@ public class NearestNeighborTest {
 	public void testWithPoints() {
 		KDTree<KDComparable> tree = makeKDTreeWithPoints(1000, 1, 1, 25);
 		Point2D.Float target1 = new Point2D.Float(1, 1);
-		Point2D.Float query1 = target1;
 		Point2D.Float target2 = new Point2D.Float(2, 2);
-		//Point2D.Float query2 = target2;
 		Point2D.Float target3 = new Point2D.Float(500, 500);
-		//Point2D.Float query3 = target3;
 		Point2D.Float target4 = new Point2D.Float(1000, 1000);
 		Point2D.Float query4 = new Point2D.Float(2000, 2000);
         Point2D.Float query5 = new Point2D.Float(-10, -10);
 
-        assertEquals(target1, tree.nearest(query1).getFirstNode());
+        assertEquals(target1, tree.nearest(target1).getFirstNode());
 		assertEquals(target1, tree.nearest(query5).getFirstNode());
 		assertEquals(target2, tree.nearest(target2).getFirstNode());
 		assertEquals(target3, tree.nearest(target3).getFirstNode());
 		assertEquals(target4, tree.nearest(query4).getFirstNode());
 		assertNotEquals(target3, tree.nearest(query4).getFirstNode());
-		assertNotEquals(target3, tree.nearest(query1).getFirstNode());
+		assertNotEquals(target3, tree.nearest(target1).getFirstNode());
 	}
 
 	@Test
@@ -94,4 +92,15 @@ public class NearestNeighborTest {
         assertEquals(target2, tree.nearest(query2).getFirstNode());
         assertNotEquals(target1, tree.nearest(query2).getFirstNode());
     }
+
+    @Test
+	public void testWithParsedWays() {
+		KDTree<KDComparable> tree = makeKDTreeWithWays(10, 2, 2, 2, 25);
+		Point2D.Float query = new Point2D.Float(0, 0);
+
+		KDComparable nearest = tree.nearest(query);
+
+		Point2D.Float expected = new Point2D.Float(2, 2);
+		assertEquals(expected, nearest.getFirstNode());
+	}
 }
