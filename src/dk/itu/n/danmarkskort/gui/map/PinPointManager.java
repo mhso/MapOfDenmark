@@ -230,6 +230,7 @@ public class PinPointManager implements Serializable {
 		return true;
 	}
 	
+	@SuppressWarnings("unused")
 	public void save() {
 		if(Main.production && Main.osmReader.getFileName().endsWith("resources/default.bin")) {
 			if(!Files.exists(Paths.get("parsedOSMFiles/default"))) {
@@ -268,6 +269,7 @@ public class PinPointManager implements Serializable {
 		return systemPinPoints.size();
 	}
 	
+	@SuppressWarnings("unused")
 	public static PinPointManager load(MapCanvas canvas) {
 		PinPointManager manager = null;
 		if(Main.production && Main.osmReader.getFileName().endsWith("resources/default.bin"))

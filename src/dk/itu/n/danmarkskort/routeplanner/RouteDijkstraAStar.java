@@ -41,7 +41,7 @@ public class RouteDijkstraAStar {
     private WeightEnum weightEnum;
     private boolean debug = false;
     private int source, target;
-    private RouteVertex sourceVertex, targetVertex;
+    private RouteVertex targetVertex;
 
     /**
      * Computes a shortest-paths tree from the source vertex {@code s} to every other
@@ -52,7 +52,6 @@ public class RouteDijkstraAStar {
      * @throws IllegalArgumentException unless {@code 0 <= s < V}
      */
     public RouteDijkstraAStar(RouteGraph graph, RouteVertex sourceVertex, RouteVertex targetVertex, WeightEnum weightEnum) {
-    	this.sourceVertex =  sourceVertex;
     	this.targetVertex =  targetVertex;
     	this.source =  sourceVertex.getId();
     	this.target =  targetVertex.getId();

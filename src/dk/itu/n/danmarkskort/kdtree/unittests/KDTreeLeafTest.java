@@ -13,7 +13,8 @@ import java.util.ArrayList;
 
 public class KDTreeLeafTest {
 
-    public KDTreeLeaf<KDComparable> makeKDTreeLeaf(int dataSize, int coordsPerElement, float startLon, float startLat) {
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+	public KDTreeLeaf<KDComparable> makeKDTreeLeaf(int dataSize, int coordsPerElement, float startLon, float startLat) {
         ArrayList<ParsedWay> list = new ArrayList<>();
         for(int i = 0; i < dataSize; i++) {
             ParsedWay way = new ParsedWay(i);
