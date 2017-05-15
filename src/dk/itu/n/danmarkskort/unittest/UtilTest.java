@@ -119,8 +119,12 @@ public class UtilTest {
 	
 	@Test
 	public void testDistanceInMeters() {
-		double expectedOutcome = 12765.8776;
+		double expectedOutcome = 3070;
+		System.out.println(Util.distanceInMeters
+				(new Point2D.Double(12.5876414, 55.6676458), 
+						new Point2D.Double(12.5749102, 55.6411929)));
 		assertEquals(Util.distanceInMeters
-				(new Point2D.Double(12.5, 55.62), new Point2D.Double(12.6, 55.72)), expectedOutcome, 0.001);
+				(new Point2D.Double(12.5876414, 55.6676458), 
+						new Point2D.Double(12.5749102, 55.6411929)), expectedOutcome, 0.01);
 	}
 }
