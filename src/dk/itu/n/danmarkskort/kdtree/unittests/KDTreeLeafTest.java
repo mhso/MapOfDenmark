@@ -51,4 +51,9 @@ public class KDTreeLeafTest {
         assertEquals(size, leaf.getItems(regionBarelyTouching).get(0).length);
         assertEquals(size, leaf.getItems(regionReversedSurrounding).get(0).length);
     }
+
+    @Test
+    public void testGetAllItems() {
+
+    }
 }
