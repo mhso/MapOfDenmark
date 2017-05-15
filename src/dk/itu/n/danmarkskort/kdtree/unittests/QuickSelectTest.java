@@ -42,7 +42,9 @@ public class QuickSelectTest {
 		QuickSelect.quickSelect(arr, arr.length / 2, true);
 		
 		boolean lower = true;
-		for(int i = 0; i < arr.length / 2; i++) if(arr[i].getFirstNode().x > arr[arr.length/2].getFirstNode().x) lower = false;
+		for(int i = 0; i < arr.length / 2; i++)
+			if(arr[i].getFirstNode().x >= arr[arr.length/2].getFirstNode().x)
+				lower = false;
 		assertTrue(lower);
 	}
 	
@@ -51,7 +53,9 @@ public class QuickSelectTest {
 		QuickSelect.quickSelect(arr, arr.length / 2, true);
 		
 		boolean higher = true;
-		for(int i = arr.length / 2+1; i < arr.length; i++) if(arr[i].getFirstNode().x < arr[arr.length/2].getFirstNode().x) higher = false;
+		for(int i = (arr.length + 1) / 2; i < arr.length; i++)
+			if(arr[i].getFirstNode().x < arr[arr.length/2].getFirstNode().x)
+				higher = false;
 		assertTrue(higher);
 	}
 }

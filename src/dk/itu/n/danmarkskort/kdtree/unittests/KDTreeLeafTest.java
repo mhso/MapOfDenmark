@@ -3,6 +3,7 @@ package dk.itu.n.danmarkskort.kdtree.unittests;
 import static org.junit.Assert.*;
 
 import dk.itu.n.danmarkskort.kdtree.KDComparable;
+import dk.itu.n.danmarkskort.kdtree.KDTree;
 import dk.itu.n.danmarkskort.kdtree.KDTreeLeaf;
 import dk.itu.n.danmarkskort.models.ParsedWay;
 import dk.itu.n.danmarkskort.models.Region;
@@ -51,5 +52,10 @@ public class KDTreeLeafTest {
         assertEquals(0, leaf.getItems(regionBottomOf).size());
         assertEquals(size, leaf.getItems(regionBarelyTouching).get(0).length);
         assertEquals(size, leaf.getItems(regionReversedSurrounding).get(0).length);
+    }
+
+    @Test
+    public void testGetAllItems() {
+
     }
 }
