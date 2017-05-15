@@ -16,10 +16,21 @@ public class KDTreeLeaf<T extends KDComparable> extends KDTree<T> {
             minLat = Float.POSITIVE_INFINITY,
             maxLat = Float.NEGATIVE_INFINITY;
 
+    /**
+     * Constructor that calls another constructor with different params.
+     * This constructors param is changed from an ArrayList to an array before the actual call.
+     *
+     * @param list List to be converted into an array
+     */
     public KDTreeLeaf(ArrayList<T> list) {
         this(list.toArray(new KDComparable[list.size()]));
     }
 
+    /**
+     * Sets an array as the data of the KDTreeLeaf.
+     * Also examines all the coordinates of the elements in the array, to determine values for a bounding box.
+     * @param array
+     */
     KDTreeLeaf(KDComparable[] array) {
         data = array;
         for(KDComparable item: data) {
