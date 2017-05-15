@@ -3,6 +3,7 @@ package dk.itu.n.danmarkskort.kdtree.unittests;
 import static org.junit.Assert.*;
 
 import dk.itu.n.danmarkskort.kdtree.KDComparable;
+import dk.itu.n.danmarkskort.kdtree.KDTree;
 import dk.itu.n.danmarkskort.kdtree.KDTreeLeaf;
 import dk.itu.n.danmarkskort.models.ParsedWay;
 import dk.itu.n.danmarkskort.models.Region;
