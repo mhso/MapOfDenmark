@@ -318,7 +318,7 @@ public class RoutePage extends JPanel {
 						new RoutePlannerMain(bufferedImage, addrFrom.toStringShort(), addrTo.toStringShort(), weightEnum, routemodels);
 					}else {
 						menu.blockVisibility(true);
-			    		JOptionPane.showMessageDialog(RoutePage.this, "Unable to find route, we're sorry.", "No route", JOptionPane.INFORMATION_MESSAGE);
+			    		JOptionPane.showMessageDialog(RoutePage.this, "Unable to find route", "No route found", JOptionPane.INFORMATION_MESSAGE);
 					}
     			}
     		});
