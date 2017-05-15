@@ -213,7 +213,7 @@ public abstract class KDTree<T extends KDComparable> implements Serializable, It
      * @param sortByLon Whether we compare by longitude (true) or latitude (false) at this depth.
      * @return The nearest object, or null of none in this part of the KDTree is closer than currentShortest.
      */
-    abstract T nearest(Point2D.Float query, double currentShortest, boolean sortByLon);
+    public abstract T nearest(Point2D.Float query, double currentShortest, boolean sortByLon);
 
     /**
      * Finds the shortest distance between a query point and an array floats, that represent a (potentially)
