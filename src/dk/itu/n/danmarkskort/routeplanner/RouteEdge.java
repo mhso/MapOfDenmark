@@ -9,7 +9,7 @@ import dk.itu.n.danmarkskort.models.ReuseRouteEdgeMetaObj;
 import dk.itu.n.danmarkskort.models.ReuseStringObj;
 
 /**
- * Used with routeGraph, edges represent a road stretch from point to point, with addtional meta data information. 
+ * Used with routeGraph, edges represent a road stretch from point to point, with additional meta data information. 
  * @author Group N
  */
 public class RouteEdge implements KDComparable, Serializable {

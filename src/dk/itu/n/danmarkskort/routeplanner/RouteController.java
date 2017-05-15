@@ -219,7 +219,7 @@ public class RouteController {
 				}
 				if(count == sizeOfEdges)
 					lastModel.updateDirectionAndDescription(RouteEnum.AT_DESTINATION, lastEdge.getDescription());
-				testEdgeBounds(routeBounds, edge);
+				updateEdgeBounds(routeBounds, edge);
 				lastEdge = edge;
 				
 			}
@@ -229,7 +229,13 @@ public class RouteController {
 		return Collections.emptyList();
 	}
 	
-	private void testEdgeBounds(double[] currentRouteBounds, RouteEdge edge) {
+	/**
+	 * Check for region to capture routeplanner image.
+	 * 
+	 * @param currentRouteBounds
+	 * @param edge
+	 */
+	private void updateEdgeBounds(double[] currentRouteBounds, RouteEdge edge) {
 		RouteVertex edgeFrom = (RouteVertex) edge.getFrom();
 		RouteVertex edgeTo = (RouteVertex) edge.getTo();
 		if(edgeFrom.getX() < currentRouteBounds[0]) currentRouteBounds[0] = edgeFrom.getX();
