@@ -74,8 +74,6 @@ public class RouteController {
 	 * At last the cleanUp method, removes unused references etc.
 	 */
 	public void makeGraph(){
-		Main.log("I am makeGraph");
-
 		vertexMap = new HashMap<>();
 		for(RouteEdge edge: routeEdges) {
 			Point2D.Float from = edge.getFrom();
