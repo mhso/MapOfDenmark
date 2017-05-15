@@ -34,7 +34,7 @@ public class RegionFloat implements Serializable {
 		return new float[] {((x1 + x2) / 2), ((y1 + y2) / 2)};
 	}
 	
-	private double distance(){
+	public double distance(){
 		return Math.sqrt(Math.pow((x2 - x1), 2) + Math.pow((y2 - y1), 2));
 	}
 }

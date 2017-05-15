@@ -1,8 +1,6 @@
 package dk.itu.n.danmarkskort.address;
 
 import dk.itu.n.danmarkskort.Main;
-import dk.itu.n.danmarkskort.TimerUtil;
-import dk.itu.n.danmarkskort.Util;
 import dk.itu.n.danmarkskort.kdtree.KDTree;
 import dk.itu.n.danmarkskort.kdtree.KDTreeNode;
 import dk.itu.n.danmarkskort.models.ParsedAddress;
@@ -158,8 +156,8 @@ public class AddressController {
 	
 	
 	/**
-	 * The method is called i the parsing process, it expects and complete address.
-	 * Because it is made up of userinput we need to validate the values.
+	 * The method is called i the parsing process, it expects a complete ParsedAddress.
+	 * Because the OSM data is made by users, under no formal oversight, we need to validate the values.
 	 * 
 	 * @param addr an object build in the OSM parsing process
 	 */
@@ -210,7 +208,7 @@ public class AddressController {
 		for(Entry<String, Postcode> entry : addressHolder.postcodes.entrySet()){
 			entry.getValue().setCity(postcodeCityBestMatch.getMatch(entry.getKey()));
 		}
-		postcodeCityBestMatch.cleanup();
+		postcodeCityBestMatch.cleanUp();
 	}
 	
 	/**

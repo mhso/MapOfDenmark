@@ -7,6 +7,33 @@ import java.util.List;
 import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.Util;
 
+/**
+ * This class is almost entirely inspired by the DijkstraSP, from 
+ * Algorithms, 4th Edition by Robert Sedgewick and Kevin Wayne.
+ * The class is extended with a heuristic method, that adds the A* addition to the Dijkstra algorithm. 
+ * Names have been changed to be more readable.
+ *
+ * @author Group N
+ *
+ * 
+ *  The {@code DijkstraSP} class represents a data type for solving the
+ *  single-source shortest paths problem in edge-weighted digraphs
+ *  where the edge weights are nonnegative.
+ *  <p>
+ *  This implementation uses Dijkstra's algorithm with a binary heap.
+ *  The constructor takes time proportional to <em>E</em> log <em>V</em>,
+ *  where <em>V</em> is the number of vertices and <em>E</em> is the number of edges.
+ *  Afterwards, the {@code distTo()} and {@code hasPathTo()} methods take
+ *  constant time and the {@code pathTo()} method takes time proportional to the
+ *  number of edges in the shortest path returned.
+ *  <p>
+ *  For additional documentation,    
+ *  see <a href="http://algs4.cs.princeton.edu/44sp">Section 4.4</a> of    
+ *  <i>Algorithms, 4th Edition</i> by Robert Sedgewick and Kevin Wayne. 
+ *
+ *  @author Robert Sedgewick
+ *  @author Kevin Wayne
+ */
 public class RouteDijkstraAStar {
 	private double[] distTo;         		// distTo[v] = distance  of shortest s->v path
     private RouteEdge[] edgeTo;    			// edgeTo[v] = last edge on shortest s->v path
@@ -14,7 +41,7 @@ public class RouteDijkstraAStar {
     private WeightEnum weightEnum;
     private boolean debug = false;
     private int source, target;
-    private RouteVertex sourceVertex, targetVertex;
+    private RouteVertex targetVertex;
 
     /**
      * Computes a shortest-paths tree from the source vertex {@code s} to every other
@@ -25,7 +52,6 @@ public class RouteDijkstraAStar {
      * @throws IllegalArgumentException unless {@code 0 <= s < V}
      */
     public RouteDijkstraAStar(RouteGraph graph, RouteVertex sourceVertex, RouteVertex targetVertex, WeightEnum weightEnum) {
-    	this.sourceVertex =  sourceVertex;
     	this.targetVertex =  targetVertex;
     	this.source =  sourceVertex.getId();
     	this.target =  targetVertex.getId();
@@ -60,11 +86,16 @@ public class RouteDijkstraAStar {
         	Main.map.setRoute(edgesInRoute);
         	Main.map.repaint();
         }
-
-        // check optimality conditions
-        //assert check(graph, source);
     }
     
+    /**
+     * The method calculates a heuristic weight guess, based on the actual source vertex a the target destination.
+     * The travel speed will be include in the calculations if relevant.
+     * 
+     * @param sourceVertex actual vertex.
+     * @param maxSpeed maximum allowed to take into account.
+     * @return a heuristic weight guess from source to target.
+     */
     private double heuristics(Point2D.Float sourceVertex, int maxSpeed){
     	Point2D source = Util.toRealCoords(sourceVertex);
     	Point2D target = Util.toRealCoords(targetVertex);

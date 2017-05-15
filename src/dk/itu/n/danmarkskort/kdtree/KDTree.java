@@ -92,7 +92,8 @@ public abstract class KDTree<T extends KDComparable> implements Serializable, It
      *             KDComparable.
      * @return Array of KDComparable objects.
      */
-    static KDComparable[] listToArray(List list) {
+    @SuppressWarnings("rawtypes")
+	static KDComparable[] listToArray(List list) {
         KDComparable[] arr = new KDComparable[list.size()];
         for(int i = 0; i < arr.length; i++) arr[i] = (KDComparable) list.get(i);
         return arr;

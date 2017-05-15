@@ -15,7 +15,6 @@ import javax.swing.ImageIcon;
 
 public class RoutePartStep extends JPanel {
 	private final String STEP_DESCRIPTION, STEP_DISTANCE, STEP_POSITION;
-	private final RouteModel routeModel;
 	private Style style;
 	
 	public RoutePartStep(int stepPosition, ImageIcon stepIcon, RouteModel routeModel) {
@@ -23,7 +22,6 @@ public class RoutePartStep extends JPanel {
 		Color textColor = style.routeText();
 
 		setBackground(style.routeInnerBG());
-		this.routeModel = routeModel;
 		STEP_POSITION = stepPosition+"";
 		STEP_DESCRIPTION = routeModel.getDescription();
 		STEP_DISTANCE = makeDistance(routeModel.getDistance());

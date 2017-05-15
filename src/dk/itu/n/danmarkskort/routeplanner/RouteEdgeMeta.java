@@ -2,6 +2,12 @@ package dk.itu.n.danmarkskort.routeplanner;
 
 import java.io.Serializable;
 
+/**
+ * Class used to keep track of metadata for an edge, the advantage is that it create the opportunity to reuse metadata for 
+ * edges with equal values.
+ * @author Group N
+ *
+ */
 public class RouteEdgeMeta implements Serializable {
 	private static final long serialVersionUID = 4626171199056902618L;
 	private final short maxSpeed;

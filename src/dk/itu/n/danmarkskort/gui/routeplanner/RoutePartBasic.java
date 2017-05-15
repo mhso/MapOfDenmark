@@ -11,7 +11,6 @@ import dk.itu.n.danmarkskort.routeplanner.WeightEnum;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
-import java.awt.Font;
 
 import javax.swing.JLabel;
 import java.util.List;

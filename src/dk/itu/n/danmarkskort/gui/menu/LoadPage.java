@@ -60,7 +60,8 @@ public class LoadPage extends JPanel  {
         panelCenter.add(btnLoadNewMapFile, gbc_btnLoadNewMapFile);
     }
     
-    private void loadNewMapFile(){
+    @SuppressWarnings("unused")
+	private void loadNewMapFile(){
 		JFileChooser fc = viewFileChooser("Load View To File", "Load");
 		int fcVal = fc.showOpenDialog(this);
 		

@@ -80,7 +80,7 @@ public class PostcodeCityBestMatch {
 	/**
 	 * Freeup memory.
 	 */
-	public void cleanup(){
+	public void cleanUp(){
 		combinations = null;
 		objMatches = null;
 		
