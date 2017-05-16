@@ -127,6 +127,7 @@ public class NearestNeighbourWhiteBox {
         placeTree = new KDTreeNode<ParsedPlace>(places, false);
         neighborTest = new NearestNeighborTestTree<>();
         assertEquals(expected, neighborTest.nearest(query, infinity, false, placeTree));
+        System.out.println(neighborTest.getResultString());
         assertTrue(neighborTest.getResultString().contains(expectedBranching1) &&
         		neighborTest.getResultString().contains(expectedBranching2));
     }
