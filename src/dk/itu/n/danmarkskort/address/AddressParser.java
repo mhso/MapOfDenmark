@@ -17,10 +17,10 @@ public class AddressParser {
 	
 	private final static String PAT_POSTCODE = RGX_POSTCODE;
 	private final static String PAT_HOUSENUMBER = "\\s(?<housenumber>("+RGX_HOUSENUMBER+"\\s)|("+RGX_HOUSENUMBER+"$))";
-	private final static String PAT_STREET_HOUSENUMBER = "^(?<street>([0-9]{1,3}+\\s"+RGX_ALPHA+"+)|("+RGX_ALPHA+"+))"
+	private final static String PAT_STREET_HOUSENUMBER = "^(?<street>([0-9]{1,3}+\\.*\\s"+RGX_ALPHA+"+)|("+RGX_ALPHA+"+))"
 			+ "\\s(?<housenumber>("+RGX_HOUSENUMBER+"\\s)|("+RGX_HOUSENUMBER+"$))";
 	private final static String PAT_POSTCODE_CITY =""+RGX_POSTCODE+"\\s(?<city>"+RGX_ALPHA+"+$)";
-	private final static String PAT_STREET = "^(?<street>([0-9]{1,3}\\s"+RGX_ALPHA+"+)|("+RGX_ALPHA+"+))";
+	private final static String PAT_STREET = "^(?<street>([0-9]{1,3}\\.*\\s"+RGX_ALPHA+"+)|("+RGX_ALPHA+"+))";
 	private final static String PAT_CITY = "(?<city>"+RGX_ALPHA+"+$)";
 	private final static String PAT_FLOOR = "(?<floor>(kld.|st.|([0-9])+(\\.\\s(sal))))";
 	private final static String PAT_DOORSIDE = "(?<side>(tv.|mf.|th.))";

@@ -69,9 +69,10 @@ public class AddressController {
 	 * @return an build Address Object from the result, null if nothing found.
 	 */
 	public Address getSearchResult(String find){
+		find = AddressValidator.cleanAddress(find);
+		
 		Address addrBuild = AddressParser.parse(find, false);
 		if(addrBuild == null) return null;
-		
 			Map<String, Postcode> list;
 			// Look for exact match.
 			list = addressHolder.search(addrBuild,
@@ -141,7 +142,7 @@ public class AddressController {
 	 * @param city, address cityname
 	 */
 	private void addAddress(Point2D.Float lonLat, String street, String housenumber, String postcode, String city){
-		street = AddressValidator.insertSpaceAfterDotChar(street);
+		street = AddressValidator.insertSpaceAfterDotChar(AddressValidator.cleanExcessSpaces(street));
 		Postcode pc = addressHolder.postcodes.get(postcode);
 		if(pc == null) pc = new Postcode(postcode, city);
 		pc.addAddress(street, housenumber, lonLat);

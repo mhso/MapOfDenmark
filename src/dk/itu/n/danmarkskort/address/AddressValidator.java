@@ -49,7 +49,7 @@ public class AddressValidator {
 		return inputStr;
 	}
 
-	private static String cleanExcessSpaces(String inputStr){
+	public static String cleanExcessSpaces(String inputStr){
 		return inputStr.replaceAll("\\s{2,}"," ").trim(); //replace spaces etc.
 	}
 	
