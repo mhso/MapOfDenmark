@@ -54,6 +54,7 @@ public class AddressValidator {
 	}
 	
 	private static String removeSpaces(String inputStr){
+		if(inputStr == null) return null;
 		return inputStr.replaceAll("\\s",""); //replace spaces etc.
 	}
 
@@ -88,6 +89,10 @@ public class AddressValidator {
 				.replaceAll("\\b(["+allowedAlphaSet+"]{2})\\s", " $1. ").replaceAll("(?i)Ny.", "Ny"); //replace double letter " * " with " *. "
 	}
 	
+	public static String insertSpaceAfterDotChar(String inputStr){
+		return inputStr.replaceAll("(.\\.)(["+allowedAlphaSet+"]*)", "$1 $2");
+	}
+	
 	private static String removeEndingDot(String inputStr){
 		inputStr = cleanExcessSpaces(inputStr);
 		if(inputStr.endsWith("\\u002E")) return inputStr.substring(0, inputStr.length()-1);
@@ -119,13 +124,8 @@ public class AddressValidator {
 				.replaceAll("([0-9]{1,2})+(\\. sal) ","");
 	}
 	
-	private static final Pattern PAT_EXTRACTPOSTCODE = Pattern.compile("(.*)(RGX_POSTCODE)(.*)");
-	private static String extractPostcode(String inputStr){
-		return PAT_EXTRACTPOSTCODE.matcher(inputStr).replaceAll("$2");
-	}
-	
 	private static final Pattern PAT_FINDPOSTCODE = Pattern.compile("(.*)(?<postcode>[0-9]{4})(.*)");
-	public static String findPostcode(String inputStr){
+	public static String extractPostcode(String inputStr){
 		Matcher matcher = PAT_FINDPOSTCODE.matcher(inputStr);
 		String postcode = null;
 		while(matcher.find()){
@@ -170,7 +170,9 @@ public class AddressValidator {
 				prepStr = cleanAddressSide(prepStr);
 				prepStr = parseAddressFloor(prepStr);
 				prepStr = cleanAddressFloor(prepStr);
+				prepStr = replaceSpaceInHouseNumber(prepStr);
 				prepStr = replaceContractNumAlpha(prepStr);
+				prepStr = replaceDashSpaces(prepStr);
 				prepStr = removeEverythingAfterFirstSpace(prepStr);
 				return splitUppercaseLetters(prepStr);
 			}

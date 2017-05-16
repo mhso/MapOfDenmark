@@ -58,7 +58,7 @@ public class AddressSuggestion {
 		List<String> result = new ArrayList<String>();
 		String streetAndNumber = find;
 		String postcode = addr.getPostcode();
-		postcode = AddressValidator.findPostcode(find); //Extracts postcode if a valid is found.
+		postcode = AddressValidator.extractPostcode(find); //Extracts postcode if a valid is found.
 		
 		if(postcode != null){
 			if(debug) System.out.println("findPostcode: " + postcode);
