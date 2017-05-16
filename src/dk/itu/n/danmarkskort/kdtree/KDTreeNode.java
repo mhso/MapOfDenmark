@@ -111,6 +111,8 @@ public class KDTreeNode<T extends KDComparable> extends KDTree<T> {
 
     public float getLeftSplit() { return leftSplit; }
     public float getRightSplit() { return rightSplit; }
+    public KDTree<T> getLeftChild() { return leftChild; }
+    public KDTree<T> getRightChild() { return rightChild; }
 
     /**
      * Recursive method that checks whether any of the children of the KDTreeNode is within either the given Region's
