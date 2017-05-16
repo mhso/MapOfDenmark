@@ -2,19 +2,19 @@ package dk.itu.n.danmarkskort.gui.routeplanner;
 
 import javax.swing.JPanel;
 
-import dk.itu.n.danmarkskort.models.RouteEnum;
+
+import dk.itu.n.danmarkskort.Main;
+import dk.itu.n.danmarkskort.TimerUtil;
+import dk.itu.n.danmarkskort.gui.Style;
 import dk.itu.n.danmarkskort.models.RouteModel;
 import dk.itu.n.danmarkskort.routeplanner.WeightEnum;
 
 import java.awt.GridBagLayout;
-
-import javax.swing.JLabel;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
-import java.util.ArrayList;
+
+import javax.swing.JLabel;
 import java.util.List;
-import java.awt.Component;
-import java.awt.Font;
 
 public class RoutePartBasic extends JPanel {
 	private static final long serialVersionUID = 3150387631326599889L;
@@ -23,11 +23,16 @@ public class RoutePartBasic extends JPanel {
 	private double routeTotalDistance;
 	private int routeSeconds;
 	private RouteImageSplit routeImageSplit;
+	private Style style;
+
 	public RoutePartBasic(String routeFrom, String routeTo, WeightEnum weightEnum, JPanel parent,  List<RouteModel> routeModels) {
 		ROUTE_FROM = routeFrom;
 		ROUTE_TO = routeTo;
 		this.weightEnum = weightEnum;
 		routeImageSplit = new RouteImageSplit();
+
+		style = Main.style;
+		setBackground(style.routeInnerBG());
 		
 		initRouteSteps(parent, routeModels);
 		
@@ -39,15 +44,15 @@ public class RoutePartBasic extends JPanel {
 		setLayout(gridBagLayout);
 		
 		JLabel lblRouteIcon = new JLabel();
-		lblRouteIcon.setIcon(routeImageSplit.getStepIcon(RouteEnum.START_AT));
 		GridBagConstraints gbc_lblRouteIcon = new GridBagConstraints();
 		gbc_lblRouteIcon.insets = new Insets(0, 0, 5, 5);
 		gbc_lblRouteIcon.gridx = 0;
 		gbc_lblRouteIcon.gridy = 0;
 		add(lblRouteIcon, gbc_lblRouteIcon);
 		
-		JLabel lblHereYouGo = new JLabel("Here you go, a wonderful route has been planned");
-		lblHereYouGo.setFont(new Font("Tahoma", Font.BOLD, 17));
+		JLabel lblHereYouGo = new JLabel("Route directions");
+		lblHereYouGo.setForeground(style.routeTextLight());
+		lblHereYouGo.setFont(style.defaultHeadline());
 		GridBagConstraints gbc_lblHereYouGo = new GridBagConstraints();
 		gbc_lblHereYouGo.anchor = GridBagConstraints.WEST;
 		gbc_lblHereYouGo.insets = new Insets(0, 0, 5, 5);
@@ -56,7 +61,8 @@ public class RoutePartBasic extends JPanel {
 		add(lblHereYouGo, gbc_lblHereYouGo);
 		
 		JLabel lblFrom = new JLabel("From: "+ROUTE_FROM);
-		lblFrom.setFont(new Font("Tahoma", Font.BOLD, 18));
+		lblFrom.setForeground(style.routeText());
+		lblFrom.setFont(style.smallHeadline());
 		GridBagConstraints gbc_lblFrom = new GridBagConstraints();
 		gbc_lblFrom.anchor = GridBagConstraints.WEST;
 		gbc_lblFrom.insets = new Insets(0, 0, 5, 5);
@@ -65,7 +71,8 @@ public class RoutePartBasic extends JPanel {
 		add(lblFrom, gbc_lblFrom);
 		
 		JLabel lblTo = new JLabel("To: "+ROUTE_TO);
-		lblTo.setFont(new Font("Tahoma", Font.BOLD, 18));
+		lblTo.setForeground(style.routeText());
+		lblTo.setFont(style.smallHeadline());
 		GridBagConstraints gbc_lblTo = new GridBagConstraints();
 		gbc_lblTo.anchor = GridBagConstraints.WEST;
 		gbc_lblTo.insets = new Insets(0, 0, 5, 5);
@@ -73,23 +80,16 @@ public class RoutePartBasic extends JPanel {
 		gbc_lblTo.gridy = 2;
 		add(lblTo, gbc_lblTo);
 		
-		JLabel lblRouteDistance = new JLabel("Distance: " + makeDistance(routeTotalDistance));
-		lblRouteDistance.setFont(new Font("Tahoma", Font.BOLD, 18));
+		JLabel lblRouteDistance = new JLabel("Distance: " + makeDistance(routeTotalDistance) + 
+				" Estimated time: " + formatTime(routeSeconds));
+		lblRouteDistance.setForeground(style.routeTextLight());
+		lblRouteDistance.setFont(style.normalText());
 		GridBagConstraints gbc_lblRouteDistance = new GridBagConstraints();
 		gbc_lblRouteDistance.insets = new Insets(0, 0, 5, 0);
 		gbc_lblRouteDistance.anchor = GridBagConstraints.WEST;
 		gbc_lblRouteDistance.gridx = 2;
 		gbc_lblRouteDistance.gridy = 3;
 		add(lblRouteDistance, gbc_lblRouteDistance);
-		
-		JLabel lblRouteTime = new JLabel("Estimated Time: " + makeTime(routeSeconds));
-		lblRouteTime.setFont(new Font("Tahoma", Font.BOLD, 18));
-		GridBagConstraints gbc_lblRouteTime = new GridBagConstraints();
-		gbc_lblRouteTime.insets = new Insets(0, 0, 5, 0);
-		gbc_lblRouteTime.anchor = GridBagConstraints.WEST;
-		gbc_lblRouteTime.gridx = 2;
-		gbc_lblRouteTime.gridy = 4;
-		add(lblRouteTime, gbc_lblRouteTime);
 	}
 	
 	private void initRouteSteps(JPanel parent, List<RouteModel> routeModels){
@@ -122,22 +122,11 @@ public class RoutePartBasic extends JPanel {
 	private String makeDistance(double input){
 		if(input == -1) return "";
 		if(input / 1000 > 1.0) return String.format("%.1f", input / 1000) + " km.";
-		return String.format("%.0f", input) + " meter";
+		return String.format("%.0f", input) + " metres.";
 	}
 	
-	private String makeTime(int seconds) {
-		String result = "";
-		if(seconds > 60) {
-			int minutes = seconds/60;
-			seconds = seconds%60;		
-			if(minutes > 60) {
-				int hours = minutes/60;
-				minutes = minutes%60;
-				result = hours + ", hours, " + minutes + " minutes and " + (int)seconds + " seconds.";
-			}
-			else result = minutes + " minutes and " + (int)seconds + " seconds.";
-		}
-		else result = seconds + " seconds.";
-		return result;
+	String formatTime(int seconds) {
+		TimerUtil timer = new TimerUtil();
+		return timer.getSimpleTimeString(seconds) + ".";
 	}
 }

@@ -15,24 +15,28 @@ import dk.itu.n.danmarkskort.gui.map.MapCanvas;
 import dk.itu.n.danmarkskort.gui.map.PinPointManager;
 import dk.itu.n.danmarkskort.gui.map.multithreading.TileController;
 import dk.itu.n.danmarkskort.mapgfx.GraphicRepresentation;
+import dk.itu.n.danmarkskort.models.ParsedData;
 import dk.itu.n.danmarkskort.models.ReuseStringObj;
 import dk.itu.n.danmarkskort.models.UserPreferences;
 import dk.itu.n.danmarkskort.routeplanner.RouteController;
 
 public class Main {
+	
 	public final static String APP_NAME = "Yak Maps";
-	public final static String APP_VERSION = "0.8";
-	public final static boolean debug = true;
-	public final static boolean debugExtra = true;
+	public final static String APP_VERSION = "1.0";
+	public final static boolean debug = false;
+	public final static boolean debugExtra = false;
 	public final static boolean production = false;
 	public final static boolean buffered = true;
 	public final static boolean saveParsedAddresses = true;
 	public final static boolean nearest = true;
+	public final static boolean	screenimage = false;
 
-	public static boolean useLauncher = true;
+    public static boolean useLauncher = true;
 	public static OSMReader osmReader;
 	public static JFrame window;
-	public static OSMParser model;
+	private static OSMParser parser;
+	public static ParsedData model;
 	public static AddressController addressController;
 	public static MapCanvas map;
 	public static MainCanvas mainPanel;
@@ -41,10 +45,11 @@ public class Main {
 	public static TileController tileController;
 	public static RouteController routeController;
 	public static Style style;
-	
-	public static void main(String[] args) {
+
+    public static void main(String[] args) {
 		System.setProperty("awt.useSystemAAFontSettings","on");
 		System.setProperty("swing.aatext", "true");
+
 		userPreferences = (UserPreferences)Util.readObjectFromFile(DKConstants.USERPREF_PATH);
 		if(userPreferences == null) {
 			userPreferences = new UserPreferences();
@@ -59,13 +64,15 @@ public class Main {
 	}
 
 	public static void startup(String[] args) {
-		if(window != null) window.getContentPane().removeAll();
 		addressController  =  new AddressController();
 		osmReader = new OSMReader();
-		model = new OSMParser(osmReader);
+		model = new ParsedData();
+		parser = new OSMParser(osmReader);
 		
 		routeController = new RouteController();
 		style = new Style();
+		UIManager.put("Label.font", style.defaultLabelText());
+
 		if(args.length > 0) prepareParser(args);
 		else prepareParser(new String[]{userPreferences.getDefaultMapFile()});
 		if(userPreferences.getCurrentMapTheme() != null) {
@@ -90,10 +97,9 @@ public class Main {
 		Runnable r = new Runnable() {
 			@Override
 			public void run() {
-				osmReader.parseFile(args[0], model);
+				osmReader.parseFile(args[0], parser);
 				ReuseStringObj.clear();
-				if(window == null) main();
-		        shutdown();
+				main();
 			}
 		};
 		new Thread(r, "ParseThread").start();
@@ -102,8 +108,14 @@ public class Main {
 	public static void main() {
 		makeFrame();
 	}
-
-	public static void shutdown() {}
+	
+	public static void handleError(String errorMessage, boolean abort) {
+		if(window != null && abort) window.dispose();
+		JOptionPane.showMessageDialog(null, errorMessage, "Error", JOptionPane.ERROR_MESSAGE);
+		shutdown();
+	}
+	
+	public static void shutdown() { System.exit(0); }
 
 	public static void log(Object text) {
 		if(debug) System.out.println("[" + APP_NAME + " " + APP_VERSION + "] " + text.toString());
@@ -132,7 +144,6 @@ public class Main {
     
     public static void windowResized(ComponentEvent e) {
     	if(!tileController.isInitialized()) tileController.initialize();
-    	Main.map.setMinMaxScale();
     	Main.tileController.setTileSize(window.getWidth(), window.getHeight());
     }
     

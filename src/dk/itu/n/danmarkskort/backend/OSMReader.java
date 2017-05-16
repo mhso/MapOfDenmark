@@ -1,11 +1,9 @@
 package dk.itu.n.danmarkskort.backend;
 
 import java.io.BufferedInputStream;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -37,7 +35,6 @@ public class OSMReader {
 	public List<OSMParserListener> parserListeners = new ArrayList<OSMParserListener>();
 	private List<ProgressListener> inputListeners = new ArrayList<ProgressListener>();
 	private String currentChecksum;
-	private InputStream inputStream;
 	private String fileName;
 	
 	public OSMReader() {
@@ -59,10 +56,6 @@ public class OSMReader {
 	
 	public void addInputListener(ProgressListener listener) {
 		inputListeners.add(listener);
-	}
-	
-	public InputStream getInputStream() {
-		return inputStream;
 	}
 	
 	public String getFileName() {
@@ -87,9 +80,15 @@ public class OSMReader {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			BinaryWrapper binary = (BinaryWrapper) Util.readObjectFromFile(fileName, inputListeners);
-			Util.extractAllFromBinary(binary);
-			for(ProgressListener listener : inputListeners) listener.onSetupDone();
+			try {
+				BinaryWrapper binary = (BinaryWrapper) Util.readObjectFromFile(fileName, inputListeners);
+				Util.extractAllFromBinary(binary);
+				for(ProgressListener listener : inputListeners) listener.onSetupDone();
+			}
+			catch (ClassCastException e) {
+				Main.handleError("Invalid binary file.", true);
+			}
+			
 		}
 		else {
 			try {
@@ -106,26 +105,32 @@ public class OSMReader {
             else {
             	if (fileName.endsWith(".osm")) {
                     try {
-                    	inputStream = new FileInputStream(fileName);
+                    	FileInputStream inputStream = new FileInputStream(fileName);
                         ProgressMonitor monitor = new ProgressMonitor(inputStream);
                         for (ProgressListener inListener : inputListeners) monitor.addListener(inListener);
-                        loadOSM(new InputSource(monitor), fileName, contentHandler);
+                        loadOSM(new InputSource(monitor), contentHandler);
                     } catch (FileNotFoundException e) {
-                        e.printStackTrace();
+                        Main.handleError("File not found.", true);
+                    } catch (IOException e) {
+                        Main.handleError("Error occured when loading file.", true);
+                    } catch(SAXException e) {
+                    	Main.handleError("Could not parse OSM data.", true);
                     }
 
                 } else if (fileName.endsWith(".zip")) {
                     try {
-                    	inputStream = new FileInputStream(fileName);
+                    	FileInputStream inputStream = new FileInputStream(fileName);
                         ProgressMonitor monitor = new ProgressMonitor(inputStream);
                         ZipInputStream zip = new ZipInputStream(new BufferedInputStream(monitor));
                         zip.getNextEntry();
                         for (ProgressListener inListener : inputListeners) monitor.addListener(inListener);
-                        loadOSM(new InputSource(zip), fileName, contentHandler);
+                        loadOSM(new InputSource(zip), contentHandler);
                     } catch (FileNotFoundException e) {
-                        e.printStackTrace();
+                        Main.handleError("File not found.", true);
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        Main.handleError("Error occured when loading file.", true);
+                    } catch(SAXException e) {
+                    	Main.handleError("Could not parse OSM data.", true);
                     }
                 }
             	
@@ -153,14 +158,10 @@ public class OSMReader {
 		Main.logRamUsage();
 	}
 
-	private void loadOSM(InputSource source, String fileName, ContentHandler contentHandler) {
-		try {
-			XMLReader reader = XMLReaderFactory.createXMLReader();
-			reader.setContentHandler(contentHandler);
-			reader.parse(source);
-		} catch (SAXException | IOException e) {
-			e.printStackTrace();
-		}
+	private void loadOSM(InputSource source, ContentHandler contentHandler) throws SAXException, IOException {
+		XMLReader reader = XMLReaderFactory.createXMLReader();
+		reader.setContentHandler(contentHandler);
+		reader.parse(source);
 	}
 	
 	private boolean checkSumExists(String checkSum) {

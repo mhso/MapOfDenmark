@@ -68,12 +68,17 @@
 		<area>
 			<type name="COASTLINE"/>
 			<innercolor color="E9E9E9"/>
-			<layer layer="1"/>
+			<layer layer="0"/>
 		</area>
 		<area>
 			<type name="WATER"/>
 			<innercolor color="D5D7D8"/>
 			<layer layer="2"/>
+		</area>
+		<area>
+			<type name="RESIDENTIAL"/>
+			<innercolor color="767776"/>
+			<layer layer="1"/>
 		</area>
 		<area>
 			<type name="INDUSTRIAL"/>
@@ -102,7 +107,17 @@
 		</area>
 		<area>
 			<type name="GRASS"/>
-			<innercolor color="E2E5E0"/>
+			<innercolor color="DFDFDF"/>
+			<layer layer="2"/>
+		</area>
+		<area>
+			<type name="RAILWAY"/>
+			<innercolor color="898788"/>
+			<layer layer="2"/>
+		</area>
+		<area>
+			<type name="WETLAND"/>
+			<innercolor color="959595"/>
 			<layer layer="2"/>
 		</area>
 		<area>

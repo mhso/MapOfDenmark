@@ -3,22 +3,19 @@ package dk.itu.n.danmarkskort.gui.menu;
 import javax.swing.*;
 
 import dk.itu.n.danmarkskort.Main;
-import dk.itu.n.danmarkskort.Util;
 import dk.itu.n.danmarkskort.gui.Style;
+import dk.itu.n.danmarkskort.gui.WindowLauncher;
 import dk.itu.n.danmarkskort.gui.components.PanelFileInfo;
-import dk.itu.n.danmarkskort.models.Region;
 
 import java.awt.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import java.io.File;
-import java.text.DecimalFormat;
 
 public class LoadPage extends JPanel  {
 	private static final long serialVersionUID = -3622354925202477780L;
 	private Style style;
-	private JLabel lblCurrentmapfilename, lblCurrentmapfilesize, lblCurrentmapaddressesfound, lblCurrentmapbounds;
 	
     public LoadPage() {
     	style = Main.style;
@@ -34,7 +31,7 @@ public class LoadPage extends JPanel  {
         panelHeadline.setBackground(style.menuContentBG());
         panelPage.add(panelHeadline, BorderLayout.NORTH);
         JLabel lblPageHeadline = new JLabel("Load New Map");
-        lblPageHeadline.setFont(new Font("Tahoma", Font.BOLD, 18));
+        lblPageHeadline.setFont(style.defaultHeadline());
         panelHeadline.add(lblPageHeadline);
         
         JPanel panelSouth = new JPanel();
@@ -59,21 +56,21 @@ public class LoadPage extends JPanel  {
         gbc_btnLoadNewMapFile.gridx = 1;
         gbc_btnLoadNewMapFile.gridy = 7;
         JButton btnLoadNewMapFile = new JButton("Load new map file");
-        btnLoadNewMapFile.addActionListener(e -> loadNewMapFile());
+        btnLoadNewMapFile.addActionListener(e -> new WindowLauncher());
         panelCenter.add(btnLoadNewMapFile, gbc_btnLoadNewMapFile);
     }
     
-    private void loadNewMapFile(){
+    @SuppressWarnings("unused")
+	private void loadNewMapFile(){
 		JFileChooser fc = viewFileChooser("Load View To File", "Load");
 		int fcVal = fc.showOpenDialog(this);
 		
 		if (fcVal == JFileChooser.APPROVE_OPTION) {
 			File file = fc.getSelectedFile();
 			
+			Main.window.dispose();
 			Main.launch(new String[]{file.getAbsolutePath()});
-			Main.window.add(Main.createFrameComponents());
-			Main.window.revalidate();
-			Main.map.setupDone();
+			Main.map.isSetupDone();
         }
     }
 	
@@ -91,12 +88,4 @@ public class LoadPage extends JPanel  {
 	private void initContentPanel(JPanel panel){
     	
     }
-	
-	public void updateCurrentMapInfo(String mapfilename, String mapfilesize, String mapbounds, String mapaddressesfound){
-		lblCurrentmapfilename.setText(mapfilename);
-		lblCurrentmapfilesize.setText(mapfilesize);
-		lblCurrentmapbounds.setText(mapbounds);
-		lblCurrentmapaddressesfound.setText(mapaddressesfound);
-	}
-	
 }

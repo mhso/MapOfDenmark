@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <theme version="0.3">
-	<defaultfont fontcolor="000000" fontsize="60"/>
+	<defaultfont fontcolor="000000" fontsize="20"/>
 	<bgcolor color="18135B"/>
 	<lines>
 		<line>
@@ -83,11 +83,21 @@
 		<area>
 			<type name="COASTLINE"/>
 			<innercolor color="333333"/>
+			<layer layer="0"/>
+		</area>
+		<area>
+			<type name="RESIDENTIAL"/>
+			<innercolor color="767776"/>
+			<layer layer="1"/>
+		</area>
+		<area>
+			<type name="INDUSTRIAL"/>
+			<innercolor color="4F524F"/>
 			<layer layer="1"/>
 		</area>
 		<area>
 			<type name="BUILDING"/>
-			<innercolor color="F5F57A"/>
+			<innercolor color="D7D765"/>
 			<outercolor color="666600"/>
 			<layer layer="5"/>
 		</area>
@@ -98,8 +108,13 @@
 			<layer layer="3"/>
 		</area>
 		<area>
+			<type name="WETLAND"/>
+			<innercolor color="232C2C"/>
+			<layer layer="2"/>
+		</area>
+		<area>
 			<type name="WOOD"/>
-			<innercolor color="8BA282"/>
+			<innercolor color="768970"/>
 			<layer layer="2"/>
 		</area>
 		<area>
@@ -115,7 +130,12 @@
 		</area>
 		<area>
 			<type name="FARMLAND"/>
-			<innercolor color="B7AF93"/>
+			<innercolor color="9F9774"/>
+			<layer layer="2"/>
+		</area>
+		<area>
+			<type name="RAILWAY"/>
+			<innercolor color="353535"/>
 			<layer layer="2"/>
 		</area>
 		<area>
@@ -130,9 +150,35 @@
 			<outercolor color="000000"/>
 			<layer layer="3"/>
 		</area>
+		<area>
+			<type name="PLATFORM"/>
+			<innercolor color="5C5F5A"/>
+			<layer layer="3"/>
+		</area>
 	</areas>
 	<labels>
 		<label>
+			<type name="PLACE_NEIGHBOURHOOD"/>
+			<innercolor color="FFFFFF"/>
+			<fontsize fontsize="14"/>
+			<layer layer="5"/>
+		</label>
+		<label>
+			<type name="PLACE_CITY"/>
+			<innercolor color="FFFFFF"/>
+			<fontsize fontsize="32"/>
+			<layer layer="5"/>
+		</label>
+		<label>
+			<type name="PLACE_TOWN"/>
+			<innercolor color="FFFFFF"/>
+			<layer layer="5"/>
+		</label>
+		<label>
+			<type name="PLACE_SUBURB"/>
+			<innercolor color="FFFFFF"/>
+			<fontsize fontsize="18"/>
+			<layer layer="5"/>
 		</label>
 	</labels>
 	<icons>

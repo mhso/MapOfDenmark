@@ -33,8 +33,19 @@ public class NodeMap {
 
     public int size() { return size; }
 
+
+
     // "& allowedRange" makes sure we don't get arrayIndexOutOfBound later
-    private int getHash(long key) {
+    public int getHash(long key) {
         return Long.hashCode(key) & allowedRange;
     }
+
+    void killNextReferences() {
+        for(int i = 0; i < nodes.length; i++) {
+            if(nodes[i] != null) nodes[i].killNextReference();
+            nodes[i] = null;
+        }
+    }
+
+    public int getAllowedRange() { return allowedRange; }
 }

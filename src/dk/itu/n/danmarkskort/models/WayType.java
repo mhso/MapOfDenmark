@@ -19,6 +19,7 @@ public enum WayType {
 	// Landuse:
 	RESIDENTIAL,		// beboelsesområde
 	FOREST, 			// Skov.
+	MEADOW,				// Græs-eng.
 	INDUSTRIAL,			// Industriområde.
 	GRASS,				// Græs.
 	RETAIL,				// Købe-ting-sted.
@@ -80,6 +81,8 @@ public enum WayType {
 	HIGHWAY_PATH,
 	//UNDEFINED 			// Udefinerbar.
 
+	PLACE_CITY,				// En storby
 	PLACE_TOWN,				// En by
-	PLACE_SUBURB			// En forstad
+	PLACE_SUBURB,			// En forstad
+    BRIDGE, PLACE_NEIGHBOURHOOD		// Et nabolag
 }

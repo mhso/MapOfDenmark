@@ -8,6 +8,12 @@ import javax.swing.ImageIcon;
 
 import dk.itu.n.danmarkskort.Main;
 
+/**
+ * A Custom JButton that provides extra visual functionality. The button changes appearance to indicate
+ * whether it is on or off, like a ToggleButton.
+ * 
+ * @author Team N ITU
+ */
 public class CustomToggleButton extends CustomButton {
 	private static final long serialVersionUID = -3440659920912017562L;
 	
@@ -23,14 +29,17 @@ public class CustomToggleButton extends CustomButton {
     	addActionListener(e -> swap());
     }
     
-    public void setOn(boolean on) {
+    public void setSelected(boolean on) {
     	if(switchedOn != on) swap();
     }
     
-    public boolean isOn() {
+    public boolean isSelected() {
     	return switchedOn;
     }
     
+    /**
+     * Invoked when the button is pressed, changes the ImageIcon of the button.
+     */
     private void swap() {
     	if(switchedOn) {
     		if(Main.production)

@@ -1,0 +1,2 @@
+This file is used for the checksum test in UtilTest.java. 
+Do not modify the contents of this file.

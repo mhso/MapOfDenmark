@@ -4,67 +4,59 @@ import java.awt.geom.Point2D;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.apache.commons.lang3.StringUtils;
 
-import dk.itu.n.danmarkskort.models.RegionFloat;
 import dk.itu.n.danmarkskort.models.ReuseStringObj;
 
-public class Street implements Serializable {
+public class Street extends HashMap<String,Housenumber> implements Serializable {
 	private static final long serialVersionUID = -2943891636428003556L;
 	private String street;
-	private Map<String, Housenumber> housenumbers;
 	private Postcode postcode;
-	private RegionFloat region;
+	
+	Street(Postcode postcode, String street){
+		super(50); // Initialize housenumber map with a average size per streets.
+		this.setPostcode(postcode);
+		this.street = ReuseStringObj.make(street);
+	}
 	
 	public Postcode getPostcode() { return postcode; }
 	public void setPostcode(Postcode postcode) { this.postcode = postcode; }
 	
-	Street(Postcode postcode, String street){
-		this.setPostcode(postcode);
-		this.street = ReuseStringObj.make(street);
-		housenumbers = new HashMap<String, Housenumber>();
-		region = null;
-	}
-	
-	public int count(){ return housenumbers.size(); }
+	public int count(){ return this.size(); }
 	
 	public String getStreet() { return street.toString(); }
-	
-	public RegionFloat getRegion(){
-		if(region == null) region = genRegion();
-		return region;
-	}
-	
-	private RegionFloat genRegion(){
-		RegionFloat region =  new RegionFloat(Float.NEGATIVE_INFINITY, Float.NEGATIVE_INFINITY, Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY);
-		for(Housenumber hn : housenumbers.values()){
-				RegionFloat hnR = new RegionFloat(hn.getLon(), hn.getLat(), hn.getLon(), hn.getLat());
-				if(hnR.x1 > region.x1) region.x1 = hnR.x1;
-				if(hnR.y1 > region.y1) region.y1 = hnR.y1;
-				if(hnR.x2 < region.x2) region.x2 = hnR.x2;
-				if(hnR.y2 < region.y2) region.y2 = hnR.y2;
-		}
-		return region;
-	}
 
-	public Map<String, Housenumber> getHousenumbers() { return housenumbers; }
+	public Map<String, Housenumber> getHousenumbers() { return this; }
 	
+	/**
+	 * Used for adding a housenumber and location to the datastructur.
+	 * If housenumber exists, add location to existing housenumber object.
+	 * 
+	 * @param street
+	 * @param housenumber
+	 * @param latLon
+	 */
 	public void addHousenumber(String housenumber, Point2D.Float lonLat){
 		if(housenumber != null && lonLat != null) {
 			Housenumber hn = getHousenumber(housenumber);
 			if(hn == null) hn = new Housenumber(postcode, this, housenumber, lonLat);
-			housenumbers.put(housenumber.toLowerCase(), hn);
+			this.put(ReuseStringObj.make(housenumber.toLowerCase()), hn);
 		}
 	}
 	
 	public Housenumber getHousenumber(String housenumber) {
 		if(housenumber == null) return null;
-		return housenumbers.get(housenumber.toLowerCase());
+		return this.get(housenumber.toLowerCase());
 	}
 
-	
+	/**
+	 * Narrows down a map input by checking if housenumbers key contains the find value.
+	 * 
+	 * @param input map of housenumbers to search in.
+	 * @param find search string
+	 * @return a map with housenumbers matching.
+	 */
 	private Map<String, Housenumber> housenumberContains(Map<String, Housenumber> input, String housenumber){
 		Map<String, Housenumber> result = new HashMap<String, Housenumber>();
 		if(housenumber == null) return result;
@@ -76,6 +68,13 @@ public class Street implements Serializable {
 		return result;
 	}
 	
+	/**
+	 * Narrows down a map input by checking if housenumbers key starts with find value.
+	 * 
+	 * @param input map of housenumbers to search in.
+	 * @param find search string
+	 * @return a map with housenumbers matching.
+	 */
 	private Map<String, Housenumber> housenumberStartsWith(Map<String, Housenumber> input, String housenumber){
 		Map<String, Housenumber> result = new HashMap<String, Housenumber>();
 		if(housenumber == null) return result;
@@ -87,6 +86,13 @@ public class Street implements Serializable {
 		return result;
 	}
 	
+	/**
+	 * Narrows down a map input by checking if housenumber key is within LevenshteinDistance 1-2 of the find value.
+	 * 
+	 * @param input map of housenumbers to search in.
+	 * @param find search string
+	 * @return a map with housenumbers matching.
+	 */
 	private Map<String, Housenumber> housenumberLevenshteinDistance(Map<String, Housenumber> input, String housenumber){
 		Map<String, Housenumber> result = new HashMap<String, Housenumber>();
 		int minValue = 0, maxValue = 3;
@@ -100,6 +106,14 @@ public class Street implements Serializable {
 		return result;
 	}
 	
+	/**
+	 * Method is used to make the search for housenumbers, by criteria for all parts.
+	 * 
+	 * @param input map of housenumbers to search in.
+	 * @param addr, address object with search values.
+	 * @param streetType
+	 * @return a map with housenumbers matching.
+	 */
 	public Map<String, Housenumber> search(Map<String, Housenumber> input, Address addr, SearchEnum housenumberType){
 		Map<String, Housenumber> result = new HashMap<String, Housenumber>();
 			switch(housenumberType){

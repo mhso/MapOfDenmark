@@ -10,6 +10,9 @@ import java.util.List;
 
 import javax.swing.Timer;
 
+import dk.itu.n.danmarkskort.Main;
+import dk.itu.n.danmarkskort.Util;
+
 /**
  * This class extends <code>FilteredInputStream</code> to provide ways to monitor the progress of an <code>InputStream</code>.
  * A class can implement <code>ProgressListener</code> to receive notifications from the Input Stream. <p>
@@ -22,11 +25,12 @@ import javax.swing.Timer;
  */
 public class ProgressMonitor extends FilterInputStream {
 	private int currentPct;
-	private int totalByteCount;
-	private int currentByteCount;
-	private int byteCountStamp;
+	private long totalByteCount;
+	private long currentByteCount;
+	private long byteCountStamp;
 	private long timeStamp;
 	private byte timeStampDelay;
+	private List<Integer> remainingTimeArr = new ArrayList<>(5);
 	private boolean streamStarted;
 	private List<ProgressListener> listeners = new ArrayList<>();
 	private ProgressTimer timer;
@@ -38,14 +42,10 @@ public class ProgressMonitor extends FilterInputStream {
 	 */
 	public ProgressMonitor(InputStream in) {
 		super(in);
-		try {
-			totalByteCount = super.available();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		totalByteCount = Util.getFileSize(Main.osmReader.getFileName());
 		timer = new ProgressTimer(10);
 	}
-
+	
 	public void addListener(ProgressListener isl) {
 		listeners.add(isl);
 	}
@@ -130,10 +130,14 @@ public class ProgressMonitor extends FilterInputStream {
 						for(ProgressListener listener : listeners) listener.onPercent((int)pct-currentPct);
 						currentPct = (int)pct;
 						
-						int bytesPassed = currentByteCount-byteCountStamp;
+						long bytesPassed = currentByteCount-byteCountStamp;
 						if(bytesPassed > 0) {
-							for(ProgressListener listener : listeners) 
-								listener.getTimeRemaining((int)(((totalByteCount-currentByteCount)/bytesPassed)*(System.currentTimeMillis()-timeStamp)));
+							remainingTimeArr.add((int)(((totalByteCount-currentByteCount)/bytesPassed)*
+									(System.currentTimeMillis()-timeStamp)));
+							int remainingSum = 0;
+							for(int i : remainingTimeArr) remainingSum += i;
+							for(ProgressListener listener : listeners) listener.getTimeRemaining(remainingSum/remainingTimeArr.size());
+							if(remainingTimeArr.size() >= 5) remainingTimeArr.remove(0);
 						}
 					}
 					timeStampDelay++;

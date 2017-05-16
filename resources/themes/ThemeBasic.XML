@@ -98,17 +98,33 @@
 			<lineproperties linewidth="8"/>
 			<layer layer="2"/>
 		</line>
+		<line>
+			<type name="PIER"/>
+			<innercolor color="EEEEEE"/>
+			<lineproperties linewidth="30"/>
+			<layer layer="2"/>
+		</line>
 	</lines>
 	<areas>
 		<area>
 			<type name="COASTLINE"/>
 			<innercolor color="F0F0E6"/>
-			<layer layer="1"/>
+			<layer layer="0"/>
 		</area>
 		<area>
 			<type name="WATER"/>
 			<innercolor color="6EC0FF"/>
 			<layer layer="2"/>
+		</area>
+		<area>
+			<type name="BRIDGE"/>
+			<innercolor color="B8B8B8"/>
+			<layer layer="2"/>
+		</area>
+		<area>
+			<type name="MEADOW"/>
+			<innercolor color="DCFCC1"/>
+			<layer layer="1"/>
 		</area>
 		<area>
 			<type name="RESIDENTIAL"/>
@@ -157,6 +173,11 @@
 			<layer layer="2"/>
 		</area>
 		<area>
+			<type name="WETLAND"/>
+			<innercolor color="94B983"/>
+			<layer layer="2"/>
+		</area>
+		<area>
 			<type name="WOOD"/>
 			<innercolor color="ADD19E"/>
 			<layer layer="2"/>
@@ -195,12 +216,22 @@
 	</areas>
 	<labels>
 		<label>
+			<type name="PLACE_NEIGHBOURHOOD"/>
+			<fontsize fontsize="14"/>
+			<layer layer="5"/>
+		</label>
+		<label>
+			<type name="PLACE_CITY"/>
+			<fontsize fontsize="32"/>
+			<layer layer="5"/>
+		</label>
+		<label>
 			<type name="PLACE_TOWN"/>
 			<layer layer="5"/>
 		</label>
 		<label>
 			<type name="PLACE_SUBURB"/>
-			<outercolor color="FFFFFF"/>
+			<fontsize fontsize="18"/>
 			<layer layer="5"/>
 		</label>
 	</labels>

@@ -1,7 +1,5 @@
 package dk.itu.n.danmarkskort.models;
 
-import dk.itu.n.danmarkskort.kdtree.KDTree;
-
 import java.awt.*;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
@@ -13,12 +11,24 @@ public class ParsedRelation extends ParsedWay {
     private ArrayList<ParsedWay> inners;
     private ArrayList<ParsedWay> outers;
 
+    /**
+     * Constructor which takes a long id, and instantiates the two ArrayLists for outer members and inner members.
+     * Members are ParsedWays, which contain geographical information, that forms various shapes.
+     *
+     * @param id ID from the OSM data.
+     */
     public ParsedRelation(long id) {
         super(id);
         inners = new ArrayList<>();
         outers = new ArrayList<>();
     }
 
+    /**
+     * Adds a ParsedWay to one of the two ArrayLists, in accordance with its role.
+     *
+     * @param item The items to be stored.
+     * @param role The role which the item is defined with in the OSM data.
+     */
     public void addMember(ParsedWay item, String role) {
         if(role.equals("outer")) {
             outers.add(item);
@@ -26,6 +36,9 @@ public class ParsedRelation extends ParsedWay {
         else inners.add(item);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void deleteOldRefs() {
         super.deleteOldRefs();
@@ -33,6 +46,11 @@ public class ParsedRelation extends ParsedWay {
         for(ParsedItem outer: outers) outer.deleteOldRefs();
     }
 
+    /**
+     * Creates a new array, with the size of the size method. Iterates over both its inner and outer collection, and
+     * adds their Point2D.Float references to the new array.
+     * @return The array created and populated.
+     */
     @Override
     public Point2D.Float[] getNodes() {
         Point2D.Float[] nodeArr = new Point2D.Float[size()];
@@ -46,7 +64,11 @@ public class ParsedRelation extends ParsedWay {
         return nodeArr;
     }
 
-
+    /**
+     * Creates a new array, with the size of the size method. Iterates over both its inner and outer collection, and
+     * adds their float references to the new array.
+     * @return The array created and populated.
+     */
     @Override
     public float[] getCoords() {
         float[] coordArr = new float[size()];
@@ -60,6 +82,10 @@ public class ParsedRelation extends ParsedWay {
         return coordArr;
     }
 
+    /**
+     * {@inheritDoc}
+     * @return
+     */
     @Override
     public Shape getShape() {
         Path2D path = new Path2D.Float(Path2D.WIND_EVEN_ODD);
@@ -68,16 +94,15 @@ public class ParsedRelation extends ParsedWay {
         return path;
     }
 
-    /*
-    * Connects outer ways into a coherent polygon.
-    * Some ways has to have their coords reversed.
-    * These reversed paths have to be created as a new instance of
-    * way, as they would otherwise mess with themselves or other
-    * relations, where they don't have to be reversed.
+    /**
+     * Connects the ParsedWays found in the 'outer'-Arraylist, into a coherent polygon.
+     *
+     * Some ways has to have their coords reversed.
+     *
+     * These reversed paths have to be created as a new instance of
+     * way, as they would otherwise mess with themselves or other
+     * relations, where they don't have to be reversed.
      */
-
-    // FIXME: check if there should both be a lastNode and firstNode to check on (ie. 5 ifs in the double for loop)
-    // FIXME: also, not sure if inners and nothingerners should also be connected like this?
     public void correctOuters() {
         if(outers.size() == 0) return;
         HashMap<Point2D, ParsedWay> tempWayMap = new HashMap<>();
@@ -120,6 +145,9 @@ public class ParsedRelation extends ParsedWay {
         outers = corrected;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void nodesToCoords() {
         if(nodes != null) super.nodesToCoords();
@@ -127,6 +155,10 @@ public class ParsedRelation extends ParsedWay {
         for(ParsedItem outer: outers) outer.nodesToCoords();
     }
 
+    /**
+     * {@inheritDoc}
+     * @return
+     */
     @Override
     public Point2D.Float getFirstNode() {
         if(nodes != null && nodes.length > 0) return nodes[0];
@@ -147,6 +179,10 @@ public class ParsedRelation extends ParsedWay {
                 + ", itemAmount=" + (inners.size() + outers.size()) + "]";
     }
 
+    /**
+     * {@inheritDoc}
+     * @return
+     */
     @Override
     public int size() {
         int size = 0;
@@ -154,4 +190,8 @@ public class ParsedRelation extends ParsedWay {
         for(ParsedItem outer: outers) size += outer.size();
         return size;
     }
+
+    public ArrayList<ParsedWay> getOuters() { return outers; }
+    public ArrayList<ParsedWay> getInners() { return inners; }
+
 }

@@ -9,6 +9,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 
+/**
+ * A Class that provides additional visual functionality to a JButton by providing transparency methods for
+ * an ImageIcon.
+ * 
+ * @author Team N ITU
+ */
 public class CustomButton extends JButton {
 	private static final long serialVersionUID = 8833927450795701033L;
 	

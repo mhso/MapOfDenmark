@@ -4,75 +4,86 @@ import java.awt.geom.Point2D;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.apache.commons.lang3.StringUtils;
 
-import dk.itu.n.danmarkskort.models.RegionFloat;
 import dk.itu.n.danmarkskort.models.ReuseStringObj;
 
-public class Postcode implements Serializable {
+/**
+ * Class represent a postcode, with cityname, and a list/map of streets
+ * includes search methods for streets.
+ * @author Group N
+ *
+ */
+public class Postcode  extends HashMap<String,Street> implements Serializable {
 	private static final long serialVersionUID = 2217407726502936291L;
 	private String postcode, city;
-	private Map<String, Street> streets;
-	private RegionFloat region;
 	
 	Postcode(String postcode, String city){
-		this.postcode = ReuseStringObj.make(postcode);
+		super(200);
+		this.postcode = ReuseStringObj.make(postcode); // Reuse string object, for space saving
 		setCity(city);
-		streets = new HashMap<String, Street>();
 	}
 
 	public String getCity() { return city.toString(); }
 	public void setCity(String city) { this.city = ReuseStringObj.make(city); }
 	
-	public RegionFloat getRegion(){
-		if(region == null) region = genRegion();
-		return region;
-	}
-
-	private RegionFloat genRegion(){
-		RegionFloat region =  new RegionFloat(Float.NEGATIVE_INFINITY, Float.NEGATIVE_INFINITY, Float.MAX_VALUE, Float.MAX_VALUE);
-		for(Street st : streets.values()){
-			RegionFloat stR = st.getRegion();
-				if(stR.x1 > region.x1) region.x1 = stR.x1;
-				if(stR.y1 > region.y1) region.y1 = stR.y1;
-				if(stR.x2 < region.x2) region.x2 = stR.x2;
-				if(stR.y2 < region.y2) region.y2 = stR.y2;
-		}
-		return region;
-	}
-	
+	/**
+	 * Return a count of all housenumbers with in all streets.
+	 * @return count of all housenumbers.
+	 */
 	public int count(){
 		int size = 0;
-		for(Street st : streets.values()) size += st.count();
+		for(Street st : this.values()) size += st.count();
 		return size;
 	}
 	
+	/**
+	 * Used for adding a new street, to the datastructur.
+	 * 
+	 * @param street
+	 */
 	public void addStreet(String street){
 		Street newStreet = getStreet(street);
-		if(newStreet == null) newStreet = new Street(this, street);
-		streets.put(street.toLowerCase(), newStreet);
+		if(newStreet == null) {
+			newStreet = new Street(this, street);
+			this.put(ReuseStringObj.make(street.toLowerCase()), newStreet);
+		}
 	}
 	
+	/**
+	 * Used for adding a street, housenumber and location to the datastructur.
+	 * If street exists, add housenumber to existing street object.
+	 * 
+	 * @param street
+	 * @param housenumber
+	 * @param latLon
+	 */
 	public void addAddress(String street, String housenumber, Point2D.Float latLon){
 		if(street != null && housenumber != null && latLon != null){
 			Street st = getStreet(street);
 			if(st == null) st = new Street(this, street);
 			st.addHousenumber(housenumber, latLon);
-			streets.put(street.toLowerCase(), st);
+			this.put(ReuseStringObj.make(street.toLowerCase()), st);
 		}
 	}
 
-	public Map<String, Street> getStreets() { return streets; }
+	public Map<String, Street> getStreets() { return this; }
 	
 	public Street getStreet(String street) {
 		if(street == null) return null;
-		return streets.get(street.toLowerCase());
+		return this.get(street.toLowerCase());
 	}
 
 	public String getPostcode() { return postcode.toString(); }
 	
+	/**
+	 * Narrows down a map input by checking if streets key contains the find value.
+	 * 
+	 * @param input map of streets to search in.
+	 * @param find search string
+	 * @return a map with streets matching.
+	 */
 	private Map<String, Street> streetContains(Map<String, Street> input, String street){
 		Map<String, Street> result = new HashMap<String, Street>();
 		if(street == null) return result;
@@ -84,26 +95,40 @@ public class Postcode implements Serializable {
 		return result;
 	}
 	
-	private Map<String, Street> streetStartsWith(Map<String, Street> input, String street){
+	/**
+	 * Narrows down a map input by checking if streets key starts with find value.
+	 * 
+	 * @param input map of streets to search in.
+	 * @param find search string
+	 * @return a map with streets matching.
+	 */
+	private Map<String, Street> streetStartsWith(Map<String, Street> input, String find){
 		Map<String, Street> result = new HashMap<String, Street>();
-		if(street == null) return result;
+		if(find == null) return result;
 		for(Entry<String, Street> entry : input.entrySet()){
-			if(entry.getKey().startsWith(street.toLowerCase())) {
+			if(entry.getKey().startsWith(find.toLowerCase())) {
 				result.put(entry.getKey(), entry.getValue());
 			}
 		}
 		return result;
 	}
 	
-	private Map<String, Street> streetLevenshteinDistance(Map<String, Street> input, String street){
+	/**
+	 * Narrows down a map input by checking if street key is within LevenshteinDistance 1-2 of the find value.
+	 * 
+	 * @param input map of streets to search in.
+	 * @param find search string
+	 * @return a map with streets matching.
+	 */
+	private Map<String, Street> streetLevenshteinDistance(Map<String, Street> input, String find){
 		Map<String, Street> result = new HashMap<String, Street>();
 		int minValue = 0, maxValue = 3;
-		if(street == null) return result;
+		if(find == null) return result;
 		for(Entry<String, Street> entry : input.entrySet()){
 			try {
-				String matchKey = entry.getKey().substring(0, street.length());
-				if(StringUtils.getLevenshteinDistance(matchKey, street.toLowerCase()) > minValue &&
-						StringUtils.getLevenshteinDistance(matchKey, street.toLowerCase()) < maxValue) {
+				String matchKey = entry.getKey().substring(0, find.length());
+				if(StringUtils.getLevenshteinDistance(matchKey, find.toLowerCase()) > minValue &&
+						StringUtils.getLevenshteinDistance(matchKey, find.toLowerCase()) < maxValue) {
 					result.put(entry.getKey(), entry.getValue());
 				}
 			} catch (StringIndexOutOfBoundsException e) {
@@ -113,6 +138,14 @@ public class Postcode implements Serializable {
 		return result;
 	}
 	
+	/**
+	 * Method is used to make the search for streets, by criteria for all parts.
+	 * 
+	 * @param input map of streets to search in.
+	 * @param addr, address object with search values.
+	 * @param streetType
+	 * @return a map with streets matching.
+	 */
 	public Map<String, Street> search(Map<String, Street> input, Address addr, SearchEnum streetType){
 		Map<String, Street> result = new HashMap<String, Street>();
 			switch(streetType){

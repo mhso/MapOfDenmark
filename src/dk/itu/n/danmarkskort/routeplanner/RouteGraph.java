@@ -2,27 +2,52 @@ package dk.itu.n.danmarkskort.routeplanner;
 
 import java.io.Serializable;
 
+/**
+ *  The {@code Graph} class represents an undirected graph of vertices
+ *  named 0 through <em>V</em> – 1.
+ *  It supports the following two primary operations: add an edge to the graph,
+ *  iterate over all of the vertices adjacent to a vertex. It also provides
+ *  methods for returning the number of vertices <em>V</em> and the number
+ *  of edges <em>E</em>. Parallel edges and self-loops are permitted.
+ *  By convention, a self-loop <em>v</em>-<em>v</em> appears in the
+ *  adjacency list of <em>v</em> twice and contributes two to the degree
+ *  of <em>v</em>.
+ *  <p>
+ *  This implementation uses an adjacency-lists representation, which 
+ *  is a vertex-indexed array of {@link Bag} objects.
+ *  All operations take constant time (in the worst case) except
+ *  iterating over the vertices adjacent to a given vertex, which takes
+ *  time proportional to the number of such vertices.
+ *  <p>
+ *  For additional documentation, see <a href="http://algs4.cs.princeton.edu/41graph">Section 4.1</a>
+ *  of <i>Algorithms, 4th Edition</i> by Robert Sedgewick and Kevin Wayne.
+ *
+ *  @author Robert Sedgewick
+ *  @author Kevin Wayne
+ */
+
 public class RouteGraph implements Serializable {
 	private static final long serialVersionUID = 7359475752602187631L;
 	private static final String NEWLINE = System.getProperty("line.separator");
 	private final int numOfVertices;			// number of vertices in this digraph
 	private int numOfEdges;						// number of edges in this digraph
-	private Bag<RouteEdge>[] adjacent;			// adj[v] = adjacency list for vertex v
-	private int[] indegree;						// indegree[v] = indegree of vertex v
+	private ResizingArrayBag<RouteEdge>[] adjacent;			// adj[v] = adjacency list for vertex v
+	//private int[] indegree;						// indegree[v] = indegree of vertex v
 	
 	/**
      * Initializes an empty edge-weighted digraph with {@code V} vertices and 0 edges.
      * @param  V the number of vertices
      * @throws IllegalArgumentException if {@code V < 0}
      */
-    public RouteGraph(int numOfVertices) {
+    @SuppressWarnings("unchecked")
+	public RouteGraph(int numOfVertices) {
         if (numOfVertices < 0) throw new IllegalArgumentException("Number of vertices in a Digraph must be nonnegative");
         this.numOfVertices = numOfVertices;
         numOfEdges = 0;
-        this.indegree = new int[numOfVertices];
-        adjacent = (Bag<RouteEdge>[]) new Bag[numOfVertices];
+        //this.indegree = new int[numOfVertices];
+        adjacent = (ResizingArrayBag<RouteEdge>[]) new ResizingArrayBag[numOfVertices];
         
-        for (int i= 0; i < numOfVertices; i++) adjacent[i] = new Bag<RouteEdge>();
+        for (int i= 0; i < numOfVertices; i++) adjacent[i] = new ResizingArrayBag<RouteEdge>();
     }
 
     /**
@@ -55,7 +80,7 @@ public class RouteGraph implements Serializable {
         validateVertex(fromId);
         validateVertex(toId);
         adjacent[fromId].add(edge);
-        indegree[toId]++;
+        //indegree[toId]++;
         numOfEdges++;
     }
 
@@ -90,10 +115,10 @@ public class RouteGraph implements Serializable {
      * @return the indegree of vertex {@code v}
      * @throws IllegalArgumentException unless {@code 0 <= v < V}
      */
-    public int indegree(int vertexId) {
-        validateVertex(vertexId);
-        return indegree[vertexId];
-    }
+//    public int indegree(int vertexId) {
+//        validateVertex(vertexId);
+//        return indegree[vertexId];
+//    }
 
     /**
      * Returns all directed edges in this edge-weighted digraph.
@@ -102,7 +127,7 @@ public class RouteGraph implements Serializable {
      * @return all edges in this edge-weighted digraph, as an iterable
      */
     public Iterable<RouteEdge> edges() {
-        Bag<RouteEdge> list = new Bag<RouteEdge>();
+    	ResizingArrayBag<RouteEdge> list = new ResizingArrayBag<RouteEdge>();
         for (int vertexId = 0; vertexId < numOfVertices; vertexId++) {
             for (RouteEdge edge : adjacent(vertexId)) {
                 list.add(edge);
@@ -129,3 +154,27 @@ public class RouteGraph implements Serializable {
         return sb.toString();
     }
 }
+
+/******************************************************************************
+ *  Copyright 2002-2016, Robert Sedgewick and Kevin Wayne.
+ *
+ *  This file is part of algs4.jar, which accompanies the textbook
+ *
+ *      Algorithms, 4th edition by Robert Sedgewick and Kevin Wayne,
+ *      Addison-Wesley Professional, 2011, ISBN 0-321-57351-X.
+ *      http://algs4.cs.princeton.edu
+ *
+ *
+ *  algs4.jar is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  algs4.jar is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with algs4.jar.  If not, see http://www.gnu.org/licenses.
+ ******************************************************************************/

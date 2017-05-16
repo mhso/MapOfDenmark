@@ -6,7 +6,9 @@ import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JTextField;
+import javax.swing.RepaintManager;
 
+import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.gui.DropdownAddressSearch;
 
 public class SearchField extends JTextField {
@@ -38,7 +40,6 @@ public class SearchField extends JTextField {
 					}
 				}
 			}
-        	
         });
 	}
 }

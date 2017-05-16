@@ -8,7 +8,6 @@ import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.Util;
 import dk.itu.n.danmarkskort.gui.components.CustomDropdown;
 import dk.itu.n.danmarkskort.gui.map.PinPoint;
-import dk.itu.n.danmarkskort.gui.menu.RoutePage;
 
 public class DropdownRightClick extends CustomDropdown {
 	private static final long serialVersionUID = -3776480204582099583L;
@@ -35,16 +34,16 @@ public class DropdownRightClick extends CustomDropdown {
 		}
 		else if(text.equals("Route from here")) {
 			Main.mainPanel.getDropMenu().showDropdown();
-			Point2D mousePoint = Util.toRealCoords(Main.map.getGeographicalMousePosition());
+			Point2D mousePoint = Util.toRealCoords(getGeographical());
 			Main.mainPanel.getDropMenu().openRoutePage((float)mousePoint.getY() + ", " + (float)mousePoint.getX(), null, true);
 		}
 		else if(text.equals("Route to here")) {
 			Main.mainPanel.getDropMenu().showDropdown();
-			Point2D mousePoint = Util.toRealCoords(Main.map.getGeographicalMousePosition());
+			Point2D mousePoint = Util.toRealCoords(getGeographical());
 			Main.mainPanel.getDropMenu().openRoutePage(null, (float)mousePoint.getY() + ", " + (float)mousePoint.getX(), true);
 		} else if(text.equals("Find tweets near this position")) {
-			Point2D mousePoint = Util.toRealCoords(Main.map.getGeographicalMousePosition());
-			String url = "https://twitter.com/search?l=&q=near%3A%22" + mousePoint.getY() + "%2C" + mousePoint.getX() + "%20%22%20within%3A15mi&src=typd";
+			Point2D mousePoint = Util.toRealCoords(getGeographical());
+			String url = "https://twitter.com/search?l=&q=near%3A%22" + mousePoint.getY() + "%2C" + mousePoint.getX() + "%20%22%20within%3A1km&src=typd";
 			Util.openWebpage(url);
 		}
 	}

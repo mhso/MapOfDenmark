@@ -6,6 +6,7 @@ import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.gui.Style;
 
 import java.awt.*;
+
 import javax.swing.border.TitledBorder;
 
 public class AboutUsPage extends JPanel  {
@@ -25,7 +26,7 @@ public class AboutUsPage extends JPanel  {
         panelHeadline.setBackground(style.menuContentBG());
         panelPage.add(panelHeadline, BorderLayout.NORTH);
         JLabel lblPageHeadline = new JLabel("About");
-        lblPageHeadline.setFont(new Font("Tahoma", Font.BOLD, 18));
+        lblPageHeadline.setFont(style.defaultHeadline());
         panelHeadline.add(lblPageHeadline);
         
         JPanel panelSouth = new JPanel();
@@ -94,7 +95,7 @@ public class AboutUsPage extends JPanel  {
         gbc_lblDate.gridy = 3;
         panel.add(lblDate, gbc_lblDate);
         
-        JLabel lblAppdate = new JLabel("03.20.2017");
+        JLabel lblAppdate = new JLabel("05.08.2017");
         GridBagConstraints gbc_lblAppdate = new GridBagConstraints();
         gbc_lblAppdate.anchor = GridBagConstraints.WEST;
         gbc_lblAppdate.insets = new Insets(0, 0, 5, 0);
@@ -111,9 +112,24 @@ public class AboutUsPage extends JPanel  {
         panel.add(lblDescription, gbc_lblDescription);
         
         String appDescription = "<html>This application is made as part of our education"
-        		+ "<br>as software developers, its includes a map of Denmark,"
+        		+ "<br>as software developers at IT-University Copenhagen, "
+        		+ "<br>it includes a map of Denmark."
         		+ "<br>Key features:"
-        		+ "<br>Zoom/pan, search, routeplanning and print.";
+        		+ "<br>Zoom/pan, themes, address-search, routeplanning."
+        		+ "<br>"
+        		+ "<br>Thanks to:"
+        		+ "<br>- Apache Commons (https://commons.apache.org) for their"
+        		+ "<br>  Levehnstein implementation as well as inspiration for "
+        		+ "<br>  our loading screen from their CountingInputStream."
+        		+ "<br>- Darryl Burke for his AlphaImageIcon implementation:"
+        		+ "<br>  https://tips4java.wordpress.com/2010/08/22/alpha-icons."
+        		+ "<br>- 'user1079877' from Stackoverflow for his JAR entries"
+        		+ "<br>  stream."
+        		+ "<br>- Princeton for user of their IndexMinPriorityQueue, "
+        		+ "<br>  ResizingArrayBag, Stack, WeightedDigraph and Djikstra "
+        		+ "<br>  implementations."
+        		+ "<br>- Finally, a big thank you to openstreetmap.org for their"
+        		+ "<br>  great (and free) data and mapping system.";
         
         JLabel lblAppDescription = new JLabel(appDescription);
         GridBagConstraints gbc_lblNewLabel = new GridBagConstraints();
@@ -131,7 +147,7 @@ public class AboutUsPage extends JPanel  {
         gbc_lblTeamName.gridy = 6;
         panel.add(lblTeamName, gbc_lblTeamName);
         
-        JLabel lblTeamAi = new JLabel("Team AI");
+        JLabel lblTeamAi = new JLabel("Group N");
         GridBagConstraints gbc_lblTeamAi = new GridBagConstraints();
         gbc_lblTeamAi.anchor = GridBagConstraints.WEST;
         gbc_lblTeamAi.insets = new Insets(0, 0, 5, 0);

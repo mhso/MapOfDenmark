@@ -5,7 +5,7 @@ import java.awt.geom.Point2D;
 public class RouteVertex extends Point2D.Float {
 	private final int id;
 	
-	RouteVertex(int id, Point2D.Float point){
+	public RouteVertex(int id, Point2D.Float point){
 		super(point.x, point.y);
 		this.id = id;
 	}
@@ -14,10 +14,5 @@ public class RouteVertex extends Point2D.Float {
 	
 	public String toString(){
 		return "Id: " + id + ", " + "Point[" + x + ", " + y + "]";
-	}
-	
-	public boolean isEqualPoint(Point2D.Float to){
-		if(x == to.x && y == to.y) return true;
-		return false;
 	}
 }

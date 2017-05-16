@@ -1,6 +1,5 @@
 package dk.itu.n.danmarkskort.kdtree;
 
-import dk.itu.n.danmarkskort.models.ParsedNode;
 import dk.itu.n.danmarkskort.models.Region;
 
 import java.awt.geom.Point2D;
@@ -17,10 +16,21 @@ public class KDTreeLeaf<T extends KDComparable> extends KDTree<T> {
             minLat = Float.POSITIVE_INFINITY,
             maxLat = Float.NEGATIVE_INFINITY;
 
+    /**
+     * Constructor that calls another constructor with different params.
+     * This constructors param is changed from an ArrayList to an array before the actual call.
+     *
+     * @param list List to be converted into an array
+     */
     public KDTreeLeaf(ArrayList<T> list) {
         this(list.toArray(new KDComparable[list.size()]));
     }
 
+    /**
+     * Sets an array as the data of the KDTreeLeaf.
+     * Also examines all the coordinates of the elements in the array, to determine values for a bounding box.
+     * @param array
+     */
     KDTreeLeaf(KDComparable[] array) {
         data = array;
         for(KDComparable item: data) {
@@ -41,8 +51,7 @@ public class KDTreeLeaf<T extends KDComparable> extends KDTree<T> {
 
     @Override
     List<KDComparable[]> getItems(Region reg, boolean sortByLon) {
-        if(overlaps(reg)) return getAllItems();
-        else return Collections.emptyList();
+        return getItems(reg);
     }
 
     @Override
@@ -51,28 +60,31 @@ public class KDTreeLeaf<T extends KDComparable> extends KDTree<T> {
         arrList.add(data);
         return arrList;
     }
+
+    public int nodeSize() { return 0; }
+
+    public int leafSize() { return 1; }
     
-    protected int leafSize(int currentSize) {
-    	return ++currentSize;
-    }
+    public int size() { return data.length; }
+
+    public boolean isSortingByLon(int currentDepth, int depth) { return currentDepth%2 == 0; }
     
-    protected int size(int currentSize) {
-    	return currentSize += data.length;
+    protected int nodesAndLeafsAtDepth(int targetDepth, int currentDepth) {
+    	currentDepth++;
+    	if(targetDepth == currentDepth) return 1;
+    	return 0;
     }
 
-    protected int nodeSizeAt(int depth, int currentDepth, int currentSize) {
-    	currentDepth++;
-    	if(depth == currentDepth) {
-    		currentSize++;
-    	}
-    	return currentSize;
-    }
-    
     private boolean overlaps(Region reg) {
-        return minLon < reg.x1 + reg.getWidth() &&
-                minLon + (maxLon - minLon) > reg.x1 &&
-                minLat < reg.y1 + reg.getHeight() &&
-                minLat + (maxLat - minLat) > reg.y1;
+        double minX = reg.x1 < reg.x2 ? reg.x1 : reg.x2;
+        double minY = reg.y1 < reg.y2 ? reg.y1 : reg.y2;
+        double width = Math.abs(reg.getWidth());
+        double height = Math.abs(reg.getHeight());
+
+        return minLon <= minX + width &&
+                minLon + (maxLon - minLon) >= minX &&
+                minLat <= minY + height &&
+                minLat + (maxLat - minLat) >= minY;
     }
 
     @SuppressWarnings("unchecked")

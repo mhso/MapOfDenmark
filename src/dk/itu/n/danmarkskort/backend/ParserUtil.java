@@ -3,7 +3,6 @@ package dk.itu.n.danmarkskort.backend;
 import dk.itu.n.danmarkskort.Main;
 import dk.itu.n.danmarkskort.models.ParsedNode;
 import dk.itu.n.danmarkskort.models.ParsedWay;
-import dk.itu.n.danmarkskort.models.WayType;
 
 import java.awt.geom.Point2D;
 import java.util.*;
@@ -28,7 +27,8 @@ public class ParserUtil {
         coastlineMap.put(merged.getLastNode(), merged);
     }
 
-    public static HashSet<ParsedWay> fixUnconnectedCoastlines(HashSet<ParsedWay> unconnected) {
+    @SuppressWarnings("unchecked")
+	public static HashSet<ParsedWay> fixUnconnectedCoastlines(HashSet<ParsedWay> unconnected) {
         HashMap<Point2D.Float, ParsedWay> unconnectedEnds = new HashMap<>();
         HashMap<Point2D.Float, ParsedWay> unconnectedStarts = new HashMap<>();
 

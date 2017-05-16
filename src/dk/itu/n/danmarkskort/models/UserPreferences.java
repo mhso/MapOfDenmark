@@ -11,6 +11,7 @@ public class UserPreferences implements Serializable {
 	private boolean saveToBinary = true;
 	private boolean forceParsing = false;
 	private boolean highlightNearestRoad = false;
+	private boolean useDjikstraWithAStar = true;
 	
 	private String defaultTheme = "Basic";
 	private String defaultMapFile = "default.bin";
@@ -22,6 +23,7 @@ public class UserPreferences implements Serializable {
 	public void setDefaultTheme(String defaultTheme) { this.defaultTheme = defaultTheme; }
 	public void setDefaultMapFile(String defaultMapFile) { this.defaultMapFile = defaultMapFile; }
 	public void setHighlightNearestRoad(boolean highlightNearestRoad) { this.highlightNearestRoad = highlightNearestRoad; }
+	public void setUseDjikstraWithAStar(boolean useDjikstraWithAStar) { this.useDjikstraWithAStar = useDjikstraWithAStar; }
 	
 	public String getCurrentMapTheme() { return currentMapTheme; }
 	public String getCurrentGUITheme() { return currentGUITheme; }
@@ -30,6 +32,7 @@ public class UserPreferences implements Serializable {
 	public String getDefaultTheme() { return defaultTheme; }
 	public String getDefaultMapFile() { return defaultMapFile; }
 	public boolean isHighlightingNearestRoad() { return highlightNearestRoad; }
+	public boolean useDjikstraWithAStar() { return useDjikstraWithAStar; }
 	public boolean isSavingToBinary() { return saveToBinary; }
 	public void setSaveToBinary(boolean saveToBinary) { this.saveToBinary = saveToBinary; }
 }

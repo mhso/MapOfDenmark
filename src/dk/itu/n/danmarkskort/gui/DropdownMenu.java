@@ -55,7 +55,7 @@ public class DropdownMenu extends JPopupMenu{
         contentPane.setPreferredSize(new Dimension(topPanel.getTopPanelDimension().width - topPanel.getMenuWidth(), menuItems.getPreferredSize().height));
         contentPane.getViewport().setBackground(style.menuContentBG());
         contentPane.getVerticalScrollBar().setUnitIncrement(6);
-        contentPane.getVerticalScrollBar().setUI(new CustomScrollBarUI(style));
+        contentPane.getVerticalScrollBar().setUI(new CustomScrollBarUI());
 
         JPanel test = new JPanel();
         test.setPreferredSize(new Dimension(80, 800));

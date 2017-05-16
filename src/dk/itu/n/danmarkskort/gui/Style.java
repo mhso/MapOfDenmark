@@ -21,13 +21,14 @@ public class Style {
     private int margin, smallMargin, topPanelBorderWidth, menuItemInsets;
     private float alphaFloat, alphaHover, menuAlpha, menuAlphaHover;
     private Color panelBG, inputFieldBG, panelTextColor, zoomButtonBG, menuContentBG, menuItemsBG, scrollBarThumb, scrollBarThumbActive,
-                dropdownItemBG, dropdownItemBGActive, dropdowItemTextColor, dropdownItemTextColorActive, launcherVersionText, launcherSelectionBG;
+                dropdownItemBG, dropdownItemBGActive, dropdowItemTextColor, dropdownItemTextColorActive, launcherVersionText, launcherSelectionBG,
+                routeOuterBG, routeInnerBG, routeText, routeTextLight;
     private CustomButton searchButton, menuButton, routeButton, centerViewButton, zoomInButton, zoomOutButton,
             menuLayerButton, menuSaveButton, menuOpenButton, menuSettingsButton, menuRouteButton, menuInfoButton, 
             menuPinPointButton, pinPointPanButton, pinPointDeleteButton, arrowUpDownButton;
     private ImageIcon scaleIndicator, basicThemePreview, nightThemePreview, bwThemePreview, logo, launcherOptionsIcon, launcherLoadIcon;
     private Image frameIcon;
-    private Font normalText, smallHeadline, mediumHeadline, largeHeadline, largeHeadlineSpacing;
+    private Font normalText, smallHeadline, mediumHeadline, largeHeadline, largeHeadlineSpacing, defaultLabelText, defaultHeadline, mapLabelFont;
 
     
     public Style() {
@@ -54,9 +55,13 @@ public class Style {
         dropdowItemTextColor = new Color(0,0,0);
         dropdownItemTextColorActive = new Color(255, 255, 255);
 
-
         launcherVersionText = new Color(160, 160, 160);
         launcherSelectionBG = new Color(130, 170, 200);
+
+        routeOuterBG = panelBG;
+        routeInnerBG = inputFieldBG;
+        routeText = new Color(180, 180, 180);
+        routeTextLight = new Color(255, 255, 255);
 
         searchButton = new CustomButton("resources/icons/search.png", alphaFloat, alphaHover);
         menuButton = new CustomButton("resources/icons/menu.png", alphaFloat, alphaHover);
@@ -71,7 +76,6 @@ public class Style {
         menuPinPointButton = new CustomButton("resources/icons/pinpointmenu.png", menuAlpha, menuAlphaHover);
         
         menuOpenButton = new CustomButton("resources/icons/open.png", menuAlpha, menuAlphaHover);
-        
 
         arrowUpDownButton = new CustomButton("resources/icons/arrowupdown.png", menuAlpha, menuAlphaHover);
         
@@ -79,9 +83,6 @@ public class Style {
         zoomInButton = new CustomButton("resources/icons/zoomin.png", alphaFloat, alphaHover, zoomButtonBG);
         zoomOutButton = new CustomButton("resources/icons/zoomout.png", alphaFloat, alphaHover, zoomButtonBG);
         
-        pinPointPanButton = new CustomButton("resources/icons/map-pin.png", menuAlpha, menuAlphaHover);
-        pinPointDeleteButton = new CustomButton("resources/icons/office-bin.png", menuAlpha, menuAlphaHover);
-
         basicThemePreview = getImageIcon("resources/icons/previewthemebasic.png");
         nightThemePreview = getImageIcon("resources/icons/previewthemenight.png");
         bwThemePreview = getImageIcon("resources/icons/previewthemebw.png");
@@ -101,16 +102,22 @@ public class Style {
 
         try {
         	if(Main.production) {
-        		normalText= Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/resources/fonts/Roboto-Regular.ttf")).deriveFont(16f);
+        	    defaultLabelText = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/resources/fonts/Roboto-Medium.ttf")).deriveFont(13f);
+        		normalText = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/resources/fonts/Roboto-Regular.ttf")).deriveFont(16f);
                 smallHeadline = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/resources/fonts/Roboto-Medium.ttf")).deriveFont(18f);
+                defaultHeadline = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/resources/fonts/Roboto-Medium.ttf")).deriveFont(20f);
                 mediumHeadline = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/resources/fonts/Roboto-Light.ttf")).deriveFont(20f);
                 largeHeadline = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/resources/fonts/Roboto-Light.ttf")).deriveFont(42f);
+                mapLabelFont = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/resources/fonts/Roboto-Medium.ttf"));
         	}
         	else {
-        		normalText= Font.createFont(Font.TRUETYPE_FONT, new File("resources/fonts/Roboto-Regular.ttf")).deriveFont(16f);
+                defaultLabelText = Font.createFont(Font.TRUETYPE_FONT, new File("resources/fonts/Roboto-Medium.ttf")).deriveFont(13f);
+                normalText = Font.createFont(Font.TRUETYPE_FONT, new File("resources/fonts/Roboto-Regular.ttf")).deriveFont(16f);
                 smallHeadline = Font.createFont(Font.TRUETYPE_FONT, new File("resources/fonts/Roboto-Medium.ttf")).deriveFont(18f);
+                defaultHeadline = Font.createFont(Font.TRUETYPE_FONT, new File("resources/fonts/Roboto-Medium.ttf")).deriveFont(20f);
                 mediumHeadline = Font.createFont(Font.TRUETYPE_FONT, new File("resources/fonts/Roboto-Light.ttf")).deriveFont(20f);
                 largeHeadline = Font.createFont(Font.TRUETYPE_FONT, new File("resources/fonts/Roboto-Light.ttf")).deriveFont(42f);
+                mapLabelFont = Font.createFont(Font.TRUETYPE_FONT, new File("resources/fonts/Roboto-Medium.ttf"));
         	}
         } catch (FontFormatException e) {
             e.printStackTrace();
@@ -181,10 +188,13 @@ public class Style {
     
     public Image frameIcon() { return frameIcon; }
 
+    public Font defaultLabelText() { return defaultLabelText; }
     public Font normalText() { return normalText; }
     public Font smallHeadline() { return smallHeadline; }
+    public Font defaultHeadline() { return defaultHeadline; }
     public Font mediumHeadline() { return mediumHeadline; }
     public Font largeHeadline() { return largeHeadline; }
+    public Font mapLabelFont() { return mapLabelFont; }
     public Font largeHeadlineSpacing() { return largeHeadlineSpacing; }
 
     public Color launcherVersionText() { return launcherVersionText; }
@@ -192,4 +202,9 @@ public class Style {
     public ImageIcon launcherOptionsIcon() { return launcherOptionsIcon; }
     public ImageIcon launcherLoadIcon() { return launcherLoadIcon; }
     public Color launcherSelectionBG() { return launcherSelectionBG; }
+
+    public Color routeOuterBG() { return routeOuterBG; }
+    public Color routeInnerBG() { return routeInnerBG; }
+    public Color routeText() { return routeText; }
+    public Color routeTextLight() { return routeTextLight; }
 }

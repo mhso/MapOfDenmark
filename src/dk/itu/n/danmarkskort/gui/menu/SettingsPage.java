@@ -47,7 +47,7 @@ public class SettingsPage extends JPanel {
         panelPage.add(panelHeadline, BorderLayout.NORTH);
         
         JLabel lblPageHeadline = new JLabel("Settings");
-        lblPageHeadline.setFont(new Font("Tahoma", Font.BOLD, 18));
+        lblPageHeadline.setFont(style.defaultHeadline());
         panelHeadline.add(lblPageHeadline);
         
         JPanel panelSouth = new JPanel();
@@ -66,7 +66,6 @@ public class SettingsPage extends JPanel {
         panelCenter.setBorder(new EmptyBorder(15, 15, 15, 15));
         panelCenter.setBackground(style.menuContentBG());
         panelPage.add(panelCenter, BorderLayout.CENTER);
-        initContentPanel(panelCenter);
         panelCenter.setLayout(new CardLayout());
         
         JPanel defaultCenterPanel = new JPanel();
@@ -80,12 +79,6 @@ public class SettingsPage extends JPanel {
         buttonChangeMapTheme.addActionListener(e -> showMapThemePanel());
         defaultCenterPanel.add(buttonChangeMapTheme);
         
-        JButton buttonChangeInterfaceTheme = new JButton("Change Interface Theme");
-        buttonChangeInterfaceTheme.setBackground(new Color(224, 255, 255));
-        buttonChangeInterfaceTheme.setBorder(new LineBorder(new Color(0, 153, 204), 2, true));
-        buttonChangeInterfaceTheme.addActionListener(e -> showInterfaceThemePanel());
-        defaultCenterPanel.add(buttonChangeInterfaceTheme);
-        
         JButton buttonChangePreferences = new JButton("Change Preferences");
         buttonChangePreferences.setBackground(new Color(224, 255, 255));
         buttonChangePreferences.setBorder(new LineBorder(new Color(0, 153, 204), 2, true));
@@ -93,23 +86,21 @@ public class SettingsPage extends JPanel {
         defaultCenterPanel.add(buttonChangePreferences);
         
         // Hack! Couldn't get ScrollPane to work properly with CardLayout, so inserting a RigidArea here to push setting buttons to the top.
-        defaultCenterPanel.add(Box.createRigidArea(new Dimension(20, 20)));
+        defaultCenterPanel.add(Box.createRigidArea(new Dimension(20, 30)));
         
         createMapThemePanel();
-        
-        createInterfaceThemePanel();
         
         createPreferencesPanel();
     }
     
     private void createMapThemePanel() {
     	final int SUBPANEL_WIDTH = 420;
-    	final int SUBPANEL_HEIGHT = 50;
+    	final int SUBPANEL_HEIGHT = 40;
     	
     	JPanel panelMapTheme = new JPanel();
         panelMapTheme.setOpaque(false);
         panelCenter.add(panelMapTheme, "name_maptheme");
-        panelMapTheme.setLayout(new BorderLayout(0, 5));
+        panelMapTheme.setLayout(new BorderLayout(0, 0));
         
         JLabel labelChangeTheme = new JLabel("Change Map Theme");
         labelChangeTheme.setFont(new Font("Tahoma", Font.PLAIN, 20));
@@ -136,12 +127,12 @@ public class SettingsPage extends JPanel {
         
         CustomToggleButton buttonBasicToggle = style.toggleButton();
         buttonBasicToggle.addActionListener(e -> {
-        	if(!buttonBasicToggle.isOn()) {
+        	if(!buttonBasicToggle.isSelected()) {
         		Main.userPreferences.setCurrentMapTheme("Basic");
             	changeCurrentTheme();
         	}
         });
-        buttonBasicToggle.setOn(false);
+        buttonBasicToggle.setSelected(false);
         panelBasicTheme.add(buttonBasicToggle, BorderLayout.EAST);
         
         Component rigidArea = Box.createRigidArea(new Dimension(20, 20));
@@ -161,12 +152,12 @@ public class SettingsPage extends JPanel {
         
         CustomToggleButton buttonNightToggle = style.toggleButton();
         buttonNightToggle.addActionListener(e -> {
-        	if(!buttonNightToggle.isOn()) {
+        	if(!buttonNightToggle.isSelected()) {
         		Main.userPreferences.setCurrentMapTheme("Night");
         		changeCurrentTheme();
         	}
         });
-        buttonNightToggle.setOn(false);
+        buttonNightToggle.setSelected(false);
         panelNightTheme.add(buttonNightToggle, BorderLayout.EAST);
         
         rigidArea = Box.createRigidArea(new Dimension(20, 20));
@@ -178,7 +169,7 @@ public class SettingsPage extends JPanel {
         panel.add(panelBWTheme);
         panelBWTheme.setLayout(new BorderLayout(0, 0));
         
-        JLabel labelBW = new JLabel("Grays");
+        JLabel labelBW = new JLabel("<html><body>Gray-<br>scale</body></html>");
         panelBWTheme.add(labelBW, BorderLayout.WEST);
         
         JLabel labelBWIcon = new JLabel(style.bwThemePreview());
@@ -186,12 +177,12 @@ public class SettingsPage extends JPanel {
         
         CustomToggleButton buttonBWToggle = style.toggleButton();
         buttonBWToggle.addActionListener(e -> {
-        	if(!buttonBWToggle.isOn()) {
+        	if(!buttonBWToggle.isSelected()) {
         		Main.userPreferences.setCurrentMapTheme("BW");
         		changeCurrentTheme();
         	}
         });
-        buttonBWToggle.setOn(false);
+        buttonBWToggle.setSelected(false);
         panelBWTheme.add(buttonBWToggle, BorderLayout.EAST);
         
         JPanel panelSouth = new JPanel();
@@ -201,7 +192,6 @@ public class SettingsPage extends JPanel {
         
         JButton buttonBack = new JButton("Back");
         buttonBack.addActionListener(e -> showDefaultPanel());
-        buttonBack.setFont(new Font("Tahoma", Font.PLAIN, 13));
         panelSouth.add(buttonBack, BorderLayout.WEST);
         
         CustomToggleButton[] buttons = {buttonBasicToggle, buttonNightToggle, buttonBWToggle};
@@ -209,9 +199,9 @@ public class SettingsPage extends JPanel {
         	button.addActionListener(new ButtonSelecter(button, buttons));
         }
         
-        if(Main.userPreferences.getCurrentMapTheme().equals("Basic")) buttonBasicToggle.setOn(true);
-        else if(Main.userPreferences.getCurrentMapTheme().equals("Night")) buttonBWToggle.setOn(true);
-        else if(Main.userPreferences.getCurrentMapTheme().equals("BW")) buttonBWToggle.setOn(true);
+        if(Main.userPreferences.getCurrentMapTheme().equals("Basic")) buttonBasicToggle.setSelected(true);
+        else if(Main.userPreferences.getCurrentMapTheme().equals("Night")) buttonNightToggle.setSelected(true);
+        else if(Main.userPreferences.getCurrentMapTheme().equals("BW")) buttonBWToggle.setSelected(true);
     }
     
     private void changeCurrentTheme() {
@@ -220,30 +210,8 @@ public class SettingsPage extends JPanel {
     	else GraphicRepresentation.parseData("resources/themes/Theme" + Main.userPreferences.getCurrentMapTheme() + ".XML");
     	Util.writeObjectToFile(Main.userPreferences, DKConstants.USERPREF_PATH);
     	Main.map.forceRepaint();
-    }
-    
-    private void createInterfaceThemePanel() {
-    	JPanel panelInterfaceTheme = new JPanel();
-    	panelInterfaceTheme.setLayout(new BorderLayout(0, 5));
-        panelInterfaceTheme.setOpaque(false);
-        panelCenter.add(panelInterfaceTheme, "name_interfacetheme");
-        
-        JLabel labelChangeTheme = new JLabel("Change Interface Theme");
-        labelChangeTheme.setFont(new Font("Tahoma", Font.PLAIN, 20));
-        labelChangeTheme.setHorizontalAlignment(SwingConstants.CENTER);
-        panelInterfaceTheme.add(labelChangeTheme, BorderLayout.NORTH);
-        
-        JPanel panelSouth = new JPanel();
-        panelSouth.setOpaque(false);
-        panelInterfaceTheme.add(panelSouth, BorderLayout.SOUTH);
-        panelSouth.setLayout(new BorderLayout(0, 0));
-        
-        JButton buttonBack = new JButton("Back");
-        buttonBack.addActionListener(e -> showDefaultPanel());
-        buttonBack.setFont(new Font("Tahoma", Font.PLAIN, 13));
-        panelSouth.add(buttonBack, BorderLayout.WEST);
-    }
-    
+    }    
+  
     private void createPreferencesPanel() {
     	JPanel panelDefaultValues = new JPanel();
     	panelDefaultValues.setLayout(new BorderLayout(0, 5));
@@ -268,12 +236,17 @@ public class SettingsPage extends JPanel {
         JLabel defaultMapFileLabel = new JLabel("Default Map File:");
         defaultMapFilePanel.add(defaultMapFileLabel, BorderLayout.WEST);
         
-        JComboBox<String> defaultMapFileBox = new JComboBox(getParsedFiles());
+        JComboBox<String> defaultMapFileBox = new JComboBox<>(getParsedFiles());
         defaultMapFileBox.addActionListener(e -> {
         	Main.userPreferences.setDefaultMapFile(defaultMapFileBox.getSelectedItem().toString());
         	Util.writeObjectToFile(Main.userPreferences, DKConstants.USERPREF_PATH);
         });
         defaultMapFileBox.addMouseListener(new MouseAdapter() {
+        	@Override
+			public void mousePressed(MouseEvent e) {
+				menu.blockVisibility(true);
+			}
+        	
 			@Override
 			public void mouseEntered(MouseEvent e) {
 				menu.blockVisibility(true);
@@ -287,7 +260,7 @@ public class SettingsPage extends JPanel {
         defaultMapFileBox.setSelectedItem(Main.userPreferences.getDefaultMapFile());
         defaultMapFilePanel.add(defaultMapFileBox, BorderLayout.EAST);
         
-        centerPanel.add(Box.createRigidArea(new Dimension(20, 20)));
+        centerPanel.add(Box.createRigidArea(new Dimension(20, 10)));
         
         JPanel defaultMapThemePanel = new JPanel();
         defaultMapThemePanel.setOpaque(false);
@@ -297,12 +270,17 @@ public class SettingsPage extends JPanel {
         JLabel defaultMapThemeLabel = new JLabel("Default Map Theme:");
         defaultMapThemePanel.add(defaultMapThemeLabel, BorderLayout.WEST);
         
-        JComboBox<String> defaultMapThemeBox = new JComboBox(new String[]{"Basic", "Colorblind"});
+        JComboBox<String> defaultMapThemeBox = new JComboBox<>(new String[]{"Basic", "Night", ""});
         defaultMapThemeBox.addActionListener(e -> {
         	Main.userPreferences.setDefaultTheme(defaultMapThemeBox.getSelectedItem().toString());
         	Util.writeObjectToFile(Main.userPreferences, DKConstants.USERPREF_PATH);
         });
         defaultMapThemeBox.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				menu.blockVisibility(true);
+			}
+
 			@Override
 			public void mouseEntered(MouseEvent e) {
 				menu.blockVisibility(true);
@@ -317,14 +295,14 @@ public class SettingsPage extends JPanel {
         defaultMapThemeBox.setPreferredSize(new Dimension(defaultMapFileBox.getPreferredSize()));
         defaultMapThemePanel.add(defaultMapThemeBox, BorderLayout.EAST);
         
-        centerPanel.add(Box.createRigidArea(new Dimension(20, 20)));
+        centerPanel.add(Box.createRigidArea(new Dimension(20, 10)));
         
         JPanel maximizeOnStartupPanel = new JPanel();
         maximizeOnStartupPanel.setOpaque(false);
         maximizeOnStartupPanel.setLayout(new BorderLayout(15, 0));
         centerPanel.add(maximizeOnStartupPanel);
         
-        JLabel maximizeLabel = new JLabel("Maximize On Startup: ");
+        JLabel maximizeLabel = new JLabel("Maximize On Startup");
         maximizeOnStartupPanel.add(maximizeLabel, BorderLayout.WEST);
         
         JCheckBox maximizeButton = new JCheckBox();
@@ -336,7 +314,7 @@ public class SettingsPage extends JPanel {
         maximizeButton.setSelected(Main.userPreferences.isMaximizeOnStartup());
         maximizeOnStartupPanel.add(maximizeButton, BorderLayout.EAST);
         
-        centerPanel.add(Box.createRigidArea(new Dimension(20, 20)));
+        centerPanel.add(Box.createRigidArea(new Dimension(20, 10)));
         
         JPanel highlightRoadPanel = new JPanel();
         highlightRoadPanel.setOpaque(false);
@@ -355,6 +333,42 @@ public class SettingsPage extends JPanel {
         highlightButton.setSelected(Main.userPreferences.isHighlightingNearestRoad());
         highlightRoadPanel.add(highlightButton, BorderLayout.EAST);
         
+        centerPanel.add(Box.createRigidArea(new Dimension(20, 10)));
+        
+        JPanel useDjikstraWithAStarPanel = new JPanel();
+        useDjikstraWithAStarPanel.setOpaque(false);
+        centerPanel.add(useDjikstraWithAStarPanel);
+        useDjikstraWithAStarPanel.setLayout(new BorderLayout(15, 0));
+        
+        JLabel useDjikstraWithAStarLabel = new JLabel("Use Djikstra with A* as search algorithm");
+        useDjikstraWithAStarPanel.add(useDjikstraWithAStarLabel, BorderLayout.WEST);
+        
+        JCheckBox useDjikstraWithAStarCheckBox = new JCheckBox();
+        useDjikstraWithAStarCheckBox.addActionListener(e ->
+        		Main.userPreferences.setUseDjikstraWithAStar(useDjikstraWithAStarCheckBox.isSelected()));
+        useDjikstraWithAStarCheckBox.setBackground(panelCenter.getBackground());
+        useDjikstraWithAStarCheckBox.setSelected(Main.userPreferences.useDjikstraWithAStar());
+        useDjikstraWithAStarPanel.add(useDjikstraWithAStarCheckBox, BorderLayout.EAST);
+        
+        centerPanel.add(Box.createRigidArea(new Dimension(20, 10)));
+        
+        JPanel drawDjikstraPanel = new JPanel();
+        drawDjikstraPanel.setOpaque(false);
+        centerPanel.add(drawDjikstraPanel);
+        drawDjikstraPanel.setLayout(new BorderLayout(15, 0));
+        
+        JLabel drawDjikstraLabel = new JLabel("DEBUG: Draw Djikstra/A*");
+        drawDjikstraPanel.add(drawDjikstraLabel, BorderLayout.WEST);
+        
+        JCheckBox drawDjikstraCheckBox = new JCheckBox();
+        drawDjikstraCheckBox.addActionListener(e -> {
+        	Main.routeController.isDrawingDjikstra = drawDjikstraCheckBox.isSelected();
+        	Util.writeObjectToFile(Main.userPreferences, DKConstants.USERPREF_PATH);
+        });
+        drawDjikstraCheckBox.setBackground(panelCenter.getBackground());
+        drawDjikstraCheckBox.setSelected(Main.userPreferences.isHighlightingNearestRoad());
+        drawDjikstraPanel.add(drawDjikstraCheckBox, BorderLayout.EAST);
+        
         JPanel panelSouth = new JPanel();
         panelSouth.setOpaque(false);
         panelDefaultValues.add(panelSouth, BorderLayout.SOUTH);
@@ -362,7 +376,6 @@ public class SettingsPage extends JPanel {
         
         JButton buttonBack = new JButton("Back");
         buttonBack.addActionListener(e -> showDefaultPanel());
-        buttonBack.setFont(new Font("Tahoma", Font.PLAIN, 13));
         panelSouth.add(buttonBack, BorderLayout.WEST);
         
         // Hack! Couldn't get ScrollPane to work properly with CardLayout, so inserting a RigidArea here to push preference buttons to the top.
@@ -381,7 +394,7 @@ public class SettingsPage extends JPanel {
 			}
 		}
 		catch (IOException e) {
-			e.printStackTrace();
+			if(Main.debug) e.printStackTrace();
 		}
 		String[] results = new String[binFiles.size()];
 		for(int i = 0; i < binFiles.size(); i++) {
@@ -400,18 +413,9 @@ public class SettingsPage extends JPanel {
 		cl.show(panelCenter, "name_maptheme");
     }
     
-    private void showInterfaceThemePanel() {
-    	CardLayout cl = (CardLayout)panelCenter.getLayout();
-		cl.show(panelCenter, "name_interfacetheme");
-    }
-    
     private void showPreferencesPanel() {
     	CardLayout cl = (CardLayout)panelCenter.getLayout();
 		cl.show(panelCenter, "name_preferences");
-    }
-
-	private void initContentPanel(JPanel panel){
-    	
     }
 
 	private class ButtonSelecter implements ActionListener {
@@ -426,7 +430,7 @@ public class SettingsPage extends JPanel {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			for(CustomToggleButton button : buttons) {
-				if(button != sourceButton) button.setOn(false);
+				if(button != sourceButton) button.setSelected(false);
 			}
 		}
 	}

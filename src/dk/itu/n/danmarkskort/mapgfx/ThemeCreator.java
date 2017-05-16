@@ -189,6 +189,7 @@ public class ThemeCreator extends JFrame {
 		saveDocument(doc, zoomFile);
 	}
 	
+	@SuppressWarnings("unused")
 	private void addElement() {
 		ThemeAddElement addElementFrame = new ThemeAddElement(this, elements);
 	}

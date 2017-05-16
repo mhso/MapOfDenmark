@@ -12,6 +12,7 @@ import dk.itu.n.danmarkskort.kdtree.KDTree;
 import dk.itu.n.danmarkskort.models.ParsedItem;
 import dk.itu.n.danmarkskort.models.ParsedNode;
 import dk.itu.n.danmarkskort.models.ParsedWay;
+import dk.itu.n.danmarkskort.models.Region;
 import dk.itu.n.danmarkskort.models.WayType;
 
 import java.awt.*;
@@ -144,22 +145,24 @@ public class BottomPanel extends JPanel implements CanvasListener {
         buttonCentreView.setBorder(new EtchedBorder(EtchedBorder.RAISED, BORDER_HIGHTLIGHT, BORDER_SHADOW));
         buttonCentreView.addActionListener(e -> {
             Main.map.zoomToRegion(Main.model.getMapRegion());
+            onZoomLevelChanged();
         });
         buttonCentreView.setFocusPainted(false);
         rightParent.add(buttonCentreView, BorderLayout.NORTH);
     }
 
     private void setScale() {
-    	double viewWidth = Main.map.getGeographicalRegion().getWidth();
-        double viewLonKm = viewWidth*111.320*Math.cos(Math.toRadians(-Main.map.getGeographicalRegion().y2));
+    	Region view = Main.map.getGeographicalRegion();
+        double viewLonM = Util.distanceInMeters(Util.toRealCoords(new Point2D.Double(view.x1, view.y2)), 
+        		Util.toRealCoords(new Point2D.Double(view.x2, view.y2)));
     	
-        String scaleString = " km";
-        double kmScale = viewLonKm/12;
-        if(kmScale < 1) {
-        	kmScale *= 1000;
-        	scaleString = " m";
+        String scaleString = " m";
+        double mScale = viewLonM/(Main.window.getWidth()/scale.getWidth());
+        if(mScale > 1000) {
+        	mScale /= 1000;
+        	scaleString = " km";
         }
-    	scale.setText((int)kmScale + scaleString);
+    	scale.setText((int)mScale + scaleString);
     }
     
     @Override

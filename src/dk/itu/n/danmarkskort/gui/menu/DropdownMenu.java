@@ -43,6 +43,7 @@ public class DropdownMenu extends CustomDropdown {
         addcontentPane();
 
         add(wrapper);
+        addToContentPane(pinPointPage);
     }
 
     private void addMenuItems() {
@@ -54,41 +55,41 @@ public class DropdownMenu extends CustomDropdown {
         menuItems.setBackground(style.menuItemsBG());
         menuItems.setBorder(BorderFactory.createEmptyBorder(style.menuItemInsets(), style.menuItemInsets(), style.menuItemInsets(), style.menuItemInsets()));
 
-        // open
+        // pinpoint
         gbcMenuItems.gridy = 1;
+        CustomButton pinPointButton = style.menuPinPointButton();
+        pinPointButton.addActionListener(e -> addToContentPane(pinPointPage));
+        menuItems.add(pinPointButton, gbcMenuItems);
+        
+        // open
+        gbcMenuItems.gridy = 2;
         CustomButton openButton = style.menuOpenButton();
         openButton.addActionListener(e -> addToContentPane(loadPage));
         menuItems.add(openButton, gbcMenuItems);
 
         // save
-        gbcMenuItems.gridy = 2;
+        gbcMenuItems.gridy = 3;
         CustomButton saveButton = style.menuSaveButton();
         saveButton.addActionListener(e -> addToContentPane(savePage));
         menuItems.add(saveButton, gbcMenuItems);
 
         // layers/filters
-        gbcMenuItems.gridy = 3;
+        gbcMenuItems.gridy = 4;
         CustomButton layerButton = style.menuLayerButton();
         layerButton.addActionListener(e -> addToContentPane(mapLayersPage));
         menuItems.add(layerButton, gbcMenuItems);
 
         // settings
-        gbcMenuItems.gridy = 4;
+        gbcMenuItems.gridy = 5;
         CustomButton settingsButton = style.menuSettingsButton();
         settingsButton.addActionListener(e -> addToContentPane(settingsPage));
         menuItems.add(settingsButton, gbcMenuItems);
-
+        
         // about us
-        gbcMenuItems.gridy = 5;
+        gbcMenuItems.gridy = 6;
         CustomButton aboutUsButton = style.menuInfoButton();
         aboutUsButton.addActionListener(e -> addToContentPane(aboutUsPage));
         menuItems.add(aboutUsButton, gbcMenuItems);
-
-        // pinpoint
-        gbcMenuItems.gridy = 6;
-        CustomButton pinPointButton = style.menuPinPointButton();
-        pinPointButton.addActionListener(e -> addToContentPane(pinPointPage));
-        menuItems.add(pinPointButton, gbcMenuItems);
         
         menuItems.setPreferredSize(new Dimension(topPanel.getMenuWidth(), menuItems.getPreferredSize().height));
         gbcContainer.gridx = 0;
@@ -108,7 +109,7 @@ public class DropdownMenu extends CustomDropdown {
         contentPane.setPreferredSize(new Dimension(topPanel.getTopPanelDimension().width - topPanel.getMenuWidth(), menuItems.getPreferredSize().height));
         contentPane.getViewport().setBackground(style.menuContentBG());
         contentPane.getVerticalScrollBar().setUnitIncrement(6);
-        contentPane.getVerticalScrollBar().setUI(new CustomScrollBarUI(style));
+        contentPane.getVerticalScrollBar().setUI(new CustomScrollBarUI());
         
         contentPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 

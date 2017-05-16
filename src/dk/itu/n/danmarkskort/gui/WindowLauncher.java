@@ -12,6 +12,8 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -30,7 +32,7 @@ public class WindowLauncher extends JFrame {
 	private JLabel labelSelectedFileHeader;
 	
 	public WindowLauncher() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		Style style = new Style();
 		setTitle("Launcher");
 		setIconImage(style.frameIcon());
@@ -75,7 +77,7 @@ public class WindowLauncher extends JFrame {
 		
 		labelSelectedFile = new JLabel();
 		
-		JList<String> binFilesList = new JList(getParsedFiles());
+		JList<String> binFilesList = new JList<>(getParsedFiles());
 		binFilesList.setFont(style.normalText());
 		binFilesList.setSelectionBackground(style.launcherSelectionBG());
 		binFilesList.setSelectionForeground(style.panelBG());
@@ -87,6 +89,7 @@ public class WindowLauncher extends JFrame {
 		binFilesList.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				if(binFilesList.getSelectedIndex() < 0) return;
 				labelSelectedFile.setText(binFilesList.getSelectedValue());
 				selectedFilePath = binFiles.get(binFilesList.getSelectedIndex()).toString();
 				if(!buttonLaunch.isEnabled()) enableLaunchButton(true);
@@ -103,7 +106,7 @@ public class WindowLauncher extends JFrame {
 		JScrollPane scroll = new JScrollPane(binFilesList);
 		scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 		scroll.getVerticalScrollBar().setUnitIncrement(6);
-		scroll.getVerticalScrollBar().setUI(new CustomScrollBarUI(style));
+		scroll.getVerticalScrollBar().setUI(new CustomScrollBarUI());
 		scroll.setBorder(null);
 		panelParsedFiles.add(scroll);
 		
@@ -223,6 +226,14 @@ public class WindowLauncher extends JFrame {
 				if(e.getKeyCode() == KeyEvent.VK_ENTER && buttonLaunch.isEnabled()) buttonLaunch.doClick();
 			}
         });
+        
+        addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				if(Main.window == null) System.exit(0);
+				dispose();
+			}      	
+        });
 
 		// Colors and stuff
 
@@ -263,6 +274,7 @@ public class WindowLauncher extends JFrame {
 	
 	private void launch() {
 		dispose();
+		if(Main.window != null) Main.window.dispose();
 		Main.launch(new String[]{selectedFilePath});
 	}
 
@@ -287,7 +299,9 @@ public class WindowLauncher extends JFrame {
 			labelSelectedFile.setText("default.bin (default)");
 		}		
 		try {
-			for(Path entry : Files.newDirectoryStream(Paths.get("parsedOSMFiles"))) {
+			Path path = Paths.get("parsedOSMFiles");
+			if(!Files.exists(path)) Files.createDirectory(path);
+			for(Path entry : Files.newDirectoryStream(path)) {
 				for(Path binFile : Files.newDirectoryStream(entry)) {
 					if(!binFile.toFile().getName().equals("pinpoints.bin")) {
 						binFiles.add(binFile);
@@ -300,7 +314,7 @@ public class WindowLauncher extends JFrame {
 			}
 		}
 		catch (IOException e) {
-			e.printStackTrace();
+			if(Main.debug) e.printStackTrace();
 		}
 		String[] results = new String[binFiles.size()];
 		for(int i = 0; i < binFiles.size(); i++) {
@@ -308,7 +322,6 @@ public class WindowLauncher extends JFrame {
 		}
 		return results;
 	}
-
 
 	private void loadFile() {
 		JFileChooser fc = viewFileChooser("Load View To File", "Load");

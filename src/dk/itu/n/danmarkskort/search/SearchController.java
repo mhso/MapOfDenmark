@@ -1,6 +1,5 @@
 package dk.itu.n.danmarkskort.search;
 
-import java.awt.geom.Point2D;
 import java.util.List;
 
 import dk.itu.n.danmarkskort.Main;
@@ -8,45 +7,51 @@ import dk.itu.n.danmarkskort.Util;
 import dk.itu.n.danmarkskort.address.Address;
 
 public class SearchController{
-	private SearchController(){ }
 	
+	/**
+	 * Get search suggestions by input, text can return multiple results,
+	 * while coordinates can return nearst address as suggestion.
+	 * 
+	 * @param inputStr address string or coordinates
+	 * @return an list of results
+	 */
 	public static List<String> getSearchFieldSuggestions(String inputStr){
 		long limitAmountOfResults = 10;
 		
 		if(inputStr == null || inputStr.isEmpty()) return null;
 		
 		if(isCoordinates(inputStr)) {
-			return Main.addressController.getSearchSuggestions(stringCordsToPointFloat(inputStr));
+			return Main.addressController.getSearchSuggestionsByCoords(Util.stringCordsToPointFloat(inputStr));
 		} else {
 			return Main.addressController.getSearchSuggestions(inputStr, limitAmountOfResults);
 		}
 	}
 	
+	/**
+	 * If search return a single address, return match.
+	 * 
+	 * @param inputStr address string or coordinates
+	 * @return an address object or null
+	 */
 	public static Address getSearchFieldAddressObj(String inputStr){
 		if(inputStr == null || inputStr.isEmpty()) return null;
 		
 		if(isCoordinates(inputStr)) {
-			return Main.addressController.getSearchResult(stringCordsToPointFloat(inputStr));
+			return Main.addressController.getSearchResultByCoords(Util.stringCordsToPointFloat(inputStr));
 		} else {
 			return Main.addressController.getSearchResult(inputStr);
 		}
 	}
 	
-	private static boolean isCoordinates(String inputStr){
+	/**
+	 * Checks if input is coordinates.
+	 * @param inputStr a string
+	 * @return true if is coordinates.
+	 */
+	public static boolean isCoordinates(String inputStr){
 		String cordRegex = "((\\-{0,1})([0-9]{1,3})(\\.)(\\-{0,1})([0-9]{5,9}))";
 		String cordsRegex = cordRegex + "(\\,\\s)" + cordRegex;
 		if(inputStr.matches(cordsRegex)) return true;
 		return false;
-	}
-	
-	private static Point2D.Float stringCordsToPointFloat(String inputStr){
-		String[] strArr = inputStr.split(", ");
-		float lat = Float.parseFloat(strArr[0]);
-		float lon = Float.parseFloat(strArr[1]);
-		Point2D realCoords = new Point2D.Float(lon, lat);
-		Point2D fakeCoords = Util.toFakeCoords(realCoords);
-		System.out.println(realCoords);
-		System.out.println(fakeCoords);
-		return new Point2D.Float((float)fakeCoords.getX(), (float)fakeCoords.getY());
 	}
 }

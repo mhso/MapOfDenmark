@@ -16,28 +16,33 @@ public class PostcodeCityBestMatch {
 	}
 	
 	private void init(){
-		combinations = new ArrayList<Combine>();
-		objMatches = new HashMap<String, Combine>();
+		combinations = new ArrayList<Combine>(1200); // Initialize with expected combinations for Denmark
+		objMatches = new HashMap<String, Combine>(1200); // Initialize with expected combinations for Denmark
 	}
 	
+	/**
+	 * Add a new combinations or increments if combination already exists.
+	 * 
+	 * @param postcode
+	 * @param city
+	 */
 	public void add(String postcode, String city){
-		
-		if(combinations == null  || objMatches == null) init();
+		if(combinations == null  || objMatches == null) init(); // If not Initialized, reInitialize.
 		
 		if(isValidPostcode(postcode) && isValidCity(city)){
 			if(!incrementCountIfExists(postcode, city)){
-				addIfNew(postcode, city);
+				combinations.add(new Combine(postcode, city));
 			}
 		}
 	}
 	
 	private boolean isValidPostcode(String postcode){
-		if(postcode != null && !postcode.isEmpty()) return true;
+		if(postcode != null && !postcode.trim().isEmpty()) return true;
 		return false;
 	}
 	
 	private boolean isValidCity(String city){
-		if(city != null && !city.isEmpty())	return true;
+		if(city != null && !city.trim().isEmpty())	return true;
 		return false;
 	}
 	
@@ -51,28 +56,42 @@ public class PostcodeCityBestMatch {
 		return false;
 	}
 	
-	private void addIfNew(String postcode, String city){
-		Combine cNew = new Combine(postcode, city);
-		combinations.add(cNew);
-	}
-	
+	/**
+	 * Generate the best matches
+	 */
 	private void genMatches(){
 		for(Combine c : combinations) objMatches.putIfAbsent(c.getPostcode(), c);
-		for(Combine c : combinations) if(c.getCount() > objMatches.get(c.getPostcode()).getCount()) objMatches.put(c.getPostcode(), c);
+		for(Combine c : combinations)
+			if(c.getCount() > objMatches.get(c.getPostcode()).getCount()) objMatches.put(c.getPostcode(), c);
 	}
 	
+	/**
+	 * Return the bestmatch stored for the postcode.
+	 * 
+	 * @param postcode
+	 * @return best match for the postcode
+	 */
 	public String getMatch(String postcode){
 		if(objMatches.isEmpty()) genMatches();
 		if(objMatches.containsKey(postcode)) return objMatches.get(postcode).getCity();
 		return null;
 	}
 	
-	public void cleanup(){
+	/**
+	 * Freeup memory.
+	 */
+	public void cleanUp(){
 		combinations = null;
 		objMatches = null;
 		
 	}
 	
+	/**
+	 * Represent a postcode, city relationship, count stores repetitions of the combination.
+	 * 
+	 * @author Group N
+	 *
+	 */
 	private class Combine{
 		private String postcode, city;
 		private int count;

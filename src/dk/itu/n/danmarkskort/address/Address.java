@@ -2,26 +2,20 @@ package dk.itu.n.danmarkskort.address;
 
 import java.awt.geom.Point2D;
 
-public class Address{
-	private float lon, lat;
+/**
+ * Class is used for representing a complete or partial address used for handling information between data-structures.
+ * The addres extends Point2D.Float to store information about its location.
+ * @author Group N
+ */
+public class Address extends Point2D.Float{
 	private String street, housenumber, city, postcode;
 
 	public Address(){
-		this.lon = -1f;
-		this.lat = -1f;
+		super(-1f, -1f);
 	}
 	
 	public Address(Point2D.Float lonLat){
-		this.lon = lonLat.x;
-		this.lat = lonLat.y;
-	}
-	
-	public Address(Point2D.Float lonLat, String street, String housenumber, String city, String postcode) {
-		this(lonLat);
-		this.street = street;
-		this.housenumber = housenumber;
-		this.city = city;
-		this.postcode = postcode;
+		this.setLocation(lonLat);
 	}
 	
 	public Address(String street, String housenumber, String city, String postcode) {
@@ -29,12 +23,14 @@ public class Address{
 		this.city = city;
 		this.postcode = postcode;
 	}
+	
+	public Address(Point2D.Float lonLat, String street, String housenumber, String city, String postcode) {
+		this(street, housenumber, city, postcode);
+		this.setLocation(lonLat);
+	}
 
-	public Point2D.Float getLonLatAsPoint() { return new Point2D.Float(lon, lat); }
-	public void setLonLat(Point2D.Float lonLat) {
-		this.lon = lonLat.x;
-		this.lat = lonLat.y;
-		}
+	public Point2D.Float getLonLatAsPoint() { return this; }
+	public void setLonLat(Point2D.Float lonLat) { this.setLocation(lonLat); }
 	
 	public String getStreet() { return street; }
 	public void setStreet(String street) { this.street = street; }
@@ -51,7 +47,7 @@ public class Address{
  	public String toStringShort(){
  		StringBuilder sb = new StringBuilder();
  			if(street != null) sb.append(street +" ");
- 			if(housenumber != null) sb.append(housenumber + " ");
+ 			if(housenumber != null) sb.append(housenumber + ", ");
  			if(postcode != null) sb.append(postcode + " ");
  			if(getCity() != null) sb.append(getCity());
  		return sb.toString().trim();
@@ -59,7 +55,7 @@ public class Address{
 
 	@Override
 	public String toString() {
-		return "Address [lon=" + lon + ", lat=" + lat + ", street=" + street + ", housenumber="
+		return "Address [lon=" + x + ", lat=" + y + ", street=" + street + ", housenumber="
 				+ housenumber + ", postcode=" + postcode + ", city=" + city + "]";
 	}
 }
