@@ -54,6 +54,7 @@ public class AddressValidator {
 	}
 	
 	private static String removeSpaces(String inputStr){
+		if(inputStr == null) return null;
 		return inputStr.replaceAll("\\s",""); //replace spaces etc.
 	}
 
