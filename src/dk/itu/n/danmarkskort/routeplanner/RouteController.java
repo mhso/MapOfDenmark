@@ -270,7 +270,7 @@ public class RouteController {
 			} else {
 				routeEnum = RouteEnum.CONTINUE_ON;
 			}
-			Main.log("v: " + v1v2AngleInt + " ( " + v2StrAngleStr + " )" + ", " + routeEnum.toString() + " til " + edge.getDescription());
+			//Main.log("v: " + v1v2AngleInt + " ( " + v2StrAngleStr + " )" + ", " + routeEnum.toString() + " til " + edge.getDescription());
 		}
 		return routeEnum;
 	}
