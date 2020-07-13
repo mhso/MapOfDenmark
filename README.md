@@ -1,6 +1,8 @@
 # YakMaps - MapOfDenmark
 Interactive map of Denmark, written in Java. Made as the first-year project at IT-University of Copenhagen. 
 
+![release1 0pic](https://github.itu.dk/storage/user/1028/files/cbc797fa-3a39-11e7-93b2-19464fbe9f37)
+
 ## Features
 - Load and visualize .osm map files, in XML format, from OpenStreetMaps.org
 - Pan & zoom around (almost) seamlessly, with multi-threading enabling a smooth experience
